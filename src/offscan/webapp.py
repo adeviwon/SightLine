@@ -323,7 +323,12 @@ HTML_PAGE = """<!DOCTYPE html>
 
             // Summary
             const summaryBox = document.getElementById('summary-box');
+            let warningHtml = '';
+            if (data.image_warnings && data.image_warnings.length > 0) {
+                warningHtml = '<br><br><span style="color:#ff9800;font-size:13px;">\u26a0\ufe0f ' + data.image_warnings.join(' ') + '</span>';
+            }
             summaryBox.innerHTML = '<strong>' + data.document_label + '</strong><br><br>' + data.summary +
+                warningHtml +
                 '<br><br><small style="color:#888">OCR confidence: ' + (data.ocr_confidence*100).toFixed(0) + '% | ' +
                 'Classification: ' + (data.classification_confidence*100).toFixed(0) + '% | ' +
                 'Time: ' + data.total_time_ms.toFixed(0) + 'ms | ' +
@@ -448,6 +453,8 @@ def scan():
         "total_time_ms": result.total_time_ms,
         "fully_offline": result.fully_offline,
         "network_calls_made": result.network_calls_made,
+        "image_quality": getattr(result, 'image_quality', 1.0),
+        "image_warnings": getattr(result, 'image_warnings', []),
     }
 
     if audio_path and os.path.exists(audio_path):

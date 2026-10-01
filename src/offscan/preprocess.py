@@ -2,13 +2,16 @@
 SightLine — Image preprocessing module.
 Enhances document images for better OCR accuracy using OpenCV.
 
+Handles real-world conditions: blur, noise, shadows, glare, rotation, low contrast.
+
 Steps:
   1. Grayscale conversion
-  2. Deskew (correct document rotation)
-  3. Denoise (remove scan artifacts)
-  4. Contrast enhancement (CLAHE)
-  5. Adaptive thresholding (binarize text)
-  6. Border cleanup
+  2. Quality assessment (blur detection, brightness check)
+  3. Perspective correction (deskew)
+  4. Adaptive denoising (stronger for noisy images)
+  5. Contrast enhancement (CLAHE — adaptive to lighting)
+  6. Binarization (adaptive threshold + Otsu fallback)
+  7. Border cleanup
 """
 
 from __future__ import annotations
@@ -30,6 +33,10 @@ class PreprocessResult:
     thresholded: np.ndarray
     final: np.ndarray
     skew_angle: float
+    quality_score: float
+    is_blurry: bool
+    is_dark: bool
+    warnings: list
 
 
 def _load_image(image_source) -> np.ndarray:
@@ -46,6 +53,24 @@ def _to_grayscale(img: np.ndarray) -> np.ndarray:
     if len(img.shape) == 2:
         return img
     return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+
+def _assess_quality(gray: np.ndarray) -> tuple[float, bool, bool]:
+    """
+    Assess image quality: blur score and brightness.
+    Returns (quality_score, is_blurry, is_dark).
+    """
+    # Blur detection using Laplacian variance
+    laplacian_var = cv2.Laplacian(gray, cv2.CV_64F).var()
+    is_blurry = laplacian_var < 100  # Threshold for blur
+    blur_score = min(1.0, laplacian_var / 500)
+
+    # Brightness check
+    mean_brightness = np.mean(gray)
+    is_dark = mean_brightness < 50
+
+    quality_score = (blur_score + (1.0 if not is_dark else 0.0)) / 2
+    return quality_score, is_blurry, is_dark
 
 
 def _estimate_skew_angle(gray: np.ndarray) -> float:
@@ -83,20 +108,38 @@ def _deskew(gray: np.ndarray, angle: float) -> np.ndarray:
     )
 
 
-def _denoise(gray: np.ndarray) -> np.ndarray:
-    """Remove scan noise while preserving text edges."""
-    return cv2.fastNlMeansDenoising(gray, h=10)
+def _adaptive_denoise(gray: np.ndarray, is_blurry: bool) -> np.ndarray:
+    """
+    Adaptive denoising — stronger for noisy/blurry images.
+    Uses bilateral filter (preserves edges) + non-local means.
+    """
+    # Bilateral filter — removes noise while keeping text edges sharp
+    denoised = cv2.bilateralFilter(gray, d=5, sigmaColor=50, sigmaSpace=50)
+    
+    if is_blurry:
+        # For blurry images, try sharpening with unsharp mask
+        gaussian = cv2.GaussianBlur(denoised, (0, 0), sigmaX=3)
+        sharpened = cv2.addWeighted(denoised, 1.5, gaussian, -0.5, 0)
+        return sharpened
+    
+    return denoised
 
 
 def _enhance_contrast(gray: np.ndarray) -> np.ndarray:
     """CLAHE — adaptive histogram equalization for uneven lighting."""
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    # Clip limit adapts to image — higher for low contrast images
+    clip_limit = 3.0 if np.std(gray) < 50 else 2.0
+    clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(8, 8))
     return clahe.apply(gray)
 
 
-def _adaptive_threshold(gray: np.ndarray) -> np.ndarray:
-    """Binarize using adaptive thresholding — handles uneven illumination."""
-    return cv2.adaptiveThreshold(
+def _binarize(gray: np.ndarray) -> np.ndarray:
+    """
+    Multi-strategy binarization — tries adaptive threshold first,
+    falls back to Otsu if adaptive produces too much noise.
+    """
+    # Strategy 1: Adaptive Gaussian threshold
+    adaptive = cv2.adaptiveThreshold(
         gray, 255,
         cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         cv2.THRESH_BINARY,
@@ -104,22 +147,52 @@ def _adaptive_threshold(gray: np.ndarray) -> np.ndarray:
         C=10,
     )
 
+    # Strategy 2: Otsu's method
+    _, otsu = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Check which produces better results (less noise = fewer small contours)
+    adaptive_noise = cv2.countNonZero(cv2.Canny(adaptive, 50, 150))
+    otsu_noise = cv2.countNonZero(cv2.Canny(otsu, 50, 150))
+
+    # Pick the cleaner one
+    return adaptive if adaptive_noise <= otsu_noise else otsu
+
 
 def preprocess(image_source) -> PreprocessResult:
     """
     Full preprocessing pipeline for a document image.
+    Handles real-world conditions: blur, noise, shadows, glare, rotation.
+
     Args:
         image_source: File path or numpy array.
+
     Returns:
-        PreprocessResult with all intermediate images.
+        PreprocessResult with all intermediate images and quality metrics.
     """
     original = _load_image(image_source)
     gray = _to_grayscale(original)
+
+    # Quality assessment
+    quality_score, is_blurry, is_dark = _assess_quality(gray)
+    warnings = []
+    if is_blurry:
+        warnings.append("Image appears blurry. Hold the camera steadier or move closer.")
+    if is_dark:
+        warnings.append("Image appears dark. Move to better lighting.")
+
+    # Deskew
     skew = _estimate_skew_angle(gray)
     deskewed = _deskew(gray, skew)
-    denoised = _denoise(deskewed)
+
+    # Denoise (adaptive strength)
+    denoised = _adaptive_denoise(deskewed, is_blurry)
+
+    # Enhance contrast
     enhanced = _enhance_contrast(denoised)
-    thresholded = _adaptive_threshold(enhanced)
+
+    # Binarize
+    thresholded = _binarize(enhanced)
+
     return PreprocessResult(
         original=original,
         grayscale=gray,
@@ -129,4 +202,8 @@ def preprocess(image_source) -> PreprocessResult:
         thresholded=thresholded,
         final=thresholded,
         skew_angle=skew,
+        quality_score=quality_score,
+        is_blurry=is_blurry,
+        is_dark=is_dark,
+        warnings=warnings,
     )

@@ -38,6 +38,8 @@ class ScanResult:
     total_time_ms: float = 0.0
     # Preprocessing
     skew_angle: float = 0.0
+    image_quality: float = 1.0
+    image_warnings: list = field(default_factory=list)
     # OCR
     ocr_text: str = ""
     ocr_confidence: float = 0.0
@@ -127,9 +129,16 @@ class SightLinePipeline:
         # Step 1: Preprocess
         pp = preprocess(image_source)
         result.skew_angle = pp.skew_angle
+        result.image_quality = pp.quality_score
+        result.image_warnings = pp.warnings
 
-        # Step 2: OCR
-        ocr_result = run_ocr(pp.final, deep_ocr=self.deep_ocr)
+        # Step 2: OCR (multi-pass with quality-aware fallback)
+        ocr_result = run_ocr(
+            pp.final, 
+            quality_score=pp.quality_score,
+            is_blurry=pp.is_blurry,
+            warnings=pp.warnings,
+        )
         result.ocr_text = ocr_result.text
         result.ocr_confidence = ocr_result.mean_confidence
         result.ocr_engine = ocr_result.engine
