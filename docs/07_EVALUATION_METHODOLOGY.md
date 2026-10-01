@@ -7,11 +7,59 @@ explains how it was produced and how to reproduce it.
 Regenerate everything:
 
 ```bash
+bash run.sh repro-check    # FIRST — proves the corpus is reproducible at all
 bash run.sh eval
 # → artifacts/eval_results.json
 bash run.sh errors
 # → per-sample error listing
 ```
+
+---
+
+## 0. Reproducibility, and the bug that made this section necessary
+
+Run this before believing any number in this repository:
+
+```bash
+bash run.sh repro-check
+```
+
+It runs the shipped corpus generator in **two subprocesses with different
+`PYTHONHASHSEED` values** and pixel-hashes the degraded output. If they differ,
+the corpus is not reproducible and no number built on it means anything.
+
+**It exists because every generator used to seed itself like this:**
+
+```python
+ds = seed * 7919 + abs(hash(name)) % 100003 + i
+```
+
+Python salts `str.__hash__` per process. So `hash("studio_clean")` returned a
+different integer in every interpreter, `seed` controlled almost nothing, and:
+
+- three `bash run.sh eval` runs produced three **different** corpora
+- three `bash run.sh train-dncnn` runs produced three different training sets
+- every figure in this repository was unreproducible by anyone, including us
+
+Nothing crashed. Nothing warned. The failure was completely silent, which is
+the only reason it survived as long as it did.
+
+Fixed in `ml/src/seedutil.py` using `zlib.crc32` — a specified checksum with no
+interpreter, platform, or `PYTHONHASHSEED` dependence. Verified load-bearing:
+reintroducing `abs(hash(name))` makes `repro-check` fail, and restoring it
+makes it pass.
+
+### The seed alone does not identify a corpus
+
+The same seed under two different seeders selects **different documents**. So
+`{"seed": 123}` in an artifact is not provenance. Every generated artifact now
+carries `seedutil.SEEDER_ID` (`zlib.crc32/seedutil-v1`), and
+`make_results_doc.py` refuses to label a results document "current" unless that
+stamp matches the tree that generated it.
+
+Note that fixing the seeder does **not** retroactively make old artifacts
+reproducible — their documents were already chosen by the old hash. That is why
+`docs/03_RESULTS.md` carries a provenance banner until everything is re-run.
 
 ---
 

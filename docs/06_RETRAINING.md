@@ -45,6 +45,34 @@ Wall clock on 4 CPU threads: **~40 minutes**, dominated by restorer training.
 
 ---
 
+## Verify before you trust
+
+Three gates, and they are not decoration — each one exists because a real bug
+slipped past the checks that preceded it.
+
+```bash
+bash run.sh repro-check    # is the corpus reproducible across processes?
+bash run.sh bundle-check   # do the shipped models load and run real inference?
+bash run.sh test           # 184 tests: leakage, determinism, metric integrity
+```
+
+**`repro-check` is the one to run first.** The corpus generators used to seed
+from `abs(hash(profile_name))`, which Python salts per process, so every
+`train-dncnn` and `eval` run silently built a *different* corpus and every
+number was unreproducible. It is fixed (`ml/src/seedutil.py`, `zlib.crc32`) and
+gated, but if you change anything in corpus generation, this is the check that
+tells you whether your run can be re-derived.
+
+**`bundle-check` loads weights for real and runs inference through the shipped
+bundle.** A file-existence check is not enough: `app/models/minilm_encoder.onnx`
+once shipped as a 56 KB fp32 graph referencing 104 external weight tensors with
+its 90 MB blob missing. The file existed, the precache audit passed, the
+manifest said `classifier: true`, and `onnx.load(load_external_data=False)`
+succeeded — because that flag exists to *skip* blob resolution. Every cheap
+check passed on a model that could not run.
+
+---
+
 ## 2. Individual steps
 
 ### The classifier

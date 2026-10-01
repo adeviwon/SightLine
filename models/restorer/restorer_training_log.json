@@ -29,9 +29,15 @@
       "train_loss": 0.125362,
       "val_psnr_db": 11.523,
       "seconds": 191.9
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.143369,
+      "val_psnr_db": 13.628,
+      "seconds": 228.7
     }
   ],
-  "best_val_psnr_db": 13.569,
+  "best_val_psnr_db": 13.628,
   "n_train_patches": 336,
   "n_val_patches": 84,
   "docs_per_profile": 14,
