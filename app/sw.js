@@ -22,7 +22,7 @@
  * sightline-* cache, so old wasm never lingers.
  */
 
-const VERSION = "v1.0.0";
+const VERSION = "v1.1.0";
 const CACHE = "sightline-" + VERSION;
 
 /** Everything required for a scan to complete with no network. */
@@ -32,14 +32,20 @@ const PRECACHE = [
   "./selftest.html",
   "./manifest.json",
   "./README.md",
+  // Availability manifest for the optional ONNX path. Precached so the app can
+  // answer "are the models present?" with zero network requests.
+  "./models/ort.json",
   "./js/pipeline.js",
+  "./js/gating.js",
   "./js/restorer.js",
   "./js/classifier.js",
   "./js/tts.js",
   "./js/app.js",
+  "./js/ORCHESTRATION.md",
   "./assets/icon-180.png",
   "./assets/icon-192.png",
   "./assets/icon-512.png",
+  "./assets/favicon.ico",
   // OCR engine + language data. ~40 MB. This is the offline guarantee.
   "./vendor/tesseract/tesseract.min.js",
   "./vendor/tesseract/worker.min.js",
@@ -66,8 +72,13 @@ const OPTIONAL = [
   "./models/minilm_encoder.onnx",
   "./models/minilm_head.onnx",
   "./models/tokenizer.json",
-  "./vendor/ort/ort.wasm.bundle.min.mjs",
-  "./vendor/ort/ort.wasm.wasm",
+  // Filenames must match prune_ort.sh's KEEP list exactly. The .wasm binary is
+  // the one that matters most: without it ORT silently falls back to looking
+  // for it on a CDN, which would break the offline guarantee.
+  "./vendor/ort/ort.min.mjs",
+  "./vendor/ort/ort.min.js",
+  "./vendor/ort/ort-wasm-simd-threaded.mjs",
+  "./vendor/ort/ort-wasm-simd-threaded.wasm",
 ];
 
 self.addEventListener("install", (event) => {

@@ -625,10 +625,27 @@ const SightLine = (() => {
    * preprocess(): load -> downscale -> grayscale -> quality -> deskew ->
    * restore -> CLAHE -> candidates.
    *
+   * `restoreMode` decides which restoration is applied:
+   *
+   *   "adaptive"  (default) noise -> 3x3 median, blur -> unsharp, and NOTHING
+   *               when neither is detected. This mirrors the desktop port, which
+   *               assumes a neural restorer covers the remaining damage.
+   *   "classical" median + unsharp unconditionally — evaluate.py's arm_classical.
+   *   "none"      deskew only.
+   *
+   * WHY THE DEFAULT IS NOT ENOUGH WHEN THERE IS NO MODEL. A moderately blurred
+   * capture lands around lapVar 135, just over the "blurry" threshold of 100, so
+   * adaptive mode applies nothing at all and the raw blur goes straight into
+   * OCR. Measured on rendered samples that cost 3/3 field recoveries on
+   * handheld_light. With restorer.onnx absent, app.js selects "classical" so
+   * the fallback matches the Python baseline rather than a weaker imitation of
+   * it. See tools/e2e_ocr.js.
+   *
    * Returns { canvas, candidates, quality, warnings, skew, width, height, arms }
    * where `arms` names each candidate with the evaluate.py arm it mirrors.
    */
-  function preprocess(source, maxDim = DEFAULT_MAX_DIM) {
+  function preprocess(source, maxDim, opts) {
+    const restoreMode = (opts && opts.restoreMode) || "adaptive";
     const sw = source.videoWidth || source.naturalWidth || source.width;
     const sh = source.videoHeight || source.naturalHeight || source.height;
     if (!sw || !sh) throw new Error("No image dimensions — invalid input");
@@ -641,18 +658,22 @@ const SightLine = (() => {
     const angle = estimateSkew(gray);
     const deskewed = angle !== 0 ? rotate(gray, angle) : gray;
 
-    // Adaptive restore. Median kills salt-pepper but destroys blurred strokes;
-    // unsharp rescues blur. Apply both when both are present, in that order.
+    // Median kills salt-pepper but destroys blurred strokes; unsharp rescues
+    // blur. Applied in that order when both are present.
     let restored = deskewed;
-    if (q.noisy) restored = median3(restored);
-    if (q.blurry || q.noisy) restored = unsharp(restored, 1.8, 2);
+    if (restoreMode === "classical") {
+      restored = unsharp(median3(deskewed), 1.8, 2);
+    } else if (restoreMode === "adaptive") {
+      if (q.noisy) restored = median3(restored);
+      if (q.blurry || q.noisy) restored = unsharp(restored, 1.8, 2);
+    }
 
     const enhanced = clahe(restored);
     const binary = binarize(enhanced);
 
     const candidates = [enhanced, binary];
     const arms = [
-      q.noisy || q.blurry ? "restorer_clahe" : "restorer",
+      restoreMode === "classical" ? "classical" : "restorer_clahe",
       "restorer_clahe",
     ];
 
@@ -660,6 +681,7 @@ const SightLine = (() => {
       canvas: enhanced,
       candidates,
       arms,
+      restoreMode,
       quality: q.quality,
       blurry: q.blurry,
       dark: q.dark,

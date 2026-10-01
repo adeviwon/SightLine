@@ -1,0 +1,429 @@
+{
+  "per_profile": {
+    "studio_clean": {
+      "raw": {
+        "field": 1.0,
+        "word": 0.9892,
+        "dosage": 1.0,
+        "conf": 92.2283,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "classical": {
+        "field": 1.0,
+        "word": 0.9339,
+        "dosage": 1.0,
+        "conf": 88.2777,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 1.0,
+        "word": 0.9892,
+        "dosage": 1.0,
+        "conf": 92.2977,
+        "class_ok": 1.0,
+        "psnr": 46.8013
+      },
+      "restorer_clahe": {
+        "field": 1.0,
+        "word": 0.981,
+        "dosage": 1.0,
+        "conf": 92.561,
+        "class_ok": 1.0,
+        "psnr": 19.2787
+      }
+    },
+    "handheld_light": {
+      "raw": {
+        "field": 0.0,
+        "word": 0.2161,
+        "dosage": 0.6,
+        "conf": 32.5649,
+        "class_ok": 0.8,
+        "psnr": null
+      },
+      "classical": {
+        "field": 0.0,
+        "word": 0.2432,
+        "dosage": 0.6,
+        "conf": 37.9666,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 0.0,
+        "word": 0.105,
+        "dosage": 0.6,
+        "conf": 30.0008,
+        "class_ok": 0.2,
+        "psnr": 19.0236
+      },
+      "restorer_clahe": {
+        "field": 0.0,
+        "word": 0.1031,
+        "dosage": 0.6,
+        "conf": 30.5474,
+        "class_ok": 0.0,
+        "psnr": 15.5325
+      }
+    },
+    "handheld_heavy": {
+      "raw": {
+        "field": 0.0,
+        "word": 0.024,
+        "dosage": 0.6,
+        "conf": 26.4772,
+        "class_ok": 0.0,
+        "psnr": null
+      },
+      "classical": {
+        "field": 0.0,
+        "word": 0.0191,
+        "dosage": 0.6,
+        "conf": 27.6434,
+        "class_ok": 0.0,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 0.0,
+        "word": 0.0176,
+        "dosage": 0.6,
+        "conf": 29.3557,
+        "class_ok": 0.0,
+        "psnr": 17.6883
+      },
+      "restorer_clahe": {
+        "field": 0.0,
+        "word": 0.0153,
+        "dosage": 0.6,
+        "conf": 27.0834,
+        "class_ok": 0.0,
+        "psnr": 14.8136
+      }
+    },
+    "low_light": {
+      "raw": {
+        "field": 0.0,
+        "word": 0.0099,
+        "dosage": 0.6,
+        "conf": 17.3426,
+        "class_ok": 0.0,
+        "psnr": null
+      },
+      "classical": {
+        "field": 0.0,
+        "word": 0.0158,
+        "dosage": 0.6,
+        "conf": 18.2593,
+        "class_ok": 0.0,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 0.0,
+        "word": 0.0215,
+        "dosage": 0.6,
+        "conf": 24.3794,
+        "class_ok": 0.2,
+        "psnr": 17.826
+      },
+      "restorer_clahe": {
+        "field": 0.0,
+        "word": 0.0374,
+        "dosage": 0.6,
+        "conf": 24.8555,
+        "class_ok": 0.0,
+        "psnr": 14.1814
+      }
+    },
+    "hand_shadow": {
+      "raw": {
+        "field": 0.2,
+        "word": 0.3433,
+        "dosage": 0.8,
+        "conf": 81.2326,
+        "class_ok": 0.6,
+        "psnr": null
+      },
+      "classical": {
+        "field": 0.2,
+        "word": 0.4668,
+        "dosage": 0.8,
+        "conf": 82.4509,
+        "class_ok": 0.8,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 0.8,
+        "word": 0.9617,
+        "dosage": 1.0,
+        "conf": 87.9361,
+        "class_ok": 1.0,
+        "psnr": 24.9619
+      },
+      "restorer_clahe": {
+        "field": 0.6,
+        "word": 0.9388,
+        "dosage": 0.8,
+        "conf": 81.8048,
+        "class_ok": 1.0,
+        "psnr": 17.0482
+      }
+    },
+    "off_axis": {
+      "raw": {
+        "field": 1.0,
+        "word": 0.9945,
+        "dosage": 1.0,
+        "conf": 93.2207,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "classical": {
+        "field": 1.0,
+        "word": 0.9706,
+        "dosage": 1.0,
+        "conf": 89.7826,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 1.0,
+        "word": 1.0,
+        "dosage": 1.0,
+        "conf": 93.3245,
+        "class_ok": 1.0,
+        "psnr": 14.0019
+      },
+      "restorer_clahe": {
+        "field": 1.0,
+        "word": 0.966,
+        "dosage": 1.0,
+        "conf": 87.7802,
+        "class_ok": 1.0,
+        "psnr": 11.8831
+      }
+    },
+    "glossy_glare": {
+      "raw": {
+        "field": 1.0,
+        "word": 0.9865,
+        "dosage": 1.0,
+        "conf": 92.7862,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "classical": {
+        "field": 1.0,
+        "word": 0.9306,
+        "dosage": 1.0,
+        "conf": 88.8349,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 1.0,
+        "word": 0.9865,
+        "dosage": 1.0,
+        "conf": 92.2683,
+        "class_ok": 1.0,
+        "psnr": 32.9117
+      },
+      "restorer_clahe": {
+        "field": 1.0,
+        "word": 0.9625,
+        "dosage": 1.0,
+        "conf": 91.6483,
+        "class_ok": 1.0,
+        "psnr": 18.7015
+      }
+    },
+    "jpeg_social": {
+      "raw": {
+        "field": 1.0,
+        "word": 0.9838,
+        "dosage": 1.0,
+        "conf": 90.7762,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "classical": {
+        "field": 1.0,
+        "word": 0.9843,
+        "dosage": 1.0,
+        "conf": 90.7299,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 0.8,
+        "word": 0.9815,
+        "dosage": 1.0,
+        "conf": 88.8187,
+        "class_ok": 1.0,
+        "psnr": 24.3039
+      },
+      "restorer_clahe": {
+        "field": 1.0,
+        "word": 0.9334,
+        "dosage": 1.0,
+        "conf": 86.3396,
+        "class_ok": 1.0,
+        "psnr": 16.8306
+      }
+    },
+    "paper_texture": {
+      "raw": {
+        "field": 1.0,
+        "word": 0.9865,
+        "dosage": 1.0,
+        "conf": 92.5165,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "classical": {
+        "field": 1.0,
+        "word": 0.9437,
+        "dosage": 1.0,
+        "conf": 87.8637,
+        "class_ok": 1.0,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 1.0,
+        "word": 0.9865,
+        "dosage": 1.0,
+        "conf": 92.4487,
+        "class_ok": 1.0,
+        "psnr": 32.7765
+      },
+      "restorer_clahe": {
+        "field": 1.0,
+        "word": 0.981,
+        "dosage": 1.0,
+        "conf": 92.9711,
+        "class_ok": 1.0,
+        "psnr": 18.3177
+      }
+    },
+    "worst_case": {
+      "raw": {
+        "field": 0.0,
+        "word": 0.0138,
+        "dosage": 0.6,
+        "conf": 18.3429,
+        "class_ok": 0.0,
+        "psnr": null
+      },
+      "classical": {
+        "field": 0.0,
+        "word": 0.0104,
+        "dosage": 0.6,
+        "conf": 32.8037,
+        "class_ok": 0.0,
+        "psnr": null
+      },
+      "restorer": {
+        "field": 0.0,
+        "word": 0.0334,
+        "dosage": 0.6,
+        "conf": 19.954,
+        "class_ok": 0.0,
+        "psnr": 15.6355
+      },
+      "restorer_clahe": {
+        "field": 0.0,
+        "word": 0.0235,
+        "dosage": 0.6,
+        "conf": 22.2381,
+        "class_ok": 0.2,
+        "psnr": 8.71
+      }
+    }
+  },
+  "arms": [
+    "raw",
+    "classical",
+    "restorer",
+    "restorer_clahe"
+  ],
+  "n_per_profile": 5,
+  "seed": 123,
+  "sub_human_profiles": [
+    "worst_case"
+  ],
+  "headline": {
+    "raw": {
+      "field_accuracy": 0.5778,
+      "word_accuracy": 0.6149,
+      "exact_dosage_rate": 0.8444,
+      "mean_ocr_confidence": 68.79,
+      "profiles_included": [
+        "studio_clean",
+        "handheld_light",
+        "handheld_heavy",
+        "low_light",
+        "hand_shadow",
+        "off_axis",
+        "glossy_glare",
+        "jpeg_social",
+        "paper_texture"
+      ],
+      "n_docs": 45
+    },
+    "classical": {
+      "field_accuracy": 0.5778,
+      "word_accuracy": 0.612,
+      "exact_dosage_rate": 0.8444,
+      "mean_ocr_confidence": 67.98,
+      "profiles_included": [
+        "studio_clean",
+        "handheld_light",
+        "handheld_heavy",
+        "low_light",
+        "hand_shadow",
+        "off_axis",
+        "glossy_glare",
+        "jpeg_social",
+        "paper_texture"
+      ],
+      "n_docs": 45
+    },
+    "restorer": {
+      "field_accuracy": 0.6222,
+      "word_accuracy": 0.6722,
+      "exact_dosage_rate": 0.8667,
+      "mean_ocr_confidence": 70.09,
+      "profiles_included": [
+        "studio_clean",
+        "handheld_light",
+        "handheld_heavy",
+        "low_light",
+        "hand_shadow",
+        "off_axis",
+        "glossy_glare",
+        "jpeg_social",
+        "paper_texture"
+      ],
+      "n_docs": 45
+    },
+    "restorer_clahe": {
+      "field_accuracy": 0.6222,
+      "word_accuracy": 0.6576,
+      "exact_dosage_rate": 0.8444,
+      "mean_ocr_confidence": 68.4,
+      "profiles_included": [
+        "studio_clean",
+        "handheld_light",
+        "handheld_heavy",
+        "low_light",
+        "hand_shadow",
+        "off_axis",
+        "glossy_glare",
+        "jpeg_social",
+        "paper_texture"
+      ],
+      "n_docs": 45
+    }
+  }
+}

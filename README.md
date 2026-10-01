@@ -61,12 +61,42 @@ airplane mode mid-demo.
 
 | Model | Framework | Params | What it does | Where it runs |
 |---|---|---|---|---|
-| **SightLineNet** | PyTorch → ONNX | 126,097 | Restores blurry/noisy/shadowed photos before OCR | Phone CPU (WASM) |
+| **SightLineNet** | PyTorch → ONNX | 37,793 | Restores blurry/noisy/shadowed photos before OCR | Phone CPU (WASM) |
 | **MiniLM-L6-v2 + head** | sentence-transformers → ONNX | 22.7M frozen + 49,796 trained | Classifies the document (banking / medical / legal / general) | Phone CPU (WASM) |
 
 Both are trained from real code in this repository, exported to ONNX, and
 **numerically verified against their PyTorch originals** before shipping.
 See [`docs/03_RESULTS.md`](docs/03_RESULTS.md) for measured numbers.
+
+---
+
+## Accuracy: what we measured, honestly
+
+**Read [`docs/10_ACCURACY_GAP.md`](docs/10_ACCURACY_GAP.md) before quoting any
+number.**
+
+| Requirement | Status |
+|---|---|
+| Trained models, ONNX-exported with parity verification | ✅ done |
+| Runs offline on iOS and Android | ✅ verified in headless Chromium |
+| Zero network calls after install | ✅ verified by static audit + source |
+| Document classification ≥ 95% | ✅ **95.0% mean** across 5 seeds (min 91.7%, CI 86.7–100%); 100% on 20-fold CV |
+| **End-to-end text accuracy on blurry images ≥ 95%** | ❌ **measured 42%** |
+
+The end-to-end number is the real one: on a clean scan the app recovers every
+field, and on a realistic handheld capture it recovers most but not all. A
+typical failure is one wrong digit — `2024-CV-00456` read as `2024-CV-00458` —
+which is why the app **omits a field it cannot read** rather than speaking a
+wrong one.
+
+Three things are known, measured, and fixable:
+
+1. `onnxruntime-web` is now vendored but the trained restorer was not yet
+   loaded on device during that measurement.
+2. The restorer is selected on **PSNR**, when it should be selected on **field
+   accuracy** — pixel metrics and OCR accuracy are weakly coupled.
+3. `off_axis` and `jpeg_social` failures are geometric (skew, layout), not
+   restoration problems, and no amount of denoising fixes them.
 
 ---
 

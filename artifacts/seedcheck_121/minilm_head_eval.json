@@ -1,0 +1,81 @@
+{
+  "accuracy": 0.9583,
+  "accuracy_ci95_bootstrap": [
+    0.875,
+    1.0
+  ],
+  "macro_f1": 0.958,
+  "per_category_accuracy": {
+    "banking": 1.0,
+    "medical": 1.0,
+    "legal": 1.0,
+    "general": 0.8333
+  },
+  "n": 24,
+  "n_per_category": {
+    "banking": 6,
+    "medical": 7,
+    "legal": 5,
+    "general": 6
+  },
+  "confusion_matrix": {
+    "labels": [
+      "banking",
+      "medical",
+      "legal",
+      "general"
+    ],
+    "rows_true_cols_pred": [
+      [
+        6,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        7,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        5,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        5
+      ]
+    ]
+  },
+  "classification_report": "              precision    recall  f1-score   support\n\n     banking       0.86      1.00      0.92         6\n     medical       1.00      1.00      1.00         7\n       legal       1.00      1.00      1.00         5\n     general       1.00      0.83      0.91         6\n\n    accuracy                           0.96        24\n   macro avg       0.96      0.96      0.96        24\nweighted avg       0.96      0.96      0.96        24\n",
+  "encoder": "sentence-transformers/all-MiniLM-L6-v2 (frozen)",
+  "head_params": 49796,
+  "encoder_params": 22713216,
+  "epochs": 60,
+  "lr": 0.002,
+  "seed": 121,
+  "best_epoch": 1,
+  "val_accuracy": 1.0,
+  "test_accuracy": 0.9583,
+  "corpus": {
+    "unique_templates": {
+      "banking": 45,
+      "medical": 50,
+      "legal": 38,
+      "general": 41
+    },
+    "total_unique": 174
+  },
+  "split_sizes": {
+    "train_raw": 126,
+    "train_augmented": 378,
+    "val": 24,
+    "test": 24
+  },
+  "seconds": 141.6
+}

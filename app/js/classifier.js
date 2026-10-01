@@ -34,12 +34,10 @@ const SightLineClassifier = (() => {
   const TOKENIZER_PATH = "models/tokenizer.json";
   const MAX_TOKENS = 256;   // matches embed_corpus(max_length=256)
 
-  const ORT_CANDIDATES = [
-    "vendor/ort/ort.webgpu.bundle.min.mjs",
-    "vendor/ort/ort.wasm.bundle.min.mjs",
-    "vendor/ort/ort.webgpu.min.mjs",
-    "vendor/ort/ort.wasm.min.mjs",
-  ];
+  // Only the WASM module is vendored (see prune_ort.sh — the webgpu, webgl,
+  // jsep and bundle variants are ~77 MB of dead weight for a CPU-only PWA).
+  const ORT_MODULE = "vendor/ort/ort.min.mjs";
+  const ORT_PATH = "vendor/ort/";
 
   let _ort = null;
   let _enc = null;
@@ -98,20 +96,16 @@ const SightLineClassifier = (() => {
     const m = await loadManifest();
     if (!m.ort) throw new Error("onnxruntime-web not vendored (models/ort.json absent or ort:false)");
     const b = base();
-    let lastErr = null;
-    for (const rel of ORT_CANDIDATES) {
-      try {
-        const mod = await import(/* webpackIgnore: true */ b + rel);
-        _ort = mod;
-        if (_ort.env && _ort.env.wasm) {
-          _ort.env.wasm.wasmPaths = b + "vendor/ort/";
-          _ort.env.wasm.numThreads = 1;
-          _ort.env.logLevel = "error";
-        }
-        return _ort;
-      } catch (e) { lastErr = e; }
+    const mod = await import(/* webpackIgnore: true */ b + ORT_MODULE);
+    _ort = mod;
+    if (_ort.env && _ort.env.wasm) {
+      // The .wasm binary sits beside the JS loader; without this, ORT looks
+      // for it at a CDN path and the offline guarantee silently breaks.
+      _ort.env.wasm.wasmPaths = b + ORT_PATH;
+      _ort.env.wasm.numThreads = 1;
+      _ort.env.logLevel = "error";
     }
-    throw new Error("onnxruntime-web not vendored: " + (lastErr && lastErr.message));
+    return _ort;
   }
 
   async function fetchJSON(url) {

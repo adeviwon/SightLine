@@ -20,11 +20,11 @@ Everything here uses 2 documents per profile over a small profile subset so
 the suite stays fast.
 """
 
-import numpy as np
-import pytest
-
 import sys
 from pathlib import Path
+
+import numpy as np
+import pytest
 
 # Project modules live in ml/src as plain modules (not an installed package).
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -35,8 +35,9 @@ from model import SightLineNet  # noqa: E402
 from train_classifier import kfold_indices  # noqa: E402
 from train_restorer import build_pairs, split_by_seed  # noqa: E402
 
-# A small, fast profile subset that still covers light, heavy and the
-# combined worst case.
+# A small, fast profile subset. It spans the identity control, two blur/ISO
+# regimes, and a low-light case — enough for a real leakage test without
+# generating the full ten-profile capture set on every run.
 FAST_PROFILES = ["studio_clean", "handheld_light", "handheld_heavy", "low_light"]
 N_DOCS = 2
 SEED = 123

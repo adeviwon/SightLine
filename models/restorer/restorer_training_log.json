@@ -35,9 +35,213 @@
       "train_loss": 0.110535,
       "val_psnr_db": 10.436,
       "seconds": 363.9
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.112649,
+      "val_psnr_db": 12.602,
+      "seconds": 434.1
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.10556,
+      "val_psnr_db": 11.913,
+      "seconds": 504.1
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.10767,
+      "val_psnr_db": 12.246,
+      "seconds": 595.3
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.104198,
+      "val_psnr_db": 12.364,
+      "seconds": 685.0
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.110364,
+      "val_psnr_db": 12.387,
+      "seconds": 775.2
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.099892,
+      "val_psnr_db": 12.039,
+      "seconds": 869.6
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.104547,
+      "val_psnr_db": 12.679,
+      "seconds": 967.0
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.096472,
+      "val_psnr_db": 12.437,
+      "seconds": 1064.0
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.099943,
+      "val_psnr_db": 11.154,
+      "seconds": 1181.9
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.097064,
+      "val_psnr_db": 12.589,
+      "seconds": 1289.3
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.089525,
+      "val_psnr_db": 12.589,
+      "seconds": 1388.4
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.087969,
+      "val_psnr_db": 12.776,
+      "seconds": 1471.6
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.087056,
+      "val_psnr_db": 12.555,
+      "seconds": 1551.9
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.085536,
+      "val_psnr_db": 12.466,
+      "seconds": 1614.6
+    },
+    {
+      "epoch": 21,
+      "train_loss": 0.086063,
+      "val_psnr_db": 12.807,
+      "seconds": 1678.0
+    },
+    {
+      "epoch": 22,
+      "train_loss": 0.088919,
+      "val_psnr_db": 12.551,
+      "seconds": 1754.4
+    },
+    {
+      "epoch": 23,
+      "train_loss": 0.084819,
+      "val_psnr_db": 12.893,
+      "seconds": 1846.8
+    },
+    {
+      "epoch": 24,
+      "train_loss": 0.084135,
+      "val_psnr_db": 12.862,
+      "seconds": 1921.0
+    },
+    {
+      "epoch": 25,
+      "train_loss": 0.085696,
+      "val_psnr_db": 12.691,
+      "seconds": 1985.2
+    },
+    {
+      "epoch": 26,
+      "train_loss": 0.08466,
+      "val_psnr_db": 12.785,
+      "seconds": 2024.2
+    },
+    {
+      "epoch": 27,
+      "train_loss": 0.085242,
+      "val_psnr_db": 12.81,
+      "seconds": 2057.8
+    },
+    {
+      "epoch": 28,
+      "train_loss": 0.079282,
+      "val_psnr_db": 12.879,
+      "seconds": 2091.8
+    },
+    {
+      "epoch": 29,
+      "train_loss": 0.081368,
+      "val_psnr_db": 12.686,
+      "seconds": 2126.5
+    },
+    {
+      "epoch": 30,
+      "train_loss": 0.080949,
+      "val_psnr_db": 12.743,
+      "seconds": 2160.7
+    },
+    {
+      "epoch": 31,
+      "train_loss": 0.081378,
+      "val_psnr_db": 12.801,
+      "seconds": 2194.4
+    },
+    {
+      "epoch": 32,
+      "train_loss": 0.080572,
+      "val_psnr_db": 12.833,
+      "seconds": 2228.0
+    },
+    {
+      "epoch": 33,
+      "train_loss": 0.078863,
+      "val_psnr_db": 12.887,
+      "seconds": 2262.1
+    },
+    {
+      "epoch": 34,
+      "train_loss": 0.077324,
+      "val_psnr_db": 12.885,
+      "seconds": 2295.4
+    },
+    {
+      "epoch": 35,
+      "train_loss": 0.078097,
+      "val_psnr_db": 12.858,
+      "seconds": 2329.8
+    },
+    {
+      "epoch": 36,
+      "train_loss": 0.07788,
+      "val_psnr_db": 12.913,
+      "seconds": 2362.7
+    },
+    {
+      "epoch": 37,
+      "train_loss": 0.077428,
+      "val_psnr_db": 12.878,
+      "seconds": 2400.1
+    },
+    {
+      "epoch": 38,
+      "train_loss": 0.077287,
+      "val_psnr_db": 12.878,
+      "seconds": 2436.4
+    },
+    {
+      "epoch": 39,
+      "train_loss": 0.07851,
+      "val_psnr_db": 12.869,
+      "seconds": 2475.3
+    },
+    {
+      "epoch": 40,
+      "train_loss": 0.077859,
+      "val_psnr_db": 12.88,
+      "seconds": 2511.9
     }
   ],
-  "best_val_psnr_db": 12.539,
+  "best_val_psnr_db": 12.913,
   "n_train_patches": 336,
   "n_val_patches": 84,
   "docs_per_profile": 14,

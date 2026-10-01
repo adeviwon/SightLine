@@ -35,9 +35,16 @@ in the first fifteen seconds or you have lost them.
 **The three numbers to say out loud** (from `docs/03_RESULTS.md`, re-run to
 confirm before you present):
 
-1. End-to-end field accuracy on the restoration model vs. the classical baseline
-2. Classifier held-out test accuracy + cross-validation mean ± std
-3. Model payload size (KB) — the "it fits on a phone" proof
+1. **Cross-validation accuracy** for the classifier — the mean over 20
+   disjoint folds. Stable, and the number that belongs on a slide.
+2. **End-to-end field accuracy** per capture profile, showing where it works
+   and where it honestly fails.
+3. **Model payload size** — the "it fits on a phone" proof.
+
+**Do not quote a single held-out test score without its context.** The test
+split is ~24 documents, so a single number swings by 8 points depending on the
+seed. See [`09_INTERPRETING_THE_NUMBERS.md`](09_INTERPRETING_THE_NUMBERS.md) —
+knowing this before a judge asks is worth more than a rounder headline.
 
 ---
 

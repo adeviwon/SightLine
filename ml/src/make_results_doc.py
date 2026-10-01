@@ -118,6 +118,22 @@ def main():
             for lab, r in zip(labs, rows):
                 A(f"| **{lab}** | " + " | ".join(str(v) for v in r) + " |")
             A("")
+        # seed robustness
+        sc = Path("artifacts/seed_summary.json")
+        if sc.exists():
+            s = json.load(open(sc))
+            A("**Seed robustness.** A single split proves little — the split "
+              "itself changes with the seed, so a different seed tests "
+              "different documents. Re-running across seeds:\n")
+            A("| seeds | test accuracy | macro F1 |")
+            A("|---|---|---|")
+            A(f"| {s.get('n_seeds')} | mean **{pct(s.get('mean_accuracy'))}**, "
+              f"min {pct(s.get('min_accuracy'))}, max {pct(s.get('max_accuracy'))}"
+              f" (σ {pct(s.get('std_accuracy'))}) | "
+              f"{num(s.get('mean_macro_f1'), 3)} |")
+            A("")
+            A("> **Quote the minimum, not the mean.** The worst split is the "
+              "honest floor for an unseen document.\n")
     else:
         A("> **Missing:** `models/classifier/minilm_head_eval.json`.")
         A("> Run `bash run.sh train-clf 60`.\n")

@@ -21,6 +21,8 @@ case "$cmd" in
   corpus)      exec $PYRUN ml/src/corpus.py "$@" ;;
   bench)       exec $PYRUN ml/src/bench.py "$@" ;;
   diagnose)    exec $PYRUN ml/src/diagnose.py "$@" ;;
+  gating)      exec $PYRUN ml/src/gating.py "$@" ;;
+  privacy)     exec $PYRUN ml/src/privacy_audit.py "$@" ;;
   results)     exec $PYRUN ml/src/make_results_doc.py "$@" ;;
   errors)      exec $PYRUN ml/src/error_analysis.py "$@" ;;
   train-clf)   ep="${1:-60}"; shift 2>/dev/null || true

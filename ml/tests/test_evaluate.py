@@ -17,11 +17,12 @@ OCR itself is NOT exercised here: it needs the tesseract binary and is slow.
 The metric functions are pure and are tested directly.
 """
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import pytest
 
-import sys
-from pathlib import Path
 
 # Project modules live in ml/src as plain modules (not an installed package).
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))

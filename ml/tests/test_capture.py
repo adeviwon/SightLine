@@ -13,11 +13,12 @@ pipeline actually suffers from:
      degradation must provably change the pixels.
 """
 
+import sys
+from pathlib import Path
+
 import numpy as np
 import pytest
 
-import sys
-from pathlib import Path
 
 # Project modules live in ml/src as plain modules (not an installed package).
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))

@@ -13,11 +13,11 @@ tests make that class of bug impossible to reintroduce silently:
 """
 
 import random
+import sys
+from pathlib import Path
 
 import pytest
 
-import sys
-from pathlib import Path
 
 # Project modules live in ml/src as plain modules (not an installed package).
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))

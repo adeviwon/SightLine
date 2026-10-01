@@ -31,6 +31,9 @@ questions judges ask, and what to cut if you fall behind.
 | 06 | [Retraining](06_RETRAINING.md) | How do I retrain, tune, debug, or extend the models? |
 | 07 | [Evaluation methodology](07_EVALUATION_METHODOLOGY.md) | How do I verify your accuracy claims? Why should I believe them? |
 | 08 | [Troubleshooting](08_TROUBLESHOOTING.md) | Something is broken. What? |
+| 09 | [Interpreting the numbers](09_INTERPRETING_THE_NUMBERS.md) | Why is the accuracy 92–100% and not just "100%"? |
+| 10 | [The accuracy gap](10_ACCURACY_GAP.md) | **What we did not achieve, measured honestly, and how to close it** |
+| — | [Privacy](PRIVACY.md) | How is the offline guarantee enforced, and how do I verify it? |
 
 ---
 

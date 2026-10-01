@@ -20,7 +20,6 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 import capture  # noqa: E402
-import corpus  # noqa: E402,F401
 
 
 @pytest.fixture(scope="session")
