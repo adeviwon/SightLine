@@ -1,0 +1,24 @@
+# OffScan — Docker Compose configuration
+# Runs the full offline scanning pipeline in an isolated container.
+# No volumes with network mounts; all data stays local.
+
+services:
+  offscan:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: offscan:latest
+    container_name: offscan
+    init: true
+    # Offline mode: no network access required at runtime
+    network_mode: "none"
+    # Mount a local directory for input images and output text
+    volumes:
+      - ./data/input:/data/input:ro
+      - ./data/output:/data/output
+    environment:
+      - ONSXRUNTIME_DISABLE_CPU_PROVIDER_FALLBACK=0
+      - TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
+    # Process a single image and write OCR text + audio to /data/output
+    command: ["scan", "/data/input/page.png", "--output-dir", "/data/output", "--speak"]
+    restart: "no"

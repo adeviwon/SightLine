@@ -1,0 +1,94 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "offscan"
+version = "0.1.0"
+description = "OffScan — fully offline document scanning, OCR, and text-to-speech pipeline"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "mrsmallflame-ai", email = "contact@mrsmallflame.ai" }
+]
+keywords = ["ocr", "document-scanning", "offline", "tesseract", "opencv", "text-to-speech", "accessibility"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics :: Capture :: Scanners",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+]
+dependencies = [
+    "opencv-python>=4.8.0",
+    "pytesseract>=0.3.10",
+    "pyttsx3>=2.90",
+    "onnxruntime>=1.16.0",
+    "scikit-learn>=1.3.0",
+    "numpy>=1.24.0",
+    "Pillow>=10.0.0",
+    "click>=8.1.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "pytest-xdist>=3.3",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    "types-Pillow",
+]
+docs = [
+    "mkdocs>=1.5",
+    "mkdocs-material>=9.2",
+    "mkdocstrings[python]>=0.22",
+]
+
+[project.scripts]
+offscan = "offscan.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/mrsmallflame-ai/OffScan"
+Repository = "https://github.com/mrsmallflame-ai/OffScan"
+Issues = "https://github.com/mrsmallflame-ai/OffScan/issues"
+Documentation = "https://github.com/mrsmallflame-ai/OffScan#readme"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["offscan"]
+
+[tool.pytest.ini_options]
+minversion = "7.4"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --cov=offscan --cov-report=term-missing"
+filterwarnings = ["error"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+files = ["src/offscan"]
