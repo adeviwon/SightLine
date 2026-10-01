@@ -18,7 +18,7 @@ Built for the **Imperial College London Hackathon (Hong Kong & Macau)**.
 | Understand how it works | [`docs/01_ARCHITECTURE.md`](docs/01_ARCHITECTURE.md) |
 | Understand the ML | [`docs/02_ML_PIPELINE.md`](docs/02_ML_PIPELINE.md) |
 | See measured results | [`docs/03_RESULTS.md`](docs/03_RESULTS.md) |
-| Run it on a phone | [`docs/04_RUNNING_ON_IOS_ANDROID.md`](docs/04_RUNNING_ON_IOS_AND_ANDROID.md) |
+| Run it on a phone | [`docs/04_RUNNING_ON_IOS_AND_ANDROID.md`](docs/04_RUNNING_ON_IOS_AND_ANDROID.md) |
 | Run the demo for judges | [`docs/05_DEMO_RUNBOOK.md`](docs/05_DEMO_RUNBOOK.md) |
 | Retrain the models | [`docs/06_RETRAINING.md`](docs/06_RETRAINING.md) |
 | Check our claims | [`docs/07_EVALUATION_METHODOLOGY.md`](docs/07_EVALUATION_METHODOLOGY.md) |
@@ -77,26 +77,40 @@ number.**
 
 | Requirement | Status |
 |---|---|
-| Trained models, ONNX-exported with parity verification | ✅ done |
-| Runs offline on iOS and Android | ✅ verified in headless Chromium |
+| Trained models, ONNX-exported, int8, parity + inference verified | ✅ done — `bash run.sh bundle-check` |
+| Runs offline on iOS and Android | ✅ verified in headless Chromium ⚠️ *not on real iOS/Android hardware* |
 | Zero network calls after install | ✅ verified by static audit + source |
-| Document classification ≥ 95% | ✅ **95.0% mean** across 5 seeds (min 91.7%, CI 86.7–100%); 100% on 20-fold CV |
-| **End-to-end text accuracy on blurry images ≥ 95%** | ❌ **measured 42%** |
+| Reproducible evaluation | ✅ fixed — `bash run.sh repro-check` |
+| Document classification ≥ 95% | ✅ **95.0% mean** across 5 seeds (min 91.7%, CI 86.7–100%), macro F1 0.947 |
+| **End-to-end text accuracy on blurry images ≥ 95%** | ❌ **~62% best arm** (pre-fix corpus; being re-measured) |
 
-The end-to-end number is the real one: on a clean scan the app recovers every
-field, and on a realistic handheld capture it recovers most but not all. A
-typical failure is one wrong digit — `2024-CV-00456` read as `2024-CV-00458` —
-which is why the app **omits a field it cannot read** rather than speaking a
-wrong one.
+The end-to-end number is the real one, and it is not close to 95%. On a clean
+scan the app recovers every field. On a realistic handheld capture it usually
+does not: `handheld_light`, `handheld_heavy` and `low_light` score **0% on
+every preprocessing arm**. A typical failure is one wrong digit —
+`2024-CV-00456` read as `2024-CV-00458` — which is why the app **omits a field
+it cannot read** rather than speaking a wrong one.
 
-Three things are known, measured, and fixable:
+Where the restorer genuinely helps, measured per profile:
 
-1. `onnxruntime-web` is now vendored but the trained restorer was not yet
-   loaded on device during that measurement.
+| Profile | raw | restorer | |
+|---|---|---|---|
+| hand_shadow | 20% | **80%** | the model rescues shadowed captures |
+| jpeg_social | 100% | 80% | restoration *hurts* compressed-but-legible text |
+| everything else | — | — | tie |
+
+That is a +4.4 point headline built from one profile. Three things are known
+and fixable:
+
+1. **Restore on optical blur only, not high-frequency loss generally.** The
+   current gate treats JPEG compression like blur (both collapse
+   variance-of-Laplacian) and over-restores text that OCR reads fine
+   un-restored. This is why `jpeg_social` regresses.
 2. The restorer is selected on **PSNR**, when it should be selected on **field
-   accuracy** — pixel metrics and OCR accuracy are weakly coupled.
-3. `off_axis` and `jpeg_social` failures are geometric (skew, layout), not
-   restoration problems, and no amount of denoising fixes them.
+   accuracy** — it scores −48.21 dB on undamaged input and +5.31 dB on badly
+   damaged input, and PSNR averages those into a number describing neither.
+3. `off_axis` and `jpeg_social` failures are partly geometric (skew, layout),
+   and no amount of denoising fixes those.
 
 ---
 

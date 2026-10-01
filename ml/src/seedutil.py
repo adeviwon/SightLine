@@ -33,7 +33,13 @@ unnoticed.
 
 import zlib
 
-__all__ = ["profile_seed", "name_hash"]
+__all__ = ["profile_seed", "name_hash", "SEEDER_ID"]
+
+# Written into every generated artifact. Two corpora are only comparable if
+# this string matches: the same seed under two different seeders selects
+# different documents entirely, so "seed 123" alone does not identify a corpus.
+# Bump it whenever corpus-generation semantics change.
+SEEDER_ID = "zlib.crc32/seedutil-v1"
 
 
 def name_hash(name: str) -> int:

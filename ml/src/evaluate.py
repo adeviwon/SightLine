@@ -205,7 +205,12 @@ def run(n_per_profile=6, seed=123, arms=None, out_path="artifacts/eval_results.j
               flush=True)
 
     results = {"per_profile": {}, "arms": arms, "n_per_profile": n_per_profile,
-               "seed": seed, "sub_human_profiles": sorted(SUB_HUMAN)}
+               "seed": seed, "sub_human_profiles": sorted(SUB_HUMAN),
+               # Provenance stamp. The seed alone does NOT identify a corpus:
+               # the same seed under two different seeders selects different
+               # documents, so make_results_doc.py refuses to call these
+               # numbers current unless this matches the current tree.
+               "seeder": seedutil.SEEDER_ID}
 
     for pname in capture.CAPTURE_PROFILES:
         rows = {a: {"field": [], "word": [], "dosage": [], "conf": [],
