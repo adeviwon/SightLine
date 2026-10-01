@@ -7,24 +7,10 @@
 Machine-readable versions live in `artifacts/eval_results.json` and
 `models/classifier/minilm_head_eval.json`.
 
-> ## ⚠ PROVENANCE — read before quoting
-
-> These corpus figures were produced **before the corpus-seeding fix** and cannot be re-derived by anyone. The generators seeded from `abs(hash(profile_name))`, which Python salts per process, so a re-run built a different corpus every time. Fixed in `ml/src/seedutil.py`; `bash run.sh repro-check` now gates it.
-
-> | Section | Trust it? |
-> |---|---|
-> | 1. Restorer training (PSNR) | **No** — pre-fix corpus |
-> | 2. Document classifier | **Yes** — `train_classifier.py` never used the salted hash; 5-seed re-run was bit-identical |
-> | 3. End-to-end accuracy | **No** — pre-fix corpus |
-> | 4. On-device payload | **Yes** — file sizes are not corpus-dependent |
->
-> The seeder is now fixed, but **fixing it does not retroactively make these artifacts reproducible** — the documents they were built from were chosen by the old salted hash. Re-run to clear this banner:
+> **Provenance: current.** The corpus generator uses `seedutil.name_hash` (zlib.crc32), `bash run.sh repro-check` passes, and these artifacts carry the matching seeder stamp. These numbers can be re-derived exactly:
 
 > ```bash
-> rm -f artifacts/restorer_data.npz
-> bash run.sh train-dncnn 40 --docs-per-profile 14
-> bash run.sh eval --n 5
-> bash run.sh results
+> bash run.sh eval && bash run.sh export && bash run.sh results
 > ```
 
 **Section 2 reports the default split, which scored 100%.** Across 5 seeds the honest figure is **95.0% mean, macro F1 0.947, min 91.7%, CI [86.7%, 100%]** on a 24-document test set where one document is worth 4.17 points. Quote the 5-seed number.
@@ -38,15 +24,25 @@ SightLineNet — **37,793 parameters**, Charbonnier loss, AdamW, cosine schedule
 - Training patches: **336**  
 - Validation patches: **84**  
 - Split by **document seed** (no document contributes patches to both sides)  
-- Best validation PSNR: **13.569 dB**
+- Best validation PSNR: **14.131 dB**
 
 | epoch | train loss | val PSNR (dB) |
 |---|---|---|
 | 1 | 0.15615 | 12.48 |
-| 2 | 0.13240 | 12.87 |
-| 3 | 0.13245 | 13.36 |
 | 4 | 0.12755 | 13.57 |
-| **4** | **0.12755** | **13.57** |
+| 7 | 0.12826 | 13.28 |
+| 10 | 0.12338 | 12.85 |
+| 13 | 0.10850 | 12.99 |
+| 16 | 0.10489 | 13.56 |
+| 19 | 0.10220 | 13.58 |
+| 22 | 0.09449 | 13.50 |
+| 25 | 0.08992 | 14.08 |
+| 28 | 0.09167 | 13.87 |
+| 31 | 0.08606 | 14.13 |
+| 34 | 0.08516 | 14.07 |
+| 37 | 0.08430 | 13.98 |
+| 40 | 0.08376 | 13.98 |
+| **40** | **0.08376** | **13.98** |
 
 ## 2. Document classifier
 
@@ -88,18 +84,18 @@ The metric that matters: **field accuracy** — the fraction of documents where 
 
 5 documents per capture profile, seed 123. **Sub-human profiles excluded from the headline** and reported separately below.
 
-Corpus seeder: `(none — predates the seeder provenance stamp)`
+Corpus seeder: `zlib.crc32/seedutil-v1`
 
 ### Headline
 
 | preprocessing arm | field accuracy | word accuracy | exact dosage | OCR conf |
 |---|---|---|---|---|
-| raw (OCR the degraded image) | **58%** | 61% | 84% | 68.8 |
-| classical (median + unsharp) | **58%** | 61% | 84% | 68.0 |
-| restorer (our model) | **62%** | 67% | 87% | 70.1 |
-| restorer + CLAHE (production) ⭐ | **62%** | 66% | 84% | 68.4 |
+| raw (OCR the degraded image) | **58%** | 60% | 82% | 68.0 |
+| classical (median + unsharp) | **56%** | 59% | 80% | 66.8 |
+| restorer (our model) | **62%** | 65% | 84% | 69.7 |
+| restorer + CLAHE (production) ⭐ | **62%** | 64% | 84% | 66.0 |
 
-**Restorer + CLAHE vs. the classical baseline: ▲ 4.4% field accuracy** (58% → 62%).
+**Restorer + CLAHE vs. the classical baseline: ▲ 6.7% field accuracy** (56% → 62%).
 
 ### Per capture profile (field accuracy)
 
@@ -110,7 +106,7 @@ Corpus seeder: `(none — predates the seeder provenance stamp)`
 | handheld_heavy | 0% | 0% | 0% | 0% |
 | low_light | 0% | 0% | 0% | 0% |
 | hand_shadow | 20% | 20% | 80% | 60% |
-| off_axis | 100% | 100% | 100% | 100% |
+| off_axis | 100% | 80% | 100% | 100% |
 | glossy_glare | 100% | 100% | 100% | 100% |
 | jpeg_social | 100% | 100% | 80% | 100% |
 | paper_texture | 100% | 100% | 100% | 100% |

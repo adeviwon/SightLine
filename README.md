@@ -82,7 +82,7 @@ number.**
 | Zero network calls after install | ✅ verified by static audit + source |
 | Reproducible evaluation | ✅ fixed — `bash run.sh repro-check` |
 | Document classification ≥ 95% | ✅ **95.0% mean** across 5 seeds (min 91.7%, CI 86.7–100%), macro F1 0.947 |
-| **End-to-end text accuracy on blurry images ≥ 95%** | ❌ **~62% best arm** (pre-fix corpus; being re-measured) |
+| **End-to-end text accuracy on blurry images ≥ 95%** | ❌ **62.2% best arm** — reproducible, and short of target |
 
 The end-to-end number is the real one, and it is not close to 95%. On a clean
 scan the app recovers every field. On a realistic handheld capture it usually
@@ -95,7 +95,7 @@ Where the restorer genuinely helps, measured per profile:
 
 | Profile | raw | restorer | |
 |---|---|---|---|
-| hand_shadow | 20% | **80%** | the model rescues shadowed captures |
+| hand_shadow | 20% | **80%** | the model rescues shadowed captures (this IS the +4.4) |
 | jpeg_social | 100% | 80% | restoration *hurts* compressed-but-legible text |
 | everything else | — | — | tie |
 
@@ -107,7 +107,7 @@ and fixable:
    variance-of-Laplacian) and over-restores text that OCR reads fine
    un-restored. This is why `jpeg_social` regresses.
 2. The restorer is selected on **PSNR**, when it should be selected on **field
-   accuracy** — it scores −48.21 dB on undamaged input and +5.31 dB on badly
+   accuracy** — it scores −55.76 dB on undamaged input and +5.81 dB on badly
    damaged input, and PSNR averages those into a number describing neither.
 3. `off_axis` and `jpeg_social` failures are partly geometric (skew, layout),
    and no amount of denoising fixes those.

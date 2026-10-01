@@ -13,161 +13,161 @@
         "field": 1.0,
         "word": 0.9339,
         "dosage": 1.0,
-        "conf": 88.2777,
+        "conf": 88.2147,
         "class_ok": 1.0,
         "psnr": null
       },
       "restorer": {
         "field": 1.0,
-        "word": 0.9892,
+        "word": 0.9919,
         "dosage": 1.0,
-        "conf": 92.2977,
+        "conf": 92.0401,
         "class_ok": 1.0,
-        "psnr": 46.8013
+        "psnr": 47.4898
       },
       "restorer_clahe": {
         "field": 1.0,
-        "word": 0.981,
+        "word": 0.9837,
         "dosage": 1.0,
-        "conf": 92.561,
+        "conf": 91.723,
         "class_ok": 1.0,
-        "psnr": 19.2787
+        "psnr": 19.1188
       }
     },
     "handheld_light": {
       "raw": {
         "field": 0.0,
-        "word": 0.2161,
+        "word": 0.2122,
         "dosage": 0.6,
-        "conf": 32.5649,
-        "class_ok": 0.8,
+        "conf": 32.5404,
+        "class_ok": 1.0,
         "psnr": null
       },
       "classical": {
         "field": 0.0,
-        "word": 0.2432,
+        "word": 0.2176,
         "dosage": 0.6,
-        "conf": 37.9666,
-        "class_ok": 1.0,
+        "conf": 38.6653,
+        "class_ok": 0.6,
         "psnr": null
       },
       "restorer": {
         "field": 0.0,
-        "word": 0.105,
+        "word": 0.0889,
         "dosage": 0.6,
-        "conf": 30.0008,
-        "class_ok": 0.2,
-        "psnr": 19.0236
+        "conf": 32.5175,
+        "class_ok": 0.0,
+        "psnr": 19.0728
       },
       "restorer_clahe": {
         "field": 0.0,
-        "word": 0.1031,
+        "word": 0.1089,
         "dosage": 0.6,
-        "conf": 30.5474,
-        "class_ok": 0.0,
-        "psnr": 15.5325
+        "conf": 29.6713,
+        "class_ok": 0.2,
+        "psnr": 15.1558
       }
     },
     "handheld_heavy": {
       "raw": {
         "field": 0.0,
-        "word": 0.024,
+        "word": 0.0274,
         "dosage": 0.6,
-        "conf": 26.4772,
+        "conf": 25.3733,
         "class_ok": 0.0,
         "psnr": null
       },
       "classical": {
         "field": 0.0,
-        "word": 0.0191,
+        "word": 0.0324,
         "dosage": 0.6,
-        "conf": 27.6434,
+        "conf": 26.3219,
         "class_ok": 0.0,
         "psnr": null
       },
       "restorer": {
         "field": 0.0,
-        "word": 0.0176,
+        "word": 0.0302,
         "dosage": 0.6,
-        "conf": 29.3557,
-        "class_ok": 0.0,
-        "psnr": 17.6883
+        "conf": 28.5683,
+        "class_ok": 0.2,
+        "psnr": 17.766
       },
       "restorer_clahe": {
         "field": 0.0,
-        "word": 0.0153,
+        "word": 0.0263,
         "dosage": 0.6,
-        "conf": 27.0834,
+        "conf": 28.0011,
         "class_ok": 0.0,
-        "psnr": 14.8136
+        "psnr": 14.6856
       }
     },
     "low_light": {
       "raw": {
         "field": 0.0,
-        "word": 0.0099,
+        "word": 0.0131,
         "dosage": 0.6,
-        "conf": 17.3426,
+        "conf": 22.3257,
         "class_ok": 0.0,
         "psnr": null
       },
       "classical": {
         "field": 0.0,
-        "word": 0.0158,
+        "word": 0.029,
         "dosage": 0.6,
-        "conf": 18.2593,
+        "conf": 19.6925,
         "class_ok": 0.0,
         "psnr": null
       },
       "restorer": {
         "field": 0.0,
-        "word": 0.0215,
+        "word": 0.0401,
         "dosage": 0.6,
-        "conf": 24.3794,
+        "conf": 22.549,
         "class_ok": 0.2,
-        "psnr": 17.826
+        "psnr": 17.912
       },
       "restorer_clahe": {
         "field": 0.0,
-        "word": 0.0374,
+        "word": 0.0377,
         "dosage": 0.6,
-        "conf": 24.8555,
+        "conf": 19.7258,
         "class_ok": 0.0,
-        "psnr": 14.1814
+        "psnr": 10.621
       }
     },
     "hand_shadow": {
       "raw": {
         "field": 0.2,
-        "word": 0.3433,
-        "dosage": 0.8,
-        "conf": 81.2326,
-        "class_ok": 0.6,
+        "word": 0.2413,
+        "dosage": 0.6,
+        "conf": 70.8669,
+        "class_ok": 0.8,
         "psnr": null
       },
       "classical": {
         "field": 0.2,
-        "word": 0.4668,
-        "dosage": 0.8,
-        "conf": 82.4509,
+        "word": 0.3446,
+        "dosage": 0.6,
+        "conf": 70.8065,
         "class_ok": 0.8,
         "psnr": null
       },
       "restorer": {
         "field": 0.8,
-        "word": 0.9617,
-        "dosage": 1.0,
-        "conf": 87.9361,
-        "class_ok": 1.0,
-        "psnr": 24.9619
+        "word": 0.7886,
+        "dosage": 0.8,
+        "conf": 84.4286,
+        "class_ok": 0.8,
+        "psnr": 22.87
       },
       "restorer_clahe": {
         "field": 0.6,
-        "word": 0.9388,
+        "word": 0.8187,
         "dosage": 0.8,
-        "conf": 81.8048,
-        "class_ok": 1.0,
-        "psnr": 17.0482
+        "conf": 74.383,
+        "class_ok": 0.8,
+        "psnr": 16.1798
       }
     },
     "off_axis": {
@@ -175,33 +175,33 @@
         "field": 1.0,
         "word": 0.9945,
         "dosage": 1.0,
-        "conf": 93.2207,
+        "conf": 92.3615,
         "class_ok": 1.0,
         "psnr": null
       },
       "classical": {
-        "field": 1.0,
-        "word": 0.9706,
-        "dosage": 1.0,
-        "conf": 89.7826,
+        "field": 0.8,
+        "word": 0.9215,
+        "dosage": 0.8,
+        "conf": 88.007,
         "class_ok": 1.0,
         "psnr": null
       },
       "restorer": {
         "field": 1.0,
-        "word": 1.0,
+        "word": 0.9973,
         "dosage": 1.0,
-        "conf": 93.3245,
+        "conf": 92.3242,
         "class_ok": 1.0,
-        "psnr": 14.0019
+        "psnr": 14.0112
       },
       "restorer_clahe": {
         "field": 1.0,
-        "word": 0.966,
+        "word": 0.9511,
         "dosage": 1.0,
-        "conf": 87.7802,
+        "conf": 86.8021,
         "class_ok": 1.0,
-        "psnr": 11.8831
+        "psnr": 11.879
       }
     },
     "glossy_glare": {
@@ -209,83 +209,83 @@
         "field": 1.0,
         "word": 0.9865,
         "dosage": 1.0,
-        "conf": 92.7862,
+        "conf": 92.8913,
         "class_ok": 1.0,
         "psnr": null
       },
       "classical": {
         "field": 1.0,
-        "word": 0.9306,
+        "word": 0.9301,
         "dosage": 1.0,
-        "conf": 88.8349,
+        "conf": 88.1343,
         "class_ok": 1.0,
         "psnr": null
       },
       "restorer": {
         "field": 1.0,
-        "word": 0.9865,
+        "word": 0.9892,
         "dosage": 1.0,
-        "conf": 92.2683,
+        "conf": 92.3014,
         "class_ok": 1.0,
-        "psnr": 32.9117
+        "psnr": 33.547
       },
       "restorer_clahe": {
         "field": 1.0,
-        "word": 0.9625,
+        "word": 0.9765,
         "dosage": 1.0,
-        "conf": 91.6483,
+        "conf": 90.4484,
         "class_ok": 1.0,
-        "psnr": 18.7015
+        "psnr": 18.0819
       }
     },
     "jpeg_social": {
       "raw": {
         "field": 1.0,
-        "word": 0.9838,
+        "word": 0.9811,
         "dosage": 1.0,
-        "conf": 90.7762,
+        "conf": 91.2673,
         "class_ok": 1.0,
         "psnr": null
       },
       "classical": {
         "field": 1.0,
-        "word": 0.9843,
+        "word": 0.981,
         "dosage": 1.0,
-        "conf": 90.7299,
+        "conf": 91.0624,
         "class_ok": 1.0,
         "psnr": null
       },
       "restorer": {
         "field": 0.8,
-        "word": 0.9815,
+        "word": 0.9711,
         "dosage": 1.0,
-        "conf": 88.8187,
+        "conf": 89.9938,
         "class_ok": 1.0,
-        "psnr": 24.3039
+        "psnr": 23.6215
       },
       "restorer_clahe": {
         "field": 1.0,
-        "word": 0.9334,
+        "word": 0.9081,
         "dosage": 1.0,
-        "conf": 86.3396,
+        "conf": 83.5493,
         "class_ok": 1.0,
-        "psnr": 16.8306
+        "psnr": 16.8346
       }
     },
     "paper_texture": {
       "raw": {
         "field": 1.0,
-        "word": 0.9865,
+        "word": 0.9892,
         "dosage": 1.0,
-        "conf": 92.5165,
+        "conf": 92.0775,
         "class_ok": 1.0,
         "psnr": null
       },
       "classical": {
         "field": 1.0,
-        "word": 0.9437,
+        "word": 0.9464,
         "dosage": 1.0,
-        "conf": 87.8637,
+        "conf": 90.0632,
         "class_ok": 1.0,
         "psnr": null
       },
@@ -293,25 +293,25 @@
         "field": 1.0,
         "word": 0.9865,
         "dosage": 1.0,
-        "conf": 92.4487,
+        "conf": 92.5761,
         "class_ok": 1.0,
-        "psnr": 32.7765
+        "psnr": 33.249
       },
       "restorer_clahe": {
         "field": 1.0,
-        "word": 0.981,
+        "word": 0.9837,
         "dosage": 1.0,
-        "conf": 92.9711,
+        "conf": 90.14,
         "class_ok": 1.0,
-        "psnr": 18.3177
+        "psnr": 18.1288
       }
     },
     "worst_case": {
       "raw": {
         "field": 0.0,
-        "word": 0.0138,
+        "word": 0.0104,
         "dosage": 0.6,
-        "conf": 18.3429,
+        "conf": 44.8,
         "class_ok": 0.0,
         "psnr": null
       },
@@ -319,25 +319,25 @@
         "field": 0.0,
         "word": 0.0104,
         "dosage": 0.6,
-        "conf": 32.8037,
+        "conf": 49.4769,
         "class_ok": 0.0,
         "psnr": null
       },
       "restorer": {
         "field": 0.0,
-        "word": 0.0334,
+        "word": 0.0131,
         "dosage": 0.6,
-        "conf": 19.954,
+        "conf": 20.9836,
         "class_ok": 0.0,
-        "psnr": 15.6355
+        "psnr": 16.1468
       },
       "restorer_clahe": {
         "field": 0.0,
-        "word": 0.0235,
+        "word": 0.0295,
         "dosage": 0.6,
-        "conf": 22.2381,
-        "class_ok": 0.2,
-        "psnr": 8.71
+        "conf": 19.3597,
+        "class_ok": 0.0,
+        "psnr": 7.0852
       }
     }
   },
@@ -352,12 +352,13 @@
   "sub_human_profiles": [
     "worst_case"
   ],
+  "seeder": "zlib.crc32/seedutil-v1",
   "headline": {
     "raw": {
       "field_accuracy": 0.5778,
-      "word_accuracy": 0.6149,
-      "exact_dosage_rate": 0.8444,
-      "mean_ocr_confidence": 68.79,
+      "word_accuracy": 0.6038,
+      "exact_dosage_rate": 0.8222,
+      "mean_ocr_confidence": 67.99,
       "profiles_included": [
         "studio_clean",
         "handheld_light",
@@ -372,10 +373,10 @@
       "n_docs": 45
     },
     "classical": {
-      "field_accuracy": 0.5778,
-      "word_accuracy": 0.612,
-      "exact_dosage_rate": 0.8444,
-      "mean_ocr_confidence": 67.98,
+      "field_accuracy": 0.5556,
+      "word_accuracy": 0.5929,
+      "exact_dosage_rate": 0.8,
+      "mean_ocr_confidence": 66.77,
       "profiles_included": [
         "studio_clean",
         "handheld_light",
@@ -391,9 +392,9 @@
     },
     "restorer": {
       "field_accuracy": 0.6222,
-      "word_accuracy": 0.6722,
-      "exact_dosage_rate": 0.8667,
-      "mean_ocr_confidence": 70.09,
+      "word_accuracy": 0.6538,
+      "exact_dosage_rate": 0.8444,
+      "mean_ocr_confidence": 69.7,
       "profiles_included": [
         "studio_clean",
         "handheld_light",
@@ -409,9 +410,9 @@
     },
     "restorer_clahe": {
       "field_accuracy": 0.6222,
-      "word_accuracy": 0.6576,
+      "word_accuracy": 0.6439,
       "exact_dosage_rate": 0.8444,
-      "mean_ocr_confidence": 68.4,
+      "mean_ocr_confidence": 66.05,
       "profiles_included": [
         "studio_clean",
         "handheld_light",
