@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SightLine — Self-Test</title>
+<meta name="theme-color" content="#0a0a0a">
+<link rel="manifest" href="manifest.json">
+<style>
+:root { --bg:#0a0a0a; --panel:#14181c; --line:#2b343c; --text:#f2f5f7; --muted:#a8b3bd;
+        --ok:#3ddc9a; --err:#ff8a8a; --accent:#58c7ff; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       padding: env(safe-area-inset-top) 16px 40px; line-height:1.5; }
+header { padding:18px 0 12px; border-bottom:1px solid var(--line); margin-bottom:14px; }
+h1 { font-size:20px; } h1 span { color:var(--accent); }
+p.sub { color:var(--muted); font-size:13px; margin-top:4px; }
+#summary { padding:14px; border-radius:12px; background:var(--panel); border:1px solid var(--line);
+           margin:14px 0; font-size:17px; font-weight:800; }
+#summary.pass { border-color:var(--ok); color:var(--ok); }
+#summary.fail { border-color:var(--err); color:var(--err); }
+h2 { font-size:12.5px; color:var(--accent); text-transform:uppercase; letter-spacing:0.9px;
+     margin:20px 0 8px; }
+table { width:100%; border-collapse:collapse; font-size:13.5px; }
+th { text-align:left; color:var(--muted); font-weight:600; padding:6px 8px; border-bottom:1px solid var(--line);
+     font-size:11.5px; text-transform:uppercase; letter-spacing:0.5px; }
+td { padding:8px; border-bottom:1px solid #1a2026; vertical-align:top; }
+td.st { width:64px; font-weight:800; white-space:nowrap; }
+.pass { color:var(--ok); } .fail { color:var(--err); }
+.val { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px; color:var(--muted);
+       word-break:break-all; }
+button { min-height:48px; padding:14px 22px; border:none; border-radius:12px; background:var(--accent);
+         color:#041722; font-size:16px; font-weight:800; font-family:inherit; cursor:pointer; margin:6px 8px 6px 0; }
+button.sec { background:var(--panel); color:var(--text); border:2px solid var(--line); }
+#live { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+a { color:var(--accent); }
+.note { font-size:12.5px; color:var(--muted); margin:8px 0 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Sight<span>Line</span> self-test</h1>
+  <p class="sub">The browser port checked against the same vectors the Python side uses.</p>
+</header>
+
+<div id="live" role="status" aria-live="polite"></div>
+
+<button id="run" type="button">Run all tests</button>
+<button id="run-text" type="button" class="sec">Text pipeline only</button>
+<button id="run-img" type="button" class="sec">Image processing only</button>
+
+<div id="summary" role="status" aria-live="polite">Not run yet.</div>
+
+<div id="out"></div>
+
+<p class="note">
+  Vectors come from <code>ml/src/capture.py</code> (PRESCRIPTION, BANK_STATEMENT,
+  LEASE_AGREEMENT) and <code>ml/src/evaluate.py</code> (FIELDS, norm, word_accuracy,
+  fields_found, classify_doc). If Python and JS disagree, the app is wrong, not the
+  test. <a href="index.html">Back to the app</a>
+</p>
+
+<script src="js/pipeline.js"></script>
+<script src="js/restorer.js"></script>
+<script src="js/classifier.js"></script>
+<script src="js/tts.js"></script>
+<script>
+"use strict";
+
+/* ── Test vectors: verbatim from the Python sources ─────────────────── */
+
+const CAPTURE = {
+  prescription: [
+    "PRESCRIPTION", "Patient: Jane Doe   DOB: 04/02/1979", "Date: 01/10/2026",
+    "PRESCRIBER: Dr A. Ahmed, MBBS", "Pharmacy: Northgate Pharmacy",
+    "Rx  Amoxicillin 500mg capsules",
+    "Take one capsule three times daily with food",
+    "Complete the full 7 day course",
+    "Rx  Ibuprofen 400mg tablets",
+    "Every 6 to 8 hours as required for pain",
+    "Maximum 1200mg in 24 hours",
+    "WARNING: may cause drowsiness",
+    "Do not drive or operate machinery",
+    "Keep out of reach of children",
+    "Pharmacist: R. Silva  GPhC 20441",
+  ],
+  banking: [
+    "HSBC UK BANK PLC", "Statement of Account", "Account Holder: John Smith",
+    "Account Number: 40218877", "Sort Code: 40-11-04", "Period: 01/03 - 31/03/2026",
+    "Opening Balance        GBP 1,204.33",
+    "01/03 SALARY CREDIT   GBP 2,900.00",
+    "01/03 RENT DD 1100     GBP -1,100.00",
+    "08/03 TESCO STORES     GBP -44.19",
+    "14/03 BRITISH GAS DD   GBP -89.99",
+    "19/03 ATM WITHDRAWAL   GBP -200.00",
+    "22/03 CASHBACK         GBP +12.40",
+    "Deposits total         GBP 2,912.40",
+    "Withdrawals total      GBP -1,434.18",
+    "Closing Balance        GBP 2,682.55",
+    "Card ending 4521 available funds 2,100.00",
+  ],
+  legal: [
+    "LEASE AGREEMENT", "This agreement is made on 15 January 2024",
+    "BETWEEN: The Landlord (1) and The Tenant (2)",
+    "PROPERTY: 123 Baker Street, London NW1 6XE",
+    "TERM: 24 months from 1 February 2024",
+    "Clause 3.2  Rent",
+    "The Tenant shall pay rent of 2,500 per month",
+    "in advance on the first day of each month",
+    "Clause 5.1  Termination",
+    "Either party may terminate with two months",
+    "written notice served on the other party",
+    "Clause 7.4  Deposit",
+    "A deposit of 5,000 is held and protected",
+    "SIGNED on behalf of both parties",
+    "Case Reference: 2024-CV-00456",
+  ],
+};
+
+/* A general-category template from ml/src/corpus.py, held out of the
+   other three so "general" is a real class and not a default. */
+const GENERAL = [
+  "NOTICE: the office will be closed on Monday for the public holiday.",
+  "Your parcel has been dispatched and should arrive within three working days.",
+  "Meeting at 2:30pm. Call +44 7700 900123 or email sam.smith@example.co.uk.",
+  "Date: 01/03/2024. Library books are due back by the end of the month.",
+].join("\n");
+
+/* Ground truth from evaluate.FIELDS, verbatim. */
+const FIELDS = {
+  prescription: ["500mg", "400mg"],
+  banking: ["40218877", "40-11-04"],
+  legal: ["2500", "2024-CV-00456"],
+};
+
+/* A blurry capture simulation: the same documents after the OCR damage that
+   the normalizer exists to repair. Expected fields reflect what the repaired
+   text must contain. */
+const DAMAGED = {
+  prescription: {
+    text: CAPTURE.prescription.join("\n").replace("500mg", "S00m9").replace("400mg", "4O0mg"),
+    expect: ["500mg"],           // 4O0mg stays broken: no safe deterministic rule
+    note: "S00m9 -> 500mg by rule reordering; 4O0mg has no safe deterministic fix, so 400mg is honestly reported as lost",
+  },
+  banking: {
+    text: CAPTURE.banking.join("\n").replace("40218877", "4O218877"),
+    expect: ["40-11-04"],
+    note: "sort code survives untouched; account number is a letter/digit swap with no safe rule",
+  },
+  legal: {
+    text: CAPTURE.legal.join("\n").replace("2,500", "2,5OO"),
+    expect: ["2024-CV-00456"],
+    note: "2,5OO -> 25oo does not match 2500, so that field is honestly reported as lost; the intact case number is still found",
+  },
+};
+
+/* ── Harness ────────────────────────────────────────────────────────── */
+
+let total = 0, failed = 0;
+const groups = [];
+
+function group(name) { groups.push({ name, rows: [] }); return groups[groups.length - 1]; }
+
+function check(g, desc, actual, expected, opts) {
+  const o = opts || {};
+  let pass;
+  if (typeof expected === "function") pass = !!expected(actual);
+  else if (o.numeric) pass = Math.abs(actual - expected) < (o.eps || 1e-6);
+  else pass = JSON.stringify(actual) === JSON.stringify(expected);
+  total++;
+  if (!pass) failed++;
+  g.rows.push({ desc, pass, actual, expected, note: o.note });
+  return pass;
+}
+
+function eq(g, desc, actual, expected) { return check(g, desc, actual, expected); }
+function near(g, desc, actual, expected, eps) {
+  return check(g, desc, actual, expected, { numeric: true, eps: eps == null ? 1e-6 : eps });
+}
+
+function fmt(v) {
+  if (v == null) return "—";
+  if (typeof v === "number") return Number.isInteger(v) ? String(v) : v.toFixed(4);
+  if (typeof v === "string") return v.length > 90 ? JSON.stringify(v.slice(0, 90)) + "…" : JSON.stringify(v);
+  if (Array.isArray(v)) return "[" + v.join(", ") + "]";
+  return JSON.stringify(v);
+}
+
+/* ── Test groups ────────────────────────────────────────────────────── */
+
+function testNorm() {
+  const g = group("norm() — evaluate.py");
+  const cases = [
+    ["40-11-04", "401104"], ["2,500", "2500"], ["GB29 NWBK", "gb29nwbk"],
+    ["£1,204.33", "120433"], ["500mg", "500mg"], ["", ""], ["!!!", ""],
+    ["Case No. 2024-CV-00456", "caseno2024cv00456"],
+  ];
+  for (const [inp, exp] of cases) eq(g, "norm(" + JSON.stringify(inp) + ")", SightLine.norm(inp), exp);
+}
+
+function testWordAccuracy() {
+  const g = group("word_accuracy() — evaluate.py");
+  near(g, "identical text scores 1.0",
+    SightLine.word_accuracy("Account Number: 40218877", "account number: 40218877"), 1.0);
+  near(g, "half the words present scores 0.5",
+    SightLine.word_accuracy("a b c d", "a b x y"), 0.5);
+  near(g, "empty ground truth scores 0.0", SightLine.word_accuracy("", "a b c"), 0.0);
+  near(g, "punctuation ignored", SightLine.word_accuracy("40-11-04", "40 11 04"), 1.0);
+  near(g, "nothing shared scores 0.0", SightLine.word_accuracy("alpha beta", "gamma delta"), 0.0);
+  near(g, "ground truth beats hypothesis length",
+    SightLine.word_accuracy("alpha beta", "alpha beta gamma delta epsilon"), 1.0);
+}
+
+function testFieldsFound() {
+  const g = group("fields_found() — evaluate.py");
+  for (const dt of Object.keys(FIELDS)) {
+    const text = CAPTURE[dt].join("\n");
+    eq(g, dt + ": clean text recovers every field",
+      SightLine.fields_found(text, dt).slice().sort(), FIELDS[dt].slice().sort());
+    eq(g, dt + ": fields_complete is true on clean text",
+      SightLine.fields_complete(text, dt), true);
+  }
+  eq(g, "prescription: empty text finds nothing",
+    SightLine.fields_found("", "prescription"), []);
+  eq(g, "unknown doc type finds nothing",
+    SightLine.fields_found("500mg 400mg", "unknown"), []);
+  eq(g, "exact_dosage_rate is 1.0 for non-prescription docs",
+    SightLine.exact_dosage_rate("", "banking"), 1.0);
+}
+
+function testClassifyDoc() {
+  const g = group("classify_doc() — evaluate.py keyword fallback");
+  const expect = { prescription: "medical", banking: "banking", legal: "legal" };
+  for (const dt of Object.keys(expect)) {
+    eq(g, dt + " document -> " + expect[dt],
+      SightLine.classify_doc(CAPTURE[dt].join("\n")), expect[dt]);
+  }
+  eq(g, "empty text -> general", SightLine.classify_doc(""), "general");
+  eq(g, "unrelated text -> general",
+    SightLine.classify_doc("qwerty zxcvbn hjkl"), "general");
+  const sc = SightLine.classify_doc_scores(CAPTURE.prescription.join("\n"));
+  check(g, "medical score is the top-scoring category for a prescription",
+    sc.medical, (v) => v > 0);
+  check(g, "all four categories produce a numeric score",
+    Object.keys(sc).length, (v) => v === 4);
+}
+
+function testNormalize() {
+  const g = group("normalizeOCRText() — the OCR-confusion normalizer");
+  const cases = [
+    ["S00m9", "500mg"],              // the headline repair: needs rule reordering
+    ["Take S00m9 twice daily", "Take 500mg twice daily"],
+    ["S00mg", "500mg"],
+    ["m9", "mg"],
+    ["m1", "ml"],
+    ["50mg mg", "50mg"],             // de-dup must not split the dose token
+    ["10ml ml", "10ml"],
+    ["S99m9", "599mg"],
+    ["S12m9", "512mg"],
+  ];
+  for (const [inp, exp] of cases) {
+    eq(g, JSON.stringify(inp) + " -> " + JSON.stringify(exp), SightLine.normalizeOCRText(inp), exp);
+  }
+  // Non-regression: words that merely look similar must survive intact.
+  const untouched = [
+    "Salary", "SMS", "Statement", "September", "Sample", "Simply",
+    "500mg", "400mg", "1200mg", "1m",
+  ];
+  for (const w of untouched) {
+    eq(g, "leaves " + JSON.stringify(w) + " alone", SightLine.normalizeOCRText(w), w);
+  }
+}
+
+function testUnderstand() {
+  const g = group("understand() — the full post-OCR chain");
+  for (const dt of Object.keys(FIELDS)) {
+    const r = SightLine.understand(CAPTURE[dt].join("\n"));
+    eq(g, dt + " -> category " + (dt === "prescription" ? "medical" : dt),
+      r.category, dt === "prescription" ? "medical" : dt);
+    check(g, dt + ": extracts at least 2 key fields", r.fields.length, (v) => v >= 2);
+    check(g, dt + ": summary is non-empty prose", r.summary.length, (v) => v > 20);
+    check(g, dt + ": confidence in [0,1]", r.classificationConfidence, (v) => v >= 0 && v <= 1);
+  }
+  const gr = SightLine.understand(GENERAL);
+  eq(g, "general document -> general", gr.category, "general");
+  check(g, "general document extracts an email",
+    gr.fields.some((f) => f.label === "Email"), (v) => v === true);
+
+  const bank = SightLine.understand(CAPTURE.banking.join("\n"));
+  check(g, "banking: account number extracted",
+    bank.fields.some((f) => f.value.includes("40218877")), (v) => v === true);
+  check(g, "banking: sort code extracted",
+    bank.fields.some((f) => f.value.includes("40-11-04")), (v) => v === true);
+  const rx = SightLine.understand(CAPTURE.prescription.join("\n"));
+  check(g, "prescription: patient name extracted",
+    rx.fields.some((f) => f.label === "Patient"), (v) => v === true);
+  check(g, "prescription: drug entity detected",
+    rx.entities.some((e) => e.label === "DRUG" && /Amoxicillin|Ibuprofen/.test(e.text)),
+    (v) => v === true);
+  const lease = SightLine.understand(CAPTURE.legal.join("\n"));
+  check(g, "legal: case number extracted",
+    lease.fields.some((f) => f.value.includes("2024-CV-00456")), (v) => v === true);
+  check(g, "legal: clauses extracted", lease.fields.some((f) => f.label === "Clause"), (v) => v === true);
+}
+
+function testDamaged() {
+  const g = group("Blurry-capture repair — the medical safety case");
+  for (const dt of Object.keys(DAMAGED)) {
+    const d = DAMAGED[dt];
+    const normalized = SightLine.normalizeOCRText(d.text);
+    const got = SightLine.fields_found(normalized, dt);
+    eq(g, dt + ": recovers " + JSON.stringify(d.expect) + " (was " + JSON.stringify(FIELDS[dt]) + ")",
+      got.slice().sort(), d.expect.slice().sort(), { note: d.note });
+    check(g, dt + ": dosage survival never overstates the reference",
+      got.length <= FIELDS[dt].length, (v) => v === true);
+  }
+  // The single most important assertion in this file: a blurry "500mg" must
+  // come back as a dose, because the alternative is a user taking the wrong
+  // amount of a medicine.
+  const repaired = SightLine.normalizeOCRText("Rx Amoxicillin S00m9 capsules");
+  eq(g, "blurred prescription dose is recovered verbatim",
+    SightLine.fields_found(repaired, "prescription"), ["500mg"]);
+}
+
+function testEntities() {
+  const g = group("extractEntities() — the NER layer");
+  const t = CAPTURE.prescription.join("\n") + "\nHSBC on 01/03 paid £44.19 for Amoxicillin";
+  const ents = SightLine.extractEntities(t);
+  check(g, "detects a DRUG", ents.some((e) => e.label === "DRUG"), (v) => v === true);
+  check(g, "detects a DOSAGE", ents.some((e) => e.label === "DOSAGE"), (v) => v === true);
+  check(g, "detects MONEY", ents.some((e) => e.label === "MONEY"), (v) => v === true);
+  check(g, "detects an ORG", ents.some((e) => e.label === "ORG"), (v) => v === true);
+  check(g, "detects a DATE", ents.some((e) => e.label === "DATE"), (v) => v === true);
+  const dupes = SightLine.extractEntities("Amoxicillin Amoxicillin 500mg 500mg");
+  eq(g, "duplicate entities are de-duplicated", dupes.length, 2);
+  eq(g, "empty text yields no entities", SightLine.extractEntities("").length, 0);
+}
+
+function testGarbage() {
+  const g = group("OCR garbage rejection");
+  eq(g, "short text is garbage", SightLine.isGarbage("hi", 1), true);
+  eq(g, "empty text is garbage", SightLine.isGarbage("", 0), true);
+  eq(g, "600 words is garbage", SightLine.isGarbage(new Array(600).fill("word").join(" "), 600), true);
+  eq(g, "mostly speckle is garbage", SightLine.isGarbage("a b c d e f g h i j k l m n o p", 16), true);
+  eq(g, "real prose is not garbage",
+    SightLine.isGarbage("Account Number: 40218877 Sort Code: 40-11-04", 7), false);
+}
+
+function testRobustness() {
+  const g = group("Robustness — no stage throws on bad input");
+  const nullish = [null, undefined, "", 0, NaN, {}, []];
+  for (const v of nullish) {
+    check(g, "norm(" + String(v) + ") does not throw", SightLine.norm(v), (r) => typeof r === "string");
+    check(g, "classify_doc(" + String(v) + ") does not throw", SightLine.classify_doc(v), (r) => typeof r === "string");
+    check(g, "normalizeOCRText(" + String(v) + ") does not throw",
+      SightLine.normalizeOCRText(v), (r) => typeof r === "string");
+    check(g, "understand(" + String(v) + ") does not throw",
+      SightLine.understand(v).category, (r) => typeof r === "string");
+  }
+  check(g, "extractFields on empty text returns an array",
+    SightLine.extractFields("", "medical"), (v) => Array.isArray(v));
+  check(g, "unknown category falls back to general patterns",
+    SightLine.extractFields("Date 01/03/2024", "nonexistent").length, (v) => v > 0);
+  eq(g, "CATEGORIES matches corpus.CATEGORIES order",
+    SightLine.CATEGORIES, ["banking", "medical", "legal", "general"]);
+  eq(g, "FIELDS matches evaluate.FIELDS",
+    SightLine.FIELDS, FIELDS);
+}
+
+function testTtsChunks() {
+  const g = group("TTS chunking — iOS utterance limit");
+  if (typeof TTS === "undefined") {
+    eq(g, "TTS module loaded", false, true);
+    return;
+  }
+  const long = "This is a medical prescription. Patient: Jane Doe. Medications: Amoxicillin. "
+    + "Dosages: 500 mg. Frequency: three times daily. Warning: may cause drowsiness. "
+    + "Keep out of reach of children.";
+  const chunks = TTS.chunkText(long, 180);
+  check(g, "long text is split into multiple chunks", chunks.length, (v) => v > 1);
+  check(g, "every chunk is within the 180-char limit",
+    chunks.every((c) => c.length <= 180), (v) => v === true);
+  eq(g, "chunking loses no words",
+    chunks.join(" ").split(/\s+/).length, long.trim().split(/\s+/).length);
+  eq(g, "empty text yields no chunks", TTS.chunkText("", 180).length, 0);
+}
+
+function testClassifierMath() {
+  const g = group("Classifier math — pooling and softmax");
+  const probs = SightLineClassifier.softmax(new Float32Array([1, 2, 3, 4]));
+  near(g, "softmax sums to 1", Array.from(probs).reduce((a, b) => a + b, 0), 1.0, 1e-6);
+  check(g, "softmax is monotonic",
+    probs[0] < probs[1] && probs[1] < probs[2] && probs[2] < probs[3], (v) => v === true);
+  near(g, "softmax argmax is the largest logit", probs.indexOf(Math.max(...probs)), 3);
+
+  // Mean-pool over a mask: token 0 = [1,0,0,0], token 1 = [0,3,0,0], masked out.
+  const h = new Float32Array([1, 0, 0, 0, 0, 3, 0, 0]);
+  const mask = new Int32Array([1, 0]);
+  const emb = SightLineClassifier.meanPoolL2(h, mask, 2, 4);
+  near(g, "unmasked token dominates the mean", emb[0], 1.0, 1e-6);
+  near(g, "embedding is L2-normalised",
+    Math.sqrt(Array.from(emb).reduce((a, b) => a + b * b, 0)), 1.0, 1e-6);
+
+  const h2 = new Float32Array(8).fill(1);
+  const emb2 = SightLineClassifier.meanPoolL2(h2, new Int32Array([1, 1]), 2, 4);
+  near(g, "uniform input pools to a unit vector",
+    emb2[0] * emb2[0] + emb2[1] * emb2[1] + emb2[2] * emb2[2] + emb2[3] * emb2[3], 1.0, 1e-6);
+}
+
+function testRestorerTiling() {
+  const g = group("Restorer tiling — must match arm_restorer");
+  if (typeof SightLineRestorer === "undefined") {
+    eq(g, "restorer module loaded", false, true);
+    return;
+  }
+  eq(g, "tile height is 64", SightLineRestorer.TILE_H, 64);
+  eq(g, "tile width is 256", SightLineRestorer.TILE_W, 256);
+  // Pad arithmetic from evaluate.arm_restorer: (t - n % t) % t
+  const padFor = (n, t) => (t - (n % t)) % t;
+  for (const n of [1, 63, 64, 65, 300, 1000, 3000]) {
+    const p = padFor(n, 64);
+    check(g, "height " + n + " pads to a whole number of 64px tiles",
+      (n + p) % 64, (v) => v === 0);
+  }
+  for (const n of [1, 255, 256, 257, 900, 3200]) {
+    const p = padFor(n, 256);
+    check(g, "width " + n + " pads to a whole number of 256px tiles",
+      (n + p) % 256, (v) => v === 0);
+  }
+}
+
+function testImagePipeline() {
+  const g = group("Image preprocessing — the canvas path");
+  const W = 320, H = 200;
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const ctx = c.getContext("2d", { willReadFrequently: true });
+  ctx.fillStyle = "#f8f8f8"; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#1c1c1c";
+  ctx.font = "20px sans-serif";
+  // Draw text lines: gives the quality estimator real edges to measure.
+  for (let i = 0; i < 8; i++) ctx.fillText("Account Number: 40218877 line " + i, 20, 25 + i * 22);
+
+  const gray = SightLine.toGrayCanvas(c, W, H);
+  eq(g, "grayscale canvas keeps dimensions", gray.width + "x" + gray.height, W + "x" + H);
+
+  const sharp = SightLine.assessQuality(gray);
+  check(g, "text image is not classified as blurry", sharp.blurry, (v) => v === false);
+  check(g, "text image is not classified as dark", sharp.dark, (v) => v === false);
+  check(g, "quality score is within [0,1]", sharp.quality, (v) => v >= 0 && v <= 1);
+  check(g, "Laplacian variance is positive for text", sharp.lapVar, (v) => v > 0);
+
+  // A blank image must be detected as blurry, or the quality gate is useless.
+  const blank = document.createElement("canvas");
+  blank.width = 64; blank.height = 64;
+  const bctx = blank.getContext("2d", { willReadFrequently: true });
+  bctx.fillStyle = "#ffffff"; bctx.fillRect(0, 0, 64, 64);
+  eq(g, "blank image is detected as blurry", SightLine.assessQuality(blank).blurry, true);
+
+  // Dark image.
+  const dark = document.createElement("canvas");
+  dark.width = 64; dark.height = 64;
+  const dctx = dark.getContext("2d", { willReadFrequently: true });
+  dctx.fillStyle = "#000000"; dctx.fillRect(0, 0, 64, 64);
+  eq(g, "black image is detected as dark", SightLine.assessQuality(dark).dark, true);
+
+  const med = SightLine.median3(gray);
+  eq(g, "median preserves dimensions", med.width + "x" + med.height, W + "x" + H);
+  const un = SightLine.unsharp(gray, 1.8, 2);
+  eq(g, "unsharp preserves dimensions", un.width + "x" + un.height, W + "x" + H);
+  const cl = SightLine.clahe(gray, 2.0, 8);
+  eq(g, "CLAHE preserves dimensions", cl.width + "x" + cl.height, W + "x" + H);
+  const bin = SightLine.binarize(gray);
+  eq(g, "binarize preserves dimensions", bin.width + "x" + bin.height, W + "x" + H);
+
+  // Binarize output must be strictly binary.
+  const bd = bin.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, W, H).data;
+  let binary = true;
+  for (let i = 0; i < bd.length; i += 4) {
+    if (bd[i] !== 0 && bd[i] !== 255) { binary = false; break; }
+  }
+  eq(g, "binarize output is strictly 0 or 255", binary, true);
+
+  // Otsu on a bimodal histogram must land between the modes.
+  const hist = new Uint32Array(256);
+  for (let i = 0; i < 8000; i++) hist[30]++;
+  for (let i = 0; i < 2000; i++) hist[220]++;
+  const t = SightLine.otsu(hist, 10000);
+  check(g, "Otsu threshold falls between the two modes", t, (v) => v >= 30 && v <= 220);
+
+  const pp = SightLine.preprocess(c, 3200);
+  check(g, "preprocess returns OCR candidates", pp.candidates.length, (v) => v >= 2);
+  check(g, "preprocess reports a skew estimate", typeof pp.skew, (v) => typeof v === "number");
+  eq(g, "preprocess caps the long edge at maxDim",
+    Math.max(pp.width, pp.height), Math.min(3200, Math.max(W, H)));
+  check(g, "preprocess returns warnings as an array",
+    Array.isArray(pp.warnings), (v) => v === true);
+
+  // Downscale path: a wide image must be scaled to maxDim.
+  const big = document.createElement("canvas");
+  big.width = 8000; big.height = 4000;
+  const gctx = big.getContext("2d", { willReadFrequently: true });
+  gctx.fillStyle = "#fff"; gctx.fillRect(0, 0, 8000, 4000);
+  gctx.fillStyle = "#000"; gctx.font = "40px sans-serif";
+  gctx.fillText("Sort Code: 40-11-04", 100, 200);
+  const pp2 = SightLine.preprocess(big, 3200);
+  eq(g, "an 8000px image is downscaled to 3200px", pp2.width, 3200);
+  check(g, "aspect ratio is preserved by the downscale",
+    Math.abs(pp2.height - 1600) <= 2, (v) => v === true);
+}
+
+/* ── Runner ─────────────────────────────────────────────────────────── */
+
+function render() {
+  const out = document.getElementById("out");
+  out.innerHTML = "";
+  for (const g of groups) {
+    const h = document.createElement("h2");
+    h.textContent = g.name + " — " + g.rows.filter((r) => r.pass).length + "/" + g.rows.length;
+    out.appendChild(h);
+    const table = document.createElement("table");
+    const thead = document.createElement("tr");
+    for (const label of ["", "Assertion", "Value"]) {
+      const th = document.createElement("th");
+      th.textContent = label;
+      thead.appendChild(th);
+    }
+    table.appendChild(thead);
+    for (const r of g.rows) {
+      const tr = document.createElement("tr");
+      const td1 = document.createElement("td");
+      td1.className = "st " + (r.pass ? "pass" : "fail");
+      td1.textContent = r.pass ? "PASS" : "FAIL";
+      const td2 = document.createElement("td");
+      td2.textContent = r.desc;
+      if (!r.pass && r.note) {
+        const n = document.createElement("div");
+        n.className = "val";
+        n.textContent = r.note;
+        td2.appendChild(n);
+      }
+      const td3 = document.createElement("td");
+      td3.className = "val";
+      td3.textContent = r.pass ? fmt(r.actual) : "got " + fmt(r.actual) + " · expected " + fmt(r.expected);
+      tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+      table.appendChild(tr);
+    }
+    out.appendChild(table);
+  }
+  const s = document.getElementById("summary");
+  s.className = failed === 0 ? "pass" : "fail";
+  s.textContent = failed === 0
+    ? "ALL " + total + " ASSERTIONS PASSED"
+    : failed + " of " + total + " ASSERTIONS FAILED";
+  document.getElementById("live").textContent = s.textContent;
+}
+
+function run(which) {
+  total = 0; failed = 0; groups.length = 0;
+  const text = which !== "img";
+  const img = which !== "text";
+  if (text) {
+    testNorm(); testWordAccuracy(); testFieldsFound(); testClassifyDoc();
+    testNormalize(); testUnderstand(); testDamaged(); testEntities();
+    testGarbage(); testRobustness(); testTtsChunks(); testClassifierMath();
+    testRestorerTiling();
+  }
+  if (img) testImagePipeline();
+  render();
+  window.scrollTo({ top: 0, behavior: "auto" });
+}
+
+document.getElementById("run").addEventListener("click", () => run("all"));
+document.getElementById("run-text").addEventListener("click", () => run("text"));
+document.getElementById("run-img").addEventListener("click", () => run("img"));
+
+// Auto-run the text battery so the page is never a blank slate.
+run("text");
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{
+  "name": "SightLine — On-Device Document Reader",
+  "short_name": "SightLine",
+  "description": "Point your phone at a prescription, bank statement or contract. SightLine reads the text, pulls out the key details and reads them aloud — entirely on your device, with no internet connection.",
+  "id": "/sightline-app",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "lang": "en-GB",
+  "dir": "ltr",
+  "categories": ["medical", "utilities", "productivity", "accessibility"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Scan a document",
+      "short_name": "Scan",
+      "description": "Open the camera and scan a document straight away",
+      "url": "./index.html?action=scan",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "./index.html",
+      "accept": {
+        "image/*": [".jpg", ".jpeg", ".png", ".heic", ".webp"],
+        "application/pdf": [".pdf"]
+      }
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
+}

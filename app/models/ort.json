@@ -1,0 +1,18 @@
+{
+  "_comment": "Availability manifest for the OPTIONAL ONNX accelerators. Read by restorer.js and classifier.js before they touch onnxruntime-web. A stock install ships with all three false: the app is fully functional on the classical path and makes no network requests for the model. To enable the model path, vendor onnxruntime-web into app/vendor/ort/, copy the exported .onnx files and tokenizer.json into app/models/, then set the flags to true and bump the sw.js VERSION.",
+  "ort": false,
+  "restorer": false,
+  "classifier": false,
+  "_expected_paths": {
+    "ort": [
+      "vendor/ort/ort.wasm.bundle.min.mjs",
+      "vendor/ort/ort.wasm.wasm"
+    ],
+    "restorer": "models/restorer.onnx",
+    "classifier": [
+      "models/minilm_encoder.onnx",
+      "models/minilm_head.onnx",
+      "models/tokenizer.json"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+# SightLine ML dependencies.
+#
+# Install with:  bash setup_env.sh      (creates .venv and installs these)
+# Do not `pip install -r requirements.txt` directly — setup_env.sh also
+# handles the CPU-only PyTorch index, which is the slow part.
+#
+# torch is intentionally NOT pinned to a CUDA build: this project trains and
+# evaluates on CPU in ~40 minutes, which fits a hackathon budget and keeps the
+# project installable on any laptop.
+
+torch>=2.2,<3
+numpy>=1.24
+Pillow>=10.0
+opencv-python-headless>=4.8      # headless: no GUI libs needed on a server
+onnx>=1.15
+onnxruntime>=1.17
+scikit-learn>=1.3
+pytest>=7.4
+pytesseract>=0.3.19               # requires the `tesseract` binary on PATH
+
+# classifier only (~500 MB with the model weights):
+sentence-transformers>=2.7
+transformers>=4.38

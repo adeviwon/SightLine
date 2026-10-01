@@ -1,0 +1,45 @@
+{
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.138135,
+      "val_psnr_db": 11.227,
+      "seconds": 63.1
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.113692,
+      "val_psnr_db": 11.804,
+      "seconds": 115.4
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.109596,
+      "val_psnr_db": 9.79,
+      "seconds": 176.6
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.147914,
+      "val_psnr_db": 8.396,
+      "seconds": 236.9
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.120516,
+      "val_psnr_db": 12.539,
+      "seconds": 291.8
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.110535,
+      "val_psnr_db": 10.436,
+      "seconds": 363.9
+    }
+  ],
+  "best_val_psnr_db": 12.539,
+  "n_train_patches": 336,
+  "n_val_patches": 84,
+  "docs_per_profile": 14,
+  "params": 37793
+}

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SightLine — On-Device Document Reader</title>
+
+<!-- PWA / install -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="color-scheme" content="dark light">
+
+<!-- iOS home-screen app -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SightLine">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+
+<style>
+/* ── Design tokens ────────────────────────────────────────────────────
+   Contrast: body text #f2f5f7 on #0a0a0a = 18.1:1 (WCAG AAA).
+   Muted text #a8b3bd on #0a0a0a = 8.9:1 (WCAG AAA).
+   Accent #58c7ff on #0a0a0a = 9.2:1. Green #3ddc9a = 11.4:1.
+   Every status colour is paired with a text label — never colour alone. */
+:root {
+  --bg: #0a0a0a;
+  --panel: #14181c;
+  --panel-2: #1c2228;
+  --line: #2b343c;
+  --text: #f2f5f7;
+  --muted: #a8b3bd;
+  --accent: #58c7ff;
+  --ok: #3ddc9a;
+  --warn: #ffc84d;
+  --err: #ff8a8a;
+  --tap: 48px;              /* WCAG 2.5.5 minimum target size */
+  --radius: 14px;
+}
+@media (prefers-contrast: more) {
+  :root { --text: #ffffff; --muted: #d7dee4; --line: #5a6771; --panel: #0d1114; }
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f9fa; --panel: #ffffff; --panel-2: #eef2f5; --line: #c3ccd3;
+    --text: #0d1114; --muted: #4a555e; --accent: #0b5f8a; --ok: #0d6b47;
+    --warn: #8a5a00; --err: #8c1f1f;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { min-height: 100%; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px; line-height: 1.5;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex; flex-direction: column; align-items: stretch;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── Header ── */
+header { padding: 14px 16px; background: var(--panel); border-bottom: 1px solid var(--line); text-align: center; }
+header h1 { font-size: 22px; letter-spacing: 0.4px; }
+header h1 span { color: var(--accent); }
+header p { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+#badge {
+  display: inline-block; margin-top: 9px; padding: 5px 13px; border-radius: 999px;
+  background: var(--ok); color: #04150e; font-size: 11px; font-weight: 800; letter-spacing: 0.3px;
+}
+#badge[data-state="pending"] { background: var(--warn); color: #241a00; }
+#badge[data-state="offline"] { background: var(--accent); color: #041722; }
+#badge[data-state="warn"] { background: var(--err); color: #2a0606; }
+
+/* Visually hidden but announced by screen readers. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+#error-banner {
+  margin: 10px 16px 0; padding: 12px 14px; border-radius: var(--radius);
+  background: #3d0f0f; border: 1px solid #7a2020; color: #ffb3b3; font-size: 14px;
+}
+@media (prefers-color-scheme: light) {
+  #error-banner { background: #fdecec; border-color: #8c1f1f; color: #6b1414; }
+}
+
+/* ── Layout ── */
+#stage { width: 100%; max-width: 620px; margin: 0 auto; padding: 12px 16px 24px; flex: 1; }
+
+/* ── Tabs ── */
+.tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.tab {
+  flex: 1; min-height: var(--tap); display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--line); border-radius: var(--radius); background: var(--panel);
+  color: var(--muted); font-size: 15px; font-weight: 700; cursor: pointer;
+}
+.tab.active { background: var(--accent); color: #041722; border-color: var(--accent); }
+@media (prefers-color-scheme: light) { .tab.active { color: #fff; } }
+.tab:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid var(--accent); outline-offset: 2px;
+}
+
+/* ── Viewfinder ── */
+#viewfinder {
+  position: relative; width: 100%; border-radius: var(--radius); overflow: hidden;
+  background: #000; border: 1px solid var(--line); min-height: 200px;
+}
+#video, #preview { width: 100%; display: block; max-height: 58vh; object-fit: contain; background: #000; }
+#scan-flash {
+  position: absolute; inset: 0; background: rgba(61, 220, 154, 0.35);
+  opacity: 0; pointer-events: none; transition: opacity 0.15s;
+}
+#scan-flash.on { opacity: 1; }
+#scan-line {
+  position: absolute; left: 0; right: 0; height: 3px; background: var(--ok);
+  box-shadow: 0 0 14px var(--ok); display: none; pointer-events: none;
+}
+#scan-line.on { display: block; animation: sweep 1.3s ease-in-out infinite; }
+@keyframes sweep { 0%, 100% { top: 6%; } 50% { top: 90%; } }
+@media (prefers-reduced-motion: reduce) {
+  #scan-line.on { animation: none; top: 48%; }
+  #scan-flash { transition: none; }
+}
+#quality-hint {
+  position: absolute; bottom: 8px; left: 8px; right: 8px; padding: 9px 11px;
+  background: rgba(0, 0, 0, 0.8); border-radius: 10px; font-size: 13px; color: var(--warn);
+}
+#viewfinder::after {
+  /* Framing guide — also a non-colour cue via dashed border. */
+  content: ""; position: absolute; inset: 8%; border: 2px dashed rgba(88, 199, 255, 0.35);
+  border-radius: 8px; pointer-events: none;
+}
+
+/* ── Controls ── */
+.controls { display: flex; flex-direction: column; gap: 10px; margin: 14px 0 6px; }
+button {
+  min-height: var(--tap); padding: 14px 20px; border: none; border-radius: var(--radius);
+  background: var(--accent); color: #041722; font-size: 17px; font-weight: 800;
+  font-family: inherit; cursor: pointer; width: 100%;
+}
+@media (prefers-color-scheme: light) { button { color: #fff; } }
+button.secondary { background: var(--panel-2); color: var(--text); border: 2px solid var(--line); }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+button:active:not(:disabled) { transform: scale(0.98); }
+@media (prefers-reduced-motion: reduce) { button:active:not(:disabled) { transform: none; } }
+#file-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+.toggles { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 10px 0 4px; font-size: 13px; color: var(--muted); }
+.toggles label { display: flex; align-items: center; gap: 8px; min-height: 40px; cursor: pointer; }
+.toggles input { width: 22px; height: 22px; accent-color: var(--accent); }
+
+/* ── Progress ── */
+#progress-wrap { margin: 14px 0 6px; }
+#progress-label { font-size: 13.5px; color: var(--muted); margin-bottom: 7px; min-height: 20px; }
+.progress-track { background: var(--panel-2); height: 10px; border-radius: 5px; overflow: hidden; border: 1px solid var(--line); }
+#progress-fill { height: 100%; width: 0%; background: var(--accent); transition: width 0.2s; }
+@media (prefers-reduced-motion: reduce) { #progress-fill { transition: none; } }
+
+/* ── Warnings ── */
+#warning-box {
+  background: #3a2a00; border: 1px solid #8a5a00; border-radius: var(--radius);
+  padding: 11px 13px; margin: 12px 0; font-size: 14px; color: var(--warn);
+}
+@media (prefers-color-scheme: light) {
+  #warning-box { background: #fff5df; border-color: #8a5a00; color: #5c3d00; }
+}
+
+/* ── Results ── */
+#results { margin-top: 16px; }
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 15px; margin-bottom: 12px;
+}
+.card h2 {
+  font-size: 12.5px; color: var(--accent); text-transform: uppercase;
+  letter-spacing: 0.9px; margin-bottom: 9px;
+}
+.summary { font-size: 18px; line-height: 1.5; }
+.meta { font-size: 12.5px; color: var(--muted); margin-top: 11px; }
+.field-row {
+  display: flex; justify-content: space-between; gap: 14px;
+  padding: 10px 0; border-bottom: 1px solid var(--line);
+}
+.field-row:last-child { border-bottom: none; }
+.field-row .label { color: var(--muted); font-size: 14px; white-space: nowrap; }
+.field-row .val { font-size: 15.5px; font-weight: 600; text-align: right; word-break: break-word; }
+.tag {
+  display: inline-block; margin: 3px 5px 3px 0; padding: 5px 11px; border-radius: 999px;
+  font-size: 13px; background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
+}
+#ocr-text {
+  font-size: 14px; color: var(--muted); max-height: 220px; overflow-y: auto;
+  white-space: pre-wrap; word-break: break-word; line-height: 1.55;
+}
+
+footer { padding: 16px 16px 28px; font-size: 12px; color: var(--muted); text-align: center; }
+footer a { color: var(--accent); }
+</style>
+</head>
+
+<body>
+<header>
+  <h1>Sight<span>Line</span></h1>
+  <p>Reads prescriptions, bank statements and contracts aloud. Fully on-device.</p>
+  <span id="badge" data-state="pending" role="status">STARTING…</span>
+</header>
+
+<!-- Screen-reader announcements for progress, results and errors. -->
+<div id="live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<div id="error-banner" role="alert" hidden></div>
+
+<main id="stage">
+  <div class="tabs" id="tabs" role="tablist" aria-label="Document source">
+    <div class="tab active" id="tab-cam" role="tab" tabindex="0"
+         aria-selected="true" aria-controls="viewfinder">Use Camera</div>
+    <div class="tab" id="tab-file" role="tab" tabindex="0"
+         aria-selected="false" aria-controls="viewfinder">Choose a Photo or PDF</div>
+  </div>
+
+  <div id="viewfinder" data-mode="none">
+    <video id="video" autoplay playsinline muted aria-label="Live camera preview"></video>
+    <img id="preview" alt="Captured document preview" hidden>
+    <div id="scan-flash"></div>
+    <div id="scan-line"></div>
+    <div id="quality-hint" role="note" hidden></div>
+  </div>
+
+  <div class="controls">
+    <button id="btn-capture" type="button" aria-describedby="capture-help">Scan Document</button>
+    <button id="btn-pick" type="button" class="secondary">Choose a Photo or PDF</button>
+    <button id="btn-retake" type="button" class="secondary" hidden>Scan Another</button>
+    <button id="btn-speak" type="button" class="secondary" hidden>Read Aloud</button>
+  </div>
+  <p id="capture-help" class="sr-only">
+    Scans the current camera frame or the selected photo. Works with no internet connection.
+  </p>
+
+  <input type="file" id="file-input" accept="image/*,application/pdf"
+         aria-label="Choose a document photo or PDF file">
+
+  <div class="toggles">
+    <label for="skip-restore">
+      <input type="checkbox" id="skip-restore" checked>
+      Skip neural restoration (faster)
+    </label>
+    <label for="skip-classify">
+      <input type="checkbox" id="skip-classify" checked>
+      Skip model classifier
+    </label>
+  </div>
+
+  <div id="progress-wrap" hidden>
+    <div id="progress-label">Starting…</div>
+    <div class="progress-track" id="progress-track" role="progressbar"
+         aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Scan progress">
+      <div id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div id="warning-box" role="status" hidden></div>
+
+  <section id="results" hidden aria-labelledby="doc-type">
+    <div class="card">
+      <h2>Document Type</h2>
+      <p class="summary" id="doc-type">Document</p>
+      <p class="summary" id="summary-text"></p>
+      <p class="meta" id="result-meta"></p>
+    </div>
+
+    <div class="card" id="fields-card" hidden>
+      <h2>Key Details</h2>
+      <div id="fields-list"></div>
+    </div>
+
+    <div class="card" id="entities-card" hidden>
+      <h2>Detected Details</h2>
+      <div id="entities-list"></div>
+    </div>
+
+    <div class="card">
+      <h2>Recognised Text</h2>
+      <div id="ocr-text" tabindex="0" role="region" aria-label="Full recognised document text"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  SightLine · All OCR and classification happen in this browser · No data leaves the device<br>
+  <a href="README.md">Install &amp; serve instructions</a> ·
+  <a href="selftest.html">Run self-test</a>
+</footer>
+
+<script src="vendor/tesseract/tesseract.min.js"></script>
+<script src="vendor/pdfjs/pdf.min.js"></script>
+<script src="js/pipeline.js"></script>
+<script src="js/restorer.js"></script>
+<script src="js/classifier.js"></script>
+<script src="js/tts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
