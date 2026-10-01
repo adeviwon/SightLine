@@ -102,6 +102,76 @@ const pp2 = SightLine.preprocess(big, 3200);
 eq(g, "an 8000px image is downscaled to 3200px", pp2.width, 3200);
 check(g, "aspect ratio is preserved by the downscale", Math.abs(pp2.height - 1600) <= 2, (v) => v === true);
 
+// restoreMode. The modes are not always different, and the test has to know
+// which is which or it asserts a coincidence:
+//   adaptive  -> noisy: median+unsharp · blurry: unsharp only · neither: NO-OP
+//   classical -> always median+unsharp
+// So on a NOISY input they coincide exactly; they diverge on a merely BLURRY
+// input (adaptive skips the median) and on a clean one (adaptive is a no-op).
+// Blurring is also the case that matters, so it is what we test here.
+// The blurred fixture is a real box blur applied with putImageData. A
+// downscale/upscale round trip is not enough: the 5x7 glyphs are so
+// high-frequency that even four passes leave lapVar ~4000, still "noisy".
+// Six 7x7 box passes reach lapVar ~4, which is genuinely blurry.
+function boxBlur(src, w, h, radius) {
+  const out = src.getContext("2d", { willReadFrequently: true }).createImageData(w, h);
+  const s = src.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, w, h).data;
+  const o = out.data;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let sum = 0, n = 0;
+      for (let dy = -radius; dy <= radius; dy++) {
+        for (let dx = -radius; dx <= radius; dx++) {
+          const yy = y + dy, xx = x + dx;
+          if (yy < 0 || yy >= h || xx < 0 || xx >= w) continue;
+          sum += s[(yy * w + xx) * 4]; n++;
+        }
+      }
+      const i = (y * w + x) * 4;
+      const v = (sum / n) | 0;
+      o[i] = o[i + 1] = o[i + 2] = v; o[i + 3] = 255;
+    }
+  }
+  return out;
+}
+const blurred = document.createElement("canvas");
+blurred.width = 320; blurred.height = 200;
+const blctx = blurred.getContext("2d", { willReadFrequently: true });
+blctx.fillStyle = "#f8f8f8"; blctx.fillRect(0, 0, 320, 200);
+blctx.drawImage(c, 0, 0, 320, 200);
+for (let pass = 0; pass < 6; pass++) {
+  blctx.putImageData(boxBlur(blurred, 320, 200, 3), 0, 0);
+}
+const blq = SightLine.assessQuality(SightLine.toGrayCanvas(blurred, 320, 200));
+check(g, "the blurred fixture is actually detected as blurry", blq.blurry, (v) => v === true);
+check(g, "the blurred fixture is not also flagged as noisy", blq.noisy, (v) => v === false);
+
+const px = (cv) => {
+  const d = cv.getContext("2d", { willReadFrequently: true })
+    .getImageData(0, 0, cv.width, cv.height).data;
+  let h = 0;
+  for (let i = 0; i < d.length; i += 4) h = (h * 31 + d[i]) | 0;
+  return h;
+};
+const bA = SightLine.preprocess(blurred, 3200, { restoreMode: "adaptive" });
+const bC = SightLine.preprocess(blurred, 3200, { restoreMode: "classical" });
+const bN = SightLine.preprocess(blurred, 3200, { restoreMode: "none" });
+eq(g, "preprocess reports the restore mode it used", bC.restoreMode, "classical");
+check(g, "on blurred input, classical and adaptive differ (median vs no median)",
+  px(bA.canvas), (v) => v !== px(bC.canvas));
+check(g, "on blurred input, classical and none differ",
+  px(bN.canvas), (v) => v !== px(bC.canvas));
+// The clean fixture is noisy (the 5x7 glyphs are high-frequency), so adaptive
+// and classical must coincide there — that is the documented behaviour, and
+// asserting the coincidence is what stops someone "fixing" it later.
+const cA = SightLine.preprocess(c, 3200, { restoreMode: "adaptive" });
+const cC = SightLine.preprocess(c, 3200, { restoreMode: "classical" });
+check(g, "on noisy input, adaptive and classical coincide (both median+unsharp)",
+  px(cA.canvas), (v) => v === px(cC.canvas));
+eq(g, "every mode still returns OCR candidates",
+  [bA, bC, bN, cA, cC].every((m) => m.candidates.length >= 2), true);
+eq(g, "the default mode is adaptive", SightLine.preprocess(c, 3200).restoreMode, "adaptive");
+
 // ── Extra: verify the restorer's classical fallback runs and preserves pixels ──
 const g2 = group("Restorer classical fallback - evaluate.arm_classical");
 (async () => {

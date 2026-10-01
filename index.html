@@ -18,6 +18,7 @@
 <link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+<link rel="icon" href="assets/favicon.ico" sizes="192x192">
 
 <style>
 /* ── Design tokens ────────────────────────────────────────────────────
@@ -210,8 +211,10 @@ footer a { color: var(--accent); }
   <span id="badge" data-state="pending" role="status">STARTING…</span>
 </header>
 
-<!-- Screen-reader announcements for progress, results and errors. -->
+<!-- Screen-reader announcements. Two regions, deliberately NOT one: progress
+     and results stay polite forever, errors go to an assertive region. -->
 <div id="live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+<div id="live-assertive" class="sr-only" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
 <div id="error-banner" role="alert" hidden></div>
 
@@ -299,6 +302,7 @@ footer a { color: var(--accent); }
 <script src="vendor/tesseract/tesseract.min.js"></script>
 <script src="vendor/pdfjs/pdf.min.js"></script>
 <script src="js/pipeline.js"></script>
+<script src="js/gating.js"></script>
 <script src="js/restorer.js"></script>
 <script src="js/classifier.js"></script>
 <script src="js/tts.js"></script>

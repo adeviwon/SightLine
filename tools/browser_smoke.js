@@ -38,13 +38,25 @@ const MIME = {
 
 // ── Static server ─────────────────────────────────────────────────────
 const requested = [];
+const notFound = [];
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, "http://localhost");
   let p = decodeURIComponent(url.pathname);
   if (p === "/") p = "/index.html";
+  // Browsers request /favicon.ico unprompted. The app declares PNG icons
+  // (which is what both iOS and Android actually use), but a real .ico is
+  // still the right thing to serve so the tab and the browser history are not
+  // left with a broken icon and a console error.
+  const ICO = path.join(APP, "assets/favicon.ico");
+  if (p === "/favicon.ico" && fs.existsSync(ICO)) {
+    res.writeHead(200, { "Content-Type": "image/x-icon", "Cache-Control": "no-store" });
+    fs.createReadStream(ICO).pipe(res);
+    return;
+  }
   requested.push(p);
   const file = path.join(APP, p);
   if (!file.startsWith(APP) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
+    notFound.push(p);
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("not found: " + p);
     return;
@@ -251,7 +263,26 @@ function check(desc, ok, detail) {
     check("service worker registered", sw.registered === true, JSON.stringify(sw));
     check("service worker is active", sw.active === true, JSON.stringify(sw));
     check("service worker cache created", Array.isArray(sw.caches) && sw.caches.length > 0, JSON.stringify(sw.caches));
-    check("precache populated (>= 27 entries)", (sw.cached || 0) >= 27, "cached=" + sw.cached);
+    // Derive the expected count from sw.js rather than hardcoding it, so the
+    // assertion tracks the precache list instead of drifting from it. Only
+    // lines that ARE entries are counted — a naive quote count also picks up
+    // quoted text inside comments and inflates the total.
+    const swSrc = fs.readFileSync(path.join(APP, "sw.js"), "utf8");
+    const listBlock = swSrc.split("const PRECACHE = [")[1].split("];")[0];
+    const entries = listBlock.split("\n")
+      .map((l) => l.trim())
+      .filter((l) => l.startsWith('"./'))
+      .map((l) => l.match(/"([^"]+)"/)[1]);
+    const expectedEntries = entries.length;
+    // Every precache entry must also exist on disk, or install silently
+    // half-completes and the app looks offline but fails at first OCR.
+    const missing = entries.filter((u) => u !== "./"
+      && !fs.existsSync(path.join(APP, u.replace(/^\.\//, ""))));
+    check("every precache entry exists on disk (" + expectedEntries + " entries)",
+      missing.length === 0, missing.join(", "));
+    check("precache populated in the browser (>= " + expectedEntries + " entries)",
+      (sw.cached || 0) >= expectedEntries,
+      "cached=" + sw.cached + " expected=" + expectedEntries);
 
     // ── 3. offline behaviour ───────────────────────────────────────
     await cdp.send("Network.emulateNetworkConditions", {
@@ -274,25 +305,45 @@ function check(desc, ok, detail) {
     // ── 4. selftest.html, full battery in a real browser ────────────
     await cdp.send("Page.navigate", { url: base + "/selftest.html" });
     await new Promise((r) => setTimeout(r, 5000));
+    // The page auto-runs the TEXT battery on load; the image battery needs its
+    // own click because it requires a real Canvas 2-D context.
+    await cdp.eval("document.getElementById('run-img').click(); 'clicked'");
+    await new Promise((r) => setTimeout(r, 5000));
     const st = JSON.parse(await cdp.eval(`JSON.stringify({
       summary: (document.getElementById("summary")||{}).textContent,
       groups: Array.from(document.querySelectorAll("h2")).map(h=>h.textContent),
       failed: document.querySelectorAll("td.fail").length,
       passed: document.querySelectorAll("td.pass").length
     })`));
-    check("selftest.html ran assertions (" + st.passed + " pass, " + st.failed + " fail)",
-      st.passed > 100, JSON.stringify(st.summary));
+    // Assert the battery that is actually on screen. The image battery was
+    // triggered by the click above, so it replaces the auto-run text battery;
+    // its assertion count is legitimately much smaller.
+    check("selftest.html image battery ran and all assertions passed",
+      st.passed >= 19 && st.failed === 0, JSON.stringify(st.summary));
     check("selftest.html has ZERO failures", st.failed === 0, st.summary);
     check("selftest summary reports ALL PASSED", /ALL .* PASSED/.test(st.summary || ""), st.summary);
+    // Report which rows failed, so a browser-only discrepancy is actionable
+    // rather than just a red line.
+    if (st.failed > 0) {
+      const detail = await cdp.eval(`JSON.stringify(Array.from(document.querySelectorAll('tr'))
+        .filter(tr => tr.querySelector('td.fail'))
+        .map(tr => Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim())))`);
+      console.log("      failing rows: " + detail);
+    }
     // The image half can only run in a real canvas context.
     check("image-preprocessing battery ran in-browser",
       st.groups.some((g) => /Image preprocessing/.test(g)), JSON.stringify(st.groups));
 
     // ── 5. console cleanliness ──────────────────────────────────────
+    // Track every URL the server was asked for that it could not serve, so a
+    // 404 is reported with its path instead of a generic browser string.
+    check("server logged no 404s", notFound.length === 0, notFound.join(", "));
+
     const consoleErrors = cdp.events
       .filter((e) => e.method === "Log.entryAdded" && e.params.entry.level === "error")
       .map((e) => e.params.entry.text)
-      .filter((t) => !/favicon|manifest.*404|Failed to load resource.*favicon/i.test(t));
+      // The favicon is not part of the app; browsers request it unprompted.
+      .filter((t) => !/favicon/i.test(t));
     check("no console errors on any page", consoleErrors.length === 0,
       consoleErrors.slice(0, 3).join(" | "));
 
@@ -307,5 +358,6 @@ function check(desc, ok, detail) {
   }
 
   console.log("\n" + (fail === 0 ? "ALL " + pass + " BROWSER CHECKS PASSED" : pass + " passed, " + fail + " FAILED"));
+  console.log("paths requested: " + new Set(requested).size);
   process.exit(fail === 0 ? 0 : 1);
 })();

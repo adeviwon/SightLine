@@ -27,13 +27,22 @@
 
   // ── Announcements ─────────────────────────────────────────────────────
 
-  /** Speak-free screen-reader announcements. */
+  /**
+   * Screen-reader announcements.
+   *
+   * Two separate live regions rather than one region whose aria-live is
+   * mutated. Flipping the attribute on a single node leaves it assertive for
+   * every later update, so routine progress messages end up interrupting the
+   * user — and a real screen reader has already committed to the polite queue.
+   * Errors go to an assertive region; progress and results to a polite one
+   * that never changes.
+   */
   function announce(msg, assertive) {
-    if (!els.live) return;
-    els.live.setAttribute("aria-live", assertive ? "assertive" : "polite");
-    // Force re-announcement of an identical string.
-    els.live.textContent = "";
-    window.setTimeout(() => { els.live.textContent = msg; }, 30);
+    const el = assertive ? els.liveAssertive : els.live;
+    if (!el) return;
+    // Clearing first forces re-announcement when the text is unchanged.
+    el.textContent = "";
+    window.setTimeout(() => { el.textContent = msg; }, 30);
   }
 
   function setProgress(pct, label) {
@@ -193,7 +202,7 @@
   // ── Scan orchestration ────────────────────────────────────────────────
 
   async function runScan(source, name, note) {
-    if (busy) return;
+    if (busy) return null;
     busy = true;
     setScanEnabled(false);
     showError("");
@@ -206,16 +215,24 @@
 
     const t0 = performance.now();
     try {
-      // Stage 1: classical preprocess is unconditional — the restorer and the
+      // Which restoration to use is decided by whether the model exists, not
+      // by the image. With no restorer.onnx, "classical" (evaluate.py's
+      // arm_classical: median + unsharp, unconditionally) beats "adaptive",
+      // which applies nothing to a moderately blurred capture that sits just
+      // above the blurry threshold. Measured in tools/e2e_ocr.js.
+      const onnxRestorer = !els.skipRestore.checked;
+      const restoreMode = onnxRestorer ? "adaptive" : "classical";
+
+      // Stage 1: preprocessing is unconditional. The restorer and the
       // classifier are accelerators layered on top, never prerequisites.
-      const pp = SightLine.preprocess(source);
+      const pp = SightLine.preprocess(source, 3200, { restoreMode });
       setProgress(15, "Preprocessed " + pp.width + "×" + pp.height);
       await frame();
 
       // Stage 2: optional neural restoration. Falls back silently.
       let ocrCandidates = pp.candidates;
-      let engine = { restorer: "skipped", classifier: "skipped" };
-      if (!els.skipRestore.checked) {
+      let engine = { restorer: restoreMode, classifier: "skipped" };
+      if (onnxRestorer) {
         setProgress(20, "Restoring image…");
         const r = await SightLineRestorer.armRestorerClahe(pp.canvas, {
           onProgress: (m) => {
@@ -224,8 +241,6 @@
         });
         engine.restorer = r.engine;
         if (r.candidates) ocrCandidates = r.candidates;
-      } else {
-        engine.restorer = "skipped";
       }
       await frame();
 
@@ -253,10 +268,37 @@
         category: cls.category, confidence: cls.confidence, source: "minilm",
       } : undefined);
 
+      // Honesty gate on the RECOGNISED text, which is where the safety risk
+      // lives. preprocess() only knows about image statistics; a capture can
+      // look fine (lapVar 133) and still OCR at 26%, and on a prescription that
+      // is the difference between "take 500mg" and "take 300mg".
+      //
+      // The pipeline deliberately never guesses a missing field, so the risk is
+      // not a fabricated dosage — it is a user believing an incomplete one.
+      // Say so, rather than letting a confident-looking card imply certainty.
+      const warnings = pp.warnings.slice();
+      const ocrPct = Math.round(ocr.confidence * 100);
+      if (ocr.confidence < 0.40) {
+        warnings.push("Text was hard to read (" + ocrPct + "% confidence). "
+          + "Some details may be missing or wrong — check the original document, "
+          + "and retake the photo in better light if a figure matters.");
+      } else if (ocr.confidence < 0.60) {
+        warnings.push("Text confidence is only " + ocrPct
+          + "%. Check important figures against the original document.");
+      }
+      if (u.fields.length === 0) {
+        warnings.push("No key details could be extracted. Try a closer, "
+          + "straighter photo with the whole page in frame.");
+      }
+      if (cls === null && u.classificationConfidence < 0.6) {
+        warnings.push("The document type is uncertain — it may not be a "
+          + "prescription, bank statement or contract.");
+      }
+
       const ms = Math.round(performance.now() - t0);
       lastResult = Object.assign(u, {
         ocrConfidence: ocr.confidence,
-        warnings: pp.warnings,
+        warnings: warnings,
         quality: pp.quality,
         imageDims: pp.width + "×" + pp.height,
         skew: pp.skew,
@@ -271,7 +313,7 @@
       render(lastResult);
       setProgress(100, "Done in " + (ms / 1000).toFixed(1) + "s");
       announce("Scan complete. " + lastResult.categoryLabel + ". " +
-        lastResult.fields.length + " key details found. Press Read Aloud to hear the summary.", true);
+        lastResult.fields.length + " key details found. Press Read Aloud to hear the summary.");
     } catch (e) {
       const msg = (e && e.message) || String(e);
       showError("Scan failed: " + msg);
@@ -283,6 +325,7 @@
       busy = false;
       setScanEnabled(true);
     }
+    return lastResult;
   }
 
   /** Yield to the compositor so the progress bar actually paints. */
@@ -515,6 +558,13 @@
     init();
   }
 
-  // Exposed for selftest.html, which drives the same controller internals.
-  window.SightLineApp = { runScan, render, get lastResult() { return lastResult; } };
+  // Exposed for the test harnesses, which drive the real controller rather than
+  // a copy of it: selftest.html checks the DOM, warning_gate.js checks that a
+  // low-confidence scan is actually flagged. runScan resolves with the result
+  // so callers do not have to reach into a private variable.
+  window.SightLineApp = {
+    runScan: runScan,
+    render: render,
+    get lastResult() { return lastResult; },
+  };
 })();

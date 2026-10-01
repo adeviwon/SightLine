@@ -198,7 +198,16 @@ class Ctx2D {
   }
 
   fillRect(x, y, w, h) {
-    const [r, g, b, a] = parseColor(this.fillStyle);
+    this._paint(x, y, w, h, parseColor(this.fillStyle));
+  }
+
+  clearRect(x, y, w, h) {
+    // Real Canvas clearRect paints transparent black, ignoring fillStyle.
+    this._paint(x, y, w, h, [0, 0, 0, 0]);
+  }
+
+  _paint(x, y, w, h, rgba) {
+    const [r, g, b, a] = rgba;
     for (let yy = Math.max(0, y | 0); yy < Math.min(this._h, (y | 0) + (h | 0)); yy++) {
       for (let xx = Math.max(0, x | 0); xx < Math.min(this._w, (x | 0) + (w | 0)); xx++) {
         const i = (yy * this._w + xx) * 4;

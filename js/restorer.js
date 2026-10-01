@@ -27,12 +27,12 @@ const SightLineRestorer = (() => {
 
   const TILE_H = 64;
   const TILE_W = 256;
-  const ORT_CANDIDATES = [
-    "vendor/ort/ort.webgpu.bundle.min.mjs",
-    "vendor/ort/ort.wasm.bundle.min.mjs",
-    "vendor/ort/ort.webgpu.min.mjs",
-    "vendor/ort/ort.wasm.min.mjs",
-  ];
+  // Only the WASM module is vendored (see prune_ort.sh — the webgpu, webgl,
+  // jsep and bundle variants are ~77 MB of dead weight). A single candidate
+  // keeps the failure mode legible: if this import fails, ORT is genuinely
+  // absent and the classical fallback is correct.
+  const ORT_MODULE = "vendor/ort/ort.min.mjs";
+  const ORT_PATH = "vendor/ort/";
   const MODEL_PATH = "models/restorer.onnx";
 
   let _ort = null;          // the ort module namespace
@@ -40,6 +40,7 @@ const SightLineRestorer = (() => {
   let _loading = null;      // in-flight promise
   let lastEngine = "uninitialised";
   let lastError = null;
+  let lastWeight = 1.0;    // last degradation-gate reading, for status()/UI
 
   /**
    * Resolve the shared pipeline module.
@@ -52,6 +53,17 @@ const SightLineRestorer = (() => {
    */
   function SL() {
     return (typeof globalThis !== "undefined" && globalThis.SightLine) || null;
+  }
+
+  /**
+   * The degradation gate (js/gating.js). Kept separate from SL() because it
+   * is a different module with a different global handle. If it is missing
+   * (script not loaded, or a bare-reference environment where the global is
+   * not visible) we fall back to weight 1.0 — i.e. always restore — which is
+   * the pre-gate behaviour and is safe, just less good.
+   */
+  function GT() {
+    return (typeof globalThis !== "undefined" && globalThis.SightLineGating) || null;
   }
 
   function base() {
@@ -103,23 +115,16 @@ const SightLineRestorer = (() => {
     const m = await loadManifest();
     if (!m.ort) throw new Error("onnxruntime-web not vendored (models/ort.json absent or ort:false)");
     const b = base();
-    let lastErr = null;
-    for (const rel of ORT_CANDIDATES) {
-      try {
-        const mod = await import(/* webpackIgnore: true */ b + rel);
-        _ort = mod;
-        if (_ort.env && _ort.env.wasm) {
-          _ort.env.wasm.wasmPaths = b + "vendor/ort/";
-          _ort.env.wasm.numThreads = 1;  // COOP/COEP-free hosting
-          _ort.env.logLevel = "error";
-        }
-        return _ort;
-      } catch (e) {
-        lastErr = e;
-      }
+    const mod = await import(/* webpackIgnore: true */ b + ORT_MODULE);
+    _ort = mod;
+    if (_ort.env && _ort.env.wasm) {
+      // The .wasm binary sits beside the JS loader; without this, ORT looks
+      // for it at a CDN path and the offline guarantee silently breaks.
+      _ort.env.wasm.wasmPaths = b + ORT_PATH;
+      _ort.env.wasm.numThreads = 1;  // COOP/COEP-free hosting
+      _ort.env.logLevel = "error";
     }
-    throw new Error("onnxruntime-web not vendored (tried " +
-      ORT_CANDIDATES.length + " paths): " + (lastErr && lastErr.message));
+    return _ort;
   }
 
   /**
@@ -132,8 +137,15 @@ const SightLineRestorer = (() => {
     if (_loading) return _loading;
     _loading = (async () => {
       try {
+        // Check the availability manifest BEFORE anything else. Without this,
+        // init() fetches restorer.onnx on every page load and logs a 404,
+        // because ORT is deliberately not vendored in a stock install.
+        const m = await loadManifest();
+        if (!m.restorer) {
+          lastError = "restorer.onnx not vendored (models/ort.json: restorer=false)";
+          return null;
+        }
         const ort = await loadOrt();
-        // HEAD first: a 404 on the model should not blow up the import path.
         const url = base() + MODEL_PATH;
         const probe = await fetch(url, { method: "GET", cache: "force-cache" });
         if (!probe.ok) {
@@ -304,16 +316,35 @@ const SightLineRestorer = (() => {
       const session = await init();
       if (session) {
         try {
+          // Measure the damage BEFORE restoring. The model is unconditional,
+          // so running it on an already-clean image actively harms it (-48 dB
+          // PSNR on the training corpus). A clean scan is the demo case, so
+          // the gate is what makes the model safe to ship. See js/gating.js.
+          const gate = GT();
+          const probe = gate && gate.weightFromImageData
+            ? gate.weightFromImageData(
+                canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height))
+            : 1.0;
+          lastWeight = probe;
+          if (probe < 0.02) {
+            // Undamaged: pass the original through untouched. Skipping
+            // inference entirely is also ~30x faster on a phone.
+            lastEngine = "gate-skipped";
+            return { canvas, engine: "gate-skipped", error: null, tiles: 0,
+                     weight: probe };
+          }
           const outCanvas = await runONNX(canvas, session, o.onProgress);
           lastEngine = "onnx";
-          return { canvas: outCanvas, engine: "onnx", error: null, tiles: null };
+          return { canvas: outCanvas, engine: "onnx", error: null, tiles: null,
+                   weight: probe };
         } catch (e) {
           lastError = "ONNX inference failed: " + ((e && e.message) || e);
         }
       }
     }
     lastEngine = "classical";
-    return { canvas: runClassical(canvas), engine: "classical", error: lastError, tiles: null };
+    return { canvas: runClassical(canvas), engine: "classical", error: lastError,
+             tiles: null, weight: 1.0 };
   }
 
   /**
@@ -331,7 +362,8 @@ const SightLineRestorer = (() => {
   }
 
   function status() {
-    return { engine: lastEngine, error: lastError, modelPath: MODEL_PATH, available: _session !== null };
+    return { engine: lastEngine, error: lastError, modelPath: MODEL_PATH,
+             available: _session !== null, weight: lastWeight };
   }
 
   return { restore, armRestorerClahe, init, available, status, runClassical, TILE_H, TILE_W, MODEL_PATH };
