@@ -97,8 +97,6 @@ class TextToSpeech:
             cmd.extend(["-v", "en+f3"])
         elif self.voice == "male":
             cmd.extend(["-v", "en+m3"])
-        # Punctuation for better readability
-        cmd.extend(["--punct", "<"])
 
         if self.output_file:
             # Output to WAV file

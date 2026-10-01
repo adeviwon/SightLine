@@ -279,10 +279,10 @@ class DocumentClassifier:
     def _extract_medical_fields(self, text: str) -> list[ExtractedField]:
         fields = []
         patterns = {
-            "Medication": r"(?:Rx|medication|prescription)[:\s]*([A-Z][a-z]+(?:\s\d+mg)?)",
+            "Medication": r"(?:Rx\s*:\s*|medication\s*:\s*|prescription\s+for\s+)([A-Z][a-z]+(?:\s\d+mg)?)",
             "Dosage": r"(\d+\s*(?:mg|ml|tablets?|capsules?)\s*(?:every\s*\d+\s*hours?|twice|three times|once daily|at bedtime)?)",
             "Frequency": r"(every\s*\d+\s*(?:hours?|hrs)|\d+\s*times?\s*daily|once\s*daily|twice\s*daily|three\s*times\s*daily)",
-            "Warning": r"(warning|caution|do not|avoid|may cause|consult|keep out)[^.]*",
+            "Warning": r"((?:WARNING|Caution|Do not\s+|Avoid\s+|May cause\s+|Consult\s+|Keep out\s+)[^.]+)",
             "Patient": r"(?:patient|name)[:\s]*([A-Z][a-z]+\s+[A-Z][a-z]+)",
         }
         for label, pattern in patterns.items():
@@ -320,13 +320,75 @@ class DocumentClassifier:
         return fields
 
     def _build_summary(self, category: str, fields: list[ExtractedField], text: str) -> str:
-        """Build a human-readable summary for TTS narration."""
+        """Build a natural-language summary for TTS narration."""
         if not fields:
-            # Return first 200 chars of text as summary
-            return text[:200].strip()
+            return text[:300].strip()
 
-        parts = [f"{CATEGORY_LABELS.get(category, 'Document')}. "]
-        for f in fields[:8]:  # Limit to 8 fields for brevity
-            parts.append(f"{f.label}: {f.value}. ")
+        # Group fields by label
+        medications = [f.value for f in fields if f.label == "Medication"]
+        dosages = [f.value for f in fields if f.label == "Dosage"]
+        frequencies = [f.value for f in fields if f.label == "Frequency"]
+        warnings = [f.value for f in fields if f.label == "Warning"]
+        patients = [f.value for f in fields if f.label == "Patient"]
+
+        # Account numbers, balances, amounts for banking
+        account_numbers = [f.value for f in fields if f.label == "Account Number"]
+        balances = [f.value for f in fields if f.label == "Balance"]
+        amounts = [f.value for f in fields if f.label == "Amount"]
+        card_ends = [f.value for f in fields if f.label == "Card End"]
+
+        # Case numbers, clauses, dates, parties for legal
+        case_numbers = [f.value for f in fields if f.label == "Case Number"]
+        clauses = [f.value for f in fields if f.label == "Clause"]
+        dates = [f.value for f in fields if f.label == "Date"]
+        parties = [f.value for f in fields if f.label == "Parties"]
+
+        # General
+        emails = [f.value for f in fields if f.label == "Email"]
+        phones = [f.value for f in fields if f.label == "Phone"]
+        times = [f.value for f in fields if f.label == "Time"]
+
+        parts = []
+
+        if category == "medical":
+            parts.append("This is a medical prescription. ")
+            if patients:
+                parts.append(f"Patient: {patients[0]}. ")
+            if medications:
+                parts.append(f"Medications prescribed: {', '.join(medications)}. ")
+            if dosages:
+                parts.append(f"Dosages: {', '.join(dosages)}. ")
+            if frequencies:
+                parts.append(f"Frequency: {', '.join(frequencies)}. ")
+            if warnings:
+                parts.append(f"Warnings: {' '.join(warnings)}")
+        elif category == "banking":
+            parts.append("This is a banking document. ")
+            if account_numbers:
+                parts.append(f"Account number: {account_numbers[0]}. ")
+            if card_ends:
+                parts.append(f"Card ending in {card_ends[0]}. ")
+            if balances:
+                parts.append(f"Balance: {balances[0]}. ")
+            if amounts:
+                parts.append(f"Amounts: {', '.join(amounts[:3])}. ")
+        elif category == "legal":
+            parts.append("This is a legal document. ")
+            if case_numbers:
+                parts.append(f"Case reference: {case_numbers[0]}. ")
+            if dates:
+                parts.append(f"Date: {dates[0]}. ")
+            if clauses:
+                parts.append(f"Clauses referenced: {', '.join(clauses)}. ")
+        else:
+            parts.append("This is a document. ")
+            if dates:
+                parts.append(f"Date: {dates[0]}. ")
+            if emails:
+                parts.append(f"Email: {emails[0]}. ")
+            if phones:
+                parts.append(f"Phone: {phones[0]}. ")
+            if times:
+                parts.append(f"Time: {times[0]}. ")
 
         return "".join(parts)

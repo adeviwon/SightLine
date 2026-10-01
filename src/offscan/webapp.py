@@ -219,7 +219,10 @@ HTML_PAGE = """<!DOCTYPE html>
         <div class="summary-box" id="summary-box"></div>
         <div id="fields-container"></div>
         <div id="entities-container"></div>
-        <audio id="audio-player" controls></audio>
+        <div style="margin-top: 12px;">
+                    <audio id="audio-player" controls style="width:100%;"></audio>
+                    <button id="read-full-btn" onclick="readFullText()" style="margin-top:8px;background:#333;color:#fff;border:none;padding:12px 24px;border-radius:8px;font-size:14px;cursor:pointer;">Read Full Document</button>
+                </div>
     </div>
 
     <script>
@@ -320,10 +323,11 @@ HTML_PAGE = """<!DOCTYPE html>
 
             // Summary
             const summaryBox = document.getElementById('summary-box');
-            summaryBox.innerHTML = '<strong>' + data.document_label + '</strong><br>' + data.summary +
-                '<br><small style="color:#888">OCR: ' + (data.ocr_confidence*100).toFixed(0) + '% | ' +
+            summaryBox.innerHTML = '<strong>' + data.document_label + '</strong><br><br>' + data.summary +
+                '<br><br><small style="color:#888">OCR confidence: ' + (data.ocr_confidence*100).toFixed(0) + '% | ' +
                 'Classification: ' + (data.classification_confidence*100).toFixed(0) + '% | ' +
-                'Time: ' + data.total_time_ms.toFixed(0) + 'ms</small>';
+                'Time: ' + data.total_time_ms.toFixed(0) + 'ms | ' +
+                'Network calls: 0</small>';
 
             // Fields
             const fieldsContainer = document.getElementById('fields-container');
@@ -354,10 +358,35 @@ HTML_PAGE = """<!DOCTYPE html>
                 entitiesContainer.innerHTML = '';
             }
 
-            // Audio
+            // Audio — auto-play
             if (data.audio_url) {
-                document.getElementById('audio-player').src = data.audio_url;
+                const audio = document.getElementById('audio-player');
+                audio.src = data.audio_url;
+                audio.play().catch(e => console.log('Auto-play blocked:', e));
             }
+        }
+
+        async function readFullText() {
+            if (!capturedBlob) return;
+            document.getElementById('read-full-btn').textContent = 'Reading...';
+            document.getElementById('read-full-btn').disabled = true;
+            
+            const formData = new FormData();
+            formData.append('image', capturedBlob);
+            
+            try {
+                const resp = await fetch('/scan?full=true', { method: 'POST', body: formData });
+                const data = await resp.json();
+                if (data.audio_url) {
+                    const audio = document.getElementById('audio-player');
+                    audio.src = data.audio_url;
+                    audio.play().catch(e => console.log('Auto-play blocked:', e));
+                }
+            } catch(e) {
+                console.error(e);
+            }
+            document.getElementById('read-full-btn').textContent = 'Read Full Document';
+            document.getElementById('read-full-btn').disabled = false;
         }
 
         startCamera();
@@ -387,15 +416,20 @@ def scan():
     # Run pipeline
     result = get_pipeline().scan(img)
 
-    # Generate audio
+    # Generate audio — read full text if requested
     audio_path = None
+    read_full = request.args.get("full", "false") == "true"
     try:
         from offscan.tts import TextToSpeech
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False, dir="/tmp") as f:
             audio_path = f.name
         tts = TextToSpeech(output_file=audio_path)
-        tts.speak(result.summary)
-    except Exception:
+        if read_full:
+            tts.speak(result.ocr_text)
+        else:
+            tts.speak(result.summary)
+    except Exception as e:
+        print(f"TTS error: {e}")
         pass
 
     response = {
