@@ -78,7 +78,7 @@ PYTHONPATH=src python3 -m offscan.cli scan /path/to/document.png --json
 # Read the full document aloud (not just the summary)
 PYTHONPATH=src python3 -m offscan.cli scan /path/to/document.png --full
 
-# Run the test suite (22 tests, all offline)
+# Run the test suite (37 tests (22 core + 15 real-world conditions))
 pip3 install pytest
 PYTHONPATH=src python3 -m pytest tests/ -v
 ```

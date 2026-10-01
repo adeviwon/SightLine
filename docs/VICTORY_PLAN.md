@@ -111,7 +111,7 @@ SightLine connects to SIX specific 2026 Policy Address priorities:
 
 ### The 150-Word Proposal (Draft)
 
-> In Hong Kong, over 50,000 people are visually impaired. Many are elderly and cannot read medical prescriptions, banking statements, or government letters — risking medication errors, financial fraud, and loss of independence. Existing reading apps send private documents to cloud servers, violating data privacy. SightLine is a fully offline document scanner that reads medical prescriptions, banking details, and official documents aloud using on-device OCR and text-to-speech. Nothing leaves the phone — no internet required, no cloud, zero privacy risk. It uses Tesseract OCR, ONNX Runtime models, and OpenCV, all running locally. Aligned with the 2026 Policy Address's AI for Welfare Lab (Para 113), Gerontechnology Promotion Scheme (Para 398-400), and AI in Healthcare (Para 108), SightLine empowers visually impaired and elderly Hong Kong residents to read sensitive documents independently and privately. A working prototype with 22 passing tests demonstrates feasibility.
+> In Hong Kong, over 50,000 people are visually impaired. Many are elderly and cannot read medical prescriptions, banking statements, or government letters — risking medication errors, financial fraud, and loss of independence. Existing reading apps send private documents to cloud servers, violating data privacy. SightLine is a fully offline document scanner that reads medical prescriptions, banking details, and official documents aloud using on-device OCR and text-to-speech. Nothing leaves the phone — no internet required, no cloud, zero privacy risk. It uses Tesseract OCR, ONNX Runtime models, and OpenCV, all running locally. Aligned with the 2026 Policy Address's AI for Welfare Lab (Para 113), Gerontechnology Promotion Scheme (Para 398-400), and AI in Healthcare (Para 108), SightLine empowers visually impaired and elderly Hong Kong residents to read sensitive documents independently and privately. A working prototype with 37 passing tests (22 core + 15 real-world) demonstrates feasibility.
 
 (That's 149 words.)
 
@@ -161,7 +161,7 @@ This is the most important deliverable. Structure:
 - Show the pipeline architecture: OpenCV → Tesseract + ONNX → Classifier → NER → TTS
 - Mention ONNX models running locally
 - Show confidence scores on screen
-- "22 tests pass. The code is open-source on GitHub."
+- "37 tests pass. The code is open-source on GitHub."
 
 **Minute 3:00-4:00 — Impact & Feasibility**
 - HK context: District Health Centres, elderly care, gerontechnology
@@ -218,7 +218,7 @@ If you're shortlisted, you get:
 > "SightLine directly addresses three Policy Address priorities. First, digital inclusion — the Digital Policy Office's mandate to help those in need access digital technology. Second, gerontechnology — Paragraph 265-266 establishes the Working Group on Ageing Society Strategies, which explicitly covers gerontechnology. Many visually impaired people in Hong Kong are elderly. Third, healthcare innovation — Paragraph 226 promotes health and medical innovation, and our prescription-reading feature directly supports medication safety."
 
 **"Is this technically feasible?"**
-> "We have a working prototype with 22 passing tests. The pipeline runs fully offline using Tesseract OCR and ONNX Runtime. We've demonstrated it reading prescriptions, bank statements, and legal documents with over 90% OCR confidence. The code is on GitHub — anyone can verify it works."
+> "We have a working prototype with 37 passing tests (22 core + 15 real-world). The pipeline runs fully offline using Tesseract OCR and ONNX Runtime. We've demonstrated it reading prescriptions, bank statements, and legal documents with over 90% OCR confidence. The code is on GitHub — anyone can verify it works."
 
 **"Why not just use existing apps?"**
 > "Google Lens, Seeing AI, and Be My Eyes all send document images to cloud servers. For a blind person scanning their bank statement or medical prescription, that's a GDPR and privacy violation. SightLine is the only solution that keeps sensitive data on the device. It also works without internet — critical for the 90% of visually impaired people globally who live in areas with unreliable connectivity."
@@ -260,7 +260,7 @@ SightLine spans all four STEMB disciplines:
 - Dual-engine OCR (Tesseract + ONNX deep OCR)
 - Document classification with confidence scoring
 - Named entity recognition for medical/financial fields
-- 22 passing tests, CI pipeline, Docker with network_mode none
+- 37 passing tests (22 core + 15 real-world), CI pipeline, Docker with network_mode none
 - This is genuinely impressive for a high school team — judges will notice
 
 ### 5. The Malvern College Hong Kong Precedent
@@ -298,7 +298,7 @@ The airplane mode demo is the mic drop. No other team in this competition will h
 
 ### Technical Preparation
 - [ ] Clone SightLine repo, run `python -m offscan.cli demo`
-- [ ] Confirm all 22 tests pass
+- [ ] Confirm all 37 tests pass
 - [ ] Download ONNX models: `python -m offscan.cli models`
 - [ ] Practice the live demo 5+ times
 - [ ] Prepare backup video in case live demo fails
@@ -345,7 +345,7 @@ The airplane mode demo is the mic drop. No other team in this competition will h
 
 Three things no other team will have:
 
-1. **A working prototype with 22 passing tests** — Most teams submit a proposal and a slide deck. We submit a working offline ML pipeline with ONNX models, confidence scoring, and zero network calls. This is unheard of in a high school hackathon.
+1. **A working prototype with 37 passing tests (22 core + 15 real-world)** — Most teams submit a proposal and a slide deck. We submit a working offline ML pipeline with ONNX models, confidence scoring, and zero network calls. This is unheard of in a high school hackathon.
 
 2. **The airplane mode demo** — When judges see airplane mode ON, a prescription scanned, and the dosage read aloud with zero bytes sent — that's the moment. No other team can prove zero network calls like this.
 
