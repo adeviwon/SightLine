@@ -251,6 +251,7 @@ if __name__ == "__main__":
     sys.path.insert(0, str(Path(__file__).parent))
     import capture
     from train_restorer import BANDS, PATCH_H, PATCH_W
+    import seedutil
 
     print(f"Calibration is measured on {PATCH_H}x{PATCH_W} PATCHES — the unit")
     print(f"the restorer consumes. Full-image numbers are ~3.5x smaller and")

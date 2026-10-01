@@ -35,9 +35,213 @@
       "train_loss": 0.143369,
       "val_psnr_db": 13.628,
       "seconds": 228.7
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.128259,
+      "val_psnr_db": 13.279,
+      "seconds": 263.1
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.120261,
+      "val_psnr_db": 12.246,
+      "seconds": 296.4
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.124573,
+      "val_psnr_db": 13.312,
+      "seconds": 329.9
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.123384,
+      "val_psnr_db": 12.847,
+      "seconds": 362.5
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.132115,
+      "val_psnr_db": 13.43,
+      "seconds": 395.1
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.112911,
+      "val_psnr_db": 13.49,
+      "seconds": 426.8
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.108504,
+      "val_psnr_db": 12.989,
+      "seconds": 458.2
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.105297,
+      "val_psnr_db": 13.463,
+      "seconds": 489.9
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.10965,
+      "val_psnr_db": 13.811,
+      "seconds": 521.9
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.104886,
+      "val_psnr_db": 13.564,
+      "seconds": 551.9
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.101649,
+      "val_psnr_db": 13.548,
+      "seconds": 582.5
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.105629,
+      "val_psnr_db": 13.512,
+      "seconds": 612.2
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.1022,
+      "val_psnr_db": 13.576,
+      "seconds": 642.4
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.097245,
+      "val_psnr_db": 13.995,
+      "seconds": 672.7
+    },
+    {
+      "epoch": 21,
+      "train_loss": 0.094277,
+      "val_psnr_db": 13.859,
+      "seconds": 704.0
+    },
+    {
+      "epoch": 22,
+      "train_loss": 0.094489,
+      "val_psnr_db": 13.498,
+      "seconds": 735.6
+    },
+    {
+      "epoch": 23,
+      "train_loss": 0.091083,
+      "val_psnr_db": 13.979,
+      "seconds": 767.7
+    },
+    {
+      "epoch": 24,
+      "train_loss": 0.092239,
+      "val_psnr_db": 13.976,
+      "seconds": 799.9
+    },
+    {
+      "epoch": 25,
+      "train_loss": 0.089918,
+      "val_psnr_db": 14.083,
+      "seconds": 832.5
+    },
+    {
+      "epoch": 26,
+      "train_loss": 0.087475,
+      "val_psnr_db": 13.764,
+      "seconds": 864.2
+    },
+    {
+      "epoch": 27,
+      "train_loss": 0.089464,
+      "val_psnr_db": 13.891,
+      "seconds": 895.3
+    },
+    {
+      "epoch": 28,
+      "train_loss": 0.091668,
+      "val_psnr_db": 13.874,
+      "seconds": 925.5
+    },
+    {
+      "epoch": 29,
+      "train_loss": 0.087846,
+      "val_psnr_db": 13.84,
+      "seconds": 955.4
+    },
+    {
+      "epoch": 30,
+      "train_loss": 0.087927,
+      "val_psnr_db": 13.939,
+      "seconds": 986.0
+    },
+    {
+      "epoch": 31,
+      "train_loss": 0.086064,
+      "val_psnr_db": 14.131,
+      "seconds": 1015.7
+    },
+    {
+      "epoch": 32,
+      "train_loss": 0.085002,
+      "val_psnr_db": 13.839,
+      "seconds": 1047.5
+    },
+    {
+      "epoch": 33,
+      "train_loss": 0.085311,
+      "val_psnr_db": 13.992,
+      "seconds": 1079.4
+    },
+    {
+      "epoch": 34,
+      "train_loss": 0.085159,
+      "val_psnr_db": 14.074,
+      "seconds": 1110.9
+    },
+    {
+      "epoch": 35,
+      "train_loss": 0.086575,
+      "val_psnr_db": 13.951,
+      "seconds": 1143.2
+    },
+    {
+      "epoch": 36,
+      "train_loss": 0.085269,
+      "val_psnr_db": 14.014,
+      "seconds": 1174.7
+    },
+    {
+      "epoch": 37,
+      "train_loss": 0.084299,
+      "val_psnr_db": 13.98,
+      "seconds": 1206.5
+    },
+    {
+      "epoch": 38,
+      "train_loss": 0.083741,
+      "val_psnr_db": 13.979,
+      "seconds": 1238.5
+    },
+    {
+      "epoch": 39,
+      "train_loss": 0.083948,
+      "val_psnr_db": 13.96,
+      "seconds": 1270.8
+    },
+    {
+      "epoch": 40,
+      "train_loss": 0.083761,
+      "val_psnr_db": 13.976,
+      "seconds": 1302.8
     }
   ],
-  "best_val_psnr_db": 13.628,
+  "best_val_psnr_db": 14.131,
   "n_train_patches": 336,
   "n_val_patches": 84,
   "docs_per_profile": 14,
