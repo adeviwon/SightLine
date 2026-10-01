@@ -24,6 +24,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).parent))
 import capture  # noqa: E402
 import gating  # noqa: E402
+import seedutil  # noqa: E402  — stable cross-process seed derivation
 from model import SightLineNet, psnr  # noqa: E402
 
 

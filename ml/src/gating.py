@@ -262,7 +262,7 @@ if __name__ == "__main__":
         sh, nz, ct, wt = [], [], [], []
         g = None
         for i in range(3):
-            ds = 123 * 7919 + abs(hash(name)) % 100003 + i
+            ds = 123 * 7919 + seedutil.name_hash(name) % 100003 + i
             lines, _ = capture.DOCS[i % len(capture.DOCS)]
             clean = capture.render_document(lines, seed=ds)
             deg = capture.apply_profile(clean, seed=ds, **params)

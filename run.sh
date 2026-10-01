@@ -20,6 +20,8 @@ case "$cmd" in
   capture)     exec $PYRUN ml/src/capture.py "$@" ;;
   corpus)      exec $PYRUN ml/src/corpus.py "$@" ;;
   bench)       exec $PYRUN ml/src/bench.py "$@" ;;
+  bundle-check) exec $PYRUN ml/src/bundle_check.py "$@" ;;
+  repro-check) exec $PYRUN ml/src/repro_check.py "$@" ;;
   diagnose)    exec $PYRUN ml/src/diagnose.py "$@" ;;
   gating)      exec $PYRUN ml/src/gating.py "$@" ;;
   privacy)     exec $PYRUN ml/src/privacy_audit.py "$@" ;;

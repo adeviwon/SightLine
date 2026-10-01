@@ -44,6 +44,7 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).parent))
 import capture  # noqa: E402
+import seedutil  # noqa: E402  — stable cross-process seed derivation
 
 # Ground-truth fields per document type. A doc counts correct ONLY if all of
 # its fields are found in the OCR output (normalized).
@@ -211,7 +212,7 @@ def run(n_per_profile=6, seed=123, arms=None, out_path="artifacts/eval_results.j
                     "class_ok": [], "psnr": []} for a in arms}
         gt_texts, t0 = {}, time.time()
         for i in range(n_per_profile):
-            ds = seed * 7919 + abs(hash(pname)) % 100003 + i
+            ds = seed * 7919 + seedutil.name_hash(pname) % 100003 + i
             lines, dtype = capture.DOCS[i % len(capture.DOCS)]
             clean = capture.render_document(lines, seed=ds)
             deg = capture.apply_profile(clean, seed=ds,

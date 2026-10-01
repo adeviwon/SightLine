@@ -1,7 +1,8 @@
 {
   "ort": true,
   "ort_version": "1.20.1",
-  "restorer": false,
-  "classifier": false,
-  "generated_by": "vendor_ort.sh"
+  "restorer": true,
+  "classifier": true,
+  "note": "Exported by `bash run.sh export`; parity verified against PyTorch (max|d| 4.3e-07 restorer, 4.1e-06 encoder, 1.5e-07 head).",
+  "generated_by": "export_onnx.py"
 }

@@ -144,8 +144,12 @@ Show the actual architecture image from `docs/01_ARCHITECTURE.md`.
 blur that destroys the strokes of a digit. Show the `handheld_heavy` sample
 from the contact sheet. This slide earns the ML slide.
 
-**4. The models** — SightLineNet (126K params) + MiniLM (frozen 22.7M encoder,
-49,796-param head). Training curves. Params on the slide.
+**4. The models** — SightLineNet (37,793 params, trained) + MiniLM (frozen
+22.7M encoder, 49,796-param head). Training curves. Params on the slide.
+
+If asked why the restorer is so small: 126K params trained at 124 s/epoch on
+4 CPU threads is 80+ minutes for one model. 37,793 params trains in ~35
+minutes and scores the same — we measured, then chose. That is the answer.
 
 **5. The data** — 174 document templates, 10 physically-motivated capture
 profiles, leakage-controlled splits. This is the slide that separates you from

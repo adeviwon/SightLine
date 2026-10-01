@@ -30,6 +30,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 import capture  # noqa: E402
+import seedutil  # noqa: E402  — shared seeding rule, not a private copy
 from corpus import CATEGORIES, RAW  # noqa: E402
 from model import SightLineNet  # noqa: E402
 from train_classifier import kfold_indices  # noqa: E402
@@ -317,14 +318,17 @@ def _seed_index(pairs_and_seeds):
 def _studio_seeds(pairs, seeds):
     """Seeds belonging to the `studio_clean` (identity) profile.
 
-    build_pairs derives a document seed as seed*7919 + hash(profile)%100003 + i
-    for every profile, so the studio_clean seeds are recomputed rather than
-    guessed. (hash() of a str is salted per process, but it is stable WITHIN
-    one process, which is all this test needs.)
+    This recomputes the document seeds via `seedutil.name_hash`, the SAME
+    function train_restorer.py uses. It previously inlined
+    `abs(hash(pname))` here, which meant the test carried a private copy of the
+    seeding rule: when that rule was fixed in the source, the test's copy went
+    stale and it failed with "0 studio_clean patches" while asserting something
+    entirely correct. Deriving from the shared function makes that impossible --
+    there is now exactly one place the rule is written down.
     """
     out = set()
     for pname in FAST_PROFILES:
         if not capture.CAPTURE_PROFILES[pname]:   # studio_clean: empty params
             for i in range(N_DOCS):
-                out.add(SEED * 7919 + abs(hash(pname)) % 100003 + i)
+                out.add(seedutil.profile_seed(pname, SEED) + i)
     return out

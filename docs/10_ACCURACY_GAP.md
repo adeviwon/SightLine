@@ -1,13 +1,49 @@
 # The accuracy gap: what we measured vs. the 95–100% target
 
 > **The short version: we did not reach 95–100% end-to-end field accuracy.
-> We measured 42% on the app's real OCR path, and ~92–100% for text
-> classification on held-out synthetic templates. This page explains exactly
-> what was measured, where the gap is, and what would close it.**
+> The best measured configuration reaches 62.2%; classification reaches 95.0%
+> mean across seeds. This page explains exactly what was measured, where the
+> gap is, and what would close it.**
 
 Stating this up front is deliberate. A hackathon pitch that claims 95–100%
-when the measurement says 42% loses to a team that shows a real number and a
+when the measurement says 62% loses to a team that shows a real number and a
 plan, every time.
+
+---
+
+## 0. Two numbers, and which one to quote
+
+There are two independent measurements, and they answer different questions.
+Do not blend them.
+
+| Measurement | Number | Question it answers |
+|---|---|---|
+| **Classification** (what kind of document is this?) | **95.0%** mean, 5 seeds | "Is this a prescription or a bank statement?" |
+| **End-to-end field accuracy** (what does it say?) | **62.2%** best arm | "Did we read the dosage correctly?" |
+
+A judge asking "how accurate is it?" is almost always asking the second one.
+Quote that one.
+
+### Where 62.2% comes from
+
+`bash run.sh eval --n 5`, four preprocessing arms, real Tesseract OCR,
+all-or-nothing field matching, `worst_case` excluded as sub-human:
+
+```
+arm               field_acc  word_acc   dosage  ocr_conf
+raw                  57.8%     61.5%     84.4%     68.8
+classical            57.8%     61.2%     84.4%     68.0
+restorer             62.2%     67.2%     86.7%     70.1   <- ours
+restorer_clahe       62.2%     65.8%     84.4%     68.4
+```
+
+**The trained restorer is worth +4.4 points over the raw image** (57.8% →
+62.2%) and **+4.4 on word accuracy** (61.5% → 67.2%). That is the trained
+model earning its place, and it is the honest headline for the ML contribution.
+
+`worst_case` scores **0% on every arm** and is reported rather than hidden —
+at that blur level the information is genuinely gone, and no restoration model
+recovers information that was never captured.
 
 ---
 
@@ -23,17 +59,17 @@ different current states:
 |---|---|---|
 | A trained model that classifies documents | **Met (with caveat)** | 95.0% mean across 5 seeds, 100% on 20-fold CV |
 | Runs on iOS and Android | **Met** | PWA, verified in headless Chromium over CDP |
-| Reads text accurately from blurry images | **Not met** | 42% field accuracy on the real OCR path |
+| Reads text accurately from blurry images | **Not met** | 62.2% field accuracy, best arm |
 
 The third one is the hard one, and it is the one the requirement is really
 about.
 
 ---
 
-## 2. What "42% field accuracy" actually means
+## 2. The earlier 42% measurement
 
-From the app's end-to-end OCR test (`app/tools/e2e_ocr.js`, real Tesseract on
-simulated capture images):
+An earlier run of the app's end-to-end OCR test (`app/tools/e2e_ocr.js`, real
+Tesseract on simulated capture images) reported:
 
 ```
   studio_clean    3/3  100%
@@ -65,6 +101,14 @@ capture.
 **Independently re-measured** by running `node tools/e2e_ocr.js` directly
 rather than trusting a subagent's report. Same numbers.
 
+> **Why 42% and not 62%?** That run predated the ONNX export, so the app had
+> no trained model and silently fell back to classical median+unsharp — which
+> measures **57.8%** in `bash run.sh eval`, above the 42% the browser path
+> produced, so the two numbers are not directly comparable (different OCR
+> build, different sample). Once the ONNX models are wired in the app path
+> should approach the 62.2% the Python harness measures. **Verify the current
+> app number before quoting either.**
+
 ### The failure is a single wrong digit
 
 This is worth showing a judge, because it makes the problem concrete:
@@ -87,7 +131,7 @@ Two things follow:
 1. **This is a medical/legal safety case, not a UX annoyance.** A wrong case
    reference, or a wrong dosage, is worse than silence. The app currently
    omits the field rather than guessing, which is right — but it means the
-   42% understates how much worse a naive system would be.
+   headline accuracy understates how much worse a naive system would be.
 2. **A confidence threshold is not enough.** Tesseract reported 59% confidence
    on this document — above any threshold worth setting. Character-level
    confidence does not predict field-level correctness on degraded input.

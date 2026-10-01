@@ -34,6 +34,7 @@ from torch.utils.data import DataLoader
 
 sys.path.insert(0, str(Path(__file__).parent))
 import capture  # noqa: E402
+import seedutil  # noqa: E402  — stable cross-process seed derivation
 from model import (CharbonnierLoss, PatchDataset, SightLineNet,  # noqa: E402
                    count_params, psnr)
 
@@ -54,7 +55,7 @@ def build_pairs(n_docs_per_profile=6, seed=123, profiles=None, verbose=True):
     for pname in profiles:
         params = capture.CAPTURE_PROFILES[pname]
         for i in range(n_docs_per_profile):
-            ds = seed * 7919 + abs(hash(pname)) % 100003 + i
+            ds = seed * 7919 + seedutil.name_hash(pname) % 100003 + i
             rng = random.Random(ds)
             # vary the capture within the profile's envelope so the network
             # sees a distribution, not one fixed example per profile

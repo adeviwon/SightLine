@@ -15,13 +15,13 @@ if [ -x "$(command -v uv)" ]; then
   uv pip install --python "$PY" \
     "torch>=2.2" --torch-backend=cpu
   uv pip install --python "$PY" \
-    numpy Pillow opencv-python-headless onnx onnxruntime \
+    numpy Pillow opencv-python-headless onnx onnxruntime onnxscript \
     scikit-learn pytest pytesseract
 else
   "$PY" -m pip install --upgrade pip
   "$PY" -m pip install torch --index-url https://download.pytorch.org/whl/cpu
   "$PY" -m pip install numpy Pillow opencv-python-headless onnx \
-    onnxruntime scikit-learn pytest pytesseract
+    onnxruntime onnxscript scikit-learn pytest pytesseract
 fi
 
 echo "=== [3/3] verifying ==="

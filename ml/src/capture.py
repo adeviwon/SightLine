@@ -24,9 +24,14 @@ they hold their own phone up. The eval harness runs every profile.
 import io
 import math
 import random
+import sys
+from pathlib import Path
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import seedutil  # noqa: E402  — stable cross-process seed derivation
 
 FONT_CANDIDATES = [
     "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
@@ -315,7 +320,7 @@ def make_capture_set(n=12, seed=123):
     """Yield (clean, degraded, profile, doc_type) tuples for the eval gate."""
     for name, params in CAPTURE_PROFILES.items():
         for i in range(n):
-            s = seed * 7919 + abs(hash(name)) % 100003 + i
+            s = seed * 7919 + seedutil.name_hash(name) % 100003 + i
             lines, dtype = DOCS[i % len(DOCS)]
             clean = render_document(lines, seed=s)
             deg = apply_profile(clean, seed=s, **params)
