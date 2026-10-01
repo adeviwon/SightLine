@@ -55,50 +55,39 @@ functional, just less accurate.
 
 ## Quick Start
 
-### Prerequisites
-
 ```bash
-# System dependencies (Ubuntu/Debian)
-sudo apt-get install tesseract-ocr tesseract-ocr-eng espeak-ng
+# Clone
+git clone https://github.com/adeviwon/SightLine.git
+cd SightLine
 
-# Python packages
-pip install -r requirements.txt
-```
+# Install system dependencies (macOS)
+brew install tesseract espeak-ng
 
-### Run
+# Install Python dependencies
+pip3 install opencv-python pytesseract pyttsx3 onnxruntime scikit-learn numpy Pillow click rich psutil
 
-```bash
-# Scan a document and hear it read aloud
-python -m offscan.cli scan document.png
+# Run the demo — generates 4 synthetic documents and scans them
+PYTHONPATH=src python3 -m offscan.cli demo
 
-# Get structured JSON output instead of speech
-python -m offscan.cli scan document.png --json
+# Scan a real document image (photograph it with your phone, pass the file)
+PYTHONPATH=src python3 -m offscan.cli scan /path/to/document.png
 
-# Read the full document text aloud (not just the summary)
-python -m offscan.cli scan document.png --full
+# Get JSON output instead of speech
+PYTHONPATH=src python3 -m offscan.cli scan /path/to/document.png --json
 
-# Save audio output to a file
-python -m offscan.cli scan document.png --output-dir ./output
+# Read the full document aloud (not just the summary)
+PYTHONPATH=src python3 -m offscan.cli scan /path/to/document.png --full
 
-# Run the built-in demo with synthetic documents
-python -m offscan.cli demo
-
-# Check ONNX model status
-python -m offscan.cli models --check
-
-# Download ONNX models (one-time, then fully offline)
-python -m offscan.cli models
+# Run the test suite (22 tests, all offline)
+pip3 install pytest
+PYTHONPATH=src python3 -m pytest tests/ -v
 ```
 
 ### Demo
 
-```bash
-# Generate synthetic document images and scan them
-python -m offscan.cli demo
-```
-
-This creates four synthetic documents (banking statement, medical prescription,
-legal contract, general letter), runs the full pipeline on each, and reads them aloud.
+The built-in demo generates four synthetic documents (banking statement, medical prescription,
+legal contract, appointment letter), runs the full pipeline on each, and reads them aloud.
+No real documents needed.
 
 ---
 
