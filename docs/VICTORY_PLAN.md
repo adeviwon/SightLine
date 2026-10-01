@@ -1,6 +1,6 @@
 # SightLine — Victory Plan for Imperial Hackathon Hong Kong 2026
 
-## The Competition (Not IC Hack — This Is a Different Event)
+## The Competition
 
 ### Key Facts
 - **Organizer**: Imperial College London (Global Hackathons team, not DoCSoc)
