@@ -432,23 +432,15 @@ def get_audio(filename):
 
 def main():
     parser = argparse.ArgumentParser(description="SightLine Web — phone camera scanner")
-    parser.add_argument("--host", default="0.0.0.0", help="Host to bind (default: 0.0.0.0 for network access)")
+    parser.add_argument("--host", default="127.0.0.1", help="Host to bind (default: 127.0.0.1 — localhost only, no network)")
     parser.add_argument("--port", type=int, default=5000, help="Port (default: 5000)")
     args = parser.parse_args()
 
     print(f"\nSightLine Web Server")
     print(f"{'='*50}")
-    print(f"Open this URL on your phone browser:")
-    print(f"  http://0.0.0.0:{args.port}")
-    print(f"\nOr if on the same WiFi network:")
-    import socket
-    try:
-        hostname = socket.gethostname()
-        local_ip = socket.gethostbyname(hostname)
-        print(f"  http://{local_ip}:{args.port}")
-    except Exception:
-        pass
-    print(f"\nFully offline — zero data leaves your device.")
+    print(f"Open this URL in your browser (uses your Mac webcam):")
+    print(f"  http://localhost:{args.port}")
+    print(f"\nNo WiFi needed. No internet needed. Fully offline.")
     print(f"{'='*50}\n")
 
     app.run(host=args.host, port=args.port, debug=False, threaded=True)

@@ -1,16 +1,16 @@
 #!/bin/bash
-# SightLine — One-command setup & run
-# Works on macOS. Uses your Mac's webcam or your phone camera (same WiFi).
+# SightLine — One-command setup & run (FULLY OFFLINE)
+# Uses your Mac's built-in webcam. No WiFi, no internet, no network.
 
 set -e
 
 echo "╔══════════════════════════════════════════════╗"
-echo "║  SightLine — Setup & Run                    ║"
+echo "║  SightLine — Fully Offline Setup            ║"
 echo "║  Your eyes, offline. Nothing leaves device.  ║"
 echo "╚══════════════════════════════════════════════╝"
 echo ""
 
-# Clone if not already in the directory
+# Clone if not in the repo
 if [ ! -f "src/offscan/pipeline.py" ]; then
     echo "→ Cloning SightLine..."
     git clone https://github.com/adeviwon/SightLine.git /tmp/sightline-run
@@ -32,25 +32,19 @@ fi
 echo "→ Installing Python packages..."
 pip3 install --quiet opencv-python pytesseract pyttsx3 onnxruntime scikit-learn numpy Pillow flask psutil 2>/dev/null || pip install --quiet opencv-python pytesseract pyttsx3 onnxruntime scikit-learn numpy Pillow flask psutil
 
-# Run the web app
+# Run — localhost only, no external network
 echo ""
 echo "──────────────────────────────────────────────"
-echo "  SightLine is starting..."
+echo "  SightLine is starting on YOUR MAC."
+echo "  Your webcam is the camera."
 echo ""
-echo "  On your Mac webcam:"
+echo "  Open this in your browser:"
 echo "    http://localhost:5000"
 echo ""
-
-# Get local IP for phone access
-LOCAL_IP=$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null || echo "your-mac-ip")
-echo "  On your phone (same WiFi):"
-echo "    http://$LOCAL_IP:5000"
-echo ""
-echo "  Open either URL in your browser."
-echo "  Point camera at a document → tap Scan Document"
-echo "  It reads the document aloud. Fully offline."
+echo "  Point your Mac at a document → tap Scan."
+echo "  It reads it aloud. Zero network."
 echo "──────────────────────────────────────────────"
 echo ""
 
 export PYTHONPATH=src
-python3 -m offscan.webapp --host 0.0.0.0 --port 5000
+python3 -m offscan.webapp --host 127.0.0.1 --port 5000

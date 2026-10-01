@@ -83,25 +83,24 @@ pip3 install pytest
 PYTHONPATH=src python3 -m pytest tests/ -v
 ```
 
-### Phone Camera Mode (Web App)
+### Webcam Mode (Fully Offline — No WiFi Needed)
 
-Run a local web server on your laptop and scan documents from your phone's camera:
+Run on your Mac, use the built-in webcam. Everything stays on your machine:
 
 ```bash
-# Install Flask
-pip3 install flask
-
-# Start the web server (accessible from any device on your WiFi)
-PYTHONPATH=src python3 -m offscan.webapp
-
-# Then open the printed URL on your phone browser
-# (e.g. http://192.168.1.x:5000)
-# Point your phone camera at a document and tap "Scan Document"
+bash run.sh
 ```
 
-The web app uses your phone's rear camera via the browser's `getUserMedia` API.
-It captures the image, sends it to your laptop for offline processing, and plays
-the audio result back on your phone. All processing is on your laptop — no cloud.
+Or manually:
+
+```bash
+pip3 install flask
+PYTHONPATH=src python3 -m offscan.webapp
+```
+
+Then open `http://localhost:5000` in your browser. Point your Mac's webcam at a
+document, tap **Scan Document**, and it reads it aloud. Zero network — no WiFi,
+no internet, no cloud. All processing runs locally on your Mac.
 
 You can also upload existing photos via the "Upload" tab.
 
