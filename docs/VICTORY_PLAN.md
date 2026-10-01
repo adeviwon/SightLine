@@ -1,4 +1,4 @@
-# SightLine — Victory Plan for Imperial Hackathon Hong Kong 2026
+# SightLine — Victory Plan for Imperial Hackathon Hong Kong 2026 (Using 2026 Policy Address)
 
 ## The Competition
 
@@ -24,7 +24,7 @@ Six pillars (confirmed from official FAQs):
 5. **Interdisciplinarity** — Does it span multiple STEMB fields (science, technology, engineering, medicine, business)?
 6. **Teamwork** — How well did the team collaborate?
 
-### CRITICAL: Every submission must connect to a real Hong Kong or Macau 2025 Policy Address priority
+### CRITICAL: Every submission must connect to a real Hong Kong or Macau 2026 Policy Address priority
 
 ### Prizes (2025 data — 2026 will be similar)
 
@@ -70,29 +70,50 @@ Six pillars (confirmed from official FAQs):
 SightLine should enter the **Open Challenge** track, not a prescribed theme. Here's why:
 
 1. The 2025 Gold winner was a Wildcard entry — the judges reward original problem identification
-2. Open challenge requires anchoring to a HK/Macau 2025 Policy Address priority NOT covered by the 5 prescribed challenges
+2. Open challenge requires anchoring to a HK/Macau 2026 Policy Address priority NOT covered by the 5 prescribed challenges
 3. Digital inclusion and accessibility for persons with disabilities IS a policy priority in Hong Kong (see below)
 4. Only 5 teams per track can enter Open Challenge — less competition than prescribed themes
 
-### Policy Anchor: Hong Kong 2025 Policy Address
+### Policy Anchor: Hong Kong 2026 Policy Address
 
-The HK 2025 Policy Address includes commitments to:
-- **Digital Inclusion** (Digital Policy Office): "promote various digital inclusion measures to help those in need (especially the elderly) to understand and use digital technology"
-- **Gerontechnology** (Para 265-266): Working Group on Ageing Society Strategies covers "elderly care, healthcare, housing, culture and leisure, and **gerontechnology**"
-- **Healthcare innovation** (Para 226): "promoting health and medical innovation"
-- **Primary Healthcare** (Para 230-235): District Health Centres across all 18 districts, chronic disease co-care
+The HK 2026 Policy Address (delivered September 16, 2026) includes explicit commitments to AI in social welfare, gerontechnology, persons with disabilities, and AI in public services:
 
-SightLine connects to ALL of these:
-- **Digital inclusion**: Gives visually impaired people access to document reading — a basic digital right
-- **Gerontechnology**: Many visually impaired are elderly (age-related vision loss); SightLine reads medical prescriptions and health documents
-- **Healthcare innovation**: Reads prescriptions aloud, extracts dosages, warns about drug interactions
-- **Primary healthcare**: Supports the District Health Centre initiative by helping visually impaired patients manage their own health documents
+**Para 108 — AI Application in Healthcare**: The Health Bureau will co-ordinate the orderly introduction and effective use of AI technologies in the healthcare sector in collaboration with the DH, HA, Hong Kong Academy of Medicine and IMACE.
+→ SightLine uses AI (OCR + ONNX models) to read medical prescriptions aloud — directly aligned.
+
+**Para 113 — AI Application in Social Welfare**: A sum of $300 million will be allocated to set up the "AI for Welfare Lab" (WelfareHK.ai) to identify AI application scenarios in social welfare services, and fund the development and pilot implementation of AI solutions.
+→ SightLine is exactly the kind of AI-for-welfare solution this $300M fund is designed to support.
+
+**Para 307-308 — eHealth+**: Over 6.5 million citizens (87% of HK population) registered with eHealth. Government expanding eMedication and eMedical Certificate functions.
+→ SightLine reads medication labels and dosages aloud — complements the eHealth eMedication initiative for visually impaired patients who cannot read screens.
+
+**Para 376-377 — Support Carers & Persons with Disabilities**: Government strengthening support for carers of elderly and persons with disabilities, adding 460 rehabilitation service places.
+→ SightLine reduces dependence on carers — visually impaired people can read documents themselves, privately.
+
+**Para 398-400 — Gerontechnology Ecosystem**: HKHA launching pilot scheme introducing household gerontechnology equipment to elderly singletons in public housing. Government earmarking $100 million for Gerontechnology Promotion Scheme to support local tech enterprises developing elderly-care products.
+→ SightLine IS a gerontechnology product. It helps elderly people with age-related vision loss read documents independently. This $100M fund is a direct pathway to real-world deployment.
+
+**Para 437-438 — AI in Public Services**: 30 AI projects implemented across government departments using data to drive public service efficacy.
+→ SightLine could be deployed as a government accessibility tool — an AI public service for visually impaired residents.
+
+**Para 441-442 — Defence against Cybersecurity Challenges**: Government developing cybersecurity threat intelligence systems and reinforcing society's digital security and resilience.
+→ SightLine's offline-first architecture is inherently secure — zero network calls means zero attack surface. This is cybersecurity by design.
+
+### The Connection (for the proposal)
+
+SightLine connects to SIX specific 2026 Policy Address priorities:
+1. **Para 108**: AI in healthcare — reads prescriptions, dosages, medical documents
+2. **Para 113**: AI for Welfare Lab ($300M fund) — SightLine is an AI-for-welfare solution
+3. **Para 307-308**: eHealth+ eMedication — SightLine reads medication labels aloud for the visually impaired
+4. **Para 376-377**: Support for persons with disabilities — SightLine enables independence
+5. **Para 398-400**: Gerontechnology ($100M fund) — SightLine is a gerontechnology product for elderly with vision loss
+6. **Para 441-442**: Cybersecurity — SightLine's zero-network architecture is secure by design
 
 ### The 150-Word Proposal (Draft)
 
-> In Hong Kong, over 50,000 people are visually impaired. Many are elderly and cannot read medical prescriptions, banking statements, or government letters — risking medication errors, financial fraud, and loss of independence. Existing reading apps (Google Lens, Seeing AI) send private documents to cloud servers, violating data privacy. SightLine is a fully offline document scanner that reads medical prescriptions, banking details, and official documents aloud using on-device OCR and text-to-speech. Nothing leaves the phone — no internet required, no cloud, zero privacy risk. It uses Tesseract OCR, ONNX Runtime models, and OpenCV, all running locally. Aligned with the 2025 Policy Address's digital inclusion and gerontechnology priorities, SightLine empowers visually impaired and elderly Hong Kong residents to read sensitive documents independently and privately. A working prototype with 22 passing tests demonstrates feasibility.
+> In Hong Kong, over 50,000 people are visually impaired. Many are elderly and cannot read medical prescriptions, banking statements, or government letters — risking medication errors, financial fraud, and loss of independence. Existing reading apps send private documents to cloud servers, violating data privacy. SightLine is a fully offline document scanner that reads medical prescriptions, banking details, and official documents aloud using on-device OCR and text-to-speech. Nothing leaves the phone — no internet required, no cloud, zero privacy risk. It uses Tesseract OCR, ONNX Runtime models, and OpenCV, all running locally. Aligned with the 2026 Policy Address's AI for Welfare Lab (Para 113), Gerontechnology Promotion Scheme (Para 398-400), and AI in Healthcare (Para 108), SightLine empowers visually impaired and elderly Hong Kong residents to read sensitive documents independently and privately. A working prototype with 22 passing tests demonstrates feasibility.
 
-(That's 148 words.)
+(That's 149 words.)
 
 ---
 
@@ -127,7 +148,7 @@ This is the most important deliverable. Structure:
 - Age-related vision loss is increasing as HK population ages (36% over 65 by 2046)
 - Existing solutions (Google Lens, Seeing AI) send private documents to cloud servers
 - Medication errors, financial fraud, loss of independence
-- Aligns with HK 2025 Policy Address: digital inclusion + gerontechnology
+- Aligns with HK 2026 Policy Address: digital inclusion + gerontechnology
 
 **Minute 1:00-2:00 — The Solution (Live Demo)**
 - Show the SightLine pipeline running
@@ -159,7 +180,7 @@ Use the draft above. Refine with your team. Every word counts.
 #### Step 5: Submit (by October 25, 2026)
 - Submit via the official entry link (provided after registration)
 - Include: team name, members, chosen challenge (Open Challenge), 150-word proposal, video pitch link
-- You also need to confirm the proposal connects to a specific HK/Macau 2025 Policy Address paragraph
+- You also need to confirm the proposal connects to a specific HK/Macau 2026 Policy Address paragraph
 
 ### Phase 2: Grand Final Preparation (If Shortlisted)
 
@@ -183,7 +204,7 @@ If you're shortlisted, you get:
 1. Title: SightLine — your tagline
 2. The human story (Mrs. Chan)
 3. The problem (statistics)
-4. Policy connection (HK 2025 Policy Address paragraphs)
+4. Policy connection (HK 2026 Policy Address paragraphs)
 5. The solution (one-line + diagram)
 6. How it works (pipeline architecture)
 7. Live demo screenshot / video clip
@@ -203,7 +224,7 @@ If you're shortlisted, you get:
 > "Google Lens, Seeing AI, and Be My Eyes all send document images to cloud servers. For a blind person scanning their bank statement or medical prescription, that's a GDPR and privacy violation. SightLine is the only solution that keeps sensitive data on the device. It also works without internet — critical for the 90% of visually impaired people globally who live in areas with unreliable connectivity."
 
 **"What's the business model?"**
-> "Free for users. Revenue through HK government digital inclusion programs and partnerships with elderly care organizations. The 2025 Policy Address commits to gerontechnology investment — SightLine is a gerontechnology product ready for that investment."
+> "Free for users. Revenue through HK government digital inclusion programs and partnerships with elderly care organizations. The 2026 Policy Address commits to gerontechnology investment — SightLine is a gerontechnology product ready for that investment."
 
 **"Can this scale beyond Hong Kong?"**
 > "Yes. The pipeline works in any language Tesseract supports (100+ languages). The ONNX models are language-agnostic for document classification. We could deploy in Macau, the Greater Bay Area, and globally. The privacy-first approach is a universal advantage."
@@ -213,7 +234,7 @@ If you're shortlisted, you get:
 ## Why SightLine Wins This Specific Competition
 
 ### 1. Policy Alignment (judges require this)
-SightLine connects to THREE specific HK 2025 Policy Address priorities:
+SightLine connects to THREE specific HK 2026 Policy Address priorities:
 - Digital inclusion (Digital Policy Office mandate)
 - Gerontechnology (Para 265-266, Working Group on Ageing Society)
 - Healthcare innovation (Para 226, medication safety)
@@ -262,7 +283,7 @@ The airplane mode demo is the mic drop. No other team in this competition will h
 
 ### Proposal Development (September - October)
 - [ ] Write 150-word proposal (use draft above as starting point)
-- [ ] Identify exact HK 2025 Policy Address paragraphs to reference
+- [ ] Identify exact HK 2026 Policy Address paragraphs to reference
 - [ ] Research HK visual impairment statistics (HK Census, WHO, HKSB)
 - [ ] Prepare the policy connection paragraph
 - [ ] Get feedback from teachers/mentors
