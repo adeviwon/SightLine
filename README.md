@@ -83,6 +83,28 @@ pip3 install pytest
 PYTHONPATH=src python3 -m pytest tests/ -v
 ```
 
+### Phone Camera Mode (Web App)
+
+Run a local web server on your laptop and scan documents from your phone's camera:
+
+```bash
+# Install Flask
+pip3 install flask
+
+# Start the web server (accessible from any device on your WiFi)
+PYTHONPATH=src python3 -m offscan.webapp
+
+# Then open the printed URL on your phone browser
+# (e.g. http://192.168.1.x:5000)
+# Point your phone camera at a document and tap "Scan Document"
+```
+
+The web app uses your phone's rear camera via the browser's `getUserMedia` API.
+It captures the image, sends it to your laptop for offline processing, and plays
+the audio result back on your phone. All processing is on your laptop — no cloud.
+
+You can also upload existing photos via the "Upload" tab.
+
 ### Demo
 
 The built-in demo generates four synthetic documents (banking statement, medical prescription,
