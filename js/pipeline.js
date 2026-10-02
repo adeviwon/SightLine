@@ -731,6 +731,60 @@ const SightLine = (() => {
   }
 
   /**
+   * structure_score(): how much READABLE STRUCTURE the text contains.
+   *
+   * WHY THIS EXISTS
+   * ---------------
+   * runOCR() picks between segmentation modes by Tesseract confidence alone,
+   * and confidence is a poor proxy for the thing this product actually needs:
+   * a legible case number.
+   *
+   * Measured, on legal/off_axis with restoration enabled:
+   *
+   *     restored  psm=6  conf 81%   -> finds BOTH fields   <- never chosen
+   *     restored  psm=11 conf 69%   -> finds NEITHER      <- was chosen
+   *
+   * The psm=6 result was MORE confident and recovered more, and still lost,
+   * because runOCR's early-exit threshold (>75%) never fired, so selection fell
+   * through to "highest confidence across everything tried" and psm=11 — whose
+   * sparse-text mode treats the page as disconnected fragments, so a case
+   * reference split across two lines never reassembles — edged ahead on a
+   * narrower margin than its structure warranted.
+   *
+   * Confidence measures how sure Tesseract is about the glyphs it emitted.
+   * Structure measures whether the RESULT is usable. For a blind user reading a
+   * dosage aloud, those are not the same question, and the second one is what
+   * the product is graded on.
+   *
+   * The patterns below are the safety-critical tokens this app extracts. They
+   * are counted, not scored against ground truth, so this stays a property of
+   * the OCR output alone and never peeks at the answer key.
+   */
+  function structure_score(text) {
+    const t = String(text || "");
+    if (!t.trim()) return 0;
+    let n = 0;
+    // Dosages: "500mg", "500 mg", "2.5mg"
+    const doses = t.match(/\d+(?:\.\d+)?\s*mg\b/gi);
+    if (doses) n += doses.length;
+    // Sort codes: "40-11-04"
+    const sortCodes = t.match(/\b\d{2}-\d{2}-\d{2}\b/g);
+    if (sortCodes) n += sortCodes.length;
+    // Case / reference numbers: "2024-CV-00456"
+    const cases = t.match(/\b\d{4}-[A-Z]{2}-\d{3,8}\b/g);
+    if (cases) n += cases.length * 2;      // weighted: most safety-critical
+    // Bare account numbers: 6-8 digit runs not part of a date/dose
+    const accts = t.match(/(?<![\d-])\d{6,8}(?![\d-])/g);
+    if (accts) n += accts.length;
+    // Currency amounts: "£2,500.00" / "$1,250" / "GBP 2,500.00" / "EUR 99".
+    // The ISO code form matters: bank statements write "GBP"/"USD" far more
+    // often than a symbol, and a bare "GBP 2,500.00" scored 0 without it.
+    const money = t.match(/(?:[£$€]|[A-Z]{3})\s?\d[\d,]*(?:\.\d{2})?/g);
+    if (money) n += money.length;
+    return n;
+  }
+
+  /**
    * isGarbage(): reject OCR output that is noise, not text. >500 words is
    * almost always a failed segmentation; >60% of words being 1-2 chars is
    * speckle.
@@ -745,8 +799,17 @@ const SightLine = (() => {
   }
 
   /**
-   * runOCR(): PSM 6 -> 3 -> 11 across every deduped candidate. Early-exit at
-   * >=75% confidence; gate on >40%; least-bad fallback if nothing passes.
+   * runOCR(): PSM 6 -> 3 -> 11 across every deduped candidate.
+   *
+   * SELECTION IS STRUCTURE-AWARE, NOT CONFIDENCE-ONLY. Ranking uses
+   * better(a, b) below; confidence is a tiebreak, not the objective. See
+   * structure_score() for the measurement that forced this: a psm=6 result at
+   * 81% confidence recovering BOTH fields lost to a psm=11 result at 69%
+   * recovering NEITHER, purely because confidence was the only criterion.
+   *
+   * Early-exit at >=75% confidence AND structure >= 1. Requiring structure too
+   * is deliberate: a confident read of a blank or badly-fragmented page should
+   * not short-circuit the remaining passes.
    */
   async function runOCR(candidates, onProgress) {
     const worker = await initWorker(onProgress);
@@ -763,17 +826,48 @@ const SightLine = (() => {
       seen.add(img);
       unique.push(img);
     }
+
+    /**
+     * Is candidate `a` a better result than the incumbent `b`?
+     *
+     * Rules, in order:
+     *   1. more structured tokens wins — this is the product metric
+     *   2. then higher confidence
+     *   3. then earlier PSM (6 before 3 before 11), because a uniform block is
+     *      the correct reading of a document; sparse-text is a fallback for
+     *      pages that genuinely are not blocks
+     *
+     * Rule 1 is a hard preference rather than a bonus. A result that recovers
+     * a case number is usable and one that does not is not, regardless of how
+     * confident Tesseract was about either.
+     */
+    const better = (a, b) => {
+      if (!b) return true;
+      if (a.structure !== b.structure) return a.structure > b.structure;
+      if (a.confidence !== b.confidence) return a.confidence > b.confidence;
+      return a.psmRank < b.psmRank;
+    };
+
     for (const img of unique) {
-      for (const p of passes) {
+      for (let pi = 0; pi < passes.length; pi++) {
+        const p = passes[pi];
         await worker.setParameters({ tessedit_pageseg_mode: p.psm });
         const res = await worker.recognize(img);
         const data = res.data;
         const garbage = isGarbage(data.text, data.words ? data.words.length : 0);
         const conf = data.confidence || 0;
         if (onProgress) onProgress({ status: "pass " + p.label + " conf " + conf.toFixed(0) + "%" });
-        if (!garbage && conf > 40 && (!best || conf > best.confidence)) {
-          best = { text: data.text, confidence: conf / 100, words: data.words || [], psm: p.psm };
-          if (best.confidence > 0.75) return best;
+        if (!garbage && conf > 40) {
+          const cand = {
+            text: data.text,
+            confidence: conf / 100,
+            words: data.words || [],
+            psm: p.psm,
+            structure: structure_score(data.text),
+            psmRank: pi,
+          };
+          if (better(cand, best)) best = cand;
+          if (best.confidence > 0.75 && best.structure >= 1) return best;
         }
       }
     }
@@ -785,6 +879,8 @@ const SightLine = (() => {
         confidence: (res.data.confidence || 0) / 100,
         words: res.data.words || [],
         psm: "6",
+        structure: structure_score(res.data.text),
+        psmRank: 0,
       };
     }
     return best;
@@ -889,7 +985,7 @@ const SightLine = (() => {
     assessQuality, estimateSkew, otsu, median3, unsharp, clahe, binarize,
     toGrayCanvas, makeCanvas, _ctx2d, preprocess,
     // ocr
-    initWorker, runOCR, isGarbage, dispose, vendorBase,
+    initWorker, runOCR, isGarbage, structure_score, dispose, vendorBase,
   };
 })();
 

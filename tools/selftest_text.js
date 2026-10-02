@@ -227,6 +227,44 @@ function testGarbage() {
   eq(g, "mostly speckle is garbage", SightLine.isGarbage("a b c d e f g h i j k l m n o p", 16), true);
   eq(g, "real prose is not garbage", SightLine.isGarbage("Account Number: 40218877 Sort Code: 40-11-04", 7), false);
 }
+function testStructureScore() {
+  const g = group("structure_score - ranks usable results over confident noise");
+  const s = SightLine.structure_score;
+  // check() takes a predicate as `expected`, which is what the >0 assertions
+  // need -- eq() is strict JSON equality and would compare a boolean to a number.
+  const gt0 = (d, t) => check(g, d, s(t), (v) => v > 0);
+
+  // The patterns this app actually extracts.
+  gt0("dosage is structure", "Amoxicillin 500mg three times daily");
+  gt0("sort code is structure", "Sort Code: 40-11-04");
+  gt0("case reference is structure", "Case reference: 2024-CV-00456");
+  gt0("bare account number is structure", "Account Number: 40218877");
+  gt0("currency symbol is structure", "Total: £2,500.00");
+  gt0("ISO currency code is structure", "Total: GBP 2,500.00");
+
+  // Must NOT fire on ordinary prose, or every confident read of a letter
+  // would outrank the result that actually contains a case number.
+  eq(g, "prose scores zero", s("the quick brown fox jumps over the lazy dog again"), 0);
+  eq(g, "empty scores zero", s(""), 0);
+  eq(g, "whitespace scores zero", s("    "), 0);
+
+  // The dangerous near-miss. A letter O where a zero belongs is exactly the
+  // single-digit error that makes a case number wrong, so it must NOT count as
+  // structure — the whole point is that structure means RECOVERABLE.
+  eq(g, "letter-O case ref is NOT structure",
+     s("Case reference: 2024-CV-OO456."), 0);
+
+  // The decisive comparison from the field_regression finding: a readable
+  // result must outrank a fragmented one that recovered less.
+  const readable = "Case reference: 2024-CV-00456 Date: 15 January 2024";
+  const fragmented = "Case reference: 2024-CV- OO456 Date: 15 Jan 2024";
+  check(g, "readable outranks fragmented",
+        s(readable), (v) => v > s(fragmented));
+
+  // A date is not an account number: the lookarounds must keep the year from
+  // being counted as a bare 6-8 digit run.
+  eq(g, "date digits are not an account number", s("Date: 15 January 2024"), 0);
+}
 function testRobustness() {
   const g = group("Robustness - no stage throws on bad input");
   for (const v of [null, undefined, "", 0, NaN, {}, []]) {
@@ -281,7 +319,7 @@ function testRestorerTiling() {
 // ── Run ──────────────────────────────────────────────────────────────
 testNorm(); testWordAccuracy(); testFieldsFound(); testClassifyDoc();
 testNormalize(); testUnderstand(); testDamaged(); testEntities();
-testGarbage(); testRobustness(); testTtsChunks(); testClassifierMath();
+testGarbage(); testStructureScore(); testRobustness(); testTtsChunks(); testClassifierMath();
 testRestorerTiling();
 
 for (const g of groups) {
