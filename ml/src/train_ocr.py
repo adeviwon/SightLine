@@ -335,7 +335,7 @@ def main():
                 sched.step()
             except ValueError:
                 pass
-            tot += float(loss)
+            tot += float(loss.detach())
             nb += 1
 
         val = evaluate(model, val_ds, val_ds.idx, device)

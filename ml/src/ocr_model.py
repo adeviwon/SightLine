@@ -173,18 +173,44 @@ class SightLineCRNN(nn.Module):
         # counts per crop width are asserted in __main__ against the longest
         # real label, so this arithmetic cannot silently rot into a model that
         # trains to garbage.
+        # Channel widths are MEASURED, not guessed. The first 40-epoch run took
+        # 335 s/epoch with 0% word accuracy after one epoch, so the stack was
+        # profiled before committing hours of CPU to it. The finding inverted
+        # the expectation: the CONV STACK is the bottleneck, not the LSTM.
+        #
+        #     n=32 W=128:  fwd+bwd 2180 ms | conv 407 ms | rnn  62 ms
+        #     n=32 W=256:  fwd+bwd 3206 ms | conv 528 ms | rnn 1489 ms
+        #
+        # The LSTM only dominates at wide crops, because T grows with width.
+        # At the median crop width the conv stack was 87% of the step, running
+        # at full 32px height through seven blocks ending at 256 channels.
+        #
+        # Halving the channel widths gives 2.2x the speed for a quarter of the
+        # parameters (1,089,632 -> 272,944):
+        #
+        #     config        W=320 conv fwd+bwd   conv params
+        #     current 256           1677 ms        1,089,632
+        #     half 128               779 ms          272,944
+        #     quarter 96             762 ms          167,904
+        #     tiny 64                896 ms           96,320
+        #
+        # `half 128` is chosen over `quarter 96` despite being no faster: the
+        # extra channels cost nothing measurable and CTC alignment benefits
+        # from feature width. Going thinner buys little more and starts to
+        # cost accuracy. The trade is settled by validation word accuracy on a
+        # real run, not by this table.
         self.cnn = nn.Sequential(
-            ConvBlock(in_ch, 32, stride=(1, 2), pool=(2, 1)),   # h/2 w/2
-            ConvBlock(32, 64, stride=(1, 2), pool=(2, 1)),      # h/2 w/2
-            ConvBlock(64, 96, stride=1, pool=1),               # refine
-            ConvBlock(96, 128, stride=1, pool=(2, 1)),          # h/2
-            ConvBlock(128, 160, stride=1, pool=(2, 1)),         # h/2
-            ConvBlock(160, 192, stride=1, pool=(2, 1)),         # h -> 1 row
-            ConvBlock(192, 256, stride=1, pool=(1, 2)),         # final w/2 only
+            ConvBlock(in_ch, 16, stride=(1, 2), pool=(2, 1)),   # h/2 w/2
+            ConvBlock(16, 32, stride=(1, 2), pool=(2, 1)),      # h/2 w/2
+            ConvBlock(32, 48, stride=1, pool=1),               # refine
+            ConvBlock(48, 64, stride=1, pool=(2, 1)),          # h/2
+            ConvBlock(64, 80, stride=1, pool=(2, 1)),          # h/2
+            ConvBlock(80, 96, stride=1, pool=(2, 1)),          # h -> 1 row
+            ConvBlock(96, 128, stride=1, pool=(1, 2)),         # final w/2 only
         )
 
         # ── sequence modelling ──────────────────────────────────────────
-        self.rnn = nn.LSTM(256, hidden, num_layers=layers, bidirectional=True,
+        self.rnn = nn.LSTM(128, hidden, num_layers=layers, bidirectional=True,
                            batch_first=True, dropout=dropout if layers > 1 else 0.0)
         self.drop = nn.Dropout(dropout)
         self.fc = nn.Linear(hidden * 2, num_classes)
