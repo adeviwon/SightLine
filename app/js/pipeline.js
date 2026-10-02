@@ -799,13 +799,32 @@ const SightLine = (() => {
   }
 
   /**
-   * runOCR(): PSM 6 -> 3 -> 11 across every deduped candidate.
+   * runOCR(): PSM 3 -> 6 -> 11 -> 4 across every deduped candidate.
    *
-   * SELECTION IS STRUCTURE-AWARE, NOT CONFIDENCE-ONLY. Ranking uses
-   * better(a, b) below; confidence is a tiebreak, not the objective. See
-   * structure_score() for the measurement that forced this: a psm=6 result at
-   * 81% confidence recovering BOTH fields lost to a psm=11 result at 69%
-   * recovering NEITHER, purely because confidence was the only criterion.
+   * PASS ORDER IS MEASURED, NOT GUESSED. tools/psm_sweep.js ran psm
+   * {3,4,6,7,11,12,13} against every candidate on all 12 samples — 336
+   * configurations — and psm 3 produced the best result on 12 of 12.
+   *
+   *     5 via binary/psm3      4 via restored/psm3      3 via clahe/psm3
+   *
+   * The previous order (6, 3, 11) tried psm 3 second and then routinely
+   * discarded it, because ranking was by confidence and psm 6/11 often edged
+   * ahead on that metric while recovering less. We were throwing away the best
+   * answer we had already computed.
+   *
+   * psm 3 ("fully automatic page segmentation, but no OSD") is the right
+   * default for a phone photo of a document: it finds text blocks without
+   * assuming a single uniform block, which is what a tilted, shadowed or
+   * multi-column page actually is. psm 6 stays in the list because it wins on
+   * clean flatbed-style scans, and psm 11 remains the sparse-text fallback.
+   * psm 4 is last: single-column of variable-size text, rarely better than 3
+   * on these captures but cheap insurance.
+   *
+   * SELECTION IS STRUCTURE-AWARE, NOT CONFIDENCE-ONLY. Ranking uses better()
+   * below; confidence is a tiebreak, not the objective. See structure_score()
+   * for the measurement that forced this: a psm=6 result at 81% confidence
+   * recovering BOTH fields lost to a psm=11 result at 69% recovering NEITHER,
+   * purely because confidence was the only criterion.
    *
    * Early-exit at >=75% confidence AND structure >= 1. Requiring structure too
    * is deliberate: a confident read of a blank or badly-fragmented page should
@@ -814,9 +833,10 @@ const SightLine = (() => {
   async function runOCR(candidates, onProgress) {
     const worker = await initWorker(onProgress);
     const passes = [
-      { psm: "6", label: "block" },
       { psm: "3", label: "auto" },
+      { psm: "6", label: "block" },
       { psm: "11", label: "sparse" },
+      { psm: "4", label: "column" },
     ];
     let best = null;
     const seen = new Set();

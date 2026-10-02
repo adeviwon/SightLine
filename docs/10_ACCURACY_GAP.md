@@ -139,6 +139,38 @@ ground truth, so it cannot leak the answer key. It scores `2024-CV-OO456`
 (letter O for zero) as **zero**, because counting a mangled case number as
 recovered would defeat the entire purpose.
 
+### Is it really a Tesseract ceiling? Measured, not assumed
+
+`handheld_light` scoring 0% has been reported as a Tesseract ceiling on the
+strength of "restoration does not help". That is an inference, so
+`app/tools/psm_sweep.js` tested it: **psm {3,4,6,7,11,12,13} × every candidate
+× 12 samples = 336 configurations**, reporting the best any configuration
+achieves.
+
+**Result: no configuration in the full PSM space recovers a single field on
+`handheld_light`** — for any of the three document types, on any candidate, at
+any segmentation mode. Confidence tops out at 19–28%. The ceiling claim stands,
+and it is now demonstrated rather than asserted.
+
+Some configurations do return substantial text (`legal/handheld_light`: 463
+characters at 28% confidence) — but never the safety-critical fields. That is
+a segmentation trade-off, not a gain, and for this product it is the wrong
+trade.
+
+### The sweep also found something actionable: psm 3 wins 12/12
+
+```
+5 via binary/psm3
+4 via restored/psm3
+3 via clahe/psm3
+```
+
+**Every single sample's best configuration used psm 3** — the mode `runOCR`
+tries *second*, and which confidence-based ranking routinely discards in favour
+of psm 6 or psm 11. That is a much better explanation for the 42% headline than
+"Tesseract cannot read these" ever was: our search was discarding the best
+answer it had already computed.
+
 ### A proxy metric that improved while the product regressed
 
 Character count rose **+31%** while field recovery fell by 2. Any ranking
