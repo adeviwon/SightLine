@@ -162,8 +162,22 @@ def encode(s: str):
     return [C2I[c] for c in s if c in C2I]
 
 
-def decode_greedy(indices):
-    """Collapse repeats then drop blanks — the standard CTC decode."""
+def decode_greedy(indices, limit=None):
+    """
+    Collapse repeats then drop blanks -- the standard CTC decode.
+
+    `limit` truncates to the first N timesteps BEFORE decoding, and exists for
+    the SAME reason the exported graph is fixed-width: a crop narrower than the
+    export width is right-padded, and the caller must ignore those padded
+    timesteps rather than let them become invented characters. It is the Python
+    mirror of recognizer.js decodeGreedy(seq, limit), and the two are compared
+    case-for-case by app/tools/recognizer_parity.js.
+
+    The limit is applied to the SEQUENCE, not to the output: truncating after
+    decoding would already have admitted the padding's characters.
+    """
+    if limit is not None:
+        indices = indices[:int(limit)]
     out, prev = [], -1
     for i in indices:
         if i != prev and i != BLANK:
