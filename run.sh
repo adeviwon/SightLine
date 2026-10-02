@@ -35,6 +35,7 @@ case "$cmd" in
   export)      exec $PYRUN ml/src/export_onnx.py "$@" ;;
   test)        exec $PYRUN -m pytest ml/tests -q "$@" ;;
   # ── real-data text recogniser (replaces Tesseract) ──────────────────────
+  fetch-data) exec bash fetch_data.sh "$@" ;;
   build-data)  exec $PYRUN ml/src/build_dataset.py "$@" ;;
   train-ocr)   ep="${1:-40}"; shift 2>/dev/null || true
                exec $PYRUN ml/src/train_ocr.py --epochs "$ep" "$@" ;;
