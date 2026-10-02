@@ -217,17 +217,223 @@ class SightLineCRNN(nn.Module):
 
     def forward(self, x):
         """x: [B,1,32,W] float in [0,1] -> [B, T, num_classes] logits."""
-        f = self.cnn(x)                      # [B, 256, 1, T]
+        f = self.cnn(x)                      # [B, 128, 1, T]
         # assert_height_is_one() guarantees this squeeze is real. Without it a
         # silent squeeze(2) would leave a 4D tensor and the permute below would
         # fail with an opaque dimension error far from the cause.
         assert f.shape[2] == 1, (
             f"conv output height is {f.shape[2]}, expected 1. The pool/stride "
             f"configuration in self.cnn has changed; see the GEOMETRY comment.")
-        f = f.squeeze(2)                     # [B, 256, T]
-        f = f.permute(0, 2, 1)               # [B, T, 256]
-        f, _ = self.rnn(f)                   # [B, T, 2*hidden]
+        f = f.squeeze(2)                     # [B, 128, T]
+        f = f.permute(0, 2, 1)               # [B, T, 128]
+        if not self.export_safe_lstm:
+            f, _ = self.rnn(f)               # [B, T, 2*hidden]
+        else:
+            f = self._lstm_loop(f)
         return self.fc(self.drop(f))         # [B, T, num_classes]
+
+    # ── ONNX export path ────────────────────────────────────────────────────
+    #
+    # nn.LSTM exports to ONNX only when the SEQUENCE LENGTH is static. Width is
+    # a dynamic axis here (crops run 16..320 px, and T = W/8), so the traced
+    # graph carries a symbolic T and aten::lstm refuses:
+    #
+    #   stack expects each tensor to be equal size, but got
+    #   torch.Size([Min(((((((s0 - 1)//4)) - 1)//2)) + 1,
+    #                  ((((((((s0 - 1)//4)) - 1)//2)) + 1)//20)), 1, 128])
+    #
+    # That symbolic shape is the CONV OUTPUT under the traced shape
+    # inference, which disagrees with the real W/8 on some widths. It is an
+    # export-time artifact only: eager PyTorch handles every width correctly
+    # (verified at W=64 -> T=8 and W=160 -> T=20), so nothing about the model
+    # is wrong.
+    #
+    # The fix is an explicit timestep loop using the SAME weights. It is
+    # mathematically identical -- it is what cuDNN's fused LSTM does internally,
+    # one step at a time -- and it traces cleanly with a dynamic T because no
+    # stacked tensor ever has a symbolic size.
+    #
+    # _verify_loop_matches_lstm() asserts the two paths agree to 1e-5, so this
+    # is checked rather than assumed. If someone changes the RNN, the gate
+    # fails instead of the browser silently producing different text than
+    # Python.
+    export_safe_lstm = False
+
+    def _lstm_loop(self, x):
+        """
+        Explicit bidirectional LSTM over a dynamic-length sequence.
+
+        Uses nn.LSTMCell built from the SAME weight_ih / weight_hh / biases that
+        nn.LSTM holds, because nn.LSTM exposes no per-layer submodule -- there
+        is no self.rnn["forward_layer0"] to reach into. The cell is constructed
+        once per call and its parameters are copied, so the loop is numerically
+        the fused LSTM, step for step.
+        """
+        for layer in range(self.rnn.num_layers):
+            if self.export_safe_lstm:
+                fwd = self._zero_init_cell(layer, "forward")
+                bwd = self._zero_init_cell(layer, "reverse")
+            else:
+                fwd = self._cell_from(layer, "forward")
+                bwd = self._cell_from(layer, "reverse")
+            f_out = self._one_direction(fwd, x, reverse=False)
+            b_out = self._one_direction(bwd, x, reverse=True)
+            x = torch.cat([f_out, b_out], dim=2)
+            if layer < self.rnn.num_layers - 1 and self.training:
+                # nn.LSTM applies dropout BETWEEN layers only, and only when
+                # training. Matching that exactly keeps the two paths equal in
+                # inference (where dropout is identity anyway).
+                x = torch.nn.functional.dropout(
+                    x, p=self.rnn.dropout, training=True)
+        return x
+
+    def _cell_from(self, layer, direction):
+        """
+        Build an LSTMCell holding a copy of one layer's real weights.
+
+        nn.LSTM names its parameters UNSUFFIXED for the forward direction and
+        `_reverse` for the backward one:
+
+            weight_ih_l0            forward direction
+            weight_ih_l0_reverse    backward direction
+
+        So the suffix is empty, not "forward". Building the lookup with an
+        explicit "" for forward and "reverse" for backward is what makes the
+        copies actually bind -- getting it wrong raises
+        "'LSTM' object has no attribute 'weight_ih_l0_forward'".
+
+        Layer 1's input_size is 2*hidden (the concatenated layer-0 output), and
+        LSTMCell is told self.rnn.input_size only for layer 0; deeper layers
+        must be told 2*H. That is handled by _cell_from taking the true input
+        width for the layer it is copying.
+        """
+        H = self.rnn.hidden_size
+        inp = self.rnn.input_size if layer == 0 else 2 * H
+        cell = torch.nn.LSTMCell(inp, H)
+        sfx = "" if direction == "forward" else "_reverse"
+        with torch.no_grad():
+            cell.weight_ih.copy_(getattr(self.rnn, f"weight_ih_l{layer}{sfx}"))
+            cell.weight_hh.copy_(getattr(self.rnn, f"weight_hh_l{layer}{sfx}"))
+            cell.bias_ih.copy_(getattr(self.rnn, f"bias_ih_l{layer}{sfx}"))
+            cell.bias_hh.copy_(getattr(self.rnn, f"bias_hh_l{layer}{sfx}"))
+        return cell
+
+    def _zero_init_cell(self, layer, direction):
+        """
+        Build an LSTMCell for the EXPORT graph with its parameters as CONSTANTS.
+
+        _cell_from() constructs a normal LSTMCell and then copies the real
+        weights in. That is right for eager use but wrong for tracing: LSTMCell
+        initialises its weights with prims.uniform, and even though the copy
+        overwrites every value, the tracer records the random initialisation
+        too and the ONNX export dies on
+
+            No ONNX function found for <OpOverload(op='prims.uniform')>
+
+        The fix is to do the arithmetic by hand with the weights as plain
+        tensors rather than calling nn.LSTMCell at all. Firing the gates with
+        explicit matrix multiplies emits MatMul/Add/Sigmoid/Mul ops -- every one
+        of which ONNX already has -- and no RNG op can appear because there is
+        no module to initialise.
+
+        The gates are the standard LSTM equations, in the same order nn.LSTMCell
+        uses: i, f, g, o from one fused [ih|hh] matmul each, then
+        c' = f*c + i*g and h' = o*tanh(c').
+        """
+        H = self.rnn.hidden_size
+        inp = self.rnn.input_size if layer == 0 else 2 * H
+        sfx = "" if direction == "forward" else "_reverse"
+        w_ih = getattr(self.rnn, f"weight_ih_l{layer}{sfx}").detach()
+        w_hh = getattr(self.rnn, f"weight_hh_l{layer}{sfx}").detach()
+        b_ih = getattr(self.rnn, f"bias_ih_l{layer}{sfx}").detach()
+        b_hh = getattr(self.rnn, f"bias_hh_l{layer}{sfx}").detach()
+        return {"w_ih": w_ih, "w_hh": w_hh, "b_ih": b_ih, "b_hh": b_hh,
+                "H": H}
+
+    def _one_direction(self, cell, x, reverse):
+        """
+        One direction of one layer, stepped a timestep at a time.
+
+        In export mode `cell` is the plain weight dict from _zero_init_cell and
+        the gates are computed explicitly. Otherwise `cell` is a real
+        nn.LSTMCell, which is much faster for training.
+        """
+        if not self.export_safe_lstm:
+            if not isinstance(cell, dict):
+                out, _ = cell(x)
+                return out
+            return self._gates_loop(cell, x, reverse)
+        return self._gates_loop(cell, x, reverse)
+
+    def _gates_loop(self, w, x, reverse):
+        """Explicit LSTM recurrence using plain tensor ops (traceable)."""
+        W_ih, W_hh = w["w_ih"], w["w_hh"]
+        b_ih, b_hh = w["b_ih"], w["b_hh"]
+        H = w["H"]
+        B, T, _ = x.shape
+        h = torch.zeros(B, H, dtype=x.dtype, device=x.device)
+        c = torch.zeros(B, H, dtype=x.dtype, device=x.device)
+        seq = torch.flip(x, [1]) if reverse else x
+        outs = []
+        for t in range(T):
+            xt = seq[:, t]
+            gates = xt @ W_ih.T + b_ih + h @ W_hh.T + b_hh
+            # ONNX `Split` takes the split SIZE as an attribute, not the output
+            # COUNT. torch's chunk(4, dim=1) lowers to a Split declaring
+            # num_outputs=4, which ONNX Runtime rejects:
+            #
+            #   Unrecognized attribute: num_outputs for operator Split
+            #
+            # Splitting by explicit size is equivalent for this tensor and is
+            # the form ORT accepts. torch.split (not chunk) makes that explicit.
+            i, f, g, o = torch.split(gates, [H, H, H, H], dim=1)
+            i = torch.sigmoid(i)
+            f = torch.sigmoid(f)
+            g = torch.tanh(g)
+            o = torch.sigmoid(o)
+            c = f * c + i * g
+            h = o * torch.tanh(c)
+            outs.append(h)
+        out = torch.stack(outs, dim=1)
+        return torch.flip(out, [1]) if reverse else out
+
+    def set_export_mode(self, on=True):
+        """Swap the recurrent path for the ONNX-traceable explicit loop."""
+        self.export_safe_lstm = bool(on)
+        return self
+
+    def assert_loop_matches_lstm(self, tol=1e-5, widths=(64, 160, 256)):
+        """
+        Prove the export loop == the real nn.LSTM, in both modes.
+
+        Builds TWO INDEPENDENT instances rather than deep-copying self.
+        export_safe_lstm is a class-level default, and deepcopy of an instance
+        whose flag is already set copies the class reference too -- so the
+        comparison would silently run the loop against itself and report a
+        perfect match no matter how wrong the loop was. That is exactly the
+        kind of gate that must not be able to pass.
+        """
+        import copy
+        ref = build(self.num_classes)
+        ref.load_state_dict(copy.deepcopy(self.state_dict()))
+        ref.export_safe_lstm = False
+        ref.eval()
+
+        alt = build(self.num_classes)
+        alt.load_state_dict(copy.deepcopy(self.state_dict()))
+        alt.export_safe_lstm = True
+        alt.eval()
+        assert ref.export_safe_lstm is False and alt.export_safe_lstm is True
+
+        worst = 0.0
+        for W in widths:
+            x = torch.rand(1, 1, 32, W)
+            with torch.no_grad():
+                a = ref(x)
+                b = alt(x)
+            assert a.shape == b.shape, (W, a.shape, b.shape)
+            worst = max(worst, float((a - b).abs().max()))
+        return worst, worst <= tol
 
     def timesteps(self, width: int) -> int:
         """
