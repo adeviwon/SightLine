@@ -886,6 +886,21 @@ const SightLine = (() => {
     return best;
   }
 
+  /**
+   * setPSM(): pin the worker's page-segmentation mode for subsequent
+   * runOCR() calls, then run a single recognition pass on ONE image.
+   *
+   * This exists for tools/psm_sweep.js, which needs to measure the whole PSM
+   * space rather than the three modes runOCR tries. It is NOT part of the
+   * normal pipeline — runOCR sets the mode itself for each of its passes, so
+   * calling this leaves the worker in a state runOCR will overwrite on its next
+   * pass. It is exported for measurement, not for callers.
+   */
+  async function setPSM(psm) {
+    const worker = await initWorker();
+    await worker.setParameters({ tessedit_pageseg_mode: String(psm) });
+  }
+
   async function dispose() {
     if (_worker) {
       try { await _worker.terminate(); } catch (e) { /* already gone */ }
@@ -985,7 +1000,7 @@ const SightLine = (() => {
     assessQuality, estimateSkew, otsu, median3, unsharp, clahe, binarize,
     toGrayCanvas, makeCanvas, _ctx2d, preprocess,
     // ocr
-    initWorker, runOCR, isGarbage, structure_score, dispose, vendorBase,
+    initWorker, runOCR, isGarbage, structure_score, setPSM, dispose, vendorBase,
   };
 })();
 
