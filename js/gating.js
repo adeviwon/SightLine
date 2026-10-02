@@ -32,6 +32,11 @@ const Gating = (() => {
   const SHARP_BAD = 0.008;    // sharpness <= this -> weight 1
   const CONTENT_MIN = 0.12;   // below this dynamic range: blank paper
 
+  // The scale the anchors above were calibrated at. Must equal TILE_H/TILE_W
+  // in restorer.js, which is what the ONNX model consumes.
+  const TILE_H = 64;
+  const TILE_W = 256;
+
   /** Grayscale Float32Array in [0,1] from an RGBA ImageData-like object. */
   function toGray(data, w, h) {
     const out = new Float32Array(w * h);
@@ -90,10 +95,51 @@ const Gating = (() => {
     return rampDown(sharpness(g, w, h), SHARP_CLEAN, SHARP_BAD);
   }
 
-  /** Convenience: build from RGBA ImageData. */
+  /**
+   * Convenience: build from RGBA ImageData, measured at TILE scale.
+   *
+   * SCALE IS NOT OPTIONAL. See the SCALE WARNING at the top of this file.
+   * Variance-of-Laplacian is a per-pixel statistic, so a full 900x580 render
+   * measures ~3.5x LOWER than a 64x256 patch of the same content. Feeding a
+   * whole image to weightFromGray() with patch-calibrated anchors produced:
+   *
+   *     profile          full-image weight   correct (per-tile)
+   *     studio_clean            0.43               0.00
+   *     off_axis                0.55               0.00
+   *     glossy_glare            0.66               0.00
+   *     paper_texture           0.52               0.00
+   *
+   * i.e. every clean profile was sent through full restoration, which costs
+   * about -56 dB PSNR on clean input and measurably changed the OCR text the
+   * classifier saw. That was the live behaviour of the shipped app.
+   *
+   * The fix is to measure the unit the model actually consumes: slice the image
+   * into TILE_H x TILE_W patches and take the MEDIAN weight. Median rather than
+   * mean so that a few blank margins (weight 0 by CONTENT_MIN) do not dilute a
+   * genuinely blurred page, and so one noisy tile cannot force restoration of a
+   * clean page.
+   */
   function weightFromImageData(imgData) {
     const g = toGray(imgData.data, imgData.width, imgData.height);
-    return weightFromGray(g, imgData.width, imgData.height);
+    const W = imgData.width, H = imgData.height;
+    if (W <= TILE_W && H <= TILE_H) return weightFromGray(g, W, H);
+
+    const ws = [];
+    for (let y = 0; y + TILE_H <= H; y += TILE_H) {
+      for (let x = 0; x + TILE_W <= W; x += TILE_W) {
+        // Extract this tile into a contiguous buffer.
+        const tile = new Float32Array(TILE_W * TILE_H);
+        for (let r = 0; r < TILE_H; r++) {
+          const src = (y + r) * W + x;
+          tile.set(g.subarray(src, src + TILE_W), r * TILE_W);
+        }
+        ws.push(weightFromGray(tile, TILE_W, TILE_H));
+      }
+    }
+    if (!ws.length) return weightFromGray(g, W, H);
+    ws.sort((a, b) => a - b);
+    const mid = ws.length >> 1;
+    return ws.length % 2 ? ws[mid] : (ws[mid - 1] + ws[mid]) / 2;
   }
 
   /**
@@ -127,6 +173,7 @@ const Gating = (() => {
 
   return { toGray, sharpness, contrast, weightFromGray, weightFromImageData,
            blend, describe, rampDown,
+           TILE_H, TILE_W,
            ANCHORS: { SHARP_CLEAN, SHARP_BAD, CONTENT_MIN } };
 })();
 

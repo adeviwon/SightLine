@@ -33,7 +33,8 @@ import capture, gating
 tiles = []
 for name, params in capture.CAPTURE_PROFILES.items():
     for band in range(3):
-        ds = 123 * 7919 + abs(hash(name)) % 100003 + band
+        import seedutil
+        ds = 123 * 7919 + seedutil.name_hash(name) % 100003 + band
         lines, _ = capture.DOCS[band % 3]
         clean = capture.render_document(lines, seed=ds)
         deg = capture.apply_profile(clean, seed=ds, **params)
