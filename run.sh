@@ -34,6 +34,14 @@ case "$cmd" in
   eval)        exec $PYRUN ml/src/evaluate.py "$@" ;;
   export)      exec $PYRUN ml/src/export_onnx.py "$@" ;;
   test)        exec $PYRUN -m pytest ml/tests -q "$@" ;;
+  # ── real-data text recogniser (replaces Tesseract) ──────────────────────
+  build-data)  exec $PYRUN ml/src/build_dataset.py "$@" ;;
+  train-ocr)   ep="${1:-40}"; shift 2>/dev/null || true
+               exec $PYRUN ml/src/train_ocr.py --epochs "$ep" "$@" ;;
+  eval-ocr)    exec $PYRUN ml/src/eval_ocr.py "$@" ;;
+  # Generic passthrough so any module can be run through the venv with
+  # PYTHONPATH stripped: bash run.sh py ml/src/realdata.py --selftest
+  py)          exec $PYRUN "$@" ;;
   serve)       port="${1:-8080}"
                echo "Serving ./app on http://0.0.0.0:${port}"
                ip=$(hostname -I 2>/dev/null | awk '{print $1}')

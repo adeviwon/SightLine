@@ -1,19 +1,7 @@
-# Python
-__pycache__/
-*.py[cod]
 .venv/
-.pytest_cache/
-*.egg-info/
-
-# Cached generated training data — regenerable with `bash run.sh train-dncnn`
-artifacts/restorer_data.npz
-
-# OS
-.DS_Store
-Thumbs.db
-
-# NOT ignored (these are the shipped artifacts — commit them):
-#   models/restorer/restorer.pt
-#   models/classifier/minilm_head.pt
-#   models/onnx/*.onnx
-#   app/vendor/**          (vendored OCR engine, required for offline)
+__pycache__/
+*.pyc
+# Real-document corpora: large, redistributable under their own licences
+# (SROIE ICDAR2019; Express Expense CC-BY-4.0), and not ours to commit.
+data/
+artifacts/*.npz
