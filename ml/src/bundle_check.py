@@ -31,7 +31,12 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent.parent.parent
 APP_MODELS = ROOT / "app" / "models"
 
-REQUIRED = ["minilm_encoder.onnx", "minilm_head.onnx", "restorer.onnx"]
+# crnn.onnx is the recogniser that replaced Tesseract, and it is REQUIRED, not
+# optional. Without it the app has no text recognition at all -- Tesseract is
+# no longer in the pipeline -- so "the app still works without it" is no longer
+# true and must not be claimed.
+REQUIRED = ["minilm_encoder.onnx", "minilm_head.onnx", "restorer.onnx",
+            "crnn.onnx"]
 
 
 def main():
@@ -150,6 +155,36 @@ def main():
     except Exception as e:
         print(f"  FAIL head inference: {type(e).__name__}: {e}")
         failures.append(f"head inference: {e}")
+
+    # The recogniser's input shape is a HARD CONTRACT with the browser, not a
+    # preference: app/js/recognizer.js builds exactly [1,1,32,256] because the
+    # exported graph cannot have a dynamic sequence length (aten::lstm refuses,
+    # and torch.export cannot unroll a symbolic loop bound). If a re-export
+    # changes that width, the JS stops matching and the app silently mis-trims
+    # timesteps -- inventing characters from padding. Asserted here so the
+    # failure is a build error rather than a wrong dosage on a phone.
+    try:
+        c = ort.InferenceSession(str(APP_MODELS / "crnn.onnx"),
+                                 providers=["CPUExecutionProvider"])
+        cx = np.random.default_rng(2).random((1, 1, 32, 256)).astype(np.float32)
+        cl = c.run(None, {"input": cx})[0]
+        finite = bool(np.isfinite(cl).all())
+        shape_ok = (cl.ndim == 3 and cl.shape[0] == 1
+                    and cl.shape[2] == 38)
+        # 256 px of crop -> 32 timesteps, i.e. W/8. If this drifts, the JS
+        # decoder's timestepsFor() is wrong for every crop.
+        ts_ok = cl.shape[1] == 32
+        print(f"  {'OK  ' if finite and shape_ok and ts_ok else 'FAIL'} crnn "
+              f"(1,1,32,256) -> logits {tuple(cl.shape)}  "
+              f"expect (1,32,38)  finite={finite}")
+        if not (finite and shape_ok):
+            failures.append(f"crnn bad logits {cl.shape}")
+        if not ts_ok:
+            failures.append(
+                f"crnn timesteps {cl.shape[1]} != 32; export width must stay 256")
+    except Exception as e:
+        print(f"  FAIL crnn inference: {type(e).__name__}: {e}")
+        failures.append(f"crnn inference: {e}")
 
     print("\n=== 4. manifest honesty ===")
     man = APP_MODELS / "ort.json"

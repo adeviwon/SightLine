@@ -38,6 +38,7 @@ const PRECACHE = [
   "./js/pipeline.js",
   "./js/gating.js",
   "./js/restorer.js",
+  "./js/recognizer.js",
   "./js/classifier.js",
   "./js/tts.js",
   "./js/app.js",
@@ -69,6 +70,7 @@ const PRECACHE = [
  */
 const OPTIONAL = [
   "./models/restorer.onnx",
+  "./models/crnn.onnx",
   "./models/minilm_encoder.onnx",
   "./models/minilm_head.onnx",
   "./models/tokenizer.json",
