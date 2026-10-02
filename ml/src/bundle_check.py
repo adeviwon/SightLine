@@ -165,17 +165,60 @@ def main():
         print("  FAIL no ort.json manifest")
         failures.append("ort.json missing")
 
-    print("\n=== 5. tokenizer assets ===")
-    tok_dir = APP_MODELS / "tokenizer"
-    if tok_dir.exists():
-        have = sorted(p.name for p in tok_dir.iterdir())
-        print(f"  OK   tokenizer/ has {len(have)} files: {', '.join(have)}")
+    print("\n=== 5. tokenizer asset ===")
+    # The app loads a single flat tokenizer.json (js/classifier.js
+    # TOKENIZER_PATH = "models/tokenizer.json") and builds its own wordpiece
+    # tokenizer from model.vocab at runtime. This check used to look for a
+    # tokenizer/ DIRECTORY, which the app never had, so it printed
+    # "informational" and moved on while the file went MISSING -- which is how
+    # tokenizer.json was absent from the bundle for its entire life and the
+    # on-device classifier could not tokenize anything.
+    #
+    # An informational check that can only ever report absence is not a check.
+    tok = APP_MODELS / "tokenizer.json"
+    if not tok.exists():
+        print("  FAIL tokenizer.json missing -- the on-device classifier "
+              "cannot tokenize without it")
+        failures.append(
+            "app/models/tokenizer.json missing; js/classifier.js requires it. "
+            "Regenerate with the export step (it runs "
+            "AutoTokenizer.save_pretrained('app/models')).")
     else:
-        print("  --   no tokenizer/ dir in the app bundle")
-        print("       (the app ships its own JS-side tokenizer; informational)")
+        import json as _json
+        kb = tok.stat().st_size / 1024
+        try:
+            spec = _json.loads(tok.read_text())
+        except Exception as e:
+            spec = {}
+            print(f"  FAIL tokenizer.json is not valid JSON: {e}")
+            failures.append(f"tokenizer.json unparseable: {e}")
+        vocab = (spec.get("model") or {}).get("vocab") or {}
+        if not vocab:
+            print("  FAIL tokenizer.json has no model.vocab -- "
+                  "js/classifier.js reads exactly that key")
+            failures.append("tokenizer.json has no model.vocab")
+        else:
+            print(f"  OK   tokenizer.json  {kb:.0f} KB  "
+                  f"vocab={len(vocab):,} tokens")
+            if len(vocab) < 30000:
+                print(f"  WARN vocab is small ({len(vocab):,}); "
+                      f"all-MiniLM-L6-v2 has 30,522 — a truncated tokenizer "
+                      f"silently degrades every classification")
+    # save_pretrained also drops a tokenizer_config.json that nothing reads.
+    # Flag it rather than shipping dead weight in the precache.
+    stray = APP_MODELS / "tokenizer_config.json"
+    if stray.exists():
+        print(f"  WARN tokenizer_config.json present "
+              f"({stray.stat().st_size/1024:.0f} KB) but referenced by nothing "
+              f"— safe to delete")
 
     print()
-    total = sum((APP_MODELS / n).stat().st_size for n in REQUIRED)
+    # Include the tokenizer in the shipped payload. It was omitted, which made
+    # the reported total 22.16 MB for a bundle that actually installs 22.87 MB.
+    payload = list(REQUIRED)
+    if (APP_MODELS / "tokenizer.json").exists():
+        payload.append("tokenizer.json")
+    total = sum((APP_MODELS / n).stat().st_size for n in payload)
     for n in REQUIRED:
         b = APP_MODELS / (n + ".data")
         if b.exists():
