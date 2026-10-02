@@ -30,9 +30,17 @@ const CHROME = process.env.CHROME_BIN
 
 const MIME = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
+  // .mjs MUST be served as JavaScript. Without it the browser gets
+  // application/octet-stream, rejects the module import with "Failed to fetch
+  // dynamically imported module", and the ONNX path silently falls back to
+  // classical — which is how this harness reported 42% while never running the
+  // model. See js/restorer.js, which imports vendor/ort/ort.min.mjs.
+  ".mjs": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8", ".png": "image/png",
   ".wasm": "application/wasm", ".gz": "application/gzip", ".md": "text/markdown; charset=utf-8",
   ".ico": "image/x-icon",
+  ".onnx": "application/octet-stream", ".jpg": "image/jpeg",
+  ".traineddata": "application/octet-stream",
 };
 
 const { CDP } = require("./cdp_min.js");
@@ -58,6 +66,9 @@ function check(desc, ok, detail) {
   // default here must be "classical" or this measures a configuration that
   // never ships. Override with RESTORE_MODE=adaptive.
   const mode = process.env.RESTORE_MODE || "classical";
+  // USE_RESTORER=1 additionally runs the neural restorer, so the harness
+  // measures the shipped pipeline rather than the classical fallback.
+  const useRestorer = process.env.USE_RESTORER === "1";
 
   console.log("scoring " + samples.length + " rendered documents (restoreMode: "
     + mode + ")\n");
@@ -119,22 +130,49 @@ function check(desc, ok, detail) {
       const wantFields = M.fields[s.doc];
       const wantCat = M.category[s.doc];
 
-      // Run the true pipeline in-page. This is exactly what runScan() calls.
-      // The restoreMode MUST match what app.js selects, or this measures a
-      // configuration the app never ships: with no restorer.onnx, app.js picks
-      // "classical", so that is the default here too. Override with
-      // RESTORE_MODE=adaptive to measure the model-present path.
+      // Run the true pipeline in-page. This is what runScan() calls.
+      //
+      // NEURAL PATH: when USE_RESTORER=1 this also runs
+      // SightLineRestorer.armRestorerClahe() and OCRs ITS candidates, which is
+      // the actual production path. Without it this test measures only
+      // preprocess()+runOCR() and the trained model never participates, no
+      // matter what is bundled in app/models. The 42% figure quoted for this
+      // harness before it gained this branch was therefore a measurement of
+      // the classical fallback, not of the shipped system.
       const out = await cdp.eval(`(async () => {
         const img = new Image();
         img.src = "/sample/${name}";
         await img.decode();
         const pp = SightLine.preprocess(img, 3200, { restoreMode: "${mode}" });
-        const ocr = await SightLine.runOCR(pp.candidates, () => {});
+        let candidates = pp.candidates;
+        let engine = { restorer: "${mode}", classifier: "skipped" };
+        ${useRestorer ? `
+        // Production path: neural restoration, gated, then CLAHE candidates.
+        try {
+          const sess = await SightLineRestorer.init();
+          if (!sess) {
+            engine = { restorer: "init-returned-null",
+                       status: SightLineRestorer.status() };
+          } else {
+            const r = await SightLineRestorer.armRestorerClahe(pp.canvas, {});
+            if (r && r.candidates && r.candidates.length) {
+              candidates = r.candidates;
+              engine = { restorer: r.engine, weight: r.weight,
+                         tiles: r.tiles, error: r.error };
+            } else {
+              engine = { restorer: "no-candidates",
+                         status: SightLineRestorer.status() };
+            }
+          }
+        } catch (e) { engine = { restorer: "threw: " + e,
+                                 status: SightLineRestorer.status() }; }` : ``}
+        const ocr = await SightLine.runOCR(candidates, () => {});
         const norm = SightLine.normalizeOCRText(ocr.text);
         const u = SightLine.understand(ocr.text);
         return JSON.stringify({
           dims: pp.width + "x" + pp.height,
           quality: pp.quality, blurry: pp.blurry, lapVar: pp.lapVar, skew: pp.skew,
+          engine: engine,
           ocrConf: ocr.confidence, psm: ocr.psm, chars: (ocr.text||"").length,
           category: u.category, conf: u.classificationConfidence,
           nFields: u.fields.length,
@@ -142,7 +180,7 @@ function check(desc, ok, detail) {
           summary: u.summary,
           docCat: SightLine.classify_doc(norm)
         });
-      })()`, 300000);
+      })()`, 600000);
       const r = JSON.parse(out);
       const all = wantFields.every((f) => r.found.includes(f));
       rows.push({ name, doc: s.doc, profile: s.profile, all, r, mode });
@@ -150,7 +188,9 @@ function check(desc, ok, detail) {
       console.log(s.doc + " / " + s.profile);
       console.log("    " + mode.padEnd(8)
         + " " + r.dims + " q=" + r.quality.toFixed(2) + " lapVar=" + Math.round(r.lapVar)
-        + " skew=" + r.skew.toFixed(1) + "deg | OCR " + (r.ocrConf * 100).toFixed(0)
+        + " skew=" + r.skew.toFixed(1) + "deg | "
+        + (r.engine ? "engine=" + JSON.stringify(r.engine) + " " : "")
+        + "OCR " + (r.ocrConf * 100).toFixed(0)
         + "% psm=" + r.psm + " " + r.chars + "ch | " + r.category
         + " (" + r.conf.toFixed(2) + ") | fields_found " + JSON.stringify(r.found)
         + (all ? "  = ALL" : "  (missing "

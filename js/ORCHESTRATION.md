@@ -238,6 +238,37 @@ one (adaptive is a no-op). `tools/selftest_image.js` asserts all three cases,
 because a test that only checked "the modes differ" would pass on the one input
 where they legitimately agree and tell you nothing.
 
+### ⚠ There are TWO different quality gates, and they do not agree
+
+This is a real inconsistency, documented here because it is easy to mistake
+one for the other.
+
+| | `pipeline.js` `assessQuality` | `gating.js` `degradation_weight` |
+|---|---|---|
+| metric | `lapVar`, variance of Laplacian on the **full image** | same metric on a **64×256 tile** |
+| scale | full-image | ~3.5× smaller — it is a per-pixel statistic |
+| threshold | `lapVar < 100` blurry | `SHARP_CLEAN 0.080` / `SHARP_BAD 0.008` |
+| unit | full-image lapVar | tile-scale sharpness |
+| purpose | decide *whether* to median/unsharp | decide *how strongly* to restore |
+
+`app.js` calls `preprocess(..., {restoreMode: "adaptive"})`, which uses the
+first gate, and then `SightLineRestorer.armRestorerClahe(...)`, which uses the
+second. They were written at different times against different units, and
+neither was calibrated against the other.
+
+Consequence: a capture that `assessQuality` calls *clean* (lapVar 133, above
+the 100 threshold) can still be fully restored by the neural path, and one it
+calls *blurry* may be passed through untouched by the gate. The measured
+`adaptive` row above is exactly this — the `lapVar ≈ 133` case that the neural
+path then does restore, which is why `classical` won when no model was
+present.
+
+**Not yet reconciled.** The clean fix is to have `assessQuality` call
+`gating.weightFromImageData` so there is one gate, one scale, one threshold —
+`ml/src/gating.py` and `app/js/gating.js` are already cross-language
+parity-tested (30/30 on real capture tiles). Until then, treat the two gates as
+independent and do not reason from one to the other.
+
 ---
 
 ## The honesty gate — `js/app.js`
