@@ -43,6 +43,15 @@ scores near zero; see `calibrate()` and the numbers printed by __main__.
 import cv2
 import numpy as np
 
+# The restorer's input geometry. Duplicated here rather than imported from
+# train_restorer so that gating.py stays importable on its own (importing
+# train_restorer pulls in torch, which gating.py does not need — it is used by
+# light-weight tools and by the __main__ calibration table).
+#
+# These MUST match train_restorer.PATCH_W/PATCH_H and js/gating.js TILE_W/TILE_H.
+# The anchors below are calibrated at exactly this scale.
+PATCH_W, PATCH_H = 256, 64
+
 
 def to_gray(img):
     """Accepts a PIL Image or a numpy array; returns float32 [0,1] grayscale."""
@@ -245,13 +254,50 @@ def describe(gray):
     return {"sharpness": s, "noise_sigma": n, "weight": w, "band": band}
 
 
+def image_weight(gray, tile_h=PATCH_H, tile_w=PATCH_W):
+    """
+    Gate weight for a WHOLE IMAGE, measured at tile scale.
+
+    Mirrors `weightFromImageData` in app/js/gating.js. The tiling is not
+    optional: variance-of-Laplacian is a per-pixel statistic, so a full
+    900x580 render measures ~3.5x lower than a 64x256 patch of the same
+    content, and feeding a whole image to degradation_weight() with
+    patch-calibrated anchors gave every clean profile a weight of 0.43-0.66
+    -- i.e. full restoration on a perfect scan, the exact failure the gate
+    exists to prevent.
+
+    MEDIAN over tiles, deliberately, not mean:
+      - blank margins score 0 by CONTENT_MIN and would otherwise dilute a
+        genuinely blurred page toward "do nothing"
+      - one noisy tile must not be able to force restoration of a clean page
+
+    Trailing partial tiles are dropped rather than padded, so the measurement
+    unit is always exactly what the model consumes.
+    """
+    h, w = gray.shape[:2]
+    if w <= tile_w and h <= tile_h:
+        return degradation_weight(gray)
+
+    ws = []
+    for y in range(0, h - tile_h + 1, tile_h):
+        for x in range(0, w - tile_w + 1, tile_w):
+            ws.append(degradation_weight(gray[y:y + tile_h, x:x + tile_w]))
+    if not ws:
+        return degradation_weight(gray)
+    return float(np.median(ws))
+
+
 if __name__ == "__main__":
     import sys
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).parent))
     import capture
-    from train_restorer import BANDS, PATCH_H, PATCH_W
+    from train_restorer import BANDS
     import seedutil
+
+    assert (PATCH_W, PATCH_H) == (256, 64), (
+        f"gating.PATCH_W/H {(PATCH_W, PATCH_H)} disagrees with the scale the "
+        f"anchors were calibrated at (256, 64)")
 
     print(f"Calibration is measured on {PATCH_H}x{PATCH_W} PATCHES — the unit")
     print(f"the restorer consumes. Full-image numbers are ~3.5x smaller and")
