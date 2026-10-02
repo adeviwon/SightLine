@@ -80,6 +80,79 @@ def recognise(model, img_u8, device):
     return text, conf
 
 
+def align_lines(got, want):
+    """
+    Pair detected lines with transcript lines in two passes.
+
+    PASS 1 -- match on exact equality, in order.
+    Exact matches are the only strong evidence available, so they anchor
+    everything else. Matching is monotonic: a line can only ever pair with a
+    later one, because text read out of order is read out of order to the user
+    and a metric that permitted reordering would hide that defect.
+
+    PASS 2 -- pair whatever is left, positionally.
+    A missed band shifts everything after it, so a purely positional pairing
+    would turn "one line not detected" into "every subsequent line wrong". The
+    anchors from pass 1 prevent that, and whatever drift remains is absorbed by
+    pairing the leftovers in order.
+
+    Why not difflib.SequenceMatcher: it also matches on string equality, but
+    when the recogniser is still noisy almost nothing matches exactly, so it
+    returns ZERO pairs and the entire evaluation silently collapses to recall
+    0% and CER 0%. I tried it first. A metric that reads 0.0% for everything
+    tells you nothing about the model, which is the one thing a metric must do.
+
+    Returns [(got_or_None, want_or_None), ...] where every input line appears
+    exactly once: a None want is a spurious band, a None got is a missed line.
+    Both are reported rather than folded into the accuracy.
+    """
+    pairs = []                  # (got_or_None, want_or_None)
+    tags = []                   # (want_index, got_index) alongside each pair
+    used_g = set()
+    matched_w = set()
+
+    # Pass 1: monotonic exact match.
+    j = 0
+    for wi, w in enumerate(want):
+        k = j
+        while k < len(got):
+            if got[k].strip().upper() == w.strip().upper():
+                pairs.append((got[k], w))
+                tags.append((wi, k))
+                used_g.add(k)
+                matched_w.add(wi)
+                j = k + 1
+                break
+            k += 1
+
+    # Pass 2: pair the leftovers positionally, in order.
+    rest_g = [i for i in range(len(got)) if i not in used_g]
+    rest_w = [i for i in range(len(want)) if i not in matched_w]
+    for gi, wi in zip(rest_g, rest_w):
+        pairs.append((got[gi], want[wi]))
+        tags.append((wi, gi))
+        used_g.add(gi)
+        matched_w.add(wi)
+    # Still unpaired: report as spurious / missed.
+    for gi in range(len(got)):
+        if gi not in used_g:
+            pairs.append((got[gi], None))
+            tags.append((len(want), gi))
+    for wi in range(len(want)):
+        if wi not in matched_w:
+            pairs.append((None, want[wi]))
+            tags.append((wi, len(got)))
+
+    # Restore document order: by want index, then by got index.
+    #
+    # The indices are carried in `tags` rather than recovered with .index(),
+    # which would find the FIRST occurrence of a duplicated line and collapse
+    # every copy onto one sort key. Receipts repeat lines -- a second "TOTAL",
+    # a repeated address line -- so that is not hypothetical.
+    order = sorted(range(len(pairs)), key=lambda t: (tags[t][0], tags[t][1]))
+    return [pairs[t] for t in order]
+
+
 def error_kind(got, want):
     """Classify a misread so the samples are actionable."""
     g, w = R.norm_label(got), R.norm_label(want)
@@ -198,6 +271,11 @@ def eval_handheld(model, device, limit=60):
         return None
 
     tot_e = tot_c = tot_x = tot_n = 0
+    # Lines the detector MISSED (in the transcript, no band) and lines it
+    # INVENTED (a band with no transcript). Reported alongside accuracy
+    # rather than folded into it, so a low score can be attributed to the
+    # detector or to the recogniser instead of being ambiguous.
+    tot_missed = tot_spurious = len_pairs = 0
     kinds = defaultdict(int)
     samples = defaultdict(list)
     n_pages = 0
@@ -286,12 +364,22 @@ def eval_handheld(model, device, limit=60):
             if txt.strip():
                 got_lines.append(txt.strip())
 
-        # Score line-by-line against the transcript.
-        for i, want in enumerate(lines):
-            want = want.strip()
-            if len(want) < 3:
+        # Score line-by-line with an ALIGNMENT, not by position, and count
+        # unmatched lines on both sides separately so a recall failure is
+        # visible instead of silently reducing the denominator.
+        want_all = [w.strip() for w in lines if len(w.strip()) >= 3]
+        pairs = align_lines(got_lines, want_all)
+        for got, want in pairs:
+            if want is None:
+                tot_spurious += 1      # band with no transcript line
                 continue
-            got = got_lines[i] if i < len(got_lines) else ""
+            if got is None:
+                tot_missed += 1        # transcript line with no band
+                # No prediction to be wrong about, but the characters it
+                # SHOULD have produced count as errors, or recall failures
+                # would flatter the CER.
+                tot_c += max(len(R.norm_label(want)), 1)
+                continue
             gn, wn = R.norm_label(got), R.norm_label(want)
             e = int(round(R.cer(got, want) * max(len(wn), 1)))
             ok = int(got.strip().upper() == want.strip().upper())
@@ -302,12 +390,20 @@ def eval_handheld(model, device, limit=60):
                 kinds[k] += 1
                 if len(samples[k]) < 4:
                     samples[k].append((want, got, None))
+        len_pairs += sum(1 for g, w in pairs if g is not None and w is not None)
         n_pages += 1
 
     return {
         "n": tot_n, "pages": n_pages, "empty_pages": empty_pages,
         "cer": tot_e / max(tot_c, 1),
         "line_acc": tot_x / max(tot_n, 1),
+        "missed": tot_missed,
+        "spurious": tot_spurious,
+        # Fraction of transcript lines the detector actually produced a band
+        # for. This is the ceiling on line accuracy: no alignment can score
+        # above it, so it must be visible or a low accuracy looks like a
+        # recognition failure when it is really a detection failure.
+        "detection_recall": len_pairs / max(len_pairs + tot_missed, 1),
         # sorted(), not kinds.most_common(): `kinds` is a defaultdict, which
         # has no most_common. Sorting by count descending and truncating gives
         # the same "top 12" ordering.
