@@ -57,8 +57,12 @@ import realdata as R                      # noqa: E402
 from build_handheld import (               # noqa: E402
     detect_lines, prepare, legible,
 )
-from eval_ocr import align_lines          # noqa: E402
-from ocr_model import build               # noqa: E402
+# Aliased, not imported as `build`: this module defines its own build(), and
+# importing the model factory under the same name made model = build(...)
+# call itself recursively until Python raised RecursionError. The traceback
+# pointed at torch's internals rather than at the shadowing, because the
+# recursion happened inside torch.load's unpickler on the way back out.
+from ocr_model import build as build_model  # noqa: E402
 
 # A pair is kept only if the model's reading of that band is this close to the
 # human transcription. 0.30 is strict on purpose: we are filtering for
@@ -98,7 +102,7 @@ def build(out_npz, ckpt=None, device=None, verbose=True):
         device = torch.device("cpu")
     torch.set_num_threads(2)
     ckd = torch.load(str(ckpt), map_location="cpu", weights_only=False)
-    model = build(ckd["num_classes"])
+    model = build_model(ckd["num_classes"])
     model.load_state_dict(ckd["model"])
     model.eval()
     if verbose:
@@ -139,20 +143,22 @@ def build(out_npz, ckpt=None, device=None, verbose=True):
         if not reads:
             continue
 
-        # Align the model's readings to the transcript.
-        pairs = align_lines(reads, [R.norm_label(w) for w in want])
-        # align_lines returns (got, want) but we need the BOX, so re-walk it
-        # in the same order the pairs were produced.
-        # Simpler and safer: align indices instead of strings.
-        gi = 0
-        anchored = []
-        # Pass 1 mirror of align_lines, tracking indices.
+        # Align the model's readings to the transcript, TRACKING INDICES.
+        #
+        # Not align_lines() itself: that returns (got_text, want_text), and
+        # duplicate strings are common in receipts -- two identical "TOTAL"
+        # lines -- so recovering a band by string lookup would always return
+        # the first one and pair it with the wrong crop. The two passes below
+        # mirror align_lines' logic exactly, so training and evaluation agree
+        # on what "aligned" means, but carry indices instead of text.
         used_g, matched_w = set(), set()
+        anchored = []
         j = 0
-        for wi, wn in enumerate([R.norm_label(w) for w in want]):
+        norm_want = [R.norm_label(w) for w in want]
+        for wi, wn in enumerate(norm_want):
             k = j
             while k < len(reads):
-                if reads[k] == wn:
+                if reads[k] and reads[k] == wn:
                     anchored.append((k, wi, True))
                     used_g.add(k)
                     matched_w.add(wi)

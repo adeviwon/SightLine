@@ -62,7 +62,12 @@ CROP_H = R.CROP_H
 MIN_W, MAX_W = R.MIN_W, R.MAX_W
 
 VARIANTS = ["clean", "jpeg", "motion", "defocus", "dark", "bright",
-            "lowres", "shadow", "composite"]
+            "lowres", "shadow", "composite", "perspective", "rotate"]
+
+# Populated on first use by _load_homographies(). Declared here, above
+# augment(), because referencing it before the assignment at the bottom of the
+# file made it an unbound local at call time.
+_HOM_CACHE = None
 
 
 def crop_to_array(img: Image.Image) -> np.ndarray:
@@ -151,7 +156,127 @@ def augment(arr: np.ndarray, kind: str, seed: int) -> np.ndarray:
             a = augment(a, k, seed + 7919 * (i + 1))
         return a
 
+    if kind == "perspective":
+        # A REAL handheld four-corner homography from the Zenodo set, applied
+        # to a flat scan crop. This is the only geometric variant, and its
+        # absence was a genuine gap: the eight others are all photometric
+        # (blur, exposure, compression), so nothing in training ever taught
+        # the model that a glyph can be a trapezoid. The hand-photographed
+        # receipts are shot at an angle, and a model trained on axis-aligned
+        # scans reads them far worse than its held-out scan score predicts.
+        #
+        # Using measured corner positions rather than a random shear matters:
+        # the real set spans up to 4010 px on the long edge, and those are the
+        # distortions a phone actually produces when held over a page.
+        # `global` is required: assigning _HOM_CACHE here makes Python treat it
+        # as a local for the WHOLE function, so reading it first raised
+        # UnboundLocalError instead of returning the module-level None.
+        global _HOM_CACHE
+        homs = _HOM_CACHE
+        if homs is None:
+            homs = _HOM_CACHE = _load_homographies()
+        if not homs:
+            return a
+        h, w = a.shape
+        quad = homs[seedutil.name_hash(f"h{seed}") % len(homs)]
+        pad = 3
+        src = np.float32([[pad, pad], [w - 1 - pad, pad],
+                          [w - 1 - pad, h - 1 - pad], [pad, h - 1 - pad]])
+        # Map the crop's rectangle onto a subset of the measured quad, so the
+        # distortion's magnitude matches the real capture instead of warping
+        # the text to some arbitrary skew.
+        # SIZE THE QUAD TO THE CROP, then let the homography's SHAPE skew it.
+        #
+        # Two mistakes here, both measured rather than reasoned about:
+        #
+        # 1. Scaling by the normalised [-1,1] coordinates put the destination
+        #    in a ~28x6 px box in the middle of a 200x32 crop, so 97% of the
+        #    output was border.
+        # 2. borderValue=0 filled that border with BLACK. Measured 6182 of
+        #    6400 pixels below the ink threshold -- the augmentation was
+        #    replacing the word with a black rectangle, which would have taught
+        #    the model to read noise while looking like a valid training
+        #    sample. The border must be PAPER, which is the crop's own bright
+        #    value, not zero.
+        #
+        # So: the quad's mean corner sits at the crop centre, and the corner
+        # OFFSETS are scaled to the crop's half-extents in each axis. That keeps
+        # the perspective's proportions while filling the frame.
+        cx, cy = w / 2.0, h / 2.0
+        f = float(rng.uniform(0.55, 0.95))   # fraction of the half-extent
+        q = quad - quad.mean(axis=0)          # centred, roughly [-1,1]
+        q = q * np.float32([w * 0.5 * f, h * 0.5 * f])
+        if rng.rand() < 0.5:                  # the sheet can tilt either way
+            q = q * np.float32([-1.0, 1.0])
+        dst = (q + np.float32([cx, cy])).astype(np.float32)
+        M = cv2.getPerspectiveTransform(src, dst)
+        # Paper tone, from the crop's own bright pixels, so it adapts to a
+        # dim or warm photo instead of assuming white.
+        paper = int(np.percentile(a, 90))
+        return cv2.warpPerspective(a, M, (w, h), flags=cv2.INTER_LINEAR,
+                                   borderMode=cv2.BORDER_CONSTANT,
+                                   borderValue=paper)
+
+    if kind == "rotate":
+        # Small in-plane rotation, the way a page sits when you do not line it
+        # up with the camera. Kept modest on purpose: a word rotated 15 degrees
+        # is a different recognition problem, not a harder version of this one.
+        #
+        # borderValue is the crop's own paper tone, not 0. Rotation exposes the
+        # corners, and filling them black teaches the model to read a black
+        # frame's worth of nothing as if it were a word.
+        ang = float(rng.uniform(-7.0, 7.0))
+        h, w = a.shape
+        M = cv2.getRotationMatrix2D((w / 2.0, h / 2.0), ang, 1.0)
+        paper = int(np.percentile(a, 90))
+        return cv2.warpAffine(a, M, (w, h), flags=cv2.INTER_LINEAR,
+                              borderMode=cv2.BORDER_CONSTANT,
+                              borderValue=paper)
+
     raise ValueError(f"unknown augmentation {kind!r}")
+
+
+def _load_homographies():
+    """
+    Read the Zenodo four-corner homographies, normalised to sit around the origin.
+
+    The raw corners are in receipt-image pixel coordinates, spanning up to
+    4010 px on the long edge. They are centred and divided by their own
+    half-extent so every one lands in roughly [-1, 1]. That normalisation is
+    what makes them reusable on a 32 px-tall word crop: the SHAPE of the
+    distortion is preserved and only the scale, which is meaningless across
+    receipts of different sizes, is discarded.
+
+    Returns a list of float32 [4,2] arrays, empty when the handheld data is
+    absent -- the perspective variant then becomes a no-op rather than an
+    error, so the corpus still builds on a machine that has only SROIE.
+    """
+    try:
+        raw = R.handheld_homography()
+    except Exception:
+        return []
+    out = []
+    for pts in raw.values():
+        p = np.asarray(pts, np.float32)
+        if p.shape != (4, 2) or p.max() <= 0:
+            continue
+        # SORT THE CORNERS into a ring before using them.
+        #
+        # The CSV stores them in the order TL, TR, BL, BR -- interleaved, not
+        # cyclic. Read literally that quad is self-intersecting, and warping
+        # with it folded the crop over itself: measured 680% of the original
+        # ink pixels and mean luminance 79/255, i.e. the whole frame filled
+        # dark. Sorting by angle around the centroid gives the true cyclic
+        # order TL, TR, BR, BL, whose shoelace sign is the opposite of the raw
+        # ordering's -- the same page, correctly wound.
+        c = p.mean(axis=0)
+        p = p[np.argsort(np.arctan2(p[:, 1] - c[1], p[:, 0] - c[0]))]
+        p = p - p.mean(axis=0)
+        half = np.abs(p).max()
+        if half <= 1e-6:
+            continue                      # degenerate quad
+        out.append((p / half).astype(np.float32))
+    return out
 
 
 def build(max_receipts=260, max_crops_per_receipt=40, seed=7):
