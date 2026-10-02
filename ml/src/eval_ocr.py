@@ -208,11 +208,29 @@ def eval_handheld(model, device, limit=60):
         a = np.asarray(img, np.uint8)
         H, W = a.shape
 
-        # Binarise with Otsu (ink dark on light paper), then invert so ink=255.
-        _, binv = cv2.threshold(a, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        # The receipt is usually a tilted rectangle on a dark table. Crop to
-        # the dominant bright region so the table's edge does not create a
-        # huge false "line".
+        # Binarise so INK is the foreground, then take the IMAGE half of
+        # cv2.threshold's return value.
+        #
+        # Two bugs lived here and both are silent:
+        #   1. `_, binv = cv2.threshold(...)` is correct -- but any code that
+        #      reads the FIRST element as the image gets a scalar float and
+        #      every projection computed from it is meaningless. cv2.threshold
+        #      returns (threshold_value, image), in that order.
+        #   2. These are DARK photos: the receipt is bright paper on a black
+        #      table. Under THRESH_BINARY the paper and the table both become
+        #      foreground, the row projection is full width everywhere, there
+        #      are no dark gaps between text lines, and the band finder
+        #      returns NOTHING. BINARY_INV is correct for the polarity but
+        #      still marks the paper as a solid block.
+        # So: local contrast against a median-blurred paper estimate, which
+        # isolates ink regardless of how dark the surrounding table is.
+        paper = cv2.medianBlur(a, 31)
+        ink = (a.astype(np.int16) < paper.astype(np.int16) - 18)
+        binv = (ink.astype(np.uint8)) * 255
+        # Crop to the receipt: rows where ink spans a real fraction of width.
+        # The page is tilted, so use a LOW bar -- the top and bottom of a
+        # receipt contain little text.
+        H, W = a.shape
         ys = np.where(binv.sum(axis=1) > W * 0.02)[0]
         if len(ys) > 20:
             binv = binv[max(0, ys[0] - 5):min(H, ys[-1] + 6), :]
@@ -237,8 +255,26 @@ def eval_handheld(model, device, limit=60):
 
         got_lines = []
         for (y0, y1) in bands:
-            band = binv[y0:y1, :]
-            band = cv2.resize(band, (band.shape[1], 32),
+            # Crop to the INK EXTENT horizontally. Using the full page width
+            # (750 px of which the text may occupy 400) hands the recogniser
+            # mostly-empty margins, and worse, pads/crops it so the text lands
+            # at a different scale than any training crop. A 3% pad on each
+            # side also guards against clipping descenders and italic tails.
+            strip = ink[y0:y1, :]
+            cols = np.where(strip.sum(axis=0) > 0)[0]
+            if len(cols) < 4:
+                continue                     # a speck, not a text line
+            pad = max(2, int((y1 - y0) * 0.10))
+            x0 = max(0, int(cols[0]) - pad)
+            x1 = min(a.shape[1], int(cols[-1]) + pad + 1)
+
+            # GRAYSCALE, not the binary mask. The model was trained on
+            # grayscale crops; handing it a 0/255 mask destroys the tonal
+            # information the restoration network and the recogniser both
+            # rely on, and reads nothing. This was the cause of the 140
+            # 'read-nothing' results.
+            band = a[y0:y1, x0:x1]
+            band = cv2.resize(band, (band.shape[1], R.CROP_H),
                               interpolation=cv2.INTER_AREA)
             # pad/crop to the recogniser's width window
             w = min(R.MAX_W, max(R.MIN_W, band.shape[1]))
@@ -272,7 +308,10 @@ def eval_handheld(model, device, limit=60):
         "n": tot_n, "pages": n_pages, "empty_pages": empty_pages,
         "cer": tot_e / max(tot_c, 1),
         "line_acc": tot_x / max(tot_n, 1),
-        "errors": dict(kinds.most_common(12)),
+        # sorted(), not kinds.most_common(): `kinds` is a defaultdict, which
+        # has no most_common. Sorting by count descending and truncating gives
+        # the same "top 12" ordering.
+        "errors": dict(sorted(kinds.items(), key=lambda kv: -kv[1])[:12]),
         "samples": samples,
     }
 
