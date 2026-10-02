@@ -329,13 +329,25 @@ def build(max_receipts=260, max_crops_per_receipt=40, seed=7):
                     if box[2] - box[0] < 6 or box[3] - box[1] < 6:
                         continue
                     base = crop_to_array(img.crop(box))
-                    # 'clean' always, plus a deterministic subset of the
-                    # degradation variants. Every word gets clean + one
-                    # variant chosen by seed, so the corpus is not 9x larger
-                    # but still covers every failure mode.
-                    picks = ["clean"] + [
-                        VARIANTS[seedutil.name_hash(f"{rid}|{kept}|{i}") % len(VARIANTS)]
-                        for i in range(2)]
+                    # 'clean' always, then DISTINCT degradation variants.
+                    #
+                    # The old picker was `VARIANTS[hash % len(VARIANTS)]` for
+                    # i in range(2), which can draw "clean" twice or the same
+                    # variant twice -- so a third of the augmentation budget
+                    # silently did nothing, and no statistic revealed it. The
+                    # clean sample is now always included exactly once and the
+                    # two extra picks are guaranteed distinct and never clean.
+                    others = [v for v in VARIANTS if v != "clean"]
+                    h0 = seedutil.name_hash(f"{rid}|{kept}")
+                    picks = ["clean"]
+                    seen_k = {"clean"}
+                    for i in range(2):
+                        v = others[(h0 + i * 7919) % len(others)]
+                        if v in seen_k:                 # hash collision
+                            v = others[(h0 + i * 7919 + 1) % len(others)]
+                        if v not in seen_k:
+                            picks.append(v)
+                            seen_k.add(v)
                     for kind in picks:
                         s = (seed * 1_000_003
                              + seedutil.name_hash(f"{rid}|{kept}|{kind}"))

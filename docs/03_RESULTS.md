@@ -78,7 +78,77 @@ MiniLM-L6-v2 (**frozen**, 22,713,216 params) + trained MLP head (**49,796 params
 | **legal** | 0 | 0 | 5 | 0 |
 | **general** | 0 | 0 | 0 | 6 |
 
-## 3. End-to-end accuracy
+## 3. OCR recogniser (our CRNN)
+
+**This is the number that answers "did you actually train something that
+reads?", and it is the weakest result in the project. It is reported here
+before the classifier because the classifier is easy and the recogniser is
+hard, and putting the easy one first is how a demo ends up overclaiming.**
+
+Model: **942,166 parameters**, 37-symbol charset, CTC loss, 2-layer
+bidirectional LSTM, 3.84 MB as one self-contained ONNX file.
+
+Trained on real word crops from **260 SROIE receipts** (flatbed scans), split
+by receipt so no document appears on both sides.
+
+| metric | value |
+|---|---|
+| **Held-out word accuracy** (SROIE test receipts) | **29.7%** |
+| Held-out CER | 14.3% |
+| Best epoch | 20 of 45 (stopped early — see below) |
+| Training time | ~150 s/epoch, CPU, 4 cores |
+| Corpus | 30,021 crops from 260 receipts |
+
+### It plateaued and we stopped it
+
+Validation word accuracy across the last eight epochs: 25.3, 28.5, 28.1, 28.8,
+29.1, 29.7, 28.7, 29.4 — flat, while training loss fell to 0.067. That is
+overfitting on 182 training receipts, not slow progress. Epochs 21-45 were
+abandoned rather than burned through to produce a prettier curve.
+
+### The domain gap, measured
+
+The same checkpoint, two held-out sets:
+
+| held-out set | what it is | CER |
+|---|---|---|
+| SROIE test | flatbed scan, even light, square to lens | **14.3%** |
+| Zenodo handheld | night photo, plastic sleeve, tilted, glare | **56.3%** |
+
+Both numbers are real. The gap between them is the interesting result, and it
+is not a scoring artefact — it is the difference between a document scanned
+flat and a document photographed by a person.
+
+### Real hand-photographed receipts — measured, not projected
+
+8 pages from the Zenodo set, projection-profile line detection, whole-page
+transcripts as ground truth:
+
+| metric | value |
+|---|---|
+| **Line exact-match accuracy** | **0.0%** |
+| **CER** | **56.3%** |
+| **Detection recall** | **62.6%** ← hard ceiling on line accuracy |
+| Lines missed by the detector | 61 |
+| Bands invented by the detector | 9 |
+| Lines scored | 102 |
+
+**Read the detection recall first.** The line detector finds only 62.6% of the
+text lines, so line accuracy cannot exceed 62.6% no matter how good the
+recogniser is. The current bottleneck is **detection, not recognition** — and
+that is a solvable, well-understood problem (a learned detector rather than a
+row-projection heuristic), which is why it is named here rather than averaged
+away.
+
+### Why we are not quoting a field-accuracy number yet
+
+End-to-end field accuracy cannot be honestly computed for the custom OCR path
+yet, because the recogniser is not accurate enough for the number to mean
+anything. Quoting it would require a detector above ~85% recall first. The
+historical end-to-end figures in section 4 are **Tesseract** results and must
+not be presented as ours.
+
+## 4. End-to-end accuracy (LEGACY — TESSERACT PATH, NOT OURS)
 
 The metric that matters: **field accuracy** — the fraction of documents where *every* key field is recovered. All-or-nothing, because a blind user who hears the wrong dosage is worse off than one who hears none.
 
@@ -114,30 +184,44 @@ Corpus seeder: `zlib.crc32/seedutil-v1`
 
 ⚠️ = `SUB_HUMAN` — a person cannot reliably read this either. Excluded from the headline: worst_case. These are honest failures, not hidden ones.
 
-## 4. On-device payload
+## 5. On-device payload
 
 | artifact | size |
 |---|---|
-| `minilm_encoder.onnx` | 22348.7 KB |
+| `minilm_encoder.onnx` (INT8) | 22348.7 KB |
 | `minilm_head.onnx` | 1.0 KB |
 | `restorer.onnx` | 3.9 KB |
-| **total ML payload** | **22353.5 KB** |
+| **`crnn.onnx` (our recogniser)** | **3840 KB** |
+| `tokenizer.json` | 695 KB |
+| **total ML payload** | **26880 KB (26.3 MB)** |
 
-Plus the vendored OCR engine and English language data: **52.2 MB**. Cached once on install; the app then works in airplane mode forever.
+**Tesseract and its 52.2 MB of language data are still shipped and still
+called by `app/js/pipeline.js`.** Removing them is the single largest payload
+win available (~52 MB, a 66% reduction) and is not yet done. The custom
+recogniser replaces it in principle and the decoder is verified against the
+Python reference, but the browser pipeline has not been migrated, so the
+shipped app still depends on Tesseract working.
 
-## 5. Test suite
+## 6. Test suite
 
 ```bash
 bash run.sh test
 ```
 
-The suite covers the claims this page makes. The ones that matter most:
+**258 tests pass.** The ones that matter most:
 
 | test file | what it proves |
 |---|---|
+| `test_ocr_model.py` | CRNN geometry (height exactly 1), timestep count, and that the ONNX export loop equals the fused `nn.LSTM` to 7.45e-08 |
+| `test_line_align.py` | the handheld line aligner survives inserted and missing bands, duplicate lines, and total mismatch without silently reporting 0% |
 | `test_leakage.py` | no template, document, or augmented twin appears in both train and evaluation sets |
 | `test_corpus.py` | the split is stratified and there are no duplicate templates (a real bug in the original corpus) |
 | `test_capture.py` | every degradation actually changes the image, is deterministic, and is physically directional |
 | `test_model.py` | the network is exactly the identity at init and stays inside the mobile parameter budget |
 | `test_evaluate.py` | sub-human profiles never leak into the headline |
+
+Plus a browser-side gate: `app/tools/recognizer_parity.js` (24/24) compares
+the JavaScript CTC decoder against the **actual Python** `decode_greedy`,
+reading the reference out of the interpreter rather than hardcoding a second
+copy of the expected answers, so the two cannot drift together.
 
