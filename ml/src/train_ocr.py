@@ -241,16 +241,58 @@ def main():
     torch.set_num_threads(args.threads)
     device = torch.device("cpu")
 
-    if not Path(args.data).exists():
-        print(f"missing {args.data}\nrun:  bash run.sh build-data", file=sys.stderr)
+    # Load every cache and CONCATENATE, so the model trains on both clean
+    # scans and real hand-held photographs.
+    #
+    # The two caches have different schemas: SROIE carries `splits`/`variants`
+    # and a `receipts` array, the handheld consensus cache carries `split` and
+    # page names. Reading one schema and assuming the other would either crash
+    # or silently train on half the data, so both are normalised here.
+    #
+    # The handheld photos are the ones the product actually faces -- night
+    # shots, plastic sleeves, tilted -- while SROIE is flatbed scans. Training
+    # on scans alone and testing on photos is a domain gap that showed up as
+    # 14% CER on held-out scans against 56% on held-out photos.
+    caches = []
+    for spec in args.data.split(","):
+        p = Path(spec.strip())
+        if not p.exists():
+            print(f"missing {p}\nrun:  bash run.sh build-data", file=sys.stderr)
+            return 1
+        caches.append(p)
+    if not caches:
+        print("no --data given", file=sys.stderr)
         return 1
 
-    print(f"loading {args.data} ...")
-    d = np.load(args.data, allow_pickle=True)
-    images, widths = d["images"], d["widths"]
-    labels = list(d["labels"])
-    splits = list(d["splits"])
-    variants = list(d["variants"])
+    all_imgs, all_w, all_lab, all_split, all_var, all_src = [], [], [], [], [], []
+    S2I = {"train": 0, "val": 1, "test": 2}
+    S2V = {"clean": 0, "sroie": 0}
+    for p in caches:
+        d = np.load(p, allow_pickle=True)
+        im, wd = d["images"], d["widths"]
+        lb = [str(x) for x in d["labels"]]
+        sp = d["splits"] if "splits" in d else d["split"]
+        sp = [x if isinstance(x, str) else ["train", "val", "test"][int(x)]
+              for x in sp]
+        vr = [str(x) for x in d["variants"]] if "variants" in d \
+            else ["handheld"] * len(lb)
+        rc = [str(x) for x in d["receipts"]] if "receipts" in d \
+            else [str(x) for x in d["page"]]
+        all_imgs.append(im)
+        all_w.append(np.asarray(wd, np.int32))
+        all_lab.append(lb)
+        all_split.append([S2I[s] for s in sp])
+        all_var.append([S2V.get(v, 0) for v in vr])
+        all_src.append([f"{p.name}:{r}" for r in rc])
+        print(f"  loaded {p.name}: {len(lb)} crops, "
+              f"{len(set(rc))} sources")
+
+    images = np.concatenate(all_imgs, axis=0)
+    widths = np.concatenate(all_w, axis=0)
+    labels = [x for s in all_lab for x in s]
+    splits = [x for s in all_split for x in s]
+    variants = [x for s in all_var for x in s]
+    srcs = [x for s in all_src for x in s]
     n_all = len(labels)
 
     # CTC feasibility filter. Computed with the real conv geometry per width,
@@ -278,7 +320,7 @@ def main():
           f"-- T < label length makes the loss infinite")
     for k in ("train", "val", "test"):
         ids = idx_by_split[k]
-        recs = len({str(d["receipts"][i]) for i in ids})
+        recs = len({srcs[i] for i in ids})
         print(f"  {k:5} {len(ids):6} crops  {recs:4} receipts")
 
     train_ds = CRNNDataset(images, widths, labels, idx_by_split["train"])
