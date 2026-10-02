@@ -109,6 +109,9 @@ class SightLineCRNN(nn.Module):
     def __init__(self, num_classes=38, in_ch=1, hidden=128, layers=2,
                  dropout=0.1):
         super().__init__()
+        # NB the name: nn.Module already reserves `.cache`, and assigning a dict
+        # there shadows Module's own machinery. `_ts_by_width` avoids that.
+        self._ts_by_width = {}
         self.num_classes = num_classes
 
         # ── feature extraction ──────────────────────────────────────────
@@ -208,13 +211,25 @@ class SightLineCRNN(nn.Module):
         multiplying factors, because the arithmetic is not a clean product (odd
         widths lose a pixel to floor division in the pools) and a clean-product
         formula would over- or under-count by one for some widths.
+
+        MEMOISED on width. timesteps() runs a real forward pass, and the
+        training loop needs it twice per sample -- once in the CTC-feasibility
+        filter and again inside collate() to build input_lengths. Over 30,021
+        crops that is 60,042 needless conv forwards, which took the dataset
+        load from 20 seconds to over four minutes. There are only ~300 distinct
+        crop widths, so a dict keyed on width turns it back into 300.
         """
+        w = int(width)
+        hit = self._ts_by_width.get(w)
+        if hit is not None:
+            return hit
         was_training = self.training
         self.eval()
         with torch.no_grad():
-            t = self.cnn(torch.zeros(1, 1, 32, int(width))).shape[3]
+            t = int(self.cnn(torch.zeros(1, 1, 32, w)).shape[3])
         self.train(was_training)
-        return int(t)
+        self._ts_by_width[w] = t
+        return t
 
     def n_params(self):
         return sum(p.numel() for p in self.parameters())
