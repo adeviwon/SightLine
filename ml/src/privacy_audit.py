@@ -25,6 +25,36 @@ from urllib.parse import urlparse
 
 APP = Path("app")
 SCAN_SUFFIXES = {".js", ".html", ".json"}
+
+# Data files that ship inside app/ but cannot execute and are never fetched.
+#
+# models/tokenizer.json is a 30,522-entry BERT vocabulary. Scanning it as if it
+# were source flagged "amplitude" at line 22423 -- the English word, a vocab
+# token -- as an analytics SDK, which failed the privacy gate over a word in a
+# word list.
+#
+# The check is right in spirit (a vendored bundle could exfiltrate) and wrong in
+# scope (a token list cannot). Scoping is by CONTENT, not extension: .json is
+# still scanned, because app/models/ort.json and the service-worker precache
+# manifest are configuration that decides what gets loaded. Only files proven to
+# be pure data are exempt, and that proof is by explicit list, not extension.
+DATA_ONLY = {
+    "models/tokenizer.json",   # wordpiece vocab: {"model": {"vocab": {...}}}
+}
+# A tokenizer.json that stops looking like a tokenizer must be scanned again, so
+# the exemption is checked against the file's actual shape rather than trusted.
+TOKENIZER_SHAPE = re.compile(r'"model"\s*:\s*\{[^{}]*"vocab"\s*:\s*\{')
+
+# ...and shape alone is not sufficient. Mutation-testing the exemption showed
+# that injecting a REAL analytics endpoint as a vocab token
+# (vocab["https://api.segment.io/v1/track"] = 99999) still passed the audit,
+# because the file kept its tokenizer shape. A token list cannot execute, but it
+# can still carry a URL that some other component might read and fetch.
+#
+# So a data-only file is exempted from the CODE checks (analytics SDK names,
+# network APIs) but NOT from the URL check. That is the honest split: the file
+# cannot call anything, but every string in it is still worth resolving.
+DATA_ONLY_SKIP_CODE_CHECKS = True
 # Namespace URLs that appear in SVG/XML attributes, plus licence-text URLs and
 # spec references. They are identifiers or documentation, never fetched by the
 # app. Matching on host only would not work here because these appear as bare
@@ -195,12 +225,36 @@ def main():
         print("app/ not found — run from the repository root")
         return 1
 
-    files = [p for p in APP.rglob("*")
-             if p.is_file() and p.suffix in SCAN_SUFFIXES
-             and "tools" not in p.parts]
+    candidates = [p for p in APP.rglob("*")
+                  if p.is_file() and p.suffix in SCAN_SUFFIXES
+                  and "tools" not in p.parts]
+
+    files, skipped = [], []
+    data_only = set()
+    for p in candidates:
+        key = str(p.relative_to(APP))
+        if key in DATA_ONLY:
+            # Exempt by explicit list AND verified by content shape, so a
+            # replaced file cannot hide behind the exemption.
+            try:
+                head = p.read_text(errors="ignore")[:4096]
+            except OSError:
+                head = ""
+            if TOKENIZER_SHAPE.search(head):
+                skipped.append(key)
+                data_only.add(p)
+                continue
+            NOTES.append(f"{rel(p)} is on the data-only list but no longer "
+                         f"matches the expected tokenizer shape — scanning it "
+                         f"after all")
+        files.append(p)
 
     print(f"scanning {len(files)} shipped files in app/ "
-          f"(including vendored third-party code)\n")
+          f"(including vendored third-party code)")
+    if skipped:
+        print(f"  {len(skipped)} data-only file(s) scanned for URLs only "
+              f"(cannot execute): {', '.join(skipped)}")
+    print()
     text_by_path = {}
     for p in files:
         try:
@@ -212,6 +266,18 @@ def main():
         check_network_apis(p, text)
         check_analytics(p, text)
         check_fetch_targets(p, text)
+
+    # Data-only files still get the URL check: a token list cannot call
+    # anything, but it can still carry a fetchable endpoint. Only the checks
+    # that look for EXECUTABLE analytics/network APIs are skipped, because a
+    # vocabulary entry named "amplitude" is a word, not an SDK.
+    for p in data_only:
+        try:
+            text = p.read_text(errors="ignore")
+        except OSError:
+            continue
+        check_external_urls(p, text)
+        text_by_path[p] = text
 
     check_cdn_defaults_overridden(text_by_path)
     check_service_worker()

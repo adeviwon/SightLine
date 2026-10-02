@@ -102,22 +102,49 @@ session and compares what OCR returns. Same source, same session — the only
 variable is whether the model ran.
 
 ```
-total OCR chars : 4535 -> 5937   (+1402, +31%)
-total fields    :   12 ->   10   (-2)
+                          chars        fields
+without the selection fix  4535 -> 5937   12 -> 10   (-2)
+with    the selection fix  4727 -> 6232   13 -> 14   (+1)
 ```
 
-**Restoration recovers 31% more text and loses two safety-critical fields at
-the same time.** Both numbers are true and the second one matters more.
+**Restoration recovers ~31% more text.** Before the selection fix it *also*
+lost two safety-critical fields; after, it gains one. The character gain was
+never the problem — candidate selection was.
 
-The regression to chase is `legal / off_axis`: gate weight 0.43, character
-count essentially unchanged (512 → 514), but fields went from
-`["2500", "2024-CV-00456…"]` to `[]`. More readable text that no longer parses
-into the right fields is *worse* for this product — the user hears a confident
-wrong answer instead of a safe omission.
+### The selection bug
 
-This is why the product metric is all-or-nothing field extraction and never
-character count. A +31% character gain that drops a case number is a net
-negative for a blind user.
+`runOCR` ranked segmentation modes by Tesseract confidence alone:
+
+```
+restored psm=6   conf 81%   -> finds BOTH ["2500", "2024-CV-00456"]
+restored psm=11  conf 69%   -> finds NEITHER                  <- was chosen
+```
+
+The `psm=6` result was **more confident and recovered more**, and still lost.
+`psm=11` (sparse text) treats a page as disconnected fragments, so a case
+reference split across two lines never reassembles.
+
+Fixed by ranking on **structure** — the count of safety-critical tokens the
+product actually extracts — then confidence, then earlier PSM. Measured effect
+in real Chromium with the model live:
+
+| metric | before | after |
+|---|---|---|
+| browser classification | 7/12 | **9/12** |
+| E2E test failures | 15 | **9** |
+| A/B field recovery | 12 → 10 | **13 → 14** |
+
+`structure_score()` counts regex hits in the OCR output only — it never sees
+ground truth, so it cannot leak the answer key. It scores `2024-CV-OO456`
+(letter O for zero) as **zero**, because counting a mangled case number as
+recovered would defeat the entire purpose.
+
+### A proxy metric that improved while the product regressed
+
+Character count rose **+31%** while field recovery fell by 2. Any ranking
+driven by character count, PSNR, or raw confidence would have called that a
+win. For a blind user hearing a dosage, it is a net negative — hence
+all-or-nothing field extraction as the product metric.
 
 ### Gate weights, measured in Chromium
 
@@ -136,7 +163,7 @@ at all.
 
 ---
 
-## 4. Three bugs that made the model look broken when it was never running
+## 4. Four bugs that made the model look broken when it was never running
 
 Recorded because each was invisible to a check that already existed.
 
@@ -157,9 +184,19 @@ engine and gate weight per sample.
 and rejected the module. `browser_smoke.js` had the entry, which is why the
 smoke test passed and the OCR E2E did not.
 
+**d) `tokenizer.json` was never vendored.** `js/classifier.js` requires it and
+`sw.js` precached it, but the file did not exist — so the on-device classifier
+could not tokenize and silently used the keyword fallback. The check meant to
+catch this looked for a `tokenizer/` *directory* the app never used, and its
+failure branch only printed "informational" without recording a failure. It
+now parses the real file, requires `model.vocab`, and fails when absent
+(verified: moving the file aside fails the gate).
+
 The general lesson: a test that exercises a *pipeline stage* is not a test of
-the *pipeline*, and a fallback path will absorb failures silently. Assert the
-engine name in the output.
+the *pipeline*, a fallback path will absorb failures silently, and a check
+whose only possible outcome is "report absence and continue" is decoration. Say
+the engine name in the output, and make every failure branch append to
+`failures`.
 
 ---
 
@@ -257,7 +294,7 @@ fixes.
 `onnxruntime-web` **is** vendored into `app/vendor/ort/`, and the models now
 load in the browser (`engine=onnx`, verified in Chromium). The trained restorer
 does contribute — but not to this historical 42%, which predates the fix. See
-§4 for the three bugs that had to be cleared first, and §3 for what the model
+§4 for the bugs that had to be cleared first, and §3 for what the model
 actually does once it runs.
 
 This was the single biggest gap and it is now closed; see §9 for what remains.
