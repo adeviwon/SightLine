@@ -2,7 +2,15 @@
   "ort": true,
   "ort_version": "1.20.1",
   "restorer": true,
+  "recognizer": true,
   "classifier": true,
-  "note": "Exported by `bash run.sh export`; parity verified against PyTorch (max|d| 4.3e-07 restorer, 4.1e-06 encoder, 1.5e-07 head).",
+  "models": {
+    "restorer.onnx": "37,793-param residual CNN, input [1,1,64,256]",
+    "crnn.onnx": "942,166-param CRNN+CTC, input [1,1,32,256] FIXED WIDTH, output [1,32,38]",
+    "minilm_encoder.onnx": "all-MiniLM-L6-v2, INT8 dynamic quantisation",
+    "minilm_head.onnx": "4-class head, [batch,384] -> [batch,4]"
+  },
+  "note": "Exported by `bash run.sh export`; parity verified against PyTorch (max|d| 4.3e-07 restorer, 6.0e-06 crnn, 4.1e-06 encoder, 1.5e-07 head). crnn.onnx width is FIXED at 256 because aten::lstm cannot export with a dynamic sequence length; app/js/recognizer.js right-pads and trims to the crop's true timestep count.",
+  "tesseract": false,
   "generated_by": "export_onnx.py"
 }
