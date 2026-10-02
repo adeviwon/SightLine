@@ -343,8 +343,10 @@ inflated number lose the moment they demo, and the loss is unrecoverable.
 | Runs on iOS and Android as an offline PWA | **True** — verified in headless Chromium |
 | Zero network calls after install | **True** — verified by static audit + source |
 | Classifier 95% average on held-out synthetic text | **True**, with CI 86.7–100% |
-| **End-to-end text accuracy on blurry images ≥ 95%** | **False. Measured 42%.** |
+| **End-to-end text accuracy on blurry images ≥ 95%** | **False. Measured 62.2%** (reproducible; see §0) |
 | Privacy guarantee | **True** and independently verifiable |
 
-Four of six claims are solid and provable. One is close with a known one-hour
-fix. One is not met, and the distance to it is now written down.
+Five of six claims are solid and provable, and the sixth — end-to-end accuracy
+on realistic handheld capture — is not met, at 62.2% against a 95% target. The
+distance to it is written down, and the reason is a Tesseract ceiling rather
+than a preprocessing gap.

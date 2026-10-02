@@ -53,9 +53,10 @@ def export_restorer(ckpt="models/restorer/restorer.pt", opset=17):
         dynamic_axes={"input": {0: "batch", 2: "h", 3: "w"},
                       "output": {0: "batch", 2: "h", 3: "w"}},
         opset_version=opset, do_constant_folding=True)
+    _inline_external_data(path)
     size = path.stat().st_size
     print(f"[export] restorer.onnx  {size/1024:.1f} KB  "
-          f"params={count_params(model):,}", flush=True)
+          f"params={count_params(model):,}  (single-file)", flush=True)
     return path, model
 
 
@@ -75,6 +76,34 @@ def _weight_bytes(path):
     if blob.exists():
         total += blob.stat().st_size
     return total
+
+
+def _inline_external_data(path):
+    """
+    Fold any external `.onnx.data` weights back into the model file itself.
+
+    onnxruntime-web has no MountedFiles API, so a model with external weights
+    loads on a laptop and fails on a phone. This rewrites the graph with the
+    weights embedded and deletes the sidecar.
+
+    Returns True if anything was inlined.
+    """
+    import onnx
+    from onnx.external_data_helper import load_external_data_for_model
+
+    p = Path(path)
+    blob = p.with_name(p.name + ".data")
+    if not blob.exists():
+        return False
+    model = onnx.load(str(p), load_external_data=True)   # resolves the blob
+    onnx.save(model, str(p), save_as_external_data=False)
+    size_mb = blob.stat().st_size / 1024 / 1024
+    blob.unlink()
+    n = sum(1 for t in model.graph.initializer
+            if t.data_location == onnx.TensorProto.EXTERNAL)
+    print(f"[inline] {p.name}: folded {n} external tensors "
+          f"(dropped {size_mb:.1f} MB sidecar)", flush=True)
+    return True
 
 
 def _encoder_is_int8():
@@ -108,7 +137,7 @@ def _encoder_is_int8():
 
 def export_minilm(head_ckpt="models/classifier/minilm_head.pt",
                  encoder_name="sentence-transformers/all-MiniLM-L6-v2",
-                 opset=17, quantize=True):
+                 opset=17, quantize=True, external_data=False):
     """
     Export the MiniLM encoder and the trained head.
 
@@ -118,8 +147,27 @@ def export_minilm(head_ckpt="models/classifier/minilm_head.pt",
     phone. int8 brings the payload to ~23 MB for a measured accuracy cost that
     is reported, not assumed (see verify_minilm's quantisation comparison).
 
-    The head is left in fp32 — it is 1 KB, and quantising a 4-class linear
+    The head is left in fp32 -- it is 1 KB, and quantising a 4-class linear
     layer buys nothing while making the parity check noisier.
+
+    `external_data=False` is REQUIRED for the browser and is the default.
+
+    WHY: onnxruntime-web cannot read external weight blobs. The error is:
+
+        Deserialize tensor body.N.weight failed. Failed to load external data
+        file ""restorer.onnx.data", error: Module.MountedFiles is not
+        available.
+
+    `Module.MountedFiles` is the ORT file-mounting API, which exists in the
+    native runtime and is not implemented in the WASM web build. So any model
+    exported with external_data=True loads fine under `onnxruntime` on a
+    laptop -- which is exactly what the Python parity check does -- and then
+    fails on a phone. The app therefore fell back to the classical path and
+    reported 42% while the "trained model" was never executed.
+
+    Inlining the weights costs nothing here: the restorer is 150 KB and the
+    head 200 KB. Only the encoder is large, and quantization brings it under
+    22 MB, which is well inside the 2 GB protobuf limit.
     """
     from transformers import AutoModel, AutoTokenizer
     from onnxruntime.quantization import quantize_dynamic, QuantType
@@ -139,8 +187,12 @@ def export_minilm(head_ckpt="models/classifier/minilm_head.pt",
                       "attention_mask": {0: "b", 1: "s"},
                       "last_hidden_state": {0: "b", 1: "s"}},
         opset_version=opset, do_constant_folding=True)
-    print(f"[export] minilm_encoder.onnx  {enc_path.stat().st_size/1024:.1f} KB",
-          flush=True)
+    if external_data:
+        raise SystemExit("external_data=True produces a model that cannot "
+                         "load in onnxruntime-web. See export_minilm docstring.")
+    _inline_external_data(enc_path)
+    print(f"[export] minilm_encoder.onnx  {enc_path.stat().st_size/1024/1024:.1f} MB"
+          f"  (single-file, no external blob)", flush=True)
 
     if quantize:
         q_path = ONNX_DIR / "minilm_encoder.int8.onnx"
@@ -189,8 +241,9 @@ def export_minilm(head_ckpt="models/classifier/minilm_head.pt",
         input_names=["embedding"], output_names=["logits"],
         dynamic_axes={"embedding": {0: "batch"}, "logits": {0: "batch"}},
         opset_version=opset, do_constant_folding=True)
-    print(f"[export] minilm_head.onnx  {head_path.stat().st_size/1024:.1f} KB",
-          flush=True)
+    _inline_external_data(head_path)
+    print(f"[export] minilm_head.onnx  {head_path.stat().st_size/1024:.1f} KB"
+          f"  (single-file)", flush=True)
     return enc_path, head_path, enc, head, tok
 
 

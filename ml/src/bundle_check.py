@@ -74,6 +74,49 @@ def main():
             print(f"  - {f}")
         return 1
 
+    print("\n=== 2b. NO EXTERNAL DATA — onnxruntime-web cannot load it ===")
+    # THE BUG THIS EXISTS FOR.
+    #
+    # onnxruntime-web has no Module.MountedFiles API, so a model whose weights
+    # live in a sidecar `.onnx.data` file loads perfectly under the native
+    # `onnxruntime` used above — and then fails in the browser with
+    #   "Failed to load external data file "restorer.onnx.data",
+    #    error: Module.MountedFiles is not available."
+    #
+    # Every check in section 2 passed on exactly that model. The app silently
+    # fell back to classical preprocessing, the E2E harness reported 42% field
+    # recovery, and the trained model was never executed once.
+    #
+    # So the loadability test above is necessary but NOT sufficient. A model
+    # is only shippable if it is also SELF-CONTAINED. Both conditions are
+    # asserted here.
+    for name in REQUIRED:
+        p = APP_MODELS / name
+        m = onnx.load(str(p), load_external_data=False)
+        ext = [t.name for t in m.graph.initializer
+               if t.data_location == onnx.TensorProto.EXTERNAL]
+        blob = APP_MODELS / (name + ".data")
+        if ext:
+            print(f"  FAIL {name:<24} {len(ext)} external tensor(s), "
+                  f"sidecar {'present ' if blob.exists() else 'MISSING'}"
+                  f" — will NOT load in onnxruntime-web")
+            failures.append(
+                f"{name} uses external data ({len(ext)} tensors); "
+                f"ORT Web cannot mount it. Re-run `bash run.sh export`, which "
+                f"now inlines weights via _inline_external_data().")
+        else:
+            print(f"  OK   {name:<24} self-contained, 0 external tensors")
+
+    # A leftover sidecar for a model that no longer references one is dead
+    # weight in the precache. Flag it, since it doubles as a hint that an
+    # export ran with external_data=True at some point.
+    for name in REQUIRED:
+        blob = APP_MODELS / (name + ".data")
+        if blob.exists():
+            print(f"  WARN {name + '.data':<24} orphan sidecar "
+                  f"{blob.stat().st_size/1024:.0f} KB — not referenced by the "
+                  f"graph; delete it")
+
     print("\n=== 3. real inference through the shipped bundle ===")
     import onnxruntime as ort
 
