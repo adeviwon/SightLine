@@ -23,7 +23,7 @@ plan, every time.
 
 ---
 
-## 0. Two numbers, and which one to quote
+## 1. Two numbers, and which one to quote
 
 There are two independent measurements, and they answer different questions.
 Do not blend them.
@@ -76,21 +76,7 @@ is really "our restorer fixes hand shadows".
 
 `worst_case` scores **0% on every arm** and is reported rather than hidden.
 
-### The three profiles that are still 0%
-
-`handheld_light`, `handheld_heavy` and `low_light` score **0% on every arm** —
-raw, classical, restorer, and restorer+CLAHE alike. These are the profiles
-that represent how people actually hold a phone.
-
-This is a **Tesseract ceiling, not a preprocessing ceiling.** No amount of
-denoising, sharpening or contrast work recovers characters the OCR engine
-never resolved, and the restorer is already scoring +4.69 dB on badly damaged
-input without moving these. Closing this needs a different OCR engine or a
-detector-based recogniser, not more image restoration.
-
----
-
-## 1. The target
+## 2. The target
 
 The requirement was: **a 95–100% accurate model, runnable on iOS and Android,
 that reads text accurately even from blurry images.**
@@ -109,7 +95,87 @@ about.
 
 ---
 
-## 2. The earlier 42% measurement
+## 3. What the browser actually does (measured, not assumed)
+
+`app/tools/restore_ab.js` runs both arms on the same image in the same browser
+session and compares what OCR returns. Same source, same session — the only
+variable is whether the model ran.
+
+```
+total OCR chars : 4535 -> 5937   (+1402, +31%)
+total fields    :   12 ->   10   (-2)
+```
+
+**Restoration recovers 31% more text and loses two safety-critical fields at
+the same time.** Both numbers are true and the second one matters more.
+
+The regression to chase is `legal / off_axis`: gate weight 0.43, character
+count essentially unchanged (512 → 514), but fields went from
+`["2500", "2024-CV-00456…"]` to `[]`. More readable text that no longer parses
+into the right fields is *worse* for this product — the user hears a confident
+wrong answer instead of a safe omission.
+
+This is why the product metric is all-or-nothing field extraction and never
+character count. A +31% character gain that drops a case number is a net
+negative for a blind user.
+
+### Gate weights, measured in Chromium
+
+The gate measures **64×256 tiles** and takes the median — not the whole image.
+That distinction is load-bearing: variance-of-Laplacian is a per-pixel
+statistic, and feeding a full 900×580 render to patch-calibrated anchors gave
+every clean profile a weight of 0.43–0.66, i.e. full restoration on a perfect
+scan. That bug shipped and was caught only once the browser path ran the model
+at all.
+
+| profile | weight | engine |
+|---|---|---|
+| studio_clean, off_axis, paper_texture | **0.00** | `gate-skipped` (no inference) |
+| jpeg_social | ~0.7–0.98 | `onnx` |
+| handheld_light | **1.00** | `onnx` |
+
+---
+
+## 4. Three bugs that made the model look broken when it was never running
+
+Recorded because each was invisible to a check that already existed.
+
+**a) ONNX external data cannot be mounted by onnxruntime-web.** The models
+referenced weights in a sidecar `.onnx.data`. The browser reported
+`Module.MountedFiles is not available` and fell back to classical. Python's
+`onnxruntime` loads the same file fine — it *has* the mounting API — and that
+is exactly what the export parity check used. `bash run.sh bundle-check` now
+asserts self-containment as well as loadability.
+
+**b) The E2E harness never called the restorer.** It ran `preprocess()` and
+`runOCR()` with `restoreMode: classical`. Every "42%" ever reported from that
+harness measured the fallback. It now takes `USE_RESTORER=1` and prints the
+engine and gate weight per sample.
+
+**c) The harness did not serve `.mjs` as JavaScript.** `restorer.js` imports
+`ort.min.mjs`; without a MIME entry the browser got `application/octet-stream`
+and rejected the module. `browser_smoke.js` had the entry, which is why the
+smoke test passed and the OCR E2E did not.
+
+The general lesson: a test that exercises a *pipeline stage* is not a test of
+the *pipeline*, and a fallback path will absorb failures silently. Assert the
+engine name in the output.
+
+---
+
+`handheld_light`, `handheld_heavy` and `low_light` score **0% on every arm** —
+raw, classical, restorer, and restorer+CLAHE alike. These are the profiles
+that represent how people actually hold a phone.
+
+This is a **Tesseract ceiling, not a preprocessing ceiling.** No amount of
+denoising, sharpening or contrast work recovers characters the OCR engine
+never resolved, and the restorer is already scoring +4.69 dB on badly damaged
+input without moving these. Closing this needs a different OCR engine or a
+detector-based recogniser, not more image restoration.
+
+---
+
+## 5. The earlier 42% measurement (superseded, kept for provenance)
 
 An earlier run of the app's end-to-end OCR test (`app/tools/e2e_ocr.js`, real
 Tesseract on simulated capture images) reported:
@@ -181,18 +247,20 @@ Two things follow:
 
 ---
 
-## 3. Why it is lower than expected — the honest diagnosis
+## 6. Why it is lower than expected — the honest diagnosis
 
 There are four distinct causes. They are separable, and they need different
 fixes.
 
-### Cause 1: the restoration model is not actually running on the device
+### ~~Cause 1: the restoration model is not actually running on the device~~ **FIXED**
 
-`onnxruntime-web` is **not vendored** into `app/`. The app detects this and
-falls back to the classical median+unsharp stack. So the trained restorer
-contributes nothing to the 42%.
+`onnxruntime-web` **is** vendored into `app/vendor/ort/`, and the models now
+load in the browser (`engine=onnx`, verified in Chromium). The trained restorer
+does contribute — but not to this historical 42%, which predates the fix. See
+§4 for the three bugs that had to be cleared first, and §3 for what the model
+actually does once it runs.
 
-This is the single biggest gap and the easiest to close — see §5.
+This was the single biggest gap and it is now closed; see §9 for what remains.
 
 ### Cause 2: PSNR gains do not translate into OCR gains
 
@@ -223,7 +291,7 @@ denoising will.
 
 ---
 
-## 4. The classifier result, stated precisely
+## 7. The classifier result, stated precisely
 
 From `bash seed_check.sh 5`:
 
@@ -244,7 +312,31 @@ and more realistic distribution it has not yet been tested on.
 
 ---
 
-## 5. What would close the gap
+## 8. How to present this honestly
+
+**Say this:**
+
+> "We measured 42% end-to-end field accuracy on realistic handheld captures,
+> and 100% on clean scans. The gap is specific and we know where it is: our
+> trained restorer isn't loaded on device yet, and we're selecting the model
+> on PSNR when we should be selecting it on OCR accuracy. Here's the plan, and
+> here's the one-hour fix that moves the number most."
+
+**Do not say this:**
+
+> "Our model achieves 95–100% accuracy."
+
+The classifier does, on synthetic templates. The end-to-end system does not.
+A judge will ask to see the blurry case, and the demo will answer the question
+for you.
+
+**Why this framing wins:** teams that present a real measurement and a
+specific diagnosis get judged on their engineering. Teams that present an
+inflated number lose the moment they demo, and the loss is unrecoverable.
+
+---
+
+## 9. What would close the gap
 
 In priority order, with honest effort estimates:
 
@@ -310,31 +402,7 @@ hackathon-night one.
 
 ---
 
-## 6. How to present this honestly
-
-**Say this:**
-
-> "We measured 42% end-to-end field accuracy on realistic handheld captures,
-> and 100% on clean scans. The gap is specific and we know where it is: our
-> trained restorer isn't loaded on device yet, and we're selecting the model
-> on PSNR when we should be selecting it on OCR accuracy. Here's the plan, and
-> here's the one-hour fix that moves the number most."
-
-**Do not say this:**
-
-> "Our model achieves 95–100% accuracy."
-
-The classifier does, on synthetic templates. The end-to-end system does not.
-A judge will ask to see the blurry case, and the demo will answer the question
-for you.
-
-**Why this framing wins:** teams that present a real measurement and a
-specific diagnosis get judged on their engineering. Teams that present an
-inflated number lose the moment they demo, and the loss is unrecoverable.
-
----
-
-## 7. Honest status summary
+## 10. Honest status summary
 
 | Claim | Verdict |
 |---|---|
@@ -343,7 +411,7 @@ inflated number lose the moment they demo, and the loss is unrecoverable.
 | Runs on iOS and Android as an offline PWA | **True** — verified in headless Chromium |
 | Zero network calls after install | **True** — verified by static audit + source |
 | Classifier 95% average on held-out synthetic text | **True**, with CI 86.7–100% |
-| **End-to-end text accuracy on blurry images ≥ 95%** | **False. Measured 62.2%** (reproducible; see §0) |
+| **End-to-end text accuracy on blurry images ≥ 95%** | **False. Measured 62.2%** (reproducible; see §1) |
 | Privacy guarantee | **True** and independently verifiable |
 
 Five of six claims are solid and provable, and the sixth — end-to-end accuracy
