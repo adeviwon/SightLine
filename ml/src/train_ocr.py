@@ -266,6 +266,8 @@ def main():
 
     all_imgs, all_w, all_lab, all_split, all_var, all_src = [], [], [], [], [], []
     S2I = {"train": 0, "val": 1, "test": 2}
+    # Inverse map, used when bucketing crops back into splits below.
+    NAME_OF = ["train", "val", "test"]
     S2V = {"clean": 0, "sroie": 0}
     for p in caches:
         d = np.load(p, allow_pickle=True)
@@ -311,9 +313,12 @@ def main():
         else:
             dropped += 1
 
+    # Keyed by NAME, not by the integer S2I produced above. Normalising to ints
+    # and then indexing a dict of string keys raises KeyError: 0 -- caught the
+    # first time the new loader ran on the rebuilt cache.
     idx_by_split = {"train": [], "val": [], "test": []}
     for i in keep:
-        idx_by_split[splits[i]].append(i)
+        idx_by_split[NAME_OF[splits[i]]].append(i)
 
     print(f"  crops           {n_all}")
     print(f"  CTC-infeasible  {dropped} ({dropped/n_all*100:.2f}%) dropped "
