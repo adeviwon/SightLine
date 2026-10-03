@@ -48,6 +48,7 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+import cv2
 import numpy as np
 import torch
 
@@ -78,6 +79,99 @@ def recognise(model, img_u8, device):
     emit = [i for i in range(len(pred)) if pred[i] != R.BLANK]
     conf = float(np.mean([p[i, pred[i]] for i in emit])) if emit else 0.0
     return text, conf
+
+
+# ── paper estimation for the line detector ─────────────────────────────────
+#
+# A MEASURED NEGATIVE RESULT. The shipped values stay at a fixed 31px median
+# window and a margin of 18, and this block records the alternatives that were
+# built and measured, so nobody re-runs them.
+#
+# THE BUG THIS INVESTIGATED. The fixed 31px window assumes it lands on blank
+# paper between text lines. On a text-dense receipt that is false: these pages
+# carry roughly 38px line pitch, so the window spans most of one text line, its
+# MEDIAN is ink rather than paper, the estimate ends up BELOW true paper, and
+# the margin then marks the paper ITSELF as ink. The symptom looked like a
+# splitting bug and was not -- 1019-receipt had ink in 100% of rows with
+# projMin=3, so there was no gap anywhere for any rule to split at, and 26
+# transcript lines collapsed into 2 bands. 1002, 1005, 1006 and 1009 collapse
+# the same way.
+#
+# REJECTED, all measured on the 20 real pages (bands per transcript line,
+# baseline 0.736, higher is closer to 1.0):
+#
+#   adaptive valley splitting        0.610   worse
+#   Otsu global                       0.195   far worse
+#   morphological-close background   0.198   far worse
+#   Bradley adaptive threshold        0.242   far worse
+#   paper localisation (segment the
+#     receipt, project only inside)   0.716   worse overall; it fixed four
+#                                              pages and broke 1001, whose
+#                                              mask covered 16.6% of frame
+#   page-scaled window + margin 45    0.817   BEST on the proxy -- and it
+#                                              STILL FAILS. See below.
+#
+# The last one is the instructive one. It raised bands/line from 0.736 to 0.817
+# and real detection recall from 67.9% to 71.1%, and line accuracy from 1.8% to
+# 2.1% -- while pushing CER from 56.5% to 61.5%. The extra bands it found are
+# real bands in the wrong place, so the ceiling rose while the text got worse.
+#
+# It was reverted. A change that improves the ceiling and degrades the
+# product-relevant metric is not a win, and quoting the recall improvement alone
+# would be cherry-picking. The blocker is NOT the paper estimate: these pages
+# need the RECEIPT LOCALISED before line finding, and localisation only pays
+# once its mask is trustworthy rather than picking the largest bright blob.
+#
+# Also note that the paper WINDOW here is a per-image statistic and these pages
+# range from 258 to 1000px tall, so any fixed window is a different fraction of
+# a line gap on each -- that part of the reasoning above stands regardless of
+# which value ships.
+PAPER_WIN_FRAC = 0.05
+PAPER_DELTA = 45
+
+# What actually ships. Deliberately separate from the rejected pair above, and
+# named as SHIPPED_* so a test can assert on the real value instead of matching
+# source text -- an earlier version of that test grepped for "PAPER_DELTA" and
+# a rename to any other identifier sailed straight past it.
+SHIPPED_WINDOW_PX = 31
+SHIPPED_DELTA = 18
+
+
+def paper_window(page_h):
+    """Odd median window for the paper estimate, scaled to page height."""
+    k = max(9, int(page_h * PAPER_WIN_FRAC) | 1)
+    return k + 1 if k % 2 == 0 else k
+
+
+def ink_mask(gray, window=None, delta=None):
+    """
+    Ink on a page, as a boolean mask.
+
+    `gray` must be 2-D. Defaults to the SHIPPED estimate. `window` and `delta`
+    exist so the rejected alternatives above can still be reproduced and
+    re-measured without editing the detector -- and, more importantly, so
+    tests can call the same function the detector calls rather than a private
+    copy that can drift.
+    """
+    paper = cv2.medianBlur(gray, window or SHIPPED_WINDOW_PX)
+    return gray.astype(np.int16) < paper.astype(np.int16) - (
+        SHIPPED_DELTA if delta is None else delta)
+
+
+def line_bands(proj, min_h=8):
+    """Row runs above 4% of the profile max. Contiguous ink = one text line."""
+    thr = max(2, int(proj.max() * 0.04))
+    bands, start = [], None
+    for i, v in enumerate(proj):
+        if v > thr and start is None:
+            start = i
+        elif v <= thr and start is not None:
+            if i - start >= min_h:
+                bands.append((start, i))
+            start = None
+    if start is not None and len(proj) - start >= min_h:
+        bands.append((start, len(proj)))
+    return bands
 
 
 def align_lines(got, want):
@@ -306,30 +400,21 @@ def eval_handheld(model, device, limit=60):
         #      still marks the paper as a solid block.
         # So: local contrast against a median-blurred paper estimate, which
         # isolates ink regardless of how dark the surrounding table is.
-        paper = cv2.medianBlur(a, 31)
-        ink = (a.astype(np.int16) < paper.astype(np.int16) - 18)
+        ink = ink_mask(a)
         binv = (ink.astype(np.uint8)) * 255
         # Crop to the receipt: rows where ink spans a real fraction of width.
         # The page is tilted, so use a LOW bar -- the top and bottom of a
         # receipt contain little text.
-        H, W = a.shape
         ys = np.where(binv.sum(axis=1) > W * 0.02)[0]
         if len(ys) > 20:
             binv = binv[max(0, ys[0] - 5):min(H, ys[-1] + 6), :]
 
         # Horizontal projection -> contiguous ink bands are text lines.
+        # line_bands() is the shared implementation, so the tests that pin the
+        # paper-estimation fix and the sweep that chose its constants exercise
+        # the same code that runs here rather than a private copy.
         proj = (binv > 0).sum(axis=1)
-        thr = max(2, int(proj.max() * 0.04))
-        bands, start = [], None
-        for i, v in enumerate(proj):
-            if v > thr and start is None:
-                start = i
-            elif v <= thr and start is not None:
-                if i - start >= 8:
-                    bands.append((start, i))
-                start = None
-        if start is not None and len(proj) - start >= 8:
-            bands.append((start, len(proj)))
+        bands = line_bands(proj)
 
         if not bands:
             empty_pages += 1

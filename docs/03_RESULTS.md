@@ -164,12 +164,63 @@ transcripts as ground truth:
 lines, so line accuracy cannot exceed 67.9% however good the recogniser is. The
 bottleneck is **detection, not recognition**.
 
-Slice-based detection was tried to improve this and made it measurably worse
-(0.39–0.66 bands per transcript line against 0.79 for plain global projection
-— see `app/js/layout.js`). One page, `1002-receipt`, still defeats any single
-global threshold: its row profile never falls below 6% ink, so all 26 of its
-lines collapse into 2 bands. Fixing this properly needs an adaptive projection
-peak-finder or a learned detector, not another constant.
+#### What the detector investigation found
+
+This is the part worth showing a judge, because it is a real research result
+rather than a tuning exercise. Five of the twenty pages — `1002`, `1005`,
+`1006`, `1009`, `1019` — collapse under **every** splitting rule tried.
+`1002-receipt` has 26 transcript lines and produces 2 bands; `1019` produces 1.
+
+**Root cause, measured:** the row-ink profile never approaches zero, so there
+is no gap anywhere for any rule to split at.
+
+| page | transcript lines | bands | rows containing ink | profile min / max |
+|---|---|---|---|---|
+| `1002-receipt` | 26 | 2 | 95.0% | — |
+| `1019-receipt` | 21 | 1 | 100.0% | 3 / 93 |
+
+The cause is the paper estimate. `medianBlur(a, 31)` assumes a 31px window
+lands on blank paper between lines; these pages carry ~38px line pitch, so the
+window spans most of one text line, its *median is ink*, the estimate falls
+below true paper, and the margin then marks the paper itself as ink.
+
+**Six fixes were built and measured. None shipped**, and the full table is in
+`ml/src/eval_ocr.py` so nobody re-runs them (bands per transcript line,
+baseline 0.736):
+
+| attempt | bands/line | verdict |
+|---|---|---|
+| adaptive valley splitting | 0.610 | worse — no valleys exist to find |
+| Otsu global | 0.195 | far worse |
+| morphological-close background | 0.198 | far worse |
+| Bradley adaptive threshold | 0.242 | far worse |
+| paper localisation (project inside receipt) | 0.716 | fixed 4 pages, broke `1001` |
+| page-scaled window + margin 45 | **0.817** | **best — and still reverted** |
+
+The last row is the instructive one. It improved **everything the proxy
+measures** — bands/line 0.736 → 0.817, real detection recall 67.9% → 71.1%,
+line accuracy 1.8% → 2.1% — while pushing **CER 56.5% → 61.5%**. The extra
+bands it found are real bands in the wrong place: the ceiling rose while the
+text got worse. Quoting the recall alone would be cherry-picking, so it was
+reverted.
+
+The remaining blocker is that **the receipt must be localised before line
+finding**, and localisation only pays once the mask is trustworthy rather than
+picking the largest bright blob — the version tested broke `1001-receipt`,
+whose mask covered 16.6% of the frame.
+
+Two methodological notes, both caught in the act:
+
+- The `bands/line` proxy **cannot detect a merge**. One band covering two lines
+  and two bands covering two lines both read as "one band per line" unless the
+  count happens to differ. Every candidate was therefore confirmed against real
+  detection recall, which is how the CER regression surfaced.
+- The first regression gate for this work grepped the module for the string
+  `"PAPER_DELTA"`. A mutation that renamed the constant to `E_PAPER` **passed
+  it**. It now asserts on resolved values, and the renamed mutation was caught.
+
+The detector blocker is encoded in the suite as `xfail(strict=True)`, so it
+turns into a loud failure the moment someone fixes it.
 
 A representative failure, from the error breakdown — the recogniser is reading
 real text, just the wrong band:
