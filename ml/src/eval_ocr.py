@@ -248,7 +248,11 @@ def eval_sroie_test(model, device, limit=400):
         "per_variant": {k: {"cer": v[0] / max(v[1], 1),
                             "word_acc": v[2] / max(v[3], 1), "n": v[3]}
                         for k, v in per.items()},
-        "errors": dict(kinds.most_common()),
+        # sorted(), not kinds.most_common(): `kinds` is a defaultdict, which
+        # has no most_common. Same fix as eval_handheld -- the attribute error
+        # fired on the first call, which means eval_sroie_test had never
+        # actually been run to completion before.
+        "errors": dict(sorted(kinds.items(), key=lambda kv: -kv[1])[:12]),
         "samples": samples,
     }
 

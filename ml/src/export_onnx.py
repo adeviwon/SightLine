@@ -561,28 +561,83 @@ def verify_crnn(model, tol=1e-4, width=256):
     # same crop's own unpadded decode on the PyTorch side. If right-padding
     # leaked characters, the padded decode gains trailing characters that the
     # unpadded one does not have.
-    if _emits_any_blank(model):
+    # INVERTED, and this is why the safety gate never ran.
+    #
+    # This said `if _emits_any_blank(model): SKIP`, so it skipped precisely when
+    # the model was trained well enough for the check to mean something -- the
+    # one case it exists for. On the epoch-39 checkpoint _emits_any_blank
+    # returns True (47.3% blanks across real crops, all 38 classes used), and
+    # the message then claimed "untrained head emits no blanks", which is the
+    # exact opposite of the truth.
+    #
+    # It read as a deliberate guard, which is why it survived review: nobody
+    # stops to ask whether a well-worded condition is the right way round.
+    # The gate protecting the fixed-width export was therefore never executed,
+    # on any checkpoint, since it was written.
+    if not _emits_any_blank(model):
         print("  [crnn] padding invariant: SKIPPED (untrained head emits no "
               "blanks; the check cannot fail meaningfully yet)")
     else:
+        # Built from a REAL crop, not random noise: two random tensors differ
+        # in content as well as padding, so a difference proves nothing. Here
+        # the padded tensor is the crop's own content followed by zeros, and
+        # the same crop decoded at its own width is the reference. If
+        # right-padding leaked characters, the padded decode gains trailing
+        # characters the reference does not have.
         for content in (32, 64, 128, 200):
-            full = torch.rand(1, 1, 32, width)
-            padded = torch.zeros(1, 1, 32, width)
-            padded[:, :, :, :content] = full[:, :, :, :content]
+            crop = _sample_real_crop(content, width)
+            if crop is None:
+                print(f"  [crnn] pad {content:3}->{width}: SKIPPED "
+                      f"(no real crop of that width available)")
+                continue
             with torch.no_grad():
-                a = decode_greedy(model(full).argmax(-1)[0].numpy())
-                b = decode_greedy(model(padded).argmax(-1)[0].numpy())
-            # Same first `content/8` timesteps must decode identically; the
-            # only permitted difference is trailing characters from padding.
-            n_t = max(1, content // 8)
-            same_prefix = a[:n_t] == b[:n_t]
-            leaked = len(b) > n_t
+                full = torch.from_numpy(crop[None, None])
+                padded = torch.zeros(1, 1, 32, width)
+                padded[:, :, :, :content] = full[:, :, :, :content]
+                # Reference: the SAME content at its own width, so the only
+                # difference is the trailing zeros.
+                ref = torch.zeros(1, 1, 32, content)
+                ref[0, 0, :, :] = full[0, 0, :, :content]
+                a = decode_greedy(model(ref).argmax(-1)[0].numpy())
+                b = decode_greedy(model(padded).argmax(-1)[0].numpy(),
+                                  limit=content // 8)
+            same = a == b
+            leaked = len(b) > len(a)
             print(f"  [crnn] pad {content:3}->{width}: "
-                  f"prefix {'ok' if same_prefix else 'CHANGED'}, "
-                  f"{'no leak' if not leaked else 'LEAKS past content'}")
-            if not same_prefix:
+                  f"{'ok' if same else 'CHANGED'} "
+                  f"(ref {a!r} vs padded {b!r})"
+                  f"{'  LEAK' if leaked else ''}")
+            if not same:
                 ok = False
     return ok
+
+
+def _sample_real_crop(content_w, export_w):
+    """
+    A real training crop exactly `content_w` px wide, or None.
+
+    Returns normalised float32 of shape [32, content_w] -- TWO dimensions, no
+    batch axis. An earlier docstring claimed [1, 32, W] and a test trusted it,
+    indexed crop[0] as if it were a batch, and got a 1-D array the model
+    rejected with "iteration over a 0-d array". The docstring was wrong, not
+    the caller. Using a real crop is the whole point anyway: the padding
+    invariant only says something when the content is something the model
+    would actually read.
+    """
+    cache = Path(__file__).resolve().parents[2] / "artifacts" / "ocr_train.npz"
+    if not cache.exists():
+        return None
+    try:
+        d = np.load(cache, allow_pickle=True)
+    except Exception:
+        return None
+    imgs, widths = d["images"], d["widths"]
+    for i in range(len(widths)):
+        if int(widths[i]) != content_w:
+            continue
+        c = imgs[i][:, :content_w].astype(np.float32) / 255.0
+        return ((c - 0.5) / 0.5).astype(np.float32)
+    return None
 
 
 def _emits_any_blank(model):
@@ -637,7 +692,12 @@ def main():
             ok4 = True
     else:
         _, tmodel = export_restorer(opset=args.opset)
-        _, cpath, cmodel = export_crnn(opset=args.opset)
+        # export_crnn returns (path, model) like export_restorer, not three
+        # values. Unpacking three raised "not enough values to unpack" AFTER the
+        # ONNX file had already been written, so the export appeared to fail
+        # when it had actually succeeded -- the sort of failure that leads to
+        # re-running an expensive step for no reason.
+        cpath, cmodel = export_crnn(opset=args.opset)
         _, _, enc, head, tok = export_minilm(opset=args.opset)
         ok1, _ = verify_restorer(tmodel)
         ok2, _ = verify_minilm(enc, head, tok, quantized=_encoder_is_int8())
