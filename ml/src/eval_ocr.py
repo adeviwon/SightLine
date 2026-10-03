@@ -174,6 +174,75 @@ def line_bands(proj, min_h=8):
     return bands
 
 
+def locate_document(gray):
+    """
+    Find the receipt as a quad, scored by the TEXT it explains.
+
+    Brightness alone cannot identify a receipt: on 1001-receipt the largest
+    bright blob was a specular highlight off the plastic sleeve covering 16.6%
+    of the frame, and restricting the projection to it destroyed a page that
+    previously worked. A receipt carries characters and a highlight does not,
+    so regions are scored by detected ink inside them, and the winner's convex
+    hull gives its extent -- which survives the hand that holds the receipt,
+    where a bounding box would include table.
+
+    Returns corner points, or None when no plausible candidate exists.
+    """
+    ink = ink_mask(gray)
+    H, W = gray.shape
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    _, t = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    m = (t > 0).astype(np.uint8)
+    # Close vertically by MORE than a line pitch, or text fragments the paper
+    # into one blob per line and every candidate looks tiny.
+    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE,
+                         cv2.getStructuringElement(
+                             cv2.MORPH_RECT, (1, max(11, (H // 10) | 1))))
+    m = cv2.morphologyEx(m, cv2.MORPH_CLOSE,
+                         cv2.getStructuringElement(
+                             cv2.MORPH_RECT, (max(11, (W // 25) | 1), 1)))
+    n, lab, stats, _ = cv2.connectedComponentsWithStats(m, 8)
+    best, best_score = None, 0.0
+    for i in range(1, n):
+        x, y, w, h, area = stats[i]
+        if area < 0.02 * H * W:
+            continue
+        region = (lab == i).astype(np.uint8) * 255
+        text_px = int((ink & (region > 0)).sum())
+        if text_px < 0.001 * H * W:
+            continue                      # no text: a glare patch, not a page
+        cnts, _ = cv2.findContours(region, cv2.RETR_EXTERNAL,
+                                   cv2.CHAIN_APPROX_SIMPLE)
+        if not cnts:
+            continue
+        hull = cv2.convexHull(max(cnts, key=cv2.contourArea))
+        rect = cv2.minAreaRect(hull)
+        fill = cv2.contourArea(hull) / max(1.0, rect[1][0] * rect[1][1])
+        score = text_px * min(1.0, fill)
+        if score > best_score:
+            best_score, best = score, cv2.boxPoints(rect).astype(np.int32)
+    return best
+
+
+def bands_in_document(gray, quad):
+    """
+    Row bands inside a located receipt.
+
+    Only rows the quad occupies can hold text, so rows above and below the
+    receipt are excluded rather than being absorbed into one enormous band.
+    """
+    mask = np.zeros(gray.shape, np.uint8)
+    cv2.fillConvexPoly(mask, quad, 255)
+    M = mask > 0
+    proj = (ink_mask(gray) & M).sum(axis=1).astype(int)
+    cols = M.sum(axis=1)
+    if cols.max() == 0:
+        return []
+    valid = cols >= max(4, int(cols.max() * 0.04))
+    return [(s, e) for (s, e) in line_bands(proj)
+            if s < len(valid) and valid[s:s + max(1, e - s)].any()]
+
+
 def align_lines(got, want):
     """
     Pair detected lines with transcript lines in two passes.
@@ -415,6 +484,17 @@ def eval_handheld(model, device, limit=60):
         # the same code that runs here rather than a private copy.
         proj = (binv > 0).sum(axis=1)
         bands = line_bands(proj)
+
+        # Localise the receipt and re-project inside it, when the document can
+        # be located. The full-width projection above sums ink across the WHOLE
+        # frame, so scene content beside the receipt -- 1002-receipt was shot
+        # next to a bowl of noodles -- puts ink in every row and the profile
+        # never drops to a splittable gap.
+        quad = locate_document(a)
+        if quad is not None:
+            located = bands_in_document(a, quad)
+            if located:
+                bands = located
 
         if not bands:
             empty_pages += 1

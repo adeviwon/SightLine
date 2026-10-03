@@ -205,9 +205,56 @@ text got worse. Quoting the recall alone would be cherry-picking, so it was
 reverted.
 
 The remaining blocker is that **the receipt must be localised before line
-finding**, and localisation only pays once the mask is trustworthy rather than
-picking the largest bright blob — the version tested broke `1001-receipt`,
-whose mask covered 16.6% of the frame.
+finding**. That is now implemented: `locate_document()` scores bright regions
+by **the text they explain** rather than by area, and takes the winner's convex
+hull so the quad survives the hand holding the receipt. Scoring by text is what
+separates a receipt from a specular highlight — the earlier area-based rule
+picked a 16.6%-of-frame glare patch on `1001` and destroyed a working page.
+
+#### ⚠️ None of these detector differences are statistically significant
+
+This matters more than any of the numbers above, so it is stated before the
+table rather than in a footnote.
+
+All variants were scored on 290 aligned lines from 20 pages:
+
+| variant | line accuracy | 95% CI (Wilson) | correct lines |
+|---|---|---|---|
+| baseline | 1.8% | [0.7%, 4.0%] | 5 / 290 |
+| + document localisation | 2.4% | [1.2%, 4.9%] | 7 / 290 |
+| + page-scaled paper window | 2.1% | [1.0%, 4.4%] | 6 / 290 |
+
+Localisation **gains 2 lines and loses 0**. Exact McNemar **p = 1.000**. The
+intervals overlap almost completely. The entire "+3.7pp recall" is two lines.
+
+So the ranking in the rejected-fixes table above is **arbitrary within noise**,
+and localisation is shipped on its **mechanism** — scene content beside a
+receipt demonstrably floods a full-width projection, which is visible in the
+rendered mask — *not* on its delta. The delta is not evidence.
+
+The warning sign is visible in the table itself: **six variants tried, all
+within ~4pp of each other, none significant.** That is a sample-size problem
+masquerading as a tuning problem. Fixing it needs more hand-photographed pages,
+not more detector heuristics. `test_sample_size_cannot_support_detector_claims`
+pins this so the numbers are not quietly re-quoted as gains.
+
+#### Three of the twenty pages cannot be fixed by any detector
+
+| page | page height | lines | px per line | upscale needed |
+|---|---|---|---|---|
+| `1006-receipt` | 258 | 22 | **11.7** | 2.73× |
+| `1009-receipt` | 348 | 20 | **17.4** | 1.84× |
+| `1019-receipt` | 348 | 21 | **16.6** | 1.93× |
+
+The recogniser consumes 32px-tall crops. These lines are 12–17px, so reaching
+that height means upsampling 1.8–2.7×: the strokes are already merged into the
+paper *before any cropping decision is made*, and no detector can recover
+information the photograph never captured.
+
+This bounds what detector work can achieve: of the five collapsing pages,
+**two** are fixable (`1002`, `1005`, both at 38.5px/line) and **three** are a
+data-collection limit. The handheld set needs more high-resolution
+photographs.
 
 Two methodological notes, both caught in the act:
 
