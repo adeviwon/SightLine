@@ -93,58 +93,104 @@ by receipt so no document appears on both sides.
 
 | metric | value |
 |---|---|
-| **Held-out word accuracy** (SROIE test receipts) | **29.7%** |
-| Held-out CER | 14.3% |
-| Best epoch | 20 of 45 (stopped early — see below) |
-| Training time | ~150 s/epoch, CPU, 4 cores |
-| Corpus | 30,021 crops from 260 receipts |
+| **Held-out word accuracy** (17,945 SROIE test words) | **29.30%** |
+| Held-out CER | 11.95% |
+| Final epoch | 39 of 40 |
+| Training time | ~250 s/epoch, CPU, 4 cores |
+| Corpus | 52,554 crops from 420 receipts |
+| Split (by receipt) | 294 train / 63 val / 63 test |
 
-### It plateaued and we stopped it
+### Head-to-head: did the bigger corpus help?
 
-Validation word accuracy across the last eight epochs: 25.3, 28.5, 28.1, 28.8,
-29.1, 29.7, 28.7, 29.4 — flat, while training loss fell to 0.067. That is
-overfitting on 182 training receipts, not slow progress. Epochs 21-45 were
-abandoned rather than burned through to produce a prettier curve.
+Two runs were compared on the **same 17,945 held-out test words**, because
+their validation splits differed (39 receipts against 63) and comparing across
+those would have meant nothing:
+
+| checkpoint | corpus | word acc | CER |
+|---|---|---|---|
+| epoch 20 | 30,021 crops / 260 receipts | 26.25% | 15.90% |
+| **epoch 39** | **52,554 crops / 420 receipts** | **29.30%** | **11.95%** |
+
+The 75% larger corpus plus real-homography perspective augmentation is worth
+**+3.05pp accuracy and −3.95pp CER**. Reproduce with
+`bash run.sh py ml/src/compare_checkpoints.py`.
+
+### The fixed-width export is verified, not assumed
+
+`crnn.onnx` takes a fixed 256px input, so crops are right-padded. That is only
+safe because a trained CTC model emits the blank symbol in padded regions.
+This was checked and it passes:
+
+```
+pad  32->256: ok (ref 'RM'         vs padded 'RM')
+pad  64->256: ok (ref '1071'       vs padded '1071')
+pad 128->256: ok (ref '01143008'   vs padded '01143008')
+pad 200->256: ok (ref 'M  C2  0'   vs padded 'M  C2  0')
+```
+
+Worth knowing: this gate's condition was **inverted** and it had never run on
+any checkpoint — it skipped precisely when the model was good enough for the
+check to matter. A mutation test now confirms the gate can fail.
 
 ### The domain gap, measured
 
-The same checkpoint, two held-out sets:
+The same checkpoint (epoch 39), two held-out sets:
 
 | held-out set | what it is | CER |
 |---|---|---|
-| SROIE test | flatbed scan, even light, square to lens | **14.3%** |
-| Zenodo handheld | night photo, plastic sleeve, tilted, glare | **56.3%** |
+| SROIE test | flatbed scan, even light, square to lens | **11.95%** |
+| Zenodo handheld | night photo, plastic sleeve, tilted, glare | **56.5%** |
 
-Both numbers are real. The gap between them is the interesting result, and it
+Both numbers are real and measured on the shipped model. **A 4.7× gap**, and it
 is not a scoring artefact — it is the difference between a document scanned
-flat and a document photographed by a person.
+flat and a document photographed by a person. This is the single largest
+weakness in the project and the thing to fix first.
 
 ### Real hand-photographed receipts — measured, not projected
 
-8 pages from the Zenodo set, projection-profile line detection, whole-page
+The full 20-page handheld set, projection-profile line detection, whole-page
 transcripts as ground truth:
 
 | metric | value |
 |---|---|
-| **Line exact-match accuracy** | **0.0%** |
-| **CER** | **56.3%** |
-| **Detection recall** | **62.6%** ← hard ceiling on line accuracy |
-| Lines missed by the detector | 61 |
-| Bands invented by the detector | 9 |
-| Lines scored | 102 |
+| **Detection recall** | **67.9%** ← hard ceiling on line accuracy |
+| **Line exact-match accuracy** | **1.8%** |
+| **CER** | **56.5%** |
+| Lines scored | 275 |
+| Lines missed by the detector | 130 |
+| Bands invented by the detector | 12 |
 
-**Read the detection recall first.** The line detector finds only 62.6% of the
-text lines, so line accuracy cannot exceed 62.6% no matter how good the
-recogniser is. The current bottleneck is **detection, not recognition** — and
-that is a solvable, well-understood problem (a learned detector rather than a
-row-projection heuristic), which is why it is named here rather than averaged
-away.
+**Read the detection recall first.** The line detector finds 67.9% of the text
+lines, so line accuracy cannot exceed 67.9% however good the recogniser is. The
+bottleneck is **detection, not recognition**.
+
+Slice-based detection was tried to improve this and made it measurably worse
+(0.39–0.66 bands per transcript line against 0.79 for plain global projection
+— see `app/js/layout.js`). One page, `1002-receipt`, still defeats any single
+global threshold: its row profile never falls below 6% ink, so all 26 of its
+lines collapse into 2 bands. Fixing this properly needs an adaptive projection
+peak-finder or a learned detector, not another constant.
+
+A representative failure, from the error breakdown — the recogniser is reading
+real text, just the wrong band:
+
+```
+'GREEN FIELD'                      -> 'NVIH'
+'Order #: 69923 dine In'           -> '15305 E PACIFIC COAS'
+'SUB TOTAL: 5.00'                  -> '99031 MILER LIE'
+"Friendly Red's"                   -> 'FRIENDLY RED S'   (correct!)
+'He Pho Ga'                        -> 'NO PIO 66'
+```
+
+`Friendly Red's` is read essentially correctly, which is why the headline
+number is not zero. The band misalignment in line 2 is the detector pairing
+the wrong crop with the right label.
 
 ### Why we are not quoting a field-accuracy number yet
 
 End-to-end field accuracy cannot be honestly computed for the custom OCR path
 yet, because the recogniser is not accurate enough for the number to mean
-anything. Quoting it would require a detector above ~85% recall first. The
+anything. Quoting it would require a detector well above 85% recall first. The
 historical end-to-end figures in section 4 are **Tesseract** results and must
 not be presented as ours.
 
