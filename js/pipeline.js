@@ -2,7 +2,8 @@
  * SightLine — on-device document pipeline (browser port).
  *
  * THIS FILE IS THE FALLBACK PATH. It has zero external dependencies beyond a
- * <canvas> and tesseract.js, and it is the path that MUST always work, offline,
+ * <canvas> and our own ONNX CRNN, and it is the path that MUST always work,
+ * offline,
  * on every browser including ones with no WebGPU/WASM-NN support. The ONNX
  * accelerators (restorer.js, classifier.js) are strictly optional upgrades that
  * hand their results back here for the same downstream stages.
@@ -16,7 +17,7 @@
  *   /tmp/ad/SightLine-Mobile/js/pipeline.js -> the tested preprocess + OCR
  *                         implementation that this port reuses verbatim.
  *
- * Stages: preprocess (canvas) -> tesseract.js multi-pass OCR -> normalize ->
+ * Stages: preprocess (canvas) -> custom CRNN+CTC OCR -> normalize ->
  *         classify -> extract fields -> NER -> summary.
  */
 
@@ -135,7 +136,7 @@ const SightLine = (() => {
   // ── OCR-confusion normalizer (classifier.py fix) ──────────────────────
 
   /**
-   * Deterministic post-fixes for the Tesseract errors that actually destroy
+   * Deterministic post-fixes for the recognition errors that actually destroy
    * structured fields on blurry camera captures:
    *   "m9"       -> "mg"      (9 misread for g)
    *   "m1"       -> "ml"      (1 misread for l)
@@ -694,10 +695,17 @@ const SightLine = (() => {
     };
   }
 
-  // ── OCR: tesseract.js multi-pass ──────────────────────────────────────
+  // ── OCR: our own CRNN+CTC recogniser ───────────────────────────────────
+  //
+  // REPLACED tesseract.js. This used to create a tesseract worker here and run
+  // four segmentation passes (PSM 3/6/11/4) per candidate, ranking the
+  // results. All of that is gone: there is no worker, no segmentation mode and
+  // no third-party OCR binary anywhere in the app. The recogniser lives in
+  // app/js/ocr_engine.js and the weights in app/models/crnn.onnx.
+  //
+  // `structure_score` is injected rather than imported so the ranking rule
+  // stays defined once, here, next to the metric it ranks by.
 
-  let _worker = null;
-  let _workerPromise = null;
 
   function vendorBase() {
     // Resolve vendor paths relative to this script so the app works from any
@@ -712,22 +720,37 @@ const SightLine = (() => {
     return base;
   }
 
-  async function initWorker(onProgress) {
-    if (_worker) return _worker;
-    if (_workerPromise) return _workerPromise;
-    if (typeof Tesseract === "undefined") {
-      throw new Error("tesseract.js not loaded (vendor/tesseract/tesseract.min.js)");
+  // pipeline.js is a CLASSIC script, so it cannot `import` the ES-module
+  // engine at the top level. Both callers below are already async, so a
+  // dynamic import() is the right tool: the module is fetched once, on first
+  // OCR, and cached here. Loading it eagerly would put the ~4 MB recogniser on
+  // the critical path of page load for a user who may never scan anything.
+  let _enginePromise = null;
+  function getEngine() {
+    if (!_enginePromise) {
+      _enginePromise = import("./ocr_engine.js")
+        .then((m) => m.default || m)
+        .catch((e) => {
+          // Clear the cache so a later call can retry rather than replaying
+          // this rejection forever.
+          _enginePromise = null;
+          throw new Error(
+            "could not load ocr_engine.js: " + e.message +
+              ". The app has no tesseract fallback by design -- OCR requires " +
+              "our own model, so a missing module is a hard failure."
+          );
+        });
     }
-    const b = vendorBase();
-    _workerPromise = Tesseract.createWorker("eng", 1, {
-      workerPath: b + "vendor/tesseract/worker.min.js",
-      corePath: b + "vendor/tesseract",
-      langPath: b + "vendor/tessdata",
-      gzip: true,
-      logger: (m) => { if (onProgress) onProgress(m); },
-    }).then((w) => { _worker = w; _workerPromise = null; return w; })
-      .catch((e) => { _workerPromise = null; throw e; });
-    return _workerPromise;
+    return _enginePromise;
+  }
+
+  // The old initWorker() created a tesseract worker here. It now just ensures
+  // the custom engine is loadable and its ONNX session exists -- ocr_engine
+  // owns that. Kept because the pipeline's stage list still calls it, and an
+  // explicit failure beats a silent fallback.
+  async function initWorker(onProgress) {
+    const engine = await getEngine();
+    return engine.initWorker(onProgress);
   }
 
   /**
@@ -735,7 +758,7 @@ const SightLine = (() => {
    *
    * WHY THIS EXISTS
    * ---------------
-   * runOCR() picks between segmentation modes by Tesseract confidence alone,
+   * runOCR() picks between candidates by recogniser confidence alone,
    * and confidence is a poor proxy for the thing this product actually needs:
    * a legible case number.
    *
@@ -751,7 +774,7 @@ const SightLine = (() => {
    * reference split across two lines never reassembles — edged ahead on a
    * narrower margin than its structure warranted.
    *
-   * Confidence measures how sure Tesseract is about the glyphs it emitted.
+   * Confidence measures how sure the CRNN is about the glyphs it emitted.
    * Structure measures whether the RESULT is usable. For a blind user reading a
    * dosage aloud, those are not the same question, and the second one is what
    * the product is graded on.
@@ -830,102 +853,39 @@ const SightLine = (() => {
    * is deliberate: a confident read of a blank or badly-fragmented page should
    * not short-circuit the remaining passes.
    */
-  async function runOCR(candidates, onProgress) {
-    const worker = await initWorker(onProgress);
-    const passes = [
-      { psm: "3", label: "auto" },
-      { psm: "6", label: "block" },
-      { psm: "11", label: "sparse" },
-      { psm: "4", label: "column" },
-    ];
-    let best = null;
-    const seen = new Set();
-    const unique = [];
-    for (const img of candidates) {
-      if (seen.has(img)) continue;
-      seen.add(img);
-      unique.push(img);
-    }
-
-    /**
-     * Is candidate `a` a better result than the incumbent `b`?
-     *
-     * Rules, in order:
-     *   1. more structured tokens wins — this is the product metric
-     *   2. then higher confidence
-     *   3. then earlier PSM (6 before 3 before 11), because a uniform block is
-     *      the correct reading of a document; sparse-text is a fallback for
-     *      pages that genuinely are not blocks
-     *
-     * Rule 1 is a hard preference rather than a bonus. A result that recovers
-     * a case number is usable and one that does not is not, regardless of how
-     * confident Tesseract was about either.
-     */
-    const better = (a, b) => {
-      if (!b) return true;
-      if (a.structure !== b.structure) return a.structure > b.structure;
-      if (a.confidence !== b.confidence) return a.confidence > b.confidence;
-      return a.psmRank < b.psmRank;
-    };
-
-    for (const img of unique) {
-      for (let pi = 0; pi < passes.length; pi++) {
-        const p = passes[pi];
-        await worker.setParameters({ tessedit_pageseg_mode: p.psm });
-        const res = await worker.recognize(img);
-        const data = res.data;
-        const garbage = isGarbage(data.text, data.words ? data.words.length : 0);
-        const conf = data.confidence || 0;
-        if (onProgress) onProgress({ status: "pass " + p.label + " conf " + conf.toFixed(0) + "%" });
-        if (!garbage && conf > 40) {
-          const cand = {
-            text: data.text,
-            confidence: conf / 100,
-            words: data.words || [],
-            psm: p.psm,
-            structure: structure_score(data.text),
-            psmRank: pi,
-          };
-          if (better(cand, best)) best = cand;
-          if (best.confidence > 0.75 && best.structure >= 1) return best;
-        }
-      }
-    }
-    if (!best) {
-      await worker.setParameters({ tessedit_pageseg_mode: "6" });
-      const res = await worker.recognize(candidates[0]);
-      best = {
-        text: res.data.text,
-        confidence: (res.data.confidence || 0) / 100,
-        words: res.data.words || [],
-        psm: "6",
-        structure: structure_score(res.data.text),
-        psmRank: 0,
-      };
-    }
-    return best;
-  }
-
   /**
-   * setPSM(): pin the worker's page-segmentation mode for subsequent
-   * runOCR() calls, then run a single recognition pass on ONE image.
+   * runOCR(): read every candidate with our own CRNN.
    *
-   * This exists for tools/psm_sweep.js, which needs to measure the whole PSM
-   * space rather than the three modes runOCR tries. It is NOT part of the
-   * normal pipeline — runOCR sets the mode itself for each of its passes, so
-   * calling this leaves the worker in a state runOCR will overwrite on its next
-   * pass. It is exported for measurement, not for callers.
+   * This used to run tesseract.js four times per candidate across PSM modes
+   * 3/6/11/4 and rank the results by structure, then confidence, then PSM. The
+   * multi-pass structure is GONE rather than translated: there is no
+   * segmentation mode to choose, because `layout.js` decides the segmentation
+   * before the recogniser sees anything. One pass per candidate.
+   *
+   * The ranking rule is unchanged and deliberately so. structure_score() counts
+   * the safety-critical tokens the product actually extracts -- dosages, case
+   * references, account numbers -- so a result that recovers a case number
+   * beats a more confident result that recovers none. docs/10_ACCURACY_GAP.md
+   * records the sweep where confidence and field recovery disagreed and the
+   * high-confidence read was the one that recovered nothing.
+   *
+   * structure_score is passed in rather than imported so it stays defined once,
+   * here, next to the metric that ranks by it.
    */
-  async function setPSM(psm) {
-    const worker = await initWorker();
-    await worker.setParameters({ tessedit_pageseg_mode: String(psm) });
+  async function runOCR(candidates, onProgress) {
+    const engine = await getEngine();
+    return engine.runOCR(candidates, onProgress, structure_score);
   }
 
   async function dispose() {
-    if (_worker) {
-      try { await _worker.terminate(); } catch (e) { /* already gone */ }
-      _worker = null;
-      _workerPromise = null;
+    // No worker to terminate. This used to hold a tesseract worker and kill it
+    // here. The custom engine owns an onnxruntime-web session, which is
+    // released by recognizer.reset().
+    if (_enginePromise) {
+      _enginePromise
+        .then((e) => { if (e.reset) e.reset(); })
+        .catch(() => { /* never loaded; nothing to release */ });
+      _enginePromise = null;
     }
   }
 
@@ -1020,7 +980,7 @@ const SightLine = (() => {
     assessQuality, estimateSkew, otsu, median3, unsharp, clahe, binarize,
     toGrayCanvas, makeCanvas, _ctx2d, preprocess,
     // ocr
-    initWorker, runOCR, isGarbage, structure_score, setPSM, dispose, vendorBase,
+    initWorker, runOCR, isGarbage, structure_score, dispose, vendorBase,
   };
 })();
 
