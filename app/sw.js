@@ -48,17 +48,6 @@ const PRECACHE = [
   "./assets/icon-512.png",
   "./assets/favicon.ico",
   // OCR engine + language data. ~40 MB. This is the offline guarantee.
-  "./vendor/tesseract/tesseract.min.js",
-  "./vendor/tesseract/worker.min.js",
-  "./vendor/tesseract/tesseract-core.wasm.js",
-  "./vendor/tesseract/tesseract-core.wasm",
-  "./vendor/tesseract/tesseract-core-simd.wasm.js",
-  "./vendor/tesseract/tesseract-core-simd.wasm",
-  "./vendor/tesseract/tesseract-core-lstm.wasm.js",
-  "./vendor/tesseract/tesseract-core-lstm.wasm",
-  "./vendor/tesseract/tesseract-core-simd-lstm.wasm.js",
-  "./vendor/tesseract/tesseract-core-simd-lstm.wasm",
-  "./vendor/tessdata/eng.traineddata.gz",
   // PDF rendering
   "./vendor/pdfjs/pdf.min.js",
   "./vendor/pdfjs/pdf.worker.min.js",

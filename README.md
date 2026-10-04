@@ -14,7 +14,9 @@ Built for the **Imperial College London Hackathon (Hong Kong & Macau)**.
 
 | I want to… | Read |
 |---|---|
-| **Win the hackathon** (start here) | [`docs/00_HACKATHON_PLAYBOOK.md`](docs/00_HACKATHON_PLAYBOOK.md) |
+| **Hackathon submission** (the 5 required steps, start here) | [`docs/12_HACKATHON_SUBMISSION.md`](docs/12_HACKATHON_SUBMISSION.md) |
+| **Show a judge** (start here — one document, the whole project) | [`docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md`](docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md) |
+| **Win the hackathon** (strategy and pitch) | [`docs/00_HACKATHON_PLAYBOOK.md`](docs/00_HACKATHON_PLAYBOOK.md) |
 | Understand how it works | [`docs/01_ARCHITECTURE.md`](docs/01_ARCHITECTURE.md) |
 | Understand the ML | [`docs/02_ML_PIPELINE.md`](docs/02_ML_PIPELINE.md) |
 | See measured results | [`docs/03_RESULTS.md`](docs/03_RESULTS.md) |
@@ -57,7 +59,7 @@ airplane mode mid-demo.
 
 ---
 
-## The two trained models
+## The trained models
 
 | Model | Framework | Params | What it does | Where it runs |
 |---|---|---|---|---|
