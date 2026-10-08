@@ -11,6 +11,10 @@ Read this first, then `README.md`, then `docs/12_HACKATHON_SUBMISSION.md`.
 
 ## 1. Run it in 60 seconds
 
+**Live install (HTTPS, camera-ready):** open <https://adeviwon.github.io/SightLine/> on a phone, add to Home Screen — it installs and then works in airplane mode.
+
+No clone or server needed for the demo — but the clone path below still works:
+
 The browser models are committed. Nothing below is needed to *use* the app:
 
 ```bash
