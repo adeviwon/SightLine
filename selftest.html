@@ -206,7 +206,12 @@ function testWordAccuracy() {
   near(g, "half the words present scores 0.5",
     SightLine.word_accuracy("a b c d", "a b x y"), 0.5);
   near(g, "empty ground truth scores 0.0", SightLine.word_accuracy("", "a b c"), 0.0);
-  near(g, "punctuation ignored", SightLine.word_accuracy("40-11-04", "40 11 04"), 1.0);
+  // "Punctuation ignored": norm() strips hyphens INSIDE a token, so the
+  // one-token ground truth "40-11-04" (-> "401104") must match the one-token
+  // hypothesis "401104". It can never match a THREE-token hypothesis
+  // ("40 11 04"): word_accuracy is whitespace-token set membership by
+  // contract, mirroring ml/src/evaluate.py:161 exactly.
+  near(g, "punctuation ignored", SightLine.word_accuracy("40-11-04", "401104"), 1.0);
   near(g, "nothing shared scores 0.0", SightLine.word_accuracy("alpha beta", "gamma delta"), 0.0);
   near(g, "ground truth beats hypothesis length",
     SightLine.word_accuracy("alpha beta", "alpha beta gamma delta epsilon"), 1.0);
