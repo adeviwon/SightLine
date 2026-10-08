@@ -14,7 +14,7 @@ Read this first, then `README.md`, then `docs/12_HACKATHON_SUBMISSION.md`.
 The browser models are committed. Nothing below is needed to *use* the app:
 
 ```bash
-git clone https://github.com/mrsmallflame-ai/SightLine.git
+git clone https://github.com/adeviwon/SightLine.git
 cd SightLine
 python3 -m http.server 8000 -d app      # then open http://localhost:8000
 ```
@@ -22,12 +22,11 @@ python3 -m http.server 8000 -d app      # then open http://localhost:8000
 (Any static server works; the PWA needs `python3` only for this line. Camera
 permission needs `localhost` or HTTPS — that is a browser rule, not ours.)
 
-**Branch note:** this branch (`pwa`, the default) is the current project. The
-repository's `master` branch holds an *earlier, different* prototype — a Python
-CLI under `src/offscan/` with its own OCR/NER/TTS pipeline, pushed the day
-before this rewrite. It is preserved for reference and its `docs/VICTORY_PLAN.md`
-may still be useful framing, but its architecture is superseded by what you are
-reading.
+**Branch note:** this repo's `main` is the current project. An earlier,
+different prototype — a Python CLI under `src/offscan/` with its own
+OCR/NER/TTS pipeline — lives on the old `mrsmallflame-ai/SightLine` `master`;
+it is superseded by this architecture, but its `docs/VICTORY_PLAN.md` may still
+be useful framing.
 
 ## 2. Train the OCR model from scratch
 
