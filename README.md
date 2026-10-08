@@ -8,6 +8,9 @@ reads it back to you in plain speech. No account, no internet, no upload.
 
 Built for the **Imperial College London Hackathon (Hong Kong & Macau)**.
 
+> **AI agent taking over?** Read [`AGENTS.md`](AGENTS.md) first — verified
+> state, standing rules, known traps, and ranked open work with done-criteria.
+
 ---
 
 ## Start here
