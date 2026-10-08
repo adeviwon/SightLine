@@ -22,20 +22,19 @@ page (hkbu.org.hk/en/knowledge/statistics).
 
 ## 150-word proposal (final draft — count checked at upload time)
 
-> In Hong Kong, 199,600 people — 2.7% of the population — live with visual
-> impairment; most are elderly and cannot read prescriptions, bank statements,
-> or government letters, risking medication errors, financial fraud, and loss
-> of independence. Existing reading apps upload those private documents to
-> cloud servers. SightLine is a fully offline document reader that runs
-> entirely on the phone: point the camera at any document and it reads the
-> text, the key details, and warnings aloud — prescriptions, account numbers,
-> labels. Nothing leaves the device: no internet, no cloud, no account, and it
-> keeps working in airplane mode forever after one install. The recogniser is
-> our own trained CRNN+CTC network (942,000 parameters), exported to a 26.7 MB
-> on-device bundle — no borrowed OCR engine, verified by an automated build
-> gate. Aligned with the 2026 Policy Address: AI in Healthcare (Para 108),
-> AI for Welfare Lab (Para 113), Gerontechnology Promotion Scheme (Paras
-> 398–400).
+> In Hong Kong, 199,600 people, 2.7% of the population, live with visual
+> impairment. Most cannot read prescriptions, bank statements, or government
+> letters, risking medication errors, financial fraud, and loss of
+> independence. Existing apps upload them to the cloud. SightLine
+> is a fully offline document reader that runs entirely on the phone: point
+> it at any document and hear it read aloud: prescriptions,
+> statements, labels. Nothing leaves the device: no internet, no cloud, no
+> account, and it keeps working in airplane mode forever after one install.
+> The recogniser is our own trained CRNN+CTC network (942,000 parameters),
+> shipped as a 26.7 MB on-device bundle: no borrowed OCR engine, enforced by
+> a build gate. Aligned with the 2026 Policy Address: AI in Healthcare
+> (Para 108), AI for Welfare Lab (Para 113), Gerontechnology Promotion Scheme
+> (Paras 398–400).
 
 ## Video beat sheet (target 3:30)
 
