@@ -30,8 +30,16 @@ torch.set_num_threads(4)
 def cer(pred, want):
     if not want:
         return 1.0
-    import Levenshtein
-    return Levenshtein.distance(pred, want) / max(len(want), 1)
+    # Levenshtein pkg absent in this venv; stdlib dynamic program is ~50 lines
+    # slower but identical, and n here is ~600 crops total.
+    prev = list(range(len(want) + 1))
+    for i, pc in enumerate(pred, 1):
+        cur = [i]
+        for j, wc in enumerate(want, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1,
+                           prev[j - 1] + (pc != wc)))
+        prev = cur
+    return prev[-1] / max(len(want), 1)
 
 
 def eval_crops(model, npz_path, split_val):
@@ -49,7 +57,9 @@ def eval_crops(model, npz_path, split_val):
         x = (x / 255.0 - 0.5) / 0.5
         with torch.no_grad():
             pred = model(torch.from_numpy(x[None, None]))[0]
-        idx = pred.argmax(-1)[0].numpy()
+        # model returns [T,C] (no batch dim) -> argmax(-1)[0] grabbed a
+        # timestep, not the batch; reshape(-1) handles both [T] and [1,T].
+        idx = pred.argmax(-1).numpy().reshape(-1)
         txt = R.decode_greedy(idx[: max(1, w // 8)])
         want = str(d["labels"][i])
         c = cer(txt, want)
@@ -63,6 +73,7 @@ def main():
     ckpts = {
         "A  8ep SROIE only        ": "/tmp/crnn_A.pt",
         "B  8ep SROIE+realphotos  ": "/tmp/crnn_B.pt",
+        "shipped 40ep SROIE only  ": "/tmp/crnn_before_realphoto.pt",
     }
     if not any(__import__("os").path.exists(v) for v in ckpts.values()):
         print("no checkpoints yet; training still running")

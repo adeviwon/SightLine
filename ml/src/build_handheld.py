@@ -180,7 +180,7 @@ def fits(crop, max_w=None):
     return min(max_w / w, R.CROP_H / h) >= 1.0
 
 
-def build(out_npz, pages_limit=None, verbose=True):
+def build(out_npz, pages_limit=None, verbose=True, strict_count=False):
     """
     Build artifacts/ocr_handheld.npz.
 
@@ -189,6 +189,12 @@ def build(out_npz, pages_limit=None, verbose=True):
     and the transcript disagree about where lines are, every label is wrong,
     and the only symptom would be a model that never converges -- so the
     pairing rate is reported loudly.
+
+    strict_count=True keeps ONLY pages where the detector found exactly as
+    many bands as the transcript has lines, so every positional label is
+    trustworthy. Costs volume (measured: ~20/187 pages qualify) for label
+    correctness -- the 8-epoch A/B run showed the noisier default cache
+    teaches the model to blank out more lines (recall 60.7% vs 70.9%).
     """
     from PIL import Image
 
@@ -226,6 +232,9 @@ def build(out_npz, pages_limit=None, verbose=True):
         ratio = len(boxes) / max(len(want), 1)
         if ratio < 0.5 or ratio > 2.0:
             stats["page_count_mismatch"] += 1
+        if strict_count and len(boxes) != len(want):
+            stats["page_count_mismatch_skipped"] += 1
+            continue
 
         # Pair by POSITION, using align_lines' exact-match anchoring where it
         # helps. Positional is the honest default: the label file preserves
