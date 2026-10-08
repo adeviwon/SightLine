@@ -86,11 +86,26 @@ bash run.sh train-ocr 8 --data artifacts/ocr_train.npz,artifacts/handheld_rebuil
 positional pairs are guesses and some fraction of the 2,301 labels are wrong.
 `ml/experiments/gate_breakdown.py` re-derives every number above.
 
-**The experiment in flight when this was written:** `ml/experiments/eval_realphoto.py`
-compares 8-epoch SROIE-only (A) vs 8-epoch SROIE+real-photos (B) on 308
-held-out real-photo crops. Equal epochs matters — comparing B against the
-shipped 40-epoch model would conflate data with training time. Both checkpoints
-were saved to `/tmp` (`crnn_A.pt`, `crnn_B.pt`), which is volatile; rerun if gone.
+**The experiment is RESOLVED — negative result.** Four-way comparison through
+the official eval pipeline (`ml/experiments/eval_official_ab.py`; detection +
+recognition + page alignment; harness validated by reproducing the shipped
+model's historical numbers exactly: 71.6% / 2.4% / 58.4%):
+
+| model | recall | CER | line-exact |
+|---|---|---|---|
+| shipped 40ep SROIE only | **71.6%** | 58.4% | **2.4%** |
+| A 8ep SROIE only | 70.9% | 56.0% | 1.4% |
+| B 8ep +2,301 noisy crops | 60.7% | 52.9% | 1.2% |
+| B2 8ep +362 strict crops | 68.9% | 54.8% | 0.7% |
+
+The shipped 40-epoch model stays. Noisy positional labels cost 10.9pp recall
+(B); `strict_count=True` in `build_handheld.build()` recovers it (B2) but there
+is no net win over SROIE-only at equal epochs, and B/B2's CER is confounded
+because some eval pages overlap their train split. The quick cache bench
+(`eval_realphoto.py`) is NOT a valid model comparator — its positional labels
+make a correct model score ~100% CER (`bench_compare.py` proves the feed path
+is identical either way). Do not re-run this without a properly line-labelled
+real-photo corpus — which is ranked task 1 above.
 
 ## 4. What would actually move the needle, ranked
 
