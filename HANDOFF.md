@@ -22,11 +22,10 @@ python3 -m http.server 8000 -d app      # then open http://localhost:8000
 (Any static server works; the PWA needs `python3` only for this line. Camera
 permission needs `localhost` or HTTPS — that is a browser rule, not ours.)
 
-**Branch note:** this repo's `main` is the current project. An earlier,
-different prototype — a Python CLI under `src/offscan/` with its own
-OCR/NER/TTS pipeline — lives on the old `mrsmallflame-ai/SightLine` `master`;
-it is superseded by this architecture, but its `docs/VICTORY_PLAN.md` may still
-be useful framing.
+**Branch note:** `main` is the current project. This repo's `master` holds an
+earlier, different prototype — a Python CLI under `src/offscan/` with its own
+OCR/NER/TTS pipeline, from October 1st. It is superseded by this architecture,
+but its `docs/VICTORY_PLAN.md` may still be useful framing.
 
 ## 2. Train the OCR model from scratch
 
