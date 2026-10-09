@@ -95,8 +95,24 @@ Everything below was measured, not assumed:
 3. **Line detector** — recall 67.9–71.6%. Done = recall gain **and** CER
    non-regression **and** McNemar significance on aligned lines. A proxy
    improvement alone does not count.
-4. **Real-photo A/B at full length** — the 8-epoch comparison (A: SROIE-only
-   92.7% CER, B: +2,301 real crops 95.1% CER on 308 held-out crops) is
-   ambiguous because both are weak; the shipped 40-epoch control through the
-   same script is pending. Done = 40-epoch A and B, same held-out split,
-   plus the control row. `ml/experiments/eval_realphoto.py` runs all three.
+4. **Real-photo training — RESOLVED, negative result.** Four-way comparison
+   through the OFFICIAL eval pipeline (`ml/experiments/eval_official_ab.py`,
+   detection + recognition + page alignment; harness validated by reproducing
+   the shipped model's historical numbers exactly: 71.6% / 2.4% / 58.4%):
+
+   | model | recall | CER | line-exact |
+   |---|---|---|---|
+   | shipped 40ep SROIE | **71.6%** | 58.4% | **2.4%** |
+   | A 8ep SROIE only | 70.9% | 56.0% | 1.4% |
+   | B 8ep +2,301 noisy crops | 60.7% | 52.9% | 1.2% |
+   | B2 8ep +362 strict crops | 68.9% | 54.8% | 0.7% |
+
+   Verdict: the shipped 40-epoch model stays. Noisy positional labels cost
+   10.9pp recall (B); strict count-matched labels recover it (B2, via
+   `build_handheld.build(strict_count=True)`) but there is NO net win over
+   SROIE-only at equal epochs, and B/B2's CER is confounded anyway because
+   some eval pages overlap their train split. The quick cache bench
+   (`eval_realphoto.py`) is NOT a valid model comparator — its positional
+   labels make a CORRECT model score ~100% CER (`bench_compare.py` proves the
+   feed path is identical either way). Do not re-run this experiment without
+   a properly line-labelled real-photo corpus; that is open-work item 1.
