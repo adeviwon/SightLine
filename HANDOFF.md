@@ -141,6 +141,15 @@ lucky seed. Trust the rerun.
   failing the build on Tesseract's return is deliberate, not bureaucratic.
 - Datasets are licensed (CC-BY-4.0) and gitignored; `fetch_data.sh` fetches and
   cites. Never commit `data/` or `artifacts/*.npz`.
-- When you measure something, write down what you measured and what you did
-  NOT. The submission's credibility comes from its own corrections — the 100%
-  seed, the reverted detector fix, the inverted safety gate. Keep that habit.
+- When you measure something, write down what you did NOT. The submission's
+  credibility comes from its own corrections — the 100% seed, the reverted
+  detector fix, the inverted safety gate. Keep that habit.
+- **Deploying to the live URL:** a GitHub Pages build for this site takes
+  ~8–10 min (26.7 MB payload). Verify the live file with
+  `curl -s 'https://adeviwon.github.io/SightLine/<file>?nocache=$(date +%s)'`
+  BEFORE smoke-testing — and remember the service worker precaches whatever
+  is live at install time, so a browser run during a rebuild serves stale
+  content even if `curl` minutes earlier was fresh. Smoke script:
+  `ml/experiments/smoke_live.js` (node + playwright-core; expects
+  ALL 172 assertions; the one console 404 for site-root /favicon.ico is
+  Chrome's automatic probe, not a missing asset).
