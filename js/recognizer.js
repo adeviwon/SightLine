@@ -47,7 +47,18 @@
  * Index 0 is the CTC blank. It is never a character.
  */
 
-const ORT = "../vendor/ort/ort.min.mjs";
+const ORT_URL = "../vendor/ort/ort.min.mjs";   // module-relative: import() resolves
+                                               // against THIS module, not the page
+let ORT = null; // ort module namespace — set by init() via dynamic import below
+
+// onnxruntime-web resolves wasmPaths (and the model URL) against the DOCUMENT
+// — a relative prefix becomes a BARE import specifier, which browsers reject
+// ("Failed to resolve module specifier"), and a page-relative one breaks under
+// subdirectory deploys (/SightLine/ on GitHub Pages). Build absolute URLs from
+// THIS module's location: correct in every mount point — the same problem
+// classifier.js solves with base().
+const WASM_DIR = new URL("../vendor/ort/", import.meta.url).href;
+const MODEL_URL = new URL("../models/crnn.onnx", import.meta.url).href;
 
 export const CHARSET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 export const BLANK = 0;
@@ -71,11 +82,31 @@ export async function init() {
   if (initPromise) return initPromise;
   initPromise = (async () => {
     try {
+      // Load the runtime the way classifier.js and restorer.js do: dynamic
+      // import into a module namespace. (The previous code named the URL
+      // string `ORT` and read `ORT.env` off it — a TypeError in strict-mode
+      // modules, so the recogniser could never load in ANY browser. Found by
+      // the selftest's ONNX group, which exists precisely to catch this.)
+      ORT = await import(ORT_URL);
       const env = ORT.env || (ORT.env = {});
       env.wasm = env.wasm || {};
-      env.wasm.wasmPaths = "../vendor/ort/";
-      env.wasm.numThreads = Math.max(1, Math.min(4, (navigator.hardwareConcurrency || 2) - 1));
-      session = await ORT.InferenceSession.create("models/crnn.onnx", {
+      // onnxruntime-web resolves wasmPaths (and the model URL) against the
+      // DOCUMENT — a relative prefix becomes a BARE import specifier, which
+      // browsers reject ("Failed to resolve module specifier"), and an
+      // absolute prefix is needed under subdirectory deploys (/SightLine/ on
+      // GitHub Pages). Build both from THIS module's location: correct in
+      // every mount point, no DOM inspection — the same problem
+      // classifier.js solves with base().
+      env.wasm.wasmPaths = WASM_DIR;
+      // Static hosting cannot send the cross-origin-isolation headers, so
+      // SharedArrayBuffer is unavailable and pthreads WASM cannot start.
+      // Request threads only when the page really is isolated; ort's
+      // threaded wasm otherwise fails depending on version. A phone visiting
+      // the deployed PWA is never COI, so this is the deployed case, not the
+      // rare one.
+      const threads = Math.max(1, Math.min(4, (navigator.hardwareConcurrency || 2) - 1));
+      env.wasm.numThreads = (typeof SharedArrayBuffer !== "undefined" && globalThis.crossOriginIsolated) ? threads : 1;
+      session = await ORT.InferenceSession.create(MODEL_URL, {
         executionProviders: ["wasm"],
       });
       return session;
