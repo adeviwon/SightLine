@@ -10,7 +10,7 @@
  */
 const { chromium } = require("playwright-core");
 
-const BASE = "https://adeviwon.github.io/SightLine/";
+const BASE = process.env.SMOKE_BASE || "https://adeviwon.github.io/SightLine/";
 const EXE = "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome";
 
 (async () => {
@@ -59,11 +59,12 @@ const EXE = "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chro
   const rows = await page.evaluate(() =>
     Array.from(document.querySelectorAll("#out table tr")).map((tr) => {
       const tds = tr.querySelectorAll("td");
-      return tds.length
-        ? `${tds[1]?.textContent?.trim()} | ${tds[0]?.textContent?.trim()} | ${(tds[2] || {}).textContent?.trim() || ""}`
-        : null;
-    }).filter(Boolean).slice(0, 30),
+      if (!tds.length) return null;
+      const pass = tds[0].textContent.trim() === "PASS";
+      return { pass, line: `${tds[1]?.textContent?.trim()} | ${tds[0]?.textContent?.trim()} | ${(tds[2] || {}).textContent?.trim() || ""}` };
+    }).filter(Boolean),
   );
+  const failing = rows.filter((r) => !r.pass);
 
   console.log("=== INDEX ===");
   console.log("title      :", title);
@@ -74,7 +75,10 @@ const EXE = "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chro
   console.log("run button :", runText);
   console.log("summary    :", summary);
   console.log("checks:");
-  rows.forEach((r) => console.log("  ", r));
+  console.log("  passing:", rows.length - failing.length, " failing:", failing.length);
+  failing.forEach((r) => console.log("  FAIL:", r.line));
+  const onnx = rows.filter((r) => /ONNX|session|inference|timesteps|ctc/.test(r.line));
+  onnx.forEach((r) => console.log("  onnx:", r.line));
 
   await browser.close();
 })().catch((e) => { console.error("SMOKE FAILED:", e.message); process.exit(1); });

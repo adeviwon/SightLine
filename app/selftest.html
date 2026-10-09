@@ -435,6 +435,58 @@ function testRestorerTiling() {
   }
 }
 
+// The ONLY group that loads real model weights. "Run all tests" runs it;
+// the auto-run text battery does not (a 4 MB model download on every page
+// visit would be hostile). This exists because the whole recogniser stage
+// once shipped broken — `ORT` was a URL string read as a module namespace,
+// a TypeError in every strict-mode module, session never created — and all
+// 172 pure-JS assertions still passed. Logic tests cannot see the runtime;
+// this group can.
+async function testOnnxRecogniser() {
+  const g = group("ONNX runtime — real crnn.onnx inference");
+  let rec;
+  try {
+    rec = await import("./js/recognizer.js");
+  } catch (e) {
+    eq(g, "recognizer.js module loads", String((e && e.message) || e), "");
+    return;
+  }
+  eq(g, "recognizer.js module loads", true, true);
+  eq(g, "charset is 37 symbols", rec.CHARSET.length, 37);
+  eq(g, "index 0 is the blank", rec.BLANK, 0);
+  // Greedy CTC decode contract, hand-traced: repeats collapse ONLY when not
+  // separated by blanks, and blank-only input decodes to nothing.
+  eq(g, "ctc decode [0,1,0,1,0] -> '00'",
+    rec.decodeGreedy(new Int32Array([0, 1, 0, 1, 0])), "00");
+  eq(g, "ctc decode [1,1,1] -> '0'",
+    rec.decodeGreedy(new Int32Array([1, 1, 1])), "0");
+  eq(g, "ctc decode [0,0,0] -> ''",
+    rec.decodeGreedy(new Int32Array([0, 0, 0])), "");
+
+  await rec.init();
+  eq(g, "crnn.onnx session created", rec.isReady(), true);
+  if (!rec.isReady()) {
+    eq(g, "init error", rec.getError() || "(none)", "(empty — init must succeed)");
+    return;
+  }
+
+  // Real inference on a deterministic synthetic crop (paper 235, ink bars 30).
+  // We assert the CONTRACT, not a string: a synthetic pattern is not text, so
+  // the honest checks are no-error, trimmed timesteps, charset-only output and
+  // a sane confidence.
+  const w = 128, H = rec.CROP_H;
+  const gray = new Uint8Array(H * w).fill(235);
+  for (const x of [10, 12, 40, 42, 80, 82]) {
+    for (let y = 4; y < H - 4; y++) gray[y * w + x] = 30;
+  }
+  const r = await rec.recognise(gray, w);
+  eq(g, "inference returned no error", r.error || "", "");
+  eq(g, "timesteps trimmed to contentWidth/8", r.timesteps, 16);
+  check(g, "output is charset-only", /^[0-9A-Z ]*$/.test(r.text), (v) => v === true);
+  check(g, "confidence in [0,1]", r.confidence, (v) => v >= 0 && v <= 1);
+  check(g, "decode length within timesteps", r.chars, (v) => v >= 0 && v <= 16);
+}
+
 function testImagePipeline() {
   const g = group("Image preprocessing — the canvas path");
   const W = 320, H = 200;
@@ -636,7 +688,7 @@ function render() {
   document.getElementById("live").textContent = s.textContent;
 }
 
-function run(which) {
+async function run(which) {
   total = 0; failed = 0; groups.length = 0;
   const text = which !== "img";
   const img = which !== "text";
@@ -647,6 +699,20 @@ function run(which) {
     testRestorerTiling();
   }
   if (img) testImagePipeline();
+  if (which === "all") {
+    // Long step: dynamic-imports ort, downloads the 4 MB model, compiles WASM.
+    // The summary stays "Not run yet." until every battery has finished, and
+    // the live region announces progress for screen readers meanwhile.
+    document.getElementById("live").textContent =
+      "Loading the ONNX runtime and models — this can take a minute…";
+    try {
+      await testOnnxRecogniser();
+    } catch (e) {
+      const g = group("ONNX runtime — real crnn.onnx inference");
+      eq(g, "the ONNX battery ran to completion",
+        "threw: " + String((e && e.message) || e), "no throw");
+    }
+  }
   render();
   window.scrollTo({ top: 0, behavior: "auto" });
 }
