@@ -62,8 +62,11 @@ Everything below was measured, not assumed:
    Everything measured is receipts + synthetic documents. Transfer is an
    untested assumption (the submission says so verbatim).
 7. Git: `origin` = `adeviwon/SightLine`, current work on `main`.
-   **`master` holds an earlier, different prototype** (`src/offscan/` Python
-   CLI, 15 commits). Preserve it; do not force-push over it, do not merge it.
+   `master` was consolidated into the same history (user-directed merge,
+   `-s ours`, 2026-10-09): its 15 Tesseract-era prototype commits are
+   ancestors of `main`, and the prototype's TREE remains checkoutable at
+   `b2a2244`. Do not build on the prototype; do not force-push over either
+   ref.
 8. Before trusting a 404 from the GitHub API, check who the token is:
    `gh api user --jq .login`.
 
