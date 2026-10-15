@@ -85,6 +85,47 @@ as "read from your label, please verify"; an adverse event routes to a named
 clinician. A phone app is not a regulated medical device, and we are explicit
 that it must not be the last check on a dose.
 
+## Grand Final logistics (from the brief — carry these, not memories)
+
+- **Track: Open Challenge** — capped at 5 teams/track (lowest-competition
+  route; the 2025 Gold winner, Team Handy Helpers from Malvern College Hong
+  Kong, won on this track).
+- **Full policy-anchor table** — five verbatim paragraphs from the 2026 Policy
+  Address (delivered 2026-09-16). The proposal cites three; the pitch and Q&A
+  can use all five:
+
+  | Para | Priority | SightLine connection |
+  |---|---|---|
+  | 108 | AI Application in Healthcare | on-device AI reads prescriptions/dosages aloud |
+  | 113 | AI for Welfare Lab ($300M) | exactly the profile of AI-welfare solution the lab funds |
+  | 398-400 | Gerontechnology Promotion Scheme ($100M) | gerontechnology product for elderly with vision loss |
+  | 376-377 | Support Persons with Disabilities & Carers | independent document reading without a carer |
+  | 441-442 | Cybersecurity & digital resilience | zero-network architecture is secure by design |
+
+- **Judges and angles**: Prof Shahid Khan (healthcare) → lead with medication
+  safety; Dr Jackie Bell (computing/EDI) → technical rigour + the refusal
+  behaviour; Lucas Cheung (Google HK, digital strategy) → the deployment path
+  via the $100M scheme and NGO partnerships.
+- **Final-day demo**: live URL is the primary path; **bring a laptop serving
+  the PWA over a local hotspot as fallback** (venue Wi-Fi is not trusted), and
+  the phone in airplane mode. Slides: **10 max, submitted 48 h ahead (by
+  2026-11-12)**. Live demo is mandatory — practice 5×, screen recording as
+  backup.
+
+## Evidence to show judges (filenames in THIS repo)
+
+- Live airplane-mode demo at `https://adeviwon.github.io/SightLine/` (the mic drop)
+- `docs/PRIVACY.md` — verifiable zero-network enforcement mechanisms
+- `docs/01_ARCHITECTURE.md` + `docs/03_RESULTS.md` — pipeline and every
+  measured number; `docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md` — the architecture
+  deep-dive; `docs/12_HACKATHON_SUBMISSION.md` — the five-step brief answers
+- This repo: auditable in minutes; `master` holds the earlier prototype,
+  preserved untouched
+
+## Grand Final (2026-11-14, Data Technology Hub, TKO)
+
+Prep begins after Round 1 submits; the kit above is the source of truth.
+
 ## Checklist
 
 - [ ] Proposal word-count confirmed ≤150, submitted by **2026-10-25**

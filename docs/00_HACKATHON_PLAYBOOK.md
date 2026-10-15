@@ -15,7 +15,10 @@ in the first fifteen seconds or you have lost them.
 > **SightLine reads your bank statements, prescriptions, and legal letters
 > out loud — with the internet switched off.**
 >
-> Thirty-one million blind people can't read their own medication label.
+> Thirty-one million blind people worldwide can't read their own medication
+> label. In Hong Kong alone — where this hackathon is judged — **199,600
+> people, 2.7% of the population, live with visual impairment** (HKSAR C&SD
+> Special Topics Report No. 63, 2021).
 > Every app that helps them uploads the document to a cloud server, because
 > the OCR runs on a GPU somewhere else. For a medical prescription, that's a
 > privacy line they shouldn't have to cross to be independent.
@@ -45,8 +48,9 @@ confirm before you present):
    new headline and the number that answers "did you actually train something
    that reads?" — see `docs/03_RESULTS.md` for the current figure and its
    confidence interval.
-2. **Classifier accuracy, mean over 5 seeds** — 95.0%, range 91.7–100%. Stable
-   and honest; never quote the 100% seed.
+2. **Classifier accuracy, mean over 5 seeds** — 95.8% (sd 2.63), macro-F1
+   95.7% (sd 2.72), per `ml/experiments/step3_f1.py`. Stable and honest; never
+   quote the 100% seed — the submission discloses that correction on purpose.
 3. **End-to-end field accuracy**, showing where it works and where it fails.
 4. **Model payload size** — the "it fits on a phone" proof.
 
