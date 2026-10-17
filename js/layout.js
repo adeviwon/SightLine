@@ -65,7 +65,6 @@ const MEDIAN_R = 31;
 /** How much darker than local paper a pixel must be to count as ink. */
 const INK_DELTA = 18;
 
-/** Column slices used for independent detection. More = less vertical merge. */
 /** Fraction of page width a row must fill with ink to count as text. */
 const ROW_INK_THRESHOLD = 0.04;
 
