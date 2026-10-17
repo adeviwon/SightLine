@@ -7,6 +7,11 @@ sourced and every metric is measured on held-out data.
 tool would exclude the people it is meant to serve. We did not find them by
 being asked; we found them by reading our own model config.
 
+**Round 1 deliverables** (150-word proposal + 3–5 minute video, due
+2026-10-25): the proposal, a shot-by-shot video list, judge intel and the
+dated countdown live in `13_ROUND1_SUBMISSION_KIT.md`; the one-document
+judges' brief is `11_JUDGE_TECHNICAL_DEEP_DIVE.md`.
+
 ---
 
 ## 1. Understand the problem
@@ -47,9 +52,9 @@ that shakes. A wrong dose is not an inconvenience; it is a medical event.
 | Language and speech | so it can speak the answer | System TTS; Cantonese (zh-HK) is the gap in §6. |
 
 **We will not pretend we have medicine data.** Everything in §3 was measured on
-receipts and synthetic documents. Transfer to medicine labels is **an assumption
-we have not tested**, and saying so is more useful to a judge than a number we
-cannot defend.
+receipts and synthetic documents. Transfer to medicine labels is **an untested
+assumption, not a result**, and saying so is more useful to a judge than a
+number we cannot defend.
 
 ---
 
@@ -120,8 +125,9 @@ manifest claimed otherwise* — see §6.
 | **Accuracy** | **95.8%** | 91.7 – 100.0% | 2.63 |
 | **Macro-F1** | **95.7%** | 91.4 – 100.0% | 2.72 |
 
-Per class (seed 123): banking F1 100%, medical 100%, legal 100%, general 100%.
-Five-fold CV mean accuracy 1.0.
+Per class (seed 123): banking/medical/legal/general F1 all 1.0, as is
+five-fold CV mean accuracy — the same saturated task, the same seed. They
+corroborate; they are not the headline and we never quote them as one.
 
 > **A correction we want judges to see.** Our stored evaluation said
 > **100% accuracy, macro-F1 1.0**. Re-running across five seeds gives 1.000,

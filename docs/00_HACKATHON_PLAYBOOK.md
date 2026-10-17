@@ -1,9 +1,11 @@
 # How to win the Imperial Hackathon with SightLine
 
-This is the working document. It assumes you have ~36 hours, a team of 3–5,
-and one goal: **win the Open Challenge track.**
-
-Everything here is ordered by what actually moves a judging panel.
+This is the strategy document. The build is **done** — 278 tests green, the
+PWA live at <https://adeviwon.github.io/SightLine/> — so what remains is
+**Round 1** (150-word proposal + 3–5 minute video, due **2026-10-25**) and the
+**Grand Final** (2026-11-14). The operational countdown lives in
+[`13_ROUND1_SUBMISSION_KIT.md`](13_ROUND1_SUBMISSION_KIT.md); this file keeps
+the pitch, the judge playbook, and the deck strategy.
 
 ---
 
@@ -15,20 +17,21 @@ in the first fifteen seconds or you have lost them.
 > **SightLine reads your bank statements, prescriptions, and legal letters
 > out loud — with the internet switched off.**
 >
-> Thirty-one million blind people worldwide can't read their own medication
-> label. In Hong Kong alone — where this hackathon is judged — **199,600
-> people, 2.7% of the population, live with visual impairment** (HKSAR C&SD
-> Special Topics Report No. 63, 2021).
-> Every app that helps them uploads the document to a cloud server, because
-> the OCR runs on a GPU somewhere else. For a medical prescription, that's a
-> privacy line they shouldn't have to cross to be independent.
+> In Hong Kong alone — where this hackathon is judged — **199,600 people, 2.7%
+> of the population, live with visual impairment** (HKSAR C&SD Special Topics
+> Report No. 63, 2021). Most cannot read their own prescription, bank
+> statement, or legal letter. Every app that helps them uploads the document
+> to a cloud server, because the OCR runs on a GPU somewhere else. For a
+> medical prescription, that's a privacy line they shouldn't have to cross to
+> be independent.
 >
 > We trained **two neural networks to read the page**. The first is a
 > restoration CNN that undoes the motion blur and sensor noise you get holding
 > a phone one-handed over a document. The second is the one that matters: a
-> **CRNN text recogniser we trained ourselves, on 30,000 real photographed
-> receipts** — including 198 hand-shot at night, in a plastic sleeve, crooked.
-> We wrote the character-level model from scratch. We did not use Tesseract.
+> **CRNN text recogniser we trained ourselves, on 52,554 real word crops from
+> 420 receipts** — with perspective warps driven by 199 real hand-held
+> homographies. We wrote the character-level model from scratch. We did not
+> use Tesseract.
 >
 > We benchmarked Tesseract against itself first — 336 configurations, every
 > page-segmentation mode — and it recovered *no* safety-critical field on those
@@ -41,18 +44,19 @@ in the first fifteen seconds or you have lost them.
 >
 > Everything runs on-device. Turn on airplane mode and it still works.
 
-**The four numbers to say out loud** (from `docs/03_RESULTS.md`, re-run to
-confirm before you present):
+**The four numbers to say out loud** (re-run the gates to confirm before you
+present):
 
-1. **Our recogniser's word accuracy on held-out real receipts.** This is the
-   new headline and the number that answers "did you actually train something
-   that reads?" — see `docs/03_RESULTS.md` for the current figure and its
-   confidence interval.
-2. **Classifier accuracy, mean over 5 seeds** — 95.8% (sd 2.63), macro-F1
-   95.7% (sd 2.72), per `ml/experiments/step3_f1.py`. Stable and honest; never
-   quote the 100% seed — the submission discloses that correction on purpose.
-3. **End-to-end field accuracy**, showing where it works and where it fails.
-4. **Model payload size** — the "it fits on a phone" proof.
+1. **Classifier accuracy, mean over 5 seeds, held-out n=24 — 95.8% (sd 2.63);
+   macro-F1 95.7% (sd 2.72)**, per `ml/experiments/step3_f1.py`. Stable and
+   honest; never quote the 100% seed — the submission discloses that
+   correction on purpose.
+2. **Held-out scan OCR, epoch 39, 17,945 test words — word accuracy 29.30%,
+   CER 11.95%.** This answers "did you actually train something that reads?"
+3. **Real hand-held photos (20 pages) — recall 67.9–71.6%, line-exact
+   1.8–2.4%, CER 56.5–58.4%** — and the app **refuses** a field it is not
+   confident about. Say the gap before a judge does.
+4. **Payload 26.68 MB** — the "it fits on a phone" proof.
 
 **Do not quote a single held-out score without its context.** Field extraction
 is all-or-nothing by design, which is a much harder bar than per-character
@@ -67,9 +71,9 @@ this before a judge asks is worth more than a rounder headline.
 **"You said you don't use Tesseract. What do you use instead?"**
 
 > A CRNN with a CTC head — a convolutional stack feeding a bidirectional LSTM,
-> trained by us on 30,021 real word crops from 260 real scanned receipts, plus
-> 198 hand-photographed ones. 942,000 parameters, 3.8 MB as a single ONNX
-> file, running in the browser's WASM. CTC means greedy decoding is one softmax
+> trained by us on 52,554 real word crops from 420 scanned receipts.
+> 942,166 parameters, 4.03 MB as a single ONNX file, running in the browser's
+> WASM. CTC means greedy decoding is one softmax
 > per timestep — no beam search, no lexicon — which is what makes it viable on
 > a phone.
 
@@ -82,9 +86,11 @@ this before a judge asks is worth more than a rounder headline.
 
 **"What's your accuracy?"** — this is where most teams overclaim.
 
-> The classifier: 95% mean over five seeds. End-to-end field extraction, where
-> a wrong digit means we omit the field rather than read it aloud: much lower,
-> and here is exactly where it breaks. We measure that on real photos, and the
+> The classifier: **95.8% mean over five seeds** (macro-F1 95.7%). End-to-end
+> field extraction, where
+> a wrong digit means we omit the field rather than read it aloud: much lower —
+> on real hand-held photos, 1.8–2.4% line-exact — and here is exactly where it
+> breaks. We measure that on real photos, and the
 > three failure modes are named.
 
 Volunteering the gap before you're asked is worth more than the number was.
@@ -107,75 +113,46 @@ demonstrably outside all four.
 
 1. **The models are actually ours.** `ml/src/train_restorer.py` and
    `ml/src/train_classifier.py` are readable in one sitting. Judges can run
-   `bash run.sh all` on a spare laptop and get the same numbers in ~2 minutes.
-2. **The evaluation is honest.** Held-out test set. Bootstrap confidence
-   intervals. Sub-human conditions reported, not dropped. See
+   `bash run.sh test` (278 tests) and `bash run.sh bundle-check` (real
+   inference through every shipped model) from a fresh clone.
+2. **The evaluation is honest.** Splits by document identity, never by crop.
+   Five-seed classifier metrics with the 100%-seed correction published, not
+   buried. McNemar significance computed before any detector claim. See
    [`07_EVALUATION_METHODOLOGY.md`](07_EVALUATION_METHODOLOGY.md).
 3. **The offline claim is verifiable.** Not a bullet point — a demo where you
    turn on airplane mode mid-presentation.
 
 ---
 
-## Part 3 — Pre-hackathon checklist (do these in the first 2 hours)
+## Part 3 — The final 8 days (2026-10-17 → 2026-10-25)
 
-```
-□  Clone the repo and run `bash setup_env.sh` on every laptop
-□  Run `bash run.sh all` — confirm it reproduces the committed numbers
-□  Run `bash run.sh test` — the suite must be green
-□  Install the app on ONE iPhone and ONE Android phone (see 04_)
-□  Run the demo twice end-to-end on both phones
-□  Record a 90-second screen capture of the demo as a backup
-□  Write the slide deck from Part 5
-□  Assign: Demo / ML talk / Slide master / Backup operator
-```
+Round 1 needs exactly two artifacts: the **150-word proposal** and the
+**3–5 minute video**. The dated, operational countdown — one item per day,
+each with a single done-criterion — lives in
+[`13_ROUND1_SUBMISSION_KIT.md`](13_ROUND1_SUBMISSION_KIT.md). The strategy,
+compressed:
+
+- **Days 1–2 (Oct 17–18): freeze the numbers.** Re-run both gates, then touch
+  nothing. Done = `bash run.sh test` and `bash run.sh bundle-check` pass and
+  every figure in docs/12–13 matches them.
+- **Days 3–4 (Oct 19–20): script and device.** VO ≤3:30 from the shot list;
+  filming phone has the PWA installed and airplane-mode verified.
+  Done = a timed read-through and one spoken scan in airplane mode.
+- **Days 5–6 (Oct 21–22): film and cut.** Five takes plus a screen-recording
+  backup. Done = every shot-list beat covered, and a captioned cut watched
+  start-to-finish twice.
+- **Day 7 (Oct 23–24): verify and upload.** Every on-screen number traced to
+  `docs/03_RESULTS.md`; upload early. Done = both deliverables live in a
+  private window 24 h before the deadline.
+- **Day 8 (Oct 25): submit with margin.** Done = confirmation received.
 
 **The single most common way to lose:** a demo that only works on the
-presenter's phone, on the presenter's wifi, with the presenter's phone
-unlocked and the app already open. Rehearse the full cold start.
+presenter's phone with the app already open. Rehearse the full cold start on
+the filming phone, and keep the screen recording as the backup track.
 
 ---
 
-## Part 4 — The build schedule (36 hours)
-
-### Hours 0–6: Make it true
-- Everything in the pre-hackathon checklist.
-- Run the evaluation on **all** capture profiles. Read `artifacts/eval_results.json`.
-- Find the weakest profile. That is your next 4 hours.
-
-### Hours 6–14: Fix the weakest thing
-Only one thing. Resist the urge to redesign.
-- If restoration is weak on `handheld_heavy` → more docs-per-profile in training.
-- If classification is weak on `banking` → add banking templates to `corpus.py`.
-- If OCR confidence is low everywhere → check preprocessing order in `evaluate.py`.
-
-Re-run `bash run.sh eval` after every change. Commit the numbers, not just
-the code.
-
-### Hours 14–20: Make it demo-proof
-- Cold-start test on both platforms, in airplane mode.
-- Add the confidence-gated retake prompt — a demo that admits uncertainty
-  looks more trustworthy than one that never fails.
-- Prepare three physical test documents: a prescription, a bank statement,
-  a letter. Laminate them. Have a backup set.
-
-### Hours 20–28: Make it presentable
-- Slides (Part 5).
-- Rehearse the 60-second pitch 10 times. Time it.
-- Prepare for the 4 questions in Part 6.
-
-### Hours 28–34: Freeze
-- **No new features after hour 30.** Only bug fixes and rehearsal.
-- Final full run on a clean checkout: `git clone && bash setup_env.sh && bash run.sh all`.
-- Back up the app folder and the trained models to a USB stick *and* the cloud.
-
-### Hours 34–36: Submit
-- README renders correctly on GitHub.
-- The demo video is uploaded and the link works.
-- Every team member can answer Part 6 questions.
-
----
-
-## Part 5 — Slide deck (9 slides, 4 minutes)
+## Part 4 — Grand Final slide deck (9 slides, ≤10 allowed; due 2026-11-12)
 
 **1. Problem** — 2.1 billion people with vision impairment; independence vs.
 privacy is a forced trade-off in every existing app. One sentence, no more.
@@ -194,8 +171,9 @@ If asked why the restorer is so small: 126K params trained at 124 s/epoch on
 4 CPU threads is 80+ minutes for one model. 37,793 params trains in ~35
 minutes and scores the same — we measured, then chose. That is the answer.
 
-**5. The data** — 174 document templates, 10 physically-motivated capture
-profiles, leakage-controlled splits. This is the slide that separates you from
+**5. The data** — 52,554 crops from 420 ICDAR SROIE receipts plus CC-BY-4.0
+hand-photographed pages (Zenodo 13688441), split by document identity, never
+by crop. This is the slide that separates you from
 teams that ran `train_test_split` once.
 
 **6. The results** — the table from `docs/03_RESULTS.md`. Include the confidence
@@ -211,28 +189,35 @@ medical and legal documents specifically.
 
 ---
 
-## Part 6 — Questions you will be asked
+## Part 5 — Questions you will be asked
 
-### "How do you know it's 95%+?"
+### "What's your accuracy?"
 Don't assert. Point at the file:
-> "Held-out test set, never used for model selection. Bootstrap 95% CI is
-> [x, y]. And here's the command to reproduce it: `bash run.sh eval`. The
-> accuracy is field-level — all-or-nothing — because a user who hears the
-> wrong dosage is worse off than one who hears nothing."
+> "Three numbers, kept apart. The classifier: **95.8% accuracy, 95.7%
+> macro-F1, mean over five seeds** on held-out text (`ml/experiments/step3_f1.py`)
+> — the stored eval once said 100%, which was one lucky seed, and we published
+> the correction. Held-out scan OCR: **29.30% word accuracy, 11.95% CER** on
+> 17,945 words. On real hand-held photos the ceiling is the line detector:
+> **67.9–71.6% recall, 1.8–2.4% line-exact** — so the app refuses a field it
+> is not confident about rather than reading a wrong dose aloud. Reproduce
+> with `bash run.sh test`."
 
-### "Isn't a synthetic dataset a weakness?"
+### "Your real-photo numbers are terrible. Why ship at all?"
 Concede, then reframe:
-> "Yes — our corpus is synthetic, and that's a real limitation. It's why we
-> don't quote a number without an interval. What we did about it: the
-> degradations are physically motivated (Poisson-Gaussian sensor noise,
-> directional motion kernels, real bokeh discs), not Gaussian noise on a
-> clean image. The next step, which we'd do with a week and a screen-reader
-> user group, is fine-tuning on photographs they actually take."
+> "On those 20 pages, yes — and we say so on purpose. Three of the twenty are
+> resolution-bound (12–17 px lines against a 32 px input); no detector can fix
+> them, the information was never captured. The rest is a sample-size problem:
+> six detector variants were statistically indistinguishable (McNemar
+> p = 1.000). What ships today is the refusal behaviour: 'I could not read
+> that — please check with a pharmacist.' An omitted field is safe; a guessed
+> dose is not. The fix is more hand-photographed, line-labelled pages — that
+> is the next data task, not a tuning task."
 
 ### "Why MiniLM? Why not fine-tune the whole model?"
 > "Because a frozen encoder can't catastrophically forget, it trains in
-> seconds on CPU, and it exports to a 700 KB ONNX file. We can show the
-> parity check proving the ONNX graph matches PyTorch to 1e-4."
+> seconds on CPU, and the trained head exports to a 0.2 MB ONNX file. We can
+> show the parity check proving the ONNX graph matches PyTorch to
+> max |Δ| = 1.94e-05."
 
 ### "What if the model is wrong about a dosage?"
 > "That's why every stage carries a confidence score, and why low confidence
@@ -243,13 +228,12 @@ Concede, then reframe:
 
 ---
 
-## Part 7 — Submission checklist
+## Part 6 — Submission checklist
 
 ```
 □  README renders on GitHub (relative links work)
-□  `bash setup_env.sh && bash run.sh all` works from a fresh clone
-□  `bash run.sh test` is green
-□  Every number in README/docs matches artifacts/eval_results.json
+□  `bash run.sh test` (278 passed) and `bash run.sh bundle-check` pass from a fresh clone
+□  Every number in README/docs matches docs/03_RESULTS.md and the appendix of docs/11
 □  Demo video uploaded, link works in a private window
 □  Live demo or video — whichever is required, both ready
 □  Repo is public, has a licence
@@ -260,17 +244,19 @@ Concede, then reframe:
 
 ---
 
-## Part 8 — If you are behind schedule
+## Part 7 — If you are behind schedule
 
-Cut in this order. Never cut in the reverse order.
+Round 1 is two artifacts, so the cut list is short. Cut in this order; never
+cut in the reverse order.
 
-1. Drop the `general` document class (3 classes instead of 4). −2 hours.
-2. Reduce capture profiles from 10 to 5 for the training run. −1 hour.
-3. Drop the restorer, ship the classical preprocessing stack + classifier. −4 hours.
-4. Ship the desktop pipeline with a web demo instead of the phone app. −6 hours.
+1. Policy-anchor breadth in the video — cite Paras 108 / 113 / 398–400 only;
+   drop 376–377 and 441–442 from the on-screen text (keep them for Q&A). −half a day.
+2. A second demo device — one filming phone plus the screen-recording backup
+   is enough for Round 1. −half a day.
+3. Music, colour grade, caption styling. Cut last, never first. −half a day.
 
 **Never cut:**
-- The held-out test set and confidence interval. An unmeasured claim loses.
 - The airplane-mode demo. It is the single most memorable moment you have.
-- One clear, narrow problem. "Reads documents aloud, offline" beats
-  "an AI accessibility platform" every time.
+- The refusal beat ("could not read that — please check with a pharmacist").
+- The honest numbers. A team caught rounding up loses more than a team with
+  a 29% word-accuracy number and a precise explanation of where it breaks.
