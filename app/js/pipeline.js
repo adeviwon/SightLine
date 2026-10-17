@@ -99,13 +99,7 @@ const SightLine = (() => {
    * sanity check the Python eval uses. Port of evaluate.classify_doc.
    */
   function classify_doc(text) {
-    const t = String(text || "").toLowerCase();
-    const scores = {
-      medical: countAll(t, ["mg", "tablet", "dose", "patient", "prescription", "capsule"]),
-      banking: countAll(t, ["balance", "account", "sort code", "iban", "debit", "credit", "gbp", "atm"]),
-      legal: countAll(t, ["agreement", "clause", "tenant", "landlord", "court", "deed", "witnesseth"]),
-      general: countAll(t, ["notice", "meeting", "library", "parcel", "recipe", "school"]),
-    };
+    const scores = classify_doc_scores(text);
     let best = "general", bestN = -1;
     for (const c of CATEGORIES) {
       if (scores[c] > bestN) { bestN = scores[c]; best = c; }
