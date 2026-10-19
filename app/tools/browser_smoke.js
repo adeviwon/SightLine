@@ -22,8 +22,32 @@ const { spawn } = require("child_process");
 const os = require("os");
 
 const APP = path.resolve(__dirname, "..");
-const CHROME = process.env.CHROME_BIN
-  || "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome";
+
+/**
+ * Find the Chromium Playwright has actually installed.
+ *
+ * The revision in the path changes every time Playwright updates (the old
+ * hardcoded chromium-1243 vanished when a newer Playwright pruned it, and this
+ * script then failed with ENOENT on a browser that was never going to exist
+ * again). CHROME_BIN still wins when set.
+ */
+function findChrome() {
+  if (process.env.CHROME_BIN) return process.env.CHROME_BIN;
+  const root = process.env.PLAYWRIGHT_BROWSERS_PATH
+    || path.join(os.homedir(), ".cache", "ms-playwright");
+  try {
+    const versions = fs.readdirSync(root)
+      .filter((d) => /^chromium-\d+$/.test(d))
+      .sort((a, b) => Number(b.split("-")[1]) - Number(a.split("-")[1]));
+    for (const v of versions) {
+      const bin = path.join(root, v, "chrome-linux64", "chrome");
+      if (fs.existsSync(bin)) return bin;
+    }
+  } catch (e) { /* fall through to the legacy default */ }
+  return "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome";
+}
+
+const CHROME = findChrome();
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -187,14 +211,19 @@ function check(desc, ok, detail) {
     const scriptSrcs = await cdp.eval(
       "Array.from(document.querySelectorAll('script[src]')).map(s=>s.getAttribute('src'))"
     );
-    // 7 tags: tesseract, pdfjs, pipeline, restorer, classifier, tts, app.
-    // Count the script tags the page actually declares rather than pinning a
-    // magic number. The old `=== 7` went stale the moment js/gating.js was
-    // added (a real 8th tag), and a stale count reports a broken page when the
-    // page is fine -- the mirror image of a check that never fails.
-    // 7 base tags + gating.js = 8.
-    check("index.html loaded all 8 script tags",
-      Array.isArray(scriptSrcs) && scriptSrcs.length === 8, JSON.stringify(scriptSrcs));
+    // 7 tags: pdfjs, pipeline, gating, restorer, classifier, tts, app.
+    // Pin the SET of scripts the app needs, not a count. The count drifted
+    // twice — `=== 7` went stale when gating.js was added, `=== 8` went stale
+    // when the Tesseract tag was deleted — and a stale count reports a broken
+    // page when the page is fine, the mirror image of a check that never fails.
+    const NEEDED = [
+      "vendor/pdfjs/pdf.min.js", "js/pipeline.js", "js/gating.js",
+      "js/restorer.js", "js/classifier.js", "js/tts.js", "js/app.js",
+    ];
+    const missingScripts = NEEDED.filter((s) => !(scriptSrcs || []).includes(s));
+    check("index.html declares every script the app needs (" + NEEDED.length + ")",
+      missingScripts.length === 0,
+      "missing: " + missingScripts.join(", ") + " | on page: " + JSON.stringify(scriptSrcs));
     for (const src of scriptSrcs || []) {
       const hit = requested.find((p) => p.endsWith("/" + src) || p === "/" + src);
       check("vendor asset served: " + src, !!hit, "not requested");
@@ -211,7 +240,7 @@ function check(desc, ok, detail) {
     check("SightLineClassifier global present", G.classifier === "object", G.classifier);
     check("TTS global present", G.tts === "object", G.tts);
     check("SightLineApp controller present", G.app === "object", G.app);
-    check("tesseract.js vendored and loaded", G.tesseract === "object", G.tesseract);
+    check("tesseract is NOT loaded — the recogniser is our own ONNX CRNN", G.tesseract === "undefined", G.tesseract);
     check("pdf.js vendored and loaded", G.pdfjs === "object", G.pdfjs);
 
     // Every asset the page actually pulled must resolve 200 over the wire.
