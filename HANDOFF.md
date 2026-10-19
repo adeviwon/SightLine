@@ -144,6 +144,27 @@ lucky seed. Trust the rerun.
 - `bash run.sh <command>` for everything; it strips PYTHONPATH/VIRTUAL_ENV.
 - Tests are the contract: `bash run.sh test` must stay green. `bundle-check`
   failing the build on Tesseract's return is deliberate, not bureaucratic.
+- **iOS is the target platform, and `bash run.sh ios-check` is the gate** for
+  it: a parse-time Safari compatibility scan of the shipped JS
+  (`app/tools/ios_compat_scan.js`) followed by the whole app — including real
+  `crnn.onnx` inference — driven in Playwright **WebKit**, the engine iOS
+  Safari uses (`app/tools/ios_webkit_check.js`). WebKit is not optional
+  coverage: Blink passes code WebKit rejects.
+- **Never ship a regex lookbehind.** It is a PARSE-TIME `SyntaxError` on
+  Safari < 16.4, and `pipeline.js`/`tts.js` are classic scripts, so one such
+  token leaves `window.SightLine` / `window.TTS` undefined and the app dead on
+  the older phones this product exists for. Two of them shipped once
+  (`pipeline.js:800`, `tts.js:98`) and every Chromium test still passed —
+  `ios_compat_scan.js` now fails the build on the pattern.
+- **The neural path needs iOS 16.4+.** ORT 1.20's only non-JSEP binary is
+  `ort-wasm-simd-threaded.wasm`, which requires WASM SIMD (Safari 16.4,
+  March 2023); there is no Tesseract fallback left. `recognizer.js`
+  `simdSupported()` detects it at startup so the user gets a sentence, not a
+  mid-scan failure.
+- **Release ORT sessions.** `SightLine.dispose()` calls `session.release()` on
+  all three sessions and `app.js` calls it on `pagehide`. Dropping the JS
+  reference does not free ORT's wasm heap, and Safari jettisons a suspended tab
+  holding ~27 MB of models far sooner than a desktop browser would.
 - Datasets are licensed (CC-BY-4.0) and gitignored; `fetch_data.sh` fetches and
   cites. Never commit `data/` or `artifacts/*.npz`.
 - When you measure something, write down what you did NOT. The submission's

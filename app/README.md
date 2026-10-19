@@ -34,8 +34,12 @@ throw its way out of a scan.
 ## Requirements
 
 - Any static file server. No backend, no build step, no npm install.
-- iOS 15+ Safari, or Android 8+ Chrome.
-- ~42 MB of vendored wasm + language data (this is the offline guarantee).
+- **iOS 16.4+ Safari**, or Android 8+ Chrome. The ONNX recogniser needs
+  WebAssembly SIMD, which Safari only shipped in 16.4 — older iOS is detected
+  at startup and told why rather than failing mid-scan. See
+  [`docs/04_RUNNING_ON_IOS_AND_ANDROID.md`](../docs/04_RUNNING_ON_IOS_AND_ANDROID.md).
+- 1.7 MB of required precache assets; the ONNX models + runtime add 40.1 MB and
+  are cached on first use (the app runs its classical path without them).
 
 ---
 

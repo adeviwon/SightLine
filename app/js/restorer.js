@@ -366,7 +366,34 @@ const SightLineRestorer = (() => {
              available: _session !== null, weight: lastWeight };
   }
 
-  return { restore, armRestorerClahe, init, available, status, runClassical, TILE_H, TILE_W, MODEL_PATH };
+  /**
+   * reset(): release the ORT session's allocations. Called from
+   * pipeline.dispose().
+   *
+   * Dropping the JS reference is NOT enough on iOS: ort's wasm heap has grown
+   * to hold the graph and cannot be shrunk, but release() returns the session's
+   * allocations to the runtime so the next load reuses them instead of growing
+   * the heap again. Safari jettisons a suspended tab long before a desktop
+   * browser would, and the byte cost of forgetting this is the whole scan.
+   *
+   * release() is async; this is fire-and-forget on purpose -- nothing downstream
+   * waits on a free, and a rejected release means it was already released.
+   */
+  function reset() {
+    const s = _session;
+    _session = null;
+    _ort = null;
+    lastEngine = "uninitialised";
+    lastError = null;
+    if (s && typeof s.release === "function") {
+      try {
+        const p = s.release();
+        if (p && typeof p.catch === "function") p.catch(() => { /* already gone */ });
+      } catch (e) { /* already gone */ }
+    }
+  }
+
+  return { restore, armRestorerClahe, init, available, status, reset, runClassical, TILE_H, TILE_W, MODEL_PATH };
 })();
 
 if (typeof module !== "undefined" && module.exports) module.exports = SightLineRestorer;

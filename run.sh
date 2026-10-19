@@ -35,7 +35,12 @@ case "$cmd" in
   export)      exec $PYRUN ml/src/export_onnx.py "$@" ;;
   test)        exec $PYRUN -m pytest ml/tests -q "$@" ;;
   # ── real-data text recogniser (replaces Tesseract) ──────────────────────
-  fetch-data) exec bash fetch_data.sh "$@" ;;
+  fetch-data) exec bash fetch_data.sh "$@";;
+  # iOS gate: parse-time Safari compatibility scan of the shipped JS, then run
+  # the whole app in WebKit (the engine iOS Safari uses), including real
+  # crnn.onnx inference. Needs the Playwright WebKit browser on disk.
+  ios-check)   node app/tools/ios_compat_scan.js || exit 1
+               exec node app/tools/ios_webkit_check.js "$@";;
   build-data)  exec $PYRUN ml/src/build_dataset.py "$@" ;;
   train-ocr)   ep="${1:-40}"; shift 2>/dev/null || true
                exec $PYRUN ml/src/train_ocr.py --epochs "$ep" "$@" ;;

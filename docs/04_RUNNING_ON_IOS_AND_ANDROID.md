@@ -64,16 +64,66 @@ python3 -m http.server 8080 --directory app
 
 ### iOS specifics you must know before the demo
 
+- **iOS 16.4 or newer is required for the OCR model to run at all.** The
+  recogniser is an ONNX graph executed by `onnxruntime-web`, and ORT 1.20 ships
+  exactly one non-JSEP binary — `ort-wasm-simd-threaded.wasm` — which needs
+  WebAssembly SIMD. Safari added WASM SIMD in **16.4** (27 March 2023); on iOS
+  15 and iOS 16.0–16.3 a SIMD-only module fails to instantiate before any code
+  runs. There is no Tesseract left to fall back to, so the app detects this up
+  front (`recognizer.js: simdSupported()`) and says so on screen instead of
+  failing halfway through a scan. Check the phone's iOS version before a demo.
+- **Camera needs a secure context** — HTTPS, or `http://localhost`. A plain
+  `http://<LAN-IP>:8080` load is NOT a secure context, so `getUserMedia` is
+  refused on iOS and Android alike; use the GitHub Pages URL (HTTPS) to demo
+  the camera, or the **Choose a Photo** path from a LAN-IP load.
+- **WKWebView wrappers:** the app fetches its models over HTTP, so a wrapper
+  that loads the bundle from `file://` (or a custom scheme without a
+  `WKURLSchemeHandler`) cannot load `models/*.onnx` or the ORT wasm. Serve the
+  app from a local HTTP server (`python3 -m http.server -d app`) or an HTTPS
+  origin.
 - **Airplane mode works** after the first successful load. Verify this during
   your rehearsal, not during the presentation.
 - **The service worker cache can be evicted** by iOS if you go weeks without
   opening the app. Reload once online before a demo.
 - **Camera permission** is requested on first use. If you pre-seeded the demo
   with a gallery image, avoid triggering it unexpectedly.
-- **HTTPS is required for the camera on iOS.** `http://localhost` and
-  `http://<LAN-IP>` both work in current iOS for `getUserMedia`; older iOS
-  (< 14) will refuse. If in doubt, test on the actual demo device.
 - **Do not use private browsing** for the demo — service workers are disabled.
+
+### Verifying the iOS path without an iPhone
+
+```bash
+bash run.sh ios-check
+```
+
+This does two things, in order:
+
+1. `tools/ios_compat_scan.js` — scans the shipped JS for syntax older Safari
+   cannot parse. The failure it exists for: a regex **lookbehind** is a
+   PARSE-TIME `SyntaxError` on Safari < 16.4, and `js/tts.js` (read-aloud) and
+   `js/pipeline.js` (the entire app) are classic scripts, so one such token left
+   `window.SightLine` and `window.TTS` undefined — a completely dead app on
+   exactly the older phones this product is for, while every Chromium test
+   still passed. It exits non-zero, so it can gate a deploy.
+2. `tools/ios_webkit_check.js` — serves `app/` over HTTP, drives it in the
+   Playwright **WebKit** browser (same engine as iOS Safari, on this machine)
+   at a 390×844 phone viewport: it loads `index.html` checking for zero page
+   errors, prints the WASM SIMD / SharedArrayBuffer / lookbehind probes, then
+   runs the full `selftest.html` battery including **real `crnn.onnx`
+   inference**. Current result: **191/191 assertions, 0 page errors**.
+
+Needs the Playwright WebKit browser on disk. If the launch complains about
+missing libraries: `npx playwright install-deps webkit`.
+
+### Memory behaviour on iOS
+
+Safari jettisons a suspended tab under memory pressure long before a desktop
+browser would, and the three ORT sessions are the footprint that matters
+(22.9 MB int8 encoder + 4 MB recogniser + 0.15 MB restorer, all inside ORT's
+wasm heap). `SightLine.dispose()` releases every session (`session.release()`)
+and `js/app.js` calls it on `pagehide`. Dropping the JS reference does **not**
+free the wasm heap — only `release()` returns the allocations to the runtime.
+If a device still struggles, the **Skip classifier** toggle removes the 22.9 MB
+encoder from the pipeline entirely.
 
 ---
 

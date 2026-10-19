@@ -85,7 +85,8 @@ number.**
 | Requirement | Status |
 |---|---|
 | Trained models, ONNX-exported, int8, parity + inference verified | ✅ done — `bash run.sh bundle-check` |
-| Runs offline on iOS and Android | ✅ verified in headless Chromium ⚠️ *not on real iOS/Android hardware* |
+| Runs offline on iOS and Android | ✅ verified in **WebKit** (the engine iOS Safari uses) *and* headless Chromium — `bash run.sh ios-check` ⚠️ *not on physical iPhone/Android hardware* |
+| iOS floor for the neural path | ⚠️ **iOS 16.4+** — `ort-wasm-simd-threaded.wasm` requires WASM SIMD, which Safari shipped in 16.4 (March 2023). Older iOS is detected at startup and told why instead of failing mid-scan. |
 | Zero network calls after install | ✅ verified by static audit + source |
 | Reproducible evaluation | ✅ fixed — `bash run.sh repro-check` |
 | Document classification ≥ 95% | ✅ **95.0% mean** across 5 seeds (min 91.7%, CI 86.7–100%), macro F1 0.947 |

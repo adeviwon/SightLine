@@ -352,6 +352,26 @@ function testGarbage() {
     SightLine.isGarbage("Account Number: 40218877 Sort Code: 40-11-04", 7), false);
 }
 
+function testStructureScore() {
+  // structure_score ranks OCR candidates by how many safety-critical tokens
+  // they contain, so a wrong count silently picks a worse reading of a page.
+  // The account-number arm used a regex lookbehind, which is a PARSE-TIME
+  // SyntaxError on Safari/iOS < 16.4 — in a classic script that is not a
+  // degraded stage, it is the whole app failing to load. These assertions pin
+  // the semantics of the lookbehind-free replacement (verified equivalent to
+  // the old form on 200,000 fuzzed digit/dash/space strings).
+  const g = group("structure_score — account numbers (no lookbehind)");
+  eq(g, "standalone 6-8 digit run counts once", SightLine.structure_score("40218877"), 1);
+  eq(g, "two account numbers count twice", SightLine.structure_score("40218877 12345678"), 2);
+  eq(g, "a sort code scores once — its own arm, not as an account number",
+    SightLine.structure_score("40-11-04"), 1);
+  eq(g, "a 9-digit run is not a 6-8 digit account number", SightLine.structure_score("123456789"), 0);
+  eq(g, "a hyphen-adjacent account number is not counted", SightLine.structure_score("40218877-1"), 0);
+  eq(g, "date and account number in one line", SightLine.structure_score("2024-01-01 40218877"), 1);
+  eq(g, "the full banking sample still scores", 
+    SightLine.structure_score("Account Number: 40218877 Sort Code: 40-11-04 Amount £2,500.00") >= 3, true);
+}
+
 function testRobustness() {
   const g = group("Robustness — no stage throws on bad input");
   const nullish = [null, undefined, "", 0, NaN, {}, []];
@@ -695,7 +715,7 @@ async function run(which) {
   if (text) {
     testNorm(); testWordAccuracy(); testFieldsFound(); testClassifyDoc();
     testNormalize(); testUnderstand(); testDamaged(); testEntities();
-    testGarbage(); testRobustness(); testTtsChunks(); testClassifierMath();
+    testGarbage(); testStructureScore(); testRobustness(); testTtsChunks(); testClassifierMath();
     testRestorerTiling();
   }
   if (img) testImagePipeline();

@@ -71,6 +71,43 @@ let initPromise = null;
 const cache = new Map();          // contentWidth -> padded Float32Array
 
 /**
+ * WebAssembly SIMD feature probe.
+ *
+ * onnxruntime-web 1.20.1 ships exactly ONE non-JSEP wasm binary --
+ * `ort-wasm-simd-threaded.wasm` -- and it requires WASM SIMD (ORT dropped its
+ * non-SIMD builds after 1.19: "ONNX Runtime Web is dropping support for
+ * non-SIMD and non-threaded builds ... since v1.19.0"). Safari shipped
+ * WebAssembly SIMD in 16.4, so on iOS 15 and iOS 16.0-16.3 the whole neural
+ * path cannot instantiate, while the app's own docs advertise iOS 15+.
+ *
+ * There is no Tesseract left to fall back to, so this must be detected BEFORE
+ * the runtime is imported: a failure inside ort surfaces as an opaque
+ * instantiation error minutes into the scan, and the user's phone looks
+ * broken. Exported so the UI can state the real reason.
+ *
+ * The module bytes below are the canonical wasm-feature-detect SIMD snippet:
+ * `(func (result v128) (v128.const i32x4 0 0 0 0))` with a shuffle op. It
+ * validates only on a SIMD-capable engine -- confirmed true under WebKit
+ * (tools/ios_webkit_check.js prints the probe result).
+ */
+export function simdSupported() {
+  try {
+    return typeof WebAssembly === "object" && WebAssembly.validate(new Uint8Array([
+      0, 97, 115, 109, 1, 0, 0, 0, 1, 5, 1, 96, 0, 1, 123,
+      3, 2, 1, 0, 10, 10, 1, 8, 0, 65, 0, 253, 15, 253, 98, 11,
+    ]));
+  } catch (e) {
+    return false;
+  }
+}
+
+/** The message the UI shows when the hardware/browser cannot run the model. */
+export const NO_SIMD_MESSAGE =
+  "This device's browser has no WebAssembly SIMD, so the text recogniser " +
+  "cannot run. It needs Safari 16.4 or newer (iOS 16.4+, March 2023). " +
+  "Update iOS, or open the app in a newer browser.";
+
+/**
  * Load the ONNX session once. Concurrent callers share one promise.
  *
  * A failed load resolves to null and sets `lastError` rather than throwing, so
@@ -82,6 +119,10 @@ export async function init() {
   if (initPromise) return initPromise;
   initPromise = (async () => {
     try {
+      if (!simdSupported()) {
+        lastError = NO_SIMD_MESSAGE;
+        return null;
+      }
       // Load the runtime the way classifier.js and restorer.js do: dynamic
       // import into a module namespace. (The previous code named the URL
       // string `ORT` and read `ORT.env` off it — a TypeError in strict-mode
@@ -259,11 +300,28 @@ export async function recogniseAll(crops) {
   return out;
 }
 
+/**
+ * Release the session. Called from pipeline.dispose().
+ *
+ * On iOS this is the difference between a working scan and a jettisoned tab:
+ * ort's wasm heap cannot shrink once grown, but release() returns this graph's
+ * allocations to the runtime, so the next scan reuses them instead of growing
+ * the heap again. Dropping the JS reference alone does none of that. The call
+ * is async and deliberately not awaited -- nothing waits on a free, and a
+ * rejected release just means it was already released.
+ */
 export function reset() {
+  const s = session;
   session = null;
   initPromise = null;
   lastError = null;
   cache.clear();
+  if (s && typeof s.release === "function") {
+    try {
+      const p = s.release();
+      if (p && typeof p.catch === "function") p.catch(() => { /* already gone */ });
+    } catch (e) { /* already gone */ }
+  }
 }
 
 // Exported for the browser self-test harness.
@@ -271,6 +329,7 @@ const SightLineRecognizer = {
   CHARSET, BLANK, CROP_H, EXPORT_W, WIDTH_DIVISOR,
   init, isReady, getError, recognise, recogniseAll,
   decodeGreedy, timestepsFor, reset,
+  simdSupported, NO_SIMD_MESSAGE,
 };
 if (typeof window !== "undefined") window.SightLineRecognizer = SightLineRecognizer;
 export default SightLineRecognizer;

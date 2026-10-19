@@ -1,10 +1,12 @@
 /**
  * SightLine service worker — offline-first, cache-first, same-origin only.
  *
- * PRECACHE RATIONALE. The 42 MB of vendored wasm + traineddata is what makes
- * the app work in airplane mode, so the install step must be exhaustive: a
- * partially-cached install is worse than none, because the app looks offline
- * and then fails at the first OCR pass. Every entry below is added
+ * PRECACHE RATIONALE. The 1.7 MB of required assets is what makes the app work
+ * in airplane mode, so the install step must be exhaustive: a partially-cached
+ * install is worse than none, because the app looks offline and then fails at
+ * the first OCR pass. (The ONNX models + runtime are a further 40.1 MB and are
+ * deliberately NOT here — they are optional accelerators, see OPTIONAL below.)
+ * Every entry below is added
  * individually (not cache.addAll, which is all-or-nothing) and the failure
  * count is reported back to the page via postMessage so the badge can be
  * honest about what is actually available.

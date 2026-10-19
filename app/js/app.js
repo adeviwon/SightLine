@@ -530,6 +530,20 @@
     window.addEventListener("offline", updateOnlineBadge);
     window.addEventListener("beforeunload", () => { stopCamera(); TTS.stop(); });
 
+    // iOS memory: release every ORT session when the page is going away.
+    // `beforeunload` is unreliable on iOS; `pagehide` is the signal WebKit
+    // actually fires on navigation, on app-switch and on tab close. Releasing
+    // returns the recogniser's 4 MB graph and the classifier's 22.9 MB int8
+    // encoder to ort's runtime instead of leaving them resident in a wasm heap
+    // that Safari will jettison under memory pressure — the failure mode being
+    // a dead tab the user has to force-quit, reported by them as "the app
+    // stopped working".
+    window.addEventListener("pagehide", () => {
+      stopCamera();
+      TTS.stop();
+      try { SightLine.dispose(); } catch (e) { /* nothing was loaded */ }
+    });
+
     // Live quality hint while the camera is up.
     if (els.video) {
       els.video.addEventListener("loadeddata", () => {

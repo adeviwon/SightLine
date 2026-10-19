@@ -796,9 +796,21 @@ const SightLine = (() => {
     // Case / reference numbers: "2024-CV-00456"
     const cases = t.match(/\b\d{4}-[A-Z]{2}-\d{3,8}\b/g);
     if (cases) n += cases.length * 2;      // weighted: most safety-critical
-    // Bare account numbers: 6-8 digit runs not part of a date/dose
-    const accts = t.match(/(?<![\d-])\d{6,8}(?![\d-])/g);
-    if (accts) n += accts.length;
+    // Bare account numbers: 6-8 digit runs not part of a date/dose.
+    //
+    // This used a negative lookbehind. Regex lookbehind is a PARSE-TIME
+    // SyntaxError in Safari before 16.4, and pipeline.js is a classic script,
+    // so that one token took the WHOLE APP down on older iPhones — window
+    // .SightLine was never defined and every scan threw. Same semantics,
+    // without it: match the digit run, then reject it when the character on
+    // either side is a digit or a hyphen (i.e. it is part of something like
+    // 40-11-04 or 2024-01-01, not a standalone account number).
+    const accts = [];
+    for (const m of t.matchAll(/\d{6,8}/g)) {
+      const boundary = (c) => c === undefined || !/[\d-]/.test(c);
+      if (boundary(t[m.index - 1]) && boundary(t[m.index + m[0].length])) accts.push(m[0]);
+    }
+    if (accts.length) n += accts.length;
     // Currency amounts: "£2,500.00" / "$1,250" / "GBP 2,500.00" / "EUR 99".
     // The ISO code form matters: bank statements write "GBP"/"USD" far more
     // often than a symbol, and a bare "GBP 2,500.00" scored 0 without it.
@@ -886,6 +898,16 @@ const SightLine = (() => {
         .then((e) => { if (e.reset) e.reset(); })
         .catch(() => { /* never loaded; nothing to release */ });
       _enginePromise = null;
+    }
+    // The two optional models own their own ORT sessions, which are the big
+    // allocations (22.9 MB encoder + 4 MB recogniser inside ort's wasm heap).
+    // They are NOT reachable through _enginePromise, so releasing only the
+    // recogniser leaves the largest allocation of the three resident — which is
+    // exactly the state iOS jettisons a suspended tab over.
+    for (const host of [globalThis.SightLineClassifier, globalThis.SightLineRestorer]) {
+      try {
+        if (host && typeof host.reset === "function") host.reset();
+      } catch (e) { /* never loaded; nothing to release */ }
     }
   }
 
