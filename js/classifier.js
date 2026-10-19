@@ -364,9 +364,39 @@ const SightLineClassifier = (() => {
     };
   }
 
+  /**
+   * reset(): release both ORT sessions and the tokenizer. Called from
+   * pipeline.dispose().
+   *
+   * This is the single most valuable byte-release on iOS: the int8 encoder is
+   * 22.9 MB of weights inside ort's wasm heap, plus a 712 KB tokenizer parsed
+   * into a JS array + Map. Neither is freed by dropping the JS reference --
+   * ort only returns a session's allocations to the runtime on release(). The
+   * heap itself does not shrink, so this buys reuse, not an instant RSS drop;
+   * it still stops the second scan from growing the heap again.
+   */
+  function reset() {
+    const sessions = [_enc, _head];
+    _enc = null;
+    _head = null;
+    _ort = null;
+    _tokenizer = null;
+    _manifest = null;
+    lastEngine = null;
+    lastError = null;
+    for (const s of sessions) {
+      if (s && typeof s.release === "function") {
+        try {
+          const p = s.release();
+          if (p && typeof p.catch === "function") p.catch(() => { /* already gone */ });
+        } catch (e) { /* already gone */ }
+      }
+    }
+  }
+
   return {
     CATEGORIES, MAX_TOKENS, ENCODER_PATH, HEAD_PATH, TOKENIZER_PATH,
-    init, available, classify, classifyWithFallback, status,
+    init, available, classify, classifyWithFallback, status, reset,
     // exported for selftest.html
     softmax, meanPoolL2, basicTokenize, wordpiece, encode,
   };

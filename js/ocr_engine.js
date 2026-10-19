@@ -44,9 +44,15 @@ import {
   recogniseAll,
   isReady,
   reset as resetRecognizer,
+  getError as recognizerError,
 } from "./recognizer.js";
 import { detectLines, cropForRecognizer } from "./layout.js";
 import { EXPORT_W } from "./recognizer.js";
+
+// Re-exported so the UI can explain an environment that cannot run the model
+// (no WebAssembly SIMD => iOS/Safari before 16.4) without reaching into the
+// recogniser module itself.
+export { simdSupported, NO_SIMD_MESSAGE } from "./recognizer.js";
 
 /** Canvas -> flat grayscale Uint8Array. */
 function toGray(canvas) {
@@ -137,7 +143,12 @@ export async function initWorker(onProgress) {
   if (onProgress) onProgress({ status: "loading our OCR model" });
   await initRecognizer();
   if (!isReady()) {
-    throw new Error("crnn.onnx failed to initialise (see recognizer.js getError())");
+    // Pass the recogniser's OWN message through. The previous text was a
+    // pointer ("see recognizer.js getError()") which reached the user as
+    // "Scan failed: crnn.onnx failed to initialise (see recognizer.js
+    // getError())" — useless on a phone, and on iOS before 16.4 the real
+    // reason is a device limitation the user can act on (update iOS).
+    throw new Error(recognizerError() || "the OCR model failed to initialise");
   }
   return { recognise: recogniseCanvas };
 }

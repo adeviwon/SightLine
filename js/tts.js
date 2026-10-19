@@ -97,7 +97,16 @@ const TTS = (() => {
   function chunkText(text, maxLen) {
     const src = String(text || "").replace(/\s+/g, " ").trim();
     if (!src) return [];
-    const sentences = src.split(/(?<=[.!?])\s+/);
+    // Sentence split WITHOUT a lookbehind. Sentence chunking used to split on
+    // a lookbehind-anchored whitespace pattern, and regex lookbehind is a
+    // PARSE-TIME SyntaxError on Safari/iOS before 16.4. tts.js is a classic
+    // script, so that error took the whole file down: window.TTS never existed
+    // and every read-aloud call threw on exactly the older phones this product
+    // targets. A global match is equivalent here and keeps the terminator with
+    // its sentence; chunkText trims, so the leading space is irrelevant.
+    // (See tools/ios_compat_scan.js, which now fails the build on this class
+    // of syntax — do not reintroduce it.)
+    const sentences = src.match(/[^.!?]+[.!?]*/g) || [src];
     const chunks = [];
     let cur = "";
     for (const s of sentences) {
