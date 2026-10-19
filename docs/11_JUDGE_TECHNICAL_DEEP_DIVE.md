@@ -26,6 +26,17 @@ of it returns.
 
 ---
 
+## The verified numbers (everything measured, sources in the appendix)
+
+| claim | number |
+|---|---|
+| Classifier accuracy / macro-F1 — 5 seeds, held-out n=24 (`ml/experiments/step3_f1.py`) | **95.8% (sd 2.63) / 95.7% (sd 2.72)** — the stored eval once said 100%; that was one lucky seed, re-measured and published |
+| Held-out scan OCR, epoch 39, 17,945 test words | word accuracy **29.30%**, CER **11.95%** |
+| Real hand-held photos (20 pages) | detection recall **67.9–71.6%**, line-exact **1.8–2.4%**, CER **56.5–58.4%** |
+| Browser payload | **26.68 MB**, self-contained, 0 bytes leave the phone |
+
+---
+
 ## 2. The pipeline
 
 ```
@@ -182,7 +193,10 @@ re-read from disk and given in bytes so the unit cannot be ambiguous.
 ## 5. The classifier — stated precisely
 
 `sentence-transformers/all-MiniLM-L6-v2`, **frozen**, plus a **49,796-parameter
-head** we trained. Five-seed mean **95.0%**, range 91.7–100%, sd 3.1%.
+head** we trained. Five seeds, held-out n=24: **accuracy 95.8% (sd 2.63),
+macro-F1 95.7% (sd 2.72)** (`ml/experiments/step3_f1.py`). Our stored
+evaluation said 100% — that was one lucky seed; the 5-seed re-run is what we
+quote.
 
 Two things a judge should hear plainly:
 
@@ -192,13 +206,26 @@ Two things a judge should hear plainly:
 2. **It is not fine-tuned end to end.** The encoder is frozen. We say so
    everywhere rather than implying full fine-tuning.
 
-**Keep the two numbers apart.** 95.0% is classifier accuracy on clean OCR text.
+**Keep the two numbers apart.** 95.8% is classifier accuracy on clean OCR text.
 It is *not* end-to-end accuracy, and presenting it as such would be the single
 most misleading thing this project could do.
 
 ---
 
-## 6. The honest limitation, stated first
+## 6. What we did NOT achieve — stated first
+
+Three claims we cannot make, in one place:
+
+1. **No medicine-label capability.** Everything measured is receipts +
+   synthetic documents; no medicine corpus exists. Transfer to medicine labels
+   is an untested assumption, not a result.
+2. **No Chinese.** The output alphabet is 37 symbols with **zero CJK** — a
+   bilingual Hong Kong label cannot produce a single correct character, and
+   TTS defaults to `en-GB`. This is the project's open-work item 2.
+3. **No end-to-end accuracy we would defend on real photos.** Line-exact
+   accuracy is **1.8–2.4%**; the honest product today is the refusal —
+   *"I could not read that — please check with a pharmacist"* — not a spoken
+   dose.
 
 **Line detection, not recognition, is the bottleneck.**
 
@@ -251,9 +278,8 @@ It skipped precisely when the model was trained well enough for the check to
 matter. On our trained checkpoint the function returns `True` (47.3% blanks,
 all 38 classes used) and the gate printed *"untrained head emits no blanks"* —
 the exact opposite of the truth. It had **never executed on any checkpoint**.
-It survived review because it read as a deliberate guard. It now runs, passes,
-and a mutation test confirms it *can* fail — a gate that cannot fail is worse
-than no gate, because it is read as reassurance.
+It now runs, passes, and a mutation test confirms it *can* fail — a gate that
+cannot fail is worse than no gate, because it is read as reassurance.
 
 **A metrics function that had never run at all.** `eval_sroie_test()` called
 `most_common()` on a `defaultdict`. Every held-out number quoted above would
@@ -297,8 +323,9 @@ licences (ICDAR 2019 SROIE; Zenodo record `13688441`, CC-BY-4.0) are cited in
 1. **We trained the OCR.** 942,166 parameters, from scratch, exported to a
    4 MB self-contained ONNX graph, decoding in the browser at a fixed 256 px
    width because the LSTM export demanded it. No OCR dependency exists.
-2. **Every number is separated by what produced it.** Classifier 95.0%, scan
-   CER 11.95%, real-photo line accuracy 2.4%, detection recall 71.6%. Mixing
+2. **Every number is separated by what produced it.** Classifier 95.8%
+   (sd 2.63, 5 seeds), scan CER 11.95%, real-photo line-exact 1.8–2.4%,
+   detection recall 67.9–71.6%. Mixing
    them would be the easiest way to look good and the fastest way to be caught.
 3. **We know which part is broken.** It is the line detector, the ceiling is
    measured, the current attempt is statistically indistinguishable from
@@ -332,6 +359,9 @@ figure in §1–§9 is one of these three kinds, and the kind is stated:
 - 278 tests, 1 xfailed — `bash run.sh test`
 - Tesseract absent from vendor/, index.html, sw.js, pipeline.js — `bundle-check`
   §4b, mutation-tested to confirm it fails when reintroduced
+- Classifier 5-seed accuracy 95.8% (sd 2.63), macro-F1 95.7% (sd 2.72),
+  held-out n=24 — `ml/experiments/step3_f1.py`; the stored eval's 100% was
+  one lucky seed, published as a correction
 - 29.30% / 11.95% and 26.25% / 15.90% CER — head-to-head on 17,945 held-out
   words, both checkpoints on the identical test set
 - 71.6% detection recall · 2.4% line accuracy · 58.4% CER — full 20-page
@@ -350,7 +380,6 @@ judge as current:
 |---|---|---|
 | explicit-LSTM loop parity | 7.451e-08 | `run.sh py ml/tests/test_ocr_model.py` |
 | restorer best PSNR | 14.13 dB | `run.sh py ml/src/evaluate.py` |
-| MiniLM 5-seed mean (range, sd) | 95.0% (91.7–100%, 3.1%) | `run.sh test` (classifier arm) |
 | training time per epoch | ~250 s | `run.sh train-ocr` |
 | int8 cost | 0.0 accuracy points | `run.sh export` |
 | corpus size | 52,554 crops / 420 receipts, 11 variants | `bash run.sh build-data` |

@@ -290,7 +290,11 @@
         warnings.push("No key details could be extracted. Try a closer, "
           + "straighter photo with the whole page in frame.");
       }
-      if (cls === null && u.classificationConfidence < 0.6) {
+      // Fires for BOTH classification paths: a MiniLM result below 60% is
+      // just as uncertain as a keyword one — the user must hear the caveat,
+      // not read it off a meta line. (Keyword-path confidence is floored at
+      // 0.5, so this changes nothing for the fallback.)
+      if (u.classificationConfidence < 0.6) {
         warnings.push("The document type is uncertain — it may not be a "
           + "prescription, bank statement or contract.");
       }
@@ -318,6 +322,11 @@
       const msg = (e && e.message) || String(e);
       showError("Scan failed: " + msg);
       setProgress(0, "Failed");
+      // The panel still shows the PREVIOUS scan. Never let Read Aloud speak
+      // a stale document after a failed one — a blind user cannot see that
+      // the card did not update.
+      lastResult = null;
+      els.btnSpeak.hidden = true;
     } finally {
       els.scanLine.classList.remove("on");
       showProgress(false);
@@ -420,7 +429,12 @@
     els.btnSpeak.textContent = "Stop";
     announce("Reading summary.");
     try {
-      await TTS.speak(lastResult.summary, { rate: 0.95, lang: "en-GB" });
+      // Warnings are spoken BEFORE the summary: the summary states fields as
+      // fact, so a low-confidence read must be caveated in the same breath —
+      // this is the honesty gate, in the medium this product actually serves.
+      const warned = lastResult.warnings && lastResult.warnings.length
+        ? "Caution. " + lastResult.warnings.join(" ") + " " : "";
+      await TTS.speak(warned + lastResult.summary, { rate: 0.95, lang: "en-GB" });
     } catch (e) {
       showError("Speech failed: " + ((e && e.message) || "unknown"));
     } finally {
@@ -523,8 +537,17 @@
     });
     els.btnSpeak.addEventListener("click", speakSummary);
     els.fileInput.addEventListener("change", onFile);
-    els.tabCam.addEventListener("click", () => { setTab("cam"); startCamera(); });
-    els.tabFile.addEventListener("click", () => { setTab("file"); stopCamera(); pickFile(); });
+    const openCam = () => { setTab("cam"); startCamera(); };
+    const openFile = () => { setTab("file"); stopCamera(); pickFile(); };
+    els.tabCam.addEventListener("click", openCam);
+    els.tabFile.addEventListener("click", openFile);
+    // role="tab" divs have no native activation: Enter and Space must switch
+    // tabs for keyboard and switch-access users (WCAG 2.1.1).
+    for (const [el, open] of [[els.tabCam, openCam], [els.tabFile, openFile]]) {
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+      });
+    }
 
     window.addEventListener("online", updateOnlineBadge);
     window.addEventListener("offline", updateOnlineBadge);

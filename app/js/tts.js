@@ -42,7 +42,15 @@ const TTS = (() => {
       const fail = (e) => {
         if (settled) return;
         settled = true;
-        reject(new Error("TTS error: " + ((e && e.error) || "unknown")));
+        const kind = e && e.error;
+        // canceled/interrupted is the user pressing Stop, not a failure —
+        // rejecting here would raise "Speech failed" for a normal stop.
+        if (kind === "canceled" || kind === "interrupted") {
+          if (o.onEnd) o.onEnd();
+          resolve();
+          return;
+        }
+        reject(new Error("TTS error: " + (kind || "unknown")));
       };
       try {
         const chunks = chunkText(clean, 180);
@@ -56,24 +64,18 @@ const TTS = (() => {
           u.lang = o.lang || "en-GB";
           if (voices) u.voice = voices;
           last = u;
+          window.speechSynthesis.speak(u);
         }
+        // Only the LAST utterance gets the end handlers: speechSynthesis
+        // resolves the whole queue when its final utterance ends.
         _current = last;
         if (last) {
           last.onend = finish;
           last.onerror = fail;
         }
-        for (const chunk of chunks) {
-          // Re-create utterances: the queue holds the object, not the string.
-          const u = new SpeechSynthesisUtterance(chunk);
-          u.rate = o.rate != null ? o.rate : 1.0;
-          u.pitch = o.pitch != null ? o.pitch : 1.0;
-          u.volume = 1.0;
-          u.lang = o.lang || "en-GB";
-          if (voices) u.voice = voices;
-          window.speechSynthesis.speak(u);
-        }
         // Some WebViews fire no events at all — never leave the UI stuck.
-        setTimeout(finish, 400 + clean.length * 90);
+        // Guard on _current so a stale timer cannot resolve a NEWER speak().
+        setTimeout(() => { if (_current === last) finish(); }, 400 + clean.length * 90);
       } catch (e) {
         fail(e);
       }

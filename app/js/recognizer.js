@@ -153,6 +153,10 @@ export async function init() {
       return session;
     } catch (e) {
       lastError = e && e.message ? e.message : String(e);
+      // Clear the failed promise so a later call can retry (a transient
+      // runtime/compile failure must not disable OCR until page reload) —
+      // same policy as pipeline.js getEngine().
+      initPromise = null;
       return null;
     }
   })();
