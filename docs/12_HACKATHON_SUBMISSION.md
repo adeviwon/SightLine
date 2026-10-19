@@ -150,6 +150,34 @@ medicine label, and it is **not** end-to-end accuracy.
 | epoch 20 | 30,021 crops / 260 receipts | 26.25% | 15.90% |
 | **epoch 39** | **52,554 crops / 420 receipts** | **29.30%** | **11.95%** |
 
+### The shipped application, end to end — the honest headline
+
+The two rows above are the recogniser alone. What the product actually does —
+detect lines, read them, classify the document, extract fields — measured by
+driving the real app in WebKit (iOS Safari's engine) over 12 rendered documents:
+
+| metric | value |
+|---|---|
+| field recovery | **0.0%** |
+| classification | **33.3%** |
+| word accuracy | **3.6%** |
+| CER | **70.8%** |
+
+All 12 scans completed without a crash or a failed scan; the reading is what
+fails. 3 document types × 4 capture profiles; row-level evidence in
+`artifacts/hackathon_metrics.json`.
+
+That gap is the project's main open problem and it is quantified, not hidden:
+the recogniser was trained on receipt crops and scores 28.0% word accuracy on
+held-out crops, so page-level text (detector errors plus the squeeze to the
+graph's fixed 256px width) collapses. Reproduction, per-profile detail and the
+caveats — including which numbers are *not* generalisation claims — are in
+`docs/14_HACKATHON_BENCHMARK.md`:
+
+```
+bash run.sh bench-pipeline && bash run.sh bench-hackathon
+```
+
 ### One situation where it gets it wrong — and why
 
 **A medicine label photographed in poor light at night.**

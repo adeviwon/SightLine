@@ -1,0 +1,335 @@
+{
+  "ok": true,
+  "requirements": {
+    "understand_the_problem": {
+      "brief": "Step 1 \u2014 the problem, who is affected, what data the AI needs",
+      "evidence": [
+        "docs/12_HACKATHON_SUBMISSION.md#1-understand-the-problem",
+        "docs/13_ROUND1_SUBMISSION_KIT.md"
+      ]
+    },
+    "build_the_ai_tool": {
+      "brief": "Step 2 \u2014 the model, the training data, how it is deployed",
+      "evidence": [
+        "docs/12_HACKATHON_SUBMISSION.md#2-build-the-ai-tool",
+        "docs/01_ARCHITECTURE.md",
+        "ml/src/ocr_model.py",
+        "ml/src/train_ocr.py"
+      ]
+    },
+    "test_and_evaluate": {
+      "brief": "Step 3 \u2014 the required metrics, on held-out data, reproducible",
+      "evidence": [
+        "artifacts/step3_classifier_metrics.json",
+        "artifacts/ocr_training.json",
+        "artifacts/pipeline_raw.json",
+        "docs/03_RESULTS.md#3-results",
+        "docs/14_HACKATHON_BENCHMARK.md"
+      ],
+      "commands": [
+        "bash run.sh bench-hackathon",
+        "bash run.sh eval-ocr",
+        "bash run.sh bench-pipeline"
+      ]
+    },
+    "check_for_fairness": {
+      "brief": "Step 4 \u2014 who the tool would exclude, and what we would do",
+      "evidence": [
+        "docs/12_HACKATHON_SUBMISSION.md#4-check-for-fairness",
+        "ml/src/privacy_audit.py"
+      ]
+    },
+    "present": {
+      "brief": "Step 5 \u2014 the pitch, the demo, the deployment path",
+      "evidence": [
+        "docs/13_ROUND1_SUBMISSION_KIT.md",
+        "docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md",
+        "docs/PRIVACY.md"
+      ]
+    }
+  },
+  "classifier": {
+    "accuracy_mean": 0.95832,
+    "macro_f1_mean": 0.9566600000000001,
+    "accuracy_sd": 0.02634178429795523,
+    "macro_f1_sd": 0.027165095251075414,
+    "seeds": [
+      123,
+      121,
+      122,
+      124,
+      125
+    ],
+    "n_test": 24,
+    "saturated": false,
+    "caveat": "A perfect score on n=24 indicates a saturated task, not an unusually strong model. Do not present as 100% accuracy.",
+    "source": "artifacts/step3_classifier_metrics.json"
+  },
+  "ocr": {
+    "test_word_acc": 0.2798730158730159,
+    "best_val_word_acc": 0.28549618320610687,
+    "params": 942166,
+    "charset": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ ",
+    "crops_total": 52554,
+    "test_crops": 7875,
+    "epochs": 40,
+    "source": "artifacts/ocr_training.json",
+    "page_level": {
+      "command": "bash run.sh eval-ocr",
+      "note": "word accuracy + CER on whole held-out pages, detector included; the printed table in docs/03 section 3 is the recorded run (71.6% line recall, 58.4% CER on real photos)"
+    }
+  },
+  "pipeline": {
+    "n": 12,
+    "errors": 0,
+    "field_recovery": 0.0,
+    "classification": 0.3333333333333333,
+    "word_accuracy": 0.036286629094848276,
+    "cer": 0.7083567329625812,
+    "headline": {
+      "n": 12,
+      "errors": 0,
+      "field_recovery": 0.0,
+      "classification": 0.3333333333333333,
+      "word_accuracy": 0.036286629094848276,
+      "cer": 0.7083567329625812
+    },
+    "headline_profiles": [
+      "handheld_light",
+      "jpeg_social",
+      "off_axis",
+      "studio_clean"
+    ],
+    "sub_human": {
+      "n": 0,
+      "field_recovery": 0.0,
+      "classification": 0.0,
+      "word_accuracy": 0.0,
+      "cer": 0.0,
+      "errors": 0
+    },
+    "sub_human_profiles": [],
+    "by_profile": {
+      "handheld_light": {
+        "n": 3,
+        "errors": 0,
+        "field_recovery": 0.0,
+        "classification": 0.0,
+        "word_accuracy": 0.017278922758374813,
+        "cer": 0.8117483741658381
+      },
+      "jpeg_social": {
+        "n": 3,
+        "errors": 0,
+        "field_recovery": 0.0,
+        "classification": 0.3333333333333333,
+        "word_accuracy": 0.0091324200913242,
+        "cer": 0.7315820334550963
+      },
+      "off_axis": {
+        "n": 3,
+        "errors": 0,
+        "field_recovery": 0.0,
+        "classification": 0.3333333333333333,
+        "word_accuracy": 0.01567732115677321,
+        "cer": 0.8538297089705256
+      },
+      "studio_clean": {
+        "n": 3,
+        "errors": 0,
+        "field_recovery": 0.0,
+        "classification": 0.6666666666666666,
+        "word_accuracy": 0.10305785237292087,
+        "cer": 0.43626681525886485
+      }
+    },
+    "metric_definitions": {
+      "word_accuracy": "fraction of ground-truth words present in the read text, compared after norm() (evaluate.word_accuracy)",
+      "cer": "character error rate: (substitutions + insertions + deletions) / ground-truth characters, on norm()ed text",
+      "field_recovery": "fraction of the document's ground-truth fields present in the extracted fields (a masked value counts if it is a suffix of the expected one)",
+      "classification": "fraction of documents whose category matches the expected category"
+    },
+    "source": "artifacts/pipeline_raw.json",
+    "records": [
+      {
+        "doc": "prescription",
+        "profile": "studio_clean",
+        "expected_category": "medical",
+        "category": "medical",
+        "expected_fields": [
+          "500mg",
+          "400mg"
+        ],
+        "fields": [],
+        "ocr_confidence": 0.8718335355287261,
+        "error": null,
+        "ms": 2993
+      },
+      {
+        "doc": "prescription",
+        "profile": "handheld_light",
+        "expected_category": "medical",
+        "category": "general",
+        "expected_fields": [
+          "500mg",
+          "400mg"
+        ],
+        "fields": [
+          "0534 65201500",
+          "320031\n038"
+        ],
+        "ocr_confidence": 0.720248543124467,
+        "error": null,
+        "ms": 4635
+      },
+      {
+        "doc": "prescription",
+        "profile": "off_axis",
+        "expected_category": "medical",
+        "category": "general",
+        "expected_fields": [
+          "500mg",
+          "400mg"
+        ],
+        "fields": [],
+        "ocr_confidence": 0.5343349276205425,
+        "error": null,
+        "ms": 1379
+      },
+      {
+        "doc": "prescription",
+        "profile": "jpeg_social",
+        "expected_category": "medical",
+        "category": "medical",
+        "expected_fields": [
+          "500mg",
+          "400mg"
+        ],
+        "fields": [],
+        "ocr_confidence": 0.695954172556722,
+        "error": null,
+        "ms": 5178
+      },
+      {
+        "doc": "banking",
+        "profile": "studio_clean",
+        "expected_category": "banking",
+        "category": "banking",
+        "expected_fields": [
+          "40218877",
+          "40-11-04"
+        ],
+        "fields": [],
+        "ocr_confidence": 0.9118094027266336,
+        "error": null,
+        "ms": 2342
+      },
+      {
+        "doc": "banking",
+        "profile": "handheld_light",
+        "expected_category": "banking",
+        "category": "general",
+        "expected_fields": [
+          "40218877",
+          "40-11-04"
+        ],
+        "fields": [],
+        "ocr_confidence": 0.7075696042504194,
+        "error": null,
+        "ms": 4699
+      },
+      {
+        "doc": "banking",
+        "profile": "off_axis",
+        "expected_category": "banking",
+        "category": "banking",
+        "expected_fields": [
+          "40218877",
+          "40-11-04"
+        ],
+        "fields": [],
+        "ocr_confidence": 0.6864775990635338,
+        "error": null,
+        "ms": 1622
+      },
+      {
+        "doc": "banking",
+        "profile": "jpeg_social",
+        "expected_category": "banking",
+        "category": "general",
+        "expected_fields": [
+          "40218877",
+          "40-11-04"
+        ],
+        "fields": [
+          "003303202"
+        ],
+        "ocr_confidence": 0.784058514072413,
+        "error": null,
+        "ms": 5743
+      },
+      {
+        "doc": "legal",
+        "profile": "studio_clean",
+        "expected_category": "legal",
+        "category": "general",
+        "expected_fields": [
+          "2500",
+          "2024-CV-00456"
+        ],
+        "fields": [
+          "2024000456"
+        ],
+        "ocr_confidence": 0.7854206467643265,
+        "error": null,
+        "ms": 1935
+      },
+      {
+        "doc": "legal",
+        "profile": "handheld_light",
+        "expected_category": "legal",
+        "category": "general",
+        "expected_fields": [
+          "2500",
+          "2024-CV-00456"
+        ],
+        "fields": [],
+        "ocr_confidence": 0.7111868547263194,
+        "error": null,
+        "ms": 4477
+      },
+      {
+        "doc": "legal",
+        "profile": "off_axis",
+        "expected_category": "legal",
+        "category": "medical",
+        "expected_fields": [
+          "2500",
+          "2024-CV-00456"
+        ],
+        "fields": [],
+        "ocr_confidence": 0.6577694498389909,
+        "error": null,
+        "ms": 1201
+      },
+      {
+        "doc": "legal",
+        "profile": "jpeg_social",
+        "expected_category": "legal",
+        "category": "general",
+        "expected_fields": [
+          "2500",
+          "2024-CV-00456"
+        ],
+        "fields": [],
+        "ocr_confidence": 0.7340600346095876,
+        "error": null,
+        "ms": 5072
+      }
+    ]
+  },
+  "missing": [],
+  "notes": [
+    "The classifier figure is the held-out n=24 number over 5 seeds. The end-to-end pipeline numbers are behaviour on synthetic renders: the recogniser never trained on them, but the classifier's templates ARE in its corpus, so its end-to-end agreement is not a generalisation claim."
+  ]
+}

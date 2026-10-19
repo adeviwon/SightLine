@@ -1,0 +1,94 @@
+# 14 — The Imperial College London Hackathon benchmark
+
+The brief's step 3 ("Test and evaluate") asks for named metrics on held-out data.
+This document is the record of those measurements, the exact command behind each
+one, and what the numbers do **not** prove. Every figure here is produced by a
+command in this repo, not typed in by hand — a judge can re-run the three lines at
+the bottom and get the same output.
+
+## The required metrics, and where each comes from
+
+| brief asks for | metric | value | command / artifact |
+|---|---|---|---|
+| classifier, held-out | accuracy | **95.8%** (±2.6) | `bash run.sh train-clf` → `artifacts/step3_classifier_metrics.json` |
+| classifier, held-out | macro-F1 | **95.7%** (±2.7) | same run — 5 seeds, n=24 test documents |
+| OCR, held-out | word accuracy | **28.0%** | `bash run.sh train-ocr` → `artifacts/ocr_training.json` (7,875 held-out crops) |
+| OCR, whole pages, detector included | word accuracy + CER | see `bash run.sh eval-ocr` | `ml/src/eval_ocr.py` — real SROIE test pages |
+| the shipped app, end to end | field recovery, classification, word accuracy, CER | **table below** | `bash run.sh bench-pipeline` → `artifacts/pipeline_raw.json` |
+| one documented failure | a real misread | `ACCOUNT NUMBER 40218877` → `ICOUNT NUMBER 4021887` | `docs/03_RESULTS.md` §3 |
+
+## The shipped app, end to end (the number that decides whether it works)
+
+`bash run.sh bench-pipeline` drives the **real app** in WebKit — iOS Safari's
+engine — over 12 rendered documents (3 types × 4 capture profiles) and records
+what came out. `bash run.sh bench-hackathon` scores those records:
+
+| profile | n | field recovery | classification | word accuracy | CER |
+|---|---|---|---|---|---|
+| studio_clean | 3 | 0.0% | 66.7% | 10.3% | 43.6% |
+| handheld_light | 3 | 0.0% | 0.0% | 1.7% | 81.2% |
+| off_axis | 3 | 0.0% | 33.3% | 1.6% | 85.4% |
+| jpeg_social | 3 | 0.0% | 33.3% | 0.9% | 73.2% |
+| **all samples** | **12** | **0.0%** | **33.3%** | **3.6%** | **70.8%** |
+
+The app ran 12/12 samples without a crash or a failed scan. **The reading is the
+problem: it recovers no ground-truth field on any document, including the clean
+ones.** Row-level evidence is in `artifacts/hackathon_metrics.json` (each sample's
+expected fields, extracted fields and confidence) and the raw records in
+`artifacts/pipeline_raw.json`.
+
+Words are scored with `evaluate.word_accuracy` (fraction of ground-truth words
+present in the read text, after `norm()`), and CER as (substitutions + insertions
++ deletions) / ground-truth characters on normalised text. Both definitions live in
+`ml/src/bench_hackathon.py` and are unit-tested in `ml/tests/test_bench_hackathon.py`
+— the browser side deliberately computes no metrics, so the two cannot drift apart.
+
+## What these numbers do NOT prove
+
+- **The recogniser never trained on these renders**; the classifier's templates
+  are in its training corpus, so its end-to-end agreement is *not* a generalisation
+  claim. The classifier's generalisation claim is the held-out n=24, 5-seed figure
+  above, and that figure carries its own caveat (`saturated`: a near-perfect score
+  on 24 documents means the task is easy, not that the model is strong).
+- **The classifier figure is not the app's classifier in isolation.** There are two
+  classifiers in this repo: the ONNX MiniLM head (an introduction-time experiment)
+  and the keyword classifier the app actually ships. `classify_doc` in
+  `ml/src/evaluate.py` is the shipped one's twin.
+- The profile split above is a *reporting* split, not an exclusion. Only
+  `evaluate.SUB_HUMAN` profiles (`worst_case`, unreadable to a human) leave the
+  headline, and none appear in this sample set.
+
+## The honest comparison a judge should see
+
+The stage-by-stage numbers in `docs/03_RESULTS.md` were measured with a Tesseract
+arm (`ml/src/evaluate.py` calls pytesseract). The app no longer contains Tesseract:
+it ships a 942k-parameter CRNN trained on SROIE receipt crops whose held-out
+**crop** word accuracy is 28.0%. Page-level recognition is harder than crop-level
+(it adds the detector's mistakes and the squeeze to the graph's fixed 256px width),
+and the end-to-end table above is what that costs: **the swap to our own recogniser
+measurably reduced end-to-end quality.** The Tesseract arm achieved 62.2% field
+accuracy on the same sample generator; the shipped arm achieves 0%.
+
+Two consequences, both already written into `HANDOFF.md` §4:
+
+1. `ml/src/evaluate.py` still measures Tesseract, so `artifacts/eval_results.json`
+   describes an engine this application does not contain. Its numbers must not be
+   quoted as the product's.
+2. The recognition gap is the project's main open problem. The measured levers, in
+   order of expected effect: train on page-level text rather than receipt crops;
+   re-export the graph at width 320 (the training clamp) instead of 256; and only
+   then revisit the preprocessing arms.
+
+## Re-running this
+
+```bash
+bash run.sh bench-pipeline     # drive the shipped app (WebKit), write raw records  (~4 min)
+bash run.sh bench-hackathon    # score them + the training artifacts, one report     (~10 s)
+bash run.sh train-clf          # the 5-seed classifier metrics                      (~2 min)
+bash run.sh train-ocr          # the recogniser's held-out crop accuracy            (~40 min, GPU)
+bash run.sh eval-ocr           # whole-page word accuracy + CER, detector included  (~10 min)
+```
+
+`bash run.sh bench-hackathon` names anything it could not measure instead of
+defaulting it to zero, and exits non-zero when a required artifact is absent — a
+missing measurement must look missing, not bad.

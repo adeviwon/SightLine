@@ -9,6 +9,17 @@ Stating this up front is deliberate. A hackathon pitch that claims 95–100%
 when the measurement says 62% loses to a team that shows a real number and a
 plan, every time.
 
+> ⚠️ **WHICH ENGINE — read this before quoting the 62.2%.** Every arm on this page
+> was measured with **Tesseract**, because `ml/src/evaluate.py` calls pytesseract.
+> The application **no longer contains Tesseract**: it ships a 942k-parameter CRNN
+> (`ocr_model.py`), and that model's end-to-end field recovery on the same
+> render bench is **0.0%**, not 62.2% — measured in WebKit, detector and all, in
+> `docs/14_HACKATHON_BENCHMARK.md`. So this page documents the ceiling of the
+> *classical restoration* work and the shape of the gap; it does **not** describe
+> the model in `app/vendor/models/`. The Tesseract numbers remain useful as the
+> baseline the recogniser has to beat, and as the reason the preprocessing arms
+> are ordered the way they are.
+
 > ## ✅ PROVENANCE: current — re-derived on the fixed corpus
 >
 > These figures were regenerated after the corpus-seeding fix. The corpus now

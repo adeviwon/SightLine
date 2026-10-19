@@ -174,6 +174,26 @@ but from an earlier state of the code). The submission doc
 — and records that the stored evaluation used to claim 100%, which was one
 lucky seed. Trust the rerun.
 
+### The engine behind the end-to-end numbers
+
+`docs/01`'s 62.2% end-to-end field accuracy and `docs/10`'s arm table come from
+**Tesseract** (`ml/src/evaluate.py` calls pytesseract). The app does not contain
+Tesseract any more. The shipped 942k-parameter CRNN's own end-to-end figure, driven
+through the real app in WebKit on 12 rendered documents, is **0.0% field recovery,
+33.3% classification, 3.6% word accuracy, 70.8% CER** — `docs/14_HACKATHON_BENCHMARK.md`,
+artifact `artifacts/hackathon_metrics.json`. Quote the engine with the number, or
+quote a number that is not the product's.
+
+The brief's step-3 metrics and their sources, in one command:
+
+```
+bash run.sh bench-pipeline      # drive the shipped app (WebKit) -> artifacts/pipeline_raw.json
+bash run.sh bench-hackathon     # score it + the training artifacts -> artifacts/hackathon_metrics.json
+                                # + the classifier's held-out accuracy/macro-F1 (5 seeds)
+                                # + the recogniser's held-out crop accuracy
+                                # exits non-zero if a required artifact is absent
+```
+
 ## 6. House rules
 
 - `bash run.sh <command>` for everything; it strips PYTHONPATH/VIRTUAL_ENV.

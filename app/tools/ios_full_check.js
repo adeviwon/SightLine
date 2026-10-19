@@ -15,6 +15,7 @@
  *   blank/noise/letter.pdf         bash run.sh py app/tools/make_fixtures.py
  *
  * Usage: node tools/ios_full_check.js [--engine=webkit|chromium|both] [--suites=a,b,c]
+ *                                   [--json=artifacts/pipeline_raw.json]
  * Exit code 0 only when every check in every suite passed.
  */
 "use strict";
@@ -71,12 +72,15 @@ function serve() {
   return new Promise((resolve) => server.listen(0, "127.0.0.1", () => resolve({ server, state })));
 }
 
+const ALL_RECORDS = [];   // bench records from every engine that ran
+
 // ── tiny assertion harness ───────────────────────────────────────────────────
 class Report {
   constructor(engine) {
     this.engine = engine;
     this.suites = [];
     this.current = null;
+    this.records = [];
   }
   suite(name) {
     this.current = { name, checks: [] };
@@ -88,6 +92,14 @@ class Report {
     console.log("  " + (pass ? "ok  " : "FAIL") + "  " + name
       + (pass || detail === undefined ? "" : "  -> " + String(detail).slice(0, 300)));
     return pass;
+  }
+  /** Raw per-sample record: data, no verdicts. The metric definitions live in
+   *  ml/src/bench_hackathon.py so the two cannot disagree. */
+  record(rec) {
+    this.records.push(rec);
+  }
+  get count() {
+    return this.records.length;
   }
   get failures() {
     return this.suites.flatMap((s) => s.checks.filter((c) => !c.pass).map((c) => s.name + " / " + c.name));
@@ -541,6 +553,47 @@ suite("cold install — install online, airplane mode before the FIRST scan", as
   await page.close();
 });
 
+// ── the benchmark the Imperial brief asks to be measured ─────────────────────
+// Drives the SHIPPED app over every rendered sample and records what it did.
+// Deliberately no metrics here: ml/src/bench_hackathon.py owns the definitions
+// (word accuracy, CER, field recovery, classification), so the browser and the
+// report cannot drift apart. Writes with --json=<path>.
+suite("bench — the shipped pipeline, one record per sample", async (ctx, R) => {
+  const page = ctx.page;
+  await page.goto(ctx.base + "/index.html", { waitUntil: "load" });
+  await page.waitForTimeout(1500);
+  const m = ctx.manifest;
+  const docs = Object.keys(m.text || {});
+  const profiles = m.profiles || [];
+  for (const doc of docs) {
+    for (const profile of profiles) {
+      const r = await scanFile(page, SAMP_DOC(doc, profile));
+      R.record({
+        doc, profile,
+        expected_category: (m.category || {})[doc] || null,
+        expected_fields: (m.fields || {})[doc] || [],
+        expected_text: (m.text || {})[doc] || "",
+        category: r.lastResult ? r.lastResult.category : null,
+        fields: r.lastResult ? r.lastResult.fields : [],
+        ocr_text: r.ocrRead ? r.ocrText : "",
+        ocr_confidence: r.lastResult ? r.lastResult.ocrConfidence : null,
+        // a sample that produced nothing is a ZERO in the report, not a missing
+        // row, so the failure has to be recorded as a reason here.
+        error: r.error || (r.timedOut ? "scan timed out"
+          : (r.lastResult || r.error ? null : "no result produced")),
+        ms: r.lastResult ? r.lastResult.ms : null,
+      });
+      process.stdout.write(".");
+    }
+  }
+  console.log("");
+  const want = (m.samples || []).length;
+  R.check("recorded one row per sample (no silent skips)", R.count === want,
+    R.count + " of " + want);
+  R.check("every row carries the read text or a reason it is empty",
+    R.records.every((x) => x.ocr_text || x.error), "some rows are silently empty");
+});
+
 // ── runner ───────────────────────────────────────────────────────────────────
 async function runEngine(engineName, jobs) {
   const R = new Report(engineName);
@@ -581,6 +634,8 @@ async function runEngine(engineName, jobs) {
   await browser.close();
   server.close();
 
+  ALL_RECORDS.push(...R.records);
+
   const fails = R.failures;
   console.log("\n[" + engineName + "] " + (R.total - fails.length) + "/" + R.total + " checks passed");
   for (const f of fails) console.log("   FAILED: " + f);
@@ -596,5 +651,13 @@ async function runEngine(engineName, jobs) {
   const engines = engArg === "both" ? ["webkit", "chromium"] : [engArg];
   let bad = 0;
   for (const e of engines) bad += await runEngine(e, jobs);
+
+  const jsonArg = process.argv.find((a) => a.startsWith("--json="));
+  if (jsonArg) {
+    const out = jsonArg.split("=").slice(1).join("=");
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, JSON.stringify(ALL_RECORDS, null, 2) + "\n");
+    console.log("\n[json] " + ALL_RECORDS.length + " record(s) -> " + out);
+  }
   process.exit(bad ? 1 : 0);
 })().catch((e) => { console.error("runner failed:", e); process.exit(2); });

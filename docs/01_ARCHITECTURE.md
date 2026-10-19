@@ -339,9 +339,10 @@ That last column is the contract: **the app degrades, it never guesses.**
 | Claim | Number | Note |
 |---|---|---|
 | MiniLM classification | **95.0%** mean over 5 seeds | the metric the brief's 95–100% bar is met by |
-| End-to-end field accuracy | **62.2%** | *synthetic* corpus, 180 samples |
+| End-to-end field accuracy | **62.2%** | *synthetic* corpus, 180 samples — **Tesseract arm** (pytesseract via `ml/src/evaluate.py`) |
 | Real held-out receipts | see `docs/03_RESULTS.md` | real photographs |
 | Handheld blur, Tesseract | **0%** | proven over 336 configurations |
+| Shipped CRNN, end to end | **0.0%** field recovery | WebKit, 12 documents — see `docs/14_HACKATHON_BENCHMARK.md` |
 
 The 95–100% target is met **for the classifier**. It is **not** met for
 end-to-end field extraction, and we do not conflate the two. Field extraction

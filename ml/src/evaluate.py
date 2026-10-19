@@ -58,6 +58,16 @@ FIELDS = {
 # but excluded from the headline (they are not a model failure).
 SUB_HUMAN = {"worst_case"}
 
+# Which pipeline category each rendered document type is expected to land in.
+# One definition, imported by everything that needs it: the eval harness (below)
+# and app/tools/render_samples.py, whose manifest must not hand-copy this map.
+DOC_CATEGORY = {
+    "prescription": "medical",
+    "banking": "banking",
+    "legal": "legal",
+    "general": "general",
+}
+
 import pytesseract  # noqa: E402
 
 
@@ -239,8 +249,7 @@ def run(n_per_profile=6, seed=123, arms=None, out_path="artifacts/eval_results.j
                     else 0.0)
                 rows[a]["conf"].append(conf)
                 pred = classify_doc(text)
-                exp = {"prescription": "medical", "banking": "banking",
-                       "legal": "legal"}[dtype]
+                exp = DOC_CATEGORY[dtype]
                 rows[a]["class_ok"].append(1.0 if pred == exp else 0.0)
                 if a in ("restorer", "restorer_clahe"):
                     g = np.asarray(img.convert("L")).astype(np.float32) / 255

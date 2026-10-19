@@ -48,6 +48,12 @@ case "$cmd" in
   train-ocr)   ep="${1:-40}"; shift 2>/dev/null || true
                exec $PYRUN ml/src/train_ocr.py --epochs "$ep" "$@" ;;
   eval-ocr)    exec $PYRUN ml/src/eval_ocr.py "$@" ;;
+  # The Imperial brief's step 3 ("test and evaluate"), scored the way it asks:
+  # bench-pipeline drives the shipped app in WebKit and writes RAW records;
+  # bench-hackathon reads them plus the training artifacts and reports every
+  # required metric with its source. See docs/14_HACKATHON_BENCHMARK.md.
+  bench-pipeline) exec node app/tools/ios_full_check.js --engine=webkit --suites=bench --json=artifacts/pipeline_raw.json ;;
+  bench-hackathon) exec $PYRUN ml/src/bench_hackathon.py "$@" ;;
   # Generic passthrough so any module can be run through the venv with
   # PYTHONPATH stripped: bash run.sh py ml/src/realdata.py --selftest
   py)          exec $PYRUN "$@" ;;
@@ -68,5 +74,5 @@ case "$cmd" in
     bash run.sh export
     bash run.sh test
     ;;
-  *) echo "usage: bash run.sh {capture|corpus|train-clf|train-dncnn|eval|export|test|all}"; exit 1 ;;
+  *) echo "usage: bash run.sh <target> [args]"; echo "  train/test: train-clf train-dncnn train-ocr eval eval-ocr test"; echo "  measure:    bench bench-pipeline bench-hackathon gating results bundle-check repro-check ios-check ios-full"; echo "  data/other: capture corpus build-data export diagnose privacy errors py serve shell"; exit 1 ;;
 esac
