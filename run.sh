@@ -41,6 +41,9 @@ case "$cmd" in
   # crnn.onnx inference. Needs the Playwright WebKit browser on disk.
   ios-check)   node app/tools/ios_compat_scan.js || exit 1
                exec node app/tools/ios_webkit_check.js "$@";;
+  # Full battery: the real controller (file input -> runScan) plus the failure
+  # paths, in WebKit and Chromium. ~12 min for both engines.
+  ios-full)    exec node app/tools/ios_full_check.js "$@";;
   build-data)  exec $PYRUN ml/src/build_dataset.py "$@" ;;
   train-ocr)   ep="${1:-40}"; shift 2>/dev/null || true
                exec $PYRUN ml/src/train_ocr.py --epochs "$ep" "$@" ;;

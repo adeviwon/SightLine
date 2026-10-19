@@ -24,7 +24,7 @@
  * sightline-* cache, so old wasm never lingers.
  */
 
-const VERSION = "v1.1.2";
+const VERSION = "v1.1.3";
 const CACHE = "sightline-" + VERSION;
 
 /** Everything required for a scan to complete with no network. */
@@ -44,6 +44,13 @@ const PRECACHE = [
   "./js/classifier.js",
   "./js/tts.js",
   "./js/app.js",
+  // The OCR ENGINE's own modules. pipeline.js dynamic-imports these on the
+  // first scan; without them in the precache a scan on a device that is already
+  // offline fails at the import, which is what the "cold install" check in
+  // tools/ios_full_check.js caught: install online, airplane mode, first scan
+  // -> "Failed to fetch dynamically imported module ocr_engine.js".
+  "./js/ocr_engine.js",
+  "./js/layout.js",
   "./js/ORCHESTRATION.md",
   "./assets/icon-180.png",
   "./assets/icon-192.png",

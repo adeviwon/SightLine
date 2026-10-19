@@ -50,10 +50,17 @@ print(json.dumps({
   // be exercised without WASM. The `export default` line must be removed
   // WHOLELY -- stripping only the keyword leaves a bare `default`, which is a
   // syntax error, not a harmless leftover.
+  //
+  // `import.meta.url` must go too: the module computes WASM_DIR/MODEL_URL from
+  // it at evaluation time, and `new Function` is not a module, so Node threw
+  // "Cannot use 'import.meta' outside a module" and this whole gate died
+  // silently as a stack trace nobody read. Both bindings are only used inside
+  // init(), which this harness never calls.
   const mod = src
     .replace(/^import .*$/gm, "")
     .replace(/^export default .*$/gm, "")
-    .replace(/^export /gm, "");
+    .replace(/^export /gm, "")
+    .replace(/^const (WASM_DIR|MODEL_URL) = .*import\.meta.*$/gm, "");
   // The module declares its bindings as `export const`/`export function`, so
   // stripping the keyword leaves bare declarations in the function scope rather
   // than properties on module.exports. Collect them explicitly instead of

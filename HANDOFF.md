@@ -114,6 +114,23 @@ real-photo corpus — which is ranked task 1 above.
 
 ## 4. What would actually move the needle, ranked
 
+0. **The recogniser is fed crops the model was never trained on.** Measured with
+   `bash run.sh ios-full` ("geometry" suite): on a 900×580 rendered page the
+   detector returns lines 10–20 px tall, and `layout.js cropForRecognizer` uses
+   `scale = min(maxW/bw, cropH/bh)`, so a wide line is scaled by WIDTH and lands
+   **12–20 px tall inside the 32 px tensor** (17/17 crops on the banking sample;
+   median 13 px), with the unfilled rows left as 0 — and `buildInput` maps 0 to
+   −1 = ink, not paper. Both reference implementations do the opposite:
+   `build_dataset.crop_to_array` uses `scale = CROP_H / h` and `eval_ocr.py`
+   resizes the band to `CROP_H` — every crop is exactly 32 px tall. The visible
+   consequence on the repo's own studio_clean renders (where `evaluate.py` scores
+   field accuracy 1.0): the app reads them at 57–87% OCR confidence with the
+   WRONG values — banking returns two 12-digit numbers instead of 40218877 /
+   40-11-04 — i.e. confidently wrong, which the confidence gate cannot catch.
+   Fix is real work, not a one-liner: scale to height 32 like the reference, and
+   because `crnn.onnx` width is FIXED at 256, split lines wider than 256 into
+   overlapping chunks and concatenate the CTC decodes instead of squeezing them.
+   Validate with the field-recovery metric the same suite already computes.
 1. **A medicine-label corpus.** Everything measured was measured on receipts.
    The hackathon submission says this in its own words — transfer to medicine
    labels is an assumption, not a result. Consent photographs + line labels is
