@@ -32,8 +32,7 @@ const { spawn } = require("child_process");
 const { CDP } = require("./cdp_min.js");
 
 const ROOT = path.resolve(__dirname, "..");
-const CHROME = process.env.CHROME_BIN
-  || "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome";
+const CHROME = require("./chrome_path.js")();
 
 const MIME = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",

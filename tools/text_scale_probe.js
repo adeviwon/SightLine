@@ -37,8 +37,7 @@ const { CDP } = require("./cdp_min.js");
 
 const ROOT = path.resolve(__dirname, "..");
 const SAMPLES = "/tmp/sightline_samples";
-const CHROME = process.env.CHROME_BIN
-  || "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome";
+const CHROME = require("./chrome_path.js")();
 const SCALES = [1, 2, 3, 4];
 
 const MIME = {

@@ -25,8 +25,7 @@ const { spawn } = require("child_process");
 const APP = path.resolve(__dirname, "..");
 const SAMPLES = "/tmp/sightline_samples";
 const MANIFEST = path.join(SAMPLES, "manifest.json");
-const CHROME = process.env.CHROME_BIN
-  || "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome";
+const CHROME = require("./chrome_path.js")();
 
 const MIME = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",

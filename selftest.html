@@ -507,6 +507,65 @@ async function testOnnxRecogniser() {
   check(g, "decode length within timesteps", r.chars, (v) => v >= 0 && v <= 16);
 }
 
+function testSkewEstimation() {
+  // CORRECTNESS, not just "returns a number". preprocess() rotates the page by
+  // whatever estimateSkew() returns, so a false angle destroys a clean scan. The
+  // estimator used to score angles by a RAW COUNT of dark samples along the
+  // sheared line, which is not comparable across angles and left every tie —
+  // a blank page included — to the sweep's first angle: -10 degrees. Every scan
+  // was therefore deskewed by a false angle, which is why pages that read fine
+  // in the Python reference came back as confident nonsense here.
+  //
+  // This has to run in the browser: the Node harness's canvas shim makes
+  // rotate() a no-op, so a tilted page is not tilted there.
+  const g = group("Skew estimation — projection profile");
+
+  function textPage(pw, ph, deg) {
+    const c = document.createElement("canvas");
+    c.width = pw; c.height = ph;
+    const cx = c.getContext("2d", { willReadFrequently: true });
+    cx.fillStyle = "#f8f8f8"; cx.fillRect(0, 0, pw, ph);
+    cx.fillStyle = "#1c1c1c";
+    cx.font = "16px sans-serif";
+    if (deg) {
+      cx.save();
+      cx.translate(pw / 2, ph / 2);
+      cx.rotate((deg * Math.PI) / 180);
+      cx.translate(-pw / 2, -ph / 2);
+    }
+    for (let i = 0; i < 14; i++) cx.fillText("Account Number 40218877 line " + i, 30, 40 + i * 26);
+    if (deg) cx.restore();
+    return c;
+  }
+
+  const clean = SightLine.estimateSkew(textPage(900, 460, 0));
+  check(g, "axis-aligned page estimates 0 skew (got " + clean + ")",
+    clean, (v) => Math.abs(v) < 0.5);
+
+  const t4 = SightLine.estimateSkew(textPage(900, 460, 4));
+  check(g, "a page tilted 4 degrees is detected (got " + t4 + ")",
+    t4, (v) => Math.abs(Math.abs(v) - 4) <= 1.5);
+
+  const t6 = SightLine.estimateSkew(textPage(900, 460, -6));
+  check(g, "a page tilted -6 degrees is detected (got " + t6 + ")",
+    t6, (v) => Math.abs(Math.abs(v) - 6) <= 1.5);
+
+  const flat = document.createElement("canvas");
+  flat.width = 64; flat.height = 64;
+  const fx = flat.getContext("2d", { willReadFrequently: true });
+  fx.fillStyle = "#fff"; fx.fillRect(0, 0, 64, 64);
+  check(g, "a blank page estimates 0 (no ink to align)",
+    SightLine.estimateSkew(flat), (v) => v === 0);
+
+  // The end-to-end property, which also pins the SIGN: preprocess() must leave a
+  // tilted page with less residual skew than it started with.
+  const tiltedIn = textPage(900, 460, 5);
+  const pp = SightLine.preprocess(tiltedIn, 3200, { restoreMode: "none" });
+  const residual = Math.abs(SightLine.estimateSkew(pp.canvas));
+  check(g, "preprocess() straightens a page tilted 5 degrees (residual " + residual + ")",
+    residual, (v) => v <= 2);
+}
+
 function testImagePipeline() {
   const g = group("Image preprocessing — the canvas path");
   const W = 320, H = 200;
@@ -718,7 +777,7 @@ async function run(which) {
     testGarbage(); testStructureScore(); testRobustness(); testTtsChunks(); testClassifierMath();
     testRestorerTiling();
   }
-  if (img) testImagePipeline();
+  if (img) { testSkewEstimation(); testImagePipeline(); }
   if (which === "all") {
     // Long step: dynamic-imports ort, downloads the 4 MB model, compiles WASM.
     // The summary stays "Not run yet." until every battery has finished, and

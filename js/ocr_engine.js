@@ -47,7 +47,7 @@ import {
   getError as recognizerError,
 } from "./recognizer.js";
 import { detectLines, cropForRecognizer } from "./layout.js";
-import { EXPORT_W } from "./recognizer.js";
+import { EXPORT_W, CROP_H } from "./recognizer.js";
 
 // Re-exported so the UI can explain an environment that cannot run the model
 // (no WebAssembly SIMD => iOS/Safari before 16.4) without reaching into the
@@ -98,8 +98,16 @@ async function recogniseCanvas(canvas, onProgress) {
   // maxW MUST be EXPORT_W. cropForRecognizer defaults to 320, and feeding a
   // 320-wide crop to a graph that wants exactly 256 is a shape error -- not a
   // silent truncation.
+  //
+  // ONE CROP PER LINE, squeezed into EXPORT_W columns past the clamp. Cutting a
+  // long line into chunks at its true aspect ratio was TRIED AND REVERTED: on
+  // the rendered samples the whole-line squeeze read the long lines BETTER
+  // (228x15 "HSBC UK BANK PLC" at 98% confidence squeezed, vs "MSEC UNBANE L"
+  // at 54% chunked), and the field/classification suite went from 5 failures to
+  // 7. The model needs the line's full horizontal context more than it needs
+  // square glyphs; see HANDOFF section 4 for the numbers before retrying it.
   const crops = lines.map((box) => {
-    const c = cropForRecognizer(gray, w, box, 32, EXPORT_W);
+    const c = cropForRecognizer(gray, w, box, CROP_H, EXPORT_W);
     // cropForRecognizer returns `data`; recogniseAll reads `gray`. Renaming
     // here rather than changing either module's contract keeps both usable by
     // their own tests.
