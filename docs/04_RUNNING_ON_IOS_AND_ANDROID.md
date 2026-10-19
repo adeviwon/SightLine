@@ -11,7 +11,7 @@ a native build, and it is the right one for a 36-hour hackathon:
 | Offline | Bundle with the binary | Service worker precache |
 | ONNX inference | Native module (build risk) | `onnxruntime-web` WASM |
 | Camera access | Native permission flows | Standard `getUserMedia` |
-| OCR offline | Bundled native lib | Tesseract WASM (vendored) |
+| OCR offline | Bundled native lib | Our own CRNN via onnxruntime-web (vendored) |
 
 The trade-off is honest: a native build would be faster and could use the
 phone's NPU. Neither matters for a document scanner, which is
@@ -56,8 +56,11 @@ python3 -m http.server 8080 --directory app
 
 1. **Open Safari** on the phone (Chrome on iOS will not install a PWA).
 2. Go to `http://<computer-ip>:8080`.
-3. Wait for the status line to read **`ENGINE READY`**. First load downloads
-   the OCR engine and language data (~15–40 MB depending on connection).
+3. Wait for the badge to read **`ONLINE — OFFLINE-READY`**. The **first scan**
+   fetches the ONNX models (~40 MB: crnn 4 MB, MiniLM int8 22.9 MB, tokenizer,
+   restorer, plus the 10.7 MB ORT wasm) and the app then asks the service worker
+   to cache them, so the next one works in airplane mode. Before that first scan
+   the app boots offline but cannot scan — it says so rather than hanging.
 4. Tap the **Share** button (square with an arrow pointing up).
 5. Tap **Add to Home Screen** → **Add**.
 6. Open SightLine from your home screen.
@@ -131,7 +134,7 @@ encoder from the pipeline entirely.
 
 1. Open **Chrome** on the phone.
 2. Go to `http://<computer-ip>:8080`.
-3. Wait for **`ENGINE READY`**.
+3. Wait for the badge to read **`ONLINE — OFFLINE-READY`**, then scan one document (the first scan downloads the models).
 4. Tap the **⋮ menu** → **Install app** (or **Add to Home screen**).
 5. Launch from your home screen.
 
@@ -151,7 +154,7 @@ encoder from the pipeline entirely.
 
 Do this on both phones during rehearsal:
 
-1. Load the app, wait for `ENGINE READY`.
+1. Load the app, wait for `ONLINE — OFFLINE-READY`.
 2. Scan one document successfully.
 3. **Turn on airplane mode.**
 4. Force-quit the app (swipe it away from recents).
@@ -199,7 +202,7 @@ in a public demo or a recorded video.
 | `ENGINE` never reaches READY | Precache failed | Hard-reload; check console for failed `cache.addAll` |
 | Blank white page | Serving from the wrong directory | Must serve `app/`, not the repo root |
 | Works online, fails offline | Service worker not installed | Confirm HTTPS/localhost; unregister old SW in DevTools |
-| OCR very slow first run | Downloading language data | Wait once, then cache persists |
+| OCR very slow first run | Downloading the ONNX models (~40 MB) | Wait once; the service worker caches them after the first scan |
 | Install prompt absent | iOS needs Safari; Android needs Chrome | Not Firefox, not in-app browsers |
 | No sound | Device muted / TTS not downloaded | Check media volume; some Android devices download voices on first use |
 

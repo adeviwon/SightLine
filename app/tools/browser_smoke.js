@@ -23,31 +23,9 @@ const os = require("os");
 
 const APP = path.resolve(__dirname, "..");
 
-/**
- * Find the Chromium Playwright has actually installed.
- *
- * The revision in the path changes every time Playwright updates (the old
- * hardcoded chromium-1243 vanished when a newer Playwright pruned it, and this
- * script then failed with ENOENT on a browser that was never going to exist
- * again). CHROME_BIN still wins when set.
- */
-function findChrome() {
-  if (process.env.CHROME_BIN) return process.env.CHROME_BIN;
-  const root = process.env.PLAYWRIGHT_BROWSERS_PATH
-    || path.join(os.homedir(), ".cache", "ms-playwright");
-  try {
-    const versions = fs.readdirSync(root)
-      .filter((d) => /^chromium-\d+$/.test(d))
-      .sort((a, b) => Number(b.split("-")[1]) - Number(a.split("-")[1]));
-    for (const v of versions) {
-      const bin = path.join(root, v, "chrome-linux64", "chrome");
-      if (fs.existsSync(bin)) return bin;
-    }
-  } catch (e) { /* fall through to the legacy default */ }
-  return "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome";
-}
-
-const CHROME = findChrome();
+// Where Chromium lives is decided by the Playwright install, not by this file;
+// see chrome_path.js for why that is a shared module and not a literal.
+const CHROME = require("./chrome_path.js")();
 
 const MIME = {
   ".html": "text/html; charset=utf-8",

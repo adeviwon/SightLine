@@ -44,7 +44,7 @@ Built for the **Imperial College London Hackathon (Hong Kong & Macau)**.
    │              undoes motion blur, sensor noise, shadow   │
    │              + CLAHE contrast                            │
    ├─────────────────────────────────────────────────────────┤
-   │ 2. READ      Tesseract OCR (WASM, offline)              │
+   │ 2. READ      our own CRNN+CTC (ONNX, WASM, offline)     │
    ├─────────────────────────────────────────────────────────┤
    │ 3. UNDERSTAND  MiniLM classifier → document type        │
    │                + field extraction (dosages, amounts,    │
@@ -90,14 +90,21 @@ number.**
 | Zero network calls after install | ✅ verified by static audit + source |
 | Reproducible evaluation | ✅ fixed — `bash run.sh repro-check` |
 | Document classification ≥ 95% | ✅ **95.0% mean** across 5 seeds (min 91.7%, CI 86.7–100%), macro F1 0.947 |
-| **End-to-end text accuracy on blurry images ≥ 95%** | ❌ **62.2% best arm** — reproducible, and short of target |
+| **End-to-end text accuracy on blurry images ≥ 95%** | ❌ **62.2% best arm — and that arm is Tesseract**, see below — reproducible, and short of target |
 
-The end-to-end number is the real one, and it is not close to 95%. On a clean
-scan the app recovers every field. On a realistic handheld capture it usually
-does not: `handheld_light`, `handheld_heavy` and `low_light` score **0% on
-every preprocessing arm**. A typical failure is one wrong digit —
-`2024-CV-00456` read as `2024-CV-00458` — which is why the app **omits a field
-it cannot read** rather than speaking a wrong one.
+The end-to-end number is the real one, and it is not close to 95%. Two caveats
+that belong next to it: the arm it comes from is **Tesseract, which the app no
+longer ships** (`ml/src/evaluate.py` still calls pytesseract — see
+[`docs/03_RESULTS.md`](docs/03_RESULTS.md) section 5), and the shipped
+recogniser's own measured numbers are the receipt line figures in
+`docs/03_RESULTS.md` section 3. On the browser pipeline's own rendered samples
+(`bash run.sh ios-full`), a clean render reads at high confidence but lossily —
+`ACCOUNT NUMBER 40218877` comes back as `ICOUNT NUMBER 4021887` — so the field
+extractor declines rather than guesses. On a realistic handheld capture it
+usually recovers nothing at all: `handheld_light`, `handheld_heavy` and
+`low_light` score **0% on every preprocessing arm**. A typical failure is one
+wrong digit — `2024-CV-00456` read as `2024-CV-00458` — which is why the app
+**omits a field it cannot read** rather than speaking a wrong one.
 
 Where the restorer genuinely helps, measured per profile:
 
@@ -130,7 +137,7 @@ sightline/
 │   ├── index.html          #   UI
 │   ├── js/                 #   pipeline, ONNX inference, fallbacks
 │   ├── sw.js               #   service worker — the offline guarantee
-│   └── vendor/             #   Tesseract WASM + language data (vendored)
+│   └── vendor/             #   ORT wasm + pdf.js (vendored, no OCR library)
 ├── ml/
 │   ├── src/
 │   │   ├── corpus.py       # document corpus + OCR-noise augmentation

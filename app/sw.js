@@ -24,7 +24,7 @@
  * sightline-* cache, so old wasm never lingers.
  */
 
-const VERSION = "v1.1.3";
+const VERSION = "v1.1.4";
 const CACHE = "sightline-" + VERSION;
 
 /** Everything required for a scan to complete with no network. */

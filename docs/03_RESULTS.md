@@ -339,12 +339,20 @@ Corpus seeder: `zlib.crc32/seedutil-v1`
 | `tokenizer.json` | 695 KB |
 | **total ML payload** | **26880 KB (26.3 MB)** |
 
-**Tesseract and its 52.2 MB of language data are still shipped and still
-called by `app/js/pipeline.js`.** Removing them is the single largest payload
-win available (~52 MB, a 66% reduction) and is not yet done. The custom
-recogniser replaces it in principle and the decoder is verified against the
-Python reference, but the browser pipeline has not been migrated, so the
-shipped app still depends on Tesseract working.
+**Tesseract and its 41.1 MB of payload were REMOVED** — `app/vendor/tesseract`
+and `app/vendor/tessdata` are gone, `bundle-check` fails the build if any of four
+routes bring them back, and the browser pipeline calls our own CRNN through
+`onnxruntime-web` (`app/js/ocr_engine.js`). This section used to say the
+opposite; it was stale.
+
+**What the historical numbers in section 4 actually measure.** The arms in
+`ml/src/evaluate.py` still call **pytesseract** (`ocr()` / `ocr_conf()`), so the
+field/word accuracy figures produced by `bash run.sh eval` describe Tesseract,
+not the recogniser the app ships. Read them as "what a mature OCR engine scores
+on these renders", not as the product's accuracy. The shipped recogniser's own
+numbers come from `bash run.sh eval-ocr` (SROIE word crops + 193 hand-photographed
+pages, detector included) and are the 71.6% line recall / 58.4% CER / 2.4%
+line-exact in section 3. Migrating `evaluate.py` to the CRNN is still open work.
 
 ## 6. Test suite
 
@@ -352,7 +360,9 @@ shipped app still depends on Tesseract working.
 bash run.sh test
 ```
 
-**258 tests pass.** The ones that matter most:
+**278 tests pass, 1 xfailed** (a documented detector defect on ink-saturated
+pages, `strict=True`, which fails loudly when someone fixes it). The ones that
+matter most:
 
 | test file | what it proves |
 |---|---|

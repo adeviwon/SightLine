@@ -194,6 +194,48 @@ const g2 = group("Restorer classical fallback - evaluate.arm_classical");
   try { await SightLineRestorer.armRestorerClahe(gray, {}); } catch (e) { threw2 = true; }
   eq(g2, "armRestorerClahe() never throws either", threw2, false);
 
+  // ── Skew estimation: CORRECTNESS, not just "returns a number" ─────────────
+  // A page that is perfectly axis-aligned must estimate ~0. preprocess()
+  // rotates by whatever this returns, so a false angle destroys a clean scan —
+  // and that is exactly what it did: 9 degrees on an unskewed render, which
+  // rotated the page and left OCR at 0% confidence. The old score was a raw
+  // count of dark samples along the slanted line, which grows with however many
+  // samples an angle happens to keep in bounds, so it drifted to whichever
+  // angle sampled most rather than the one that straightened the text.
+  const gSkew = group("Skew estimation — projection profile");
+  function textPage(pw, ph, deg) {
+    const c2 = document.createElement("canvas");
+    c2.width = pw; c2.height = ph;
+    const cx = c2.getContext("2d", { willReadFrequently: true });
+    cx.fillStyle = "#f8f8f8"; cx.fillRect(0, 0, pw, ph);
+    cx.fillStyle = "#1c1c1c";
+    cx.font = "16px sans-serif";
+    if (deg) {
+      cx.save();
+      cx.translate(pw / 2, ph / 2);
+      cx.rotate((deg * Math.PI) / 180);
+      cx.translate(-pw / 2, -ph / 2);
+    }
+    for (let i = 0; i < 14; i++) cx.fillText("Account Number 40218877 line " + i, 30, 40 + i * 26);
+    if (deg) cx.restore();
+    return c2;
+  }
+  const cleanPage = textPage(900, 460, 0);
+  const cleanSkew = SightLine.estimateSkew(cleanPage);
+  check(gSkew, "axis-aligned page estimates 0 skew (got " + cleanSkew + ")",
+    cleanSkew, (v) => Math.abs(v) < 0.5);
+
+  // The tilt cases live in selftest.html, not here: this harness's canvas shim
+  // makes rotate() a no-op by design, so a "tilted" page is not tilted in Node
+  // and the assertion would be testing the shim. See the browser battery.
+
+  const flat = document.createElement("canvas");
+  flat.width = 64; flat.height = 64;
+  const fctx = flat.getContext("2d", { willReadFrequently: true });
+  fctx.fillStyle = "#fff"; fctx.fillRect(0, 0, 64, 64);
+  check(gSkew, "a blank page estimates 0 (no ink to align)",
+    SightLine.estimateSkew(flat), (v) => v === 0);
+
   for (const g3 of groups) {
     const bad = g3.rows.filter((r) => !r.pass);
     console.log((bad.length ? "FAIL" : "ok  ") + "  " + g3.name +

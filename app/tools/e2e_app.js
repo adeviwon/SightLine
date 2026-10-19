@@ -4,8 +4,8 @@
  *
  * Run: SMOKE_BASE=http://localhost:8000/ node e2e_app.js [imagepath]
  */
-const { chromium } = require("playwright-core");
-const EXE = "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome";
+const { chromium } = require("./pw_core.js")();   // see pw_core.js: not in node_modules here
+const EXE = require("./chrome_path.js")();
 const BASE = process.env.SMOKE_BASE || "https://adeviwon.github.io/SightLine/";
 const IMG = process.argv[2] || "/tmp/test_document.png";
 

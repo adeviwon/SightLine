@@ -19,11 +19,15 @@ const { spawn } = require("child_process");
 const APP = path.resolve(__dirname, "..");
 const SAMPLES = "/tmp/sightline_samples";
 const MANIFEST = path.join(SAMPLES, "manifest.json");
-const CHROME = process.env.CHROME_BIN
-  || "/home/ubuntu/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome";
+const CHROME = require("./chrome_path.js")();
 
 const MIME = {
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
+  // .mjs MUST be a JavaScript MIME type: the app dynamic-imports
+  // vendor/ort/ort.min.mjs, and a browser refuses to execute a module served as
+  // application/octet-stream. Its absence here made every scan in this harness
+  // fail with "Failed to fetch dynamically imported module".
+  ".mjs": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8", ".png": "image/png",
   ".wasm": "application/wasm", ".gz": "application/gzip", ".md": "text/markdown; charset=utf-8",
   ".ico": "image/x-icon",
@@ -87,7 +91,17 @@ function check(desc, ok, detail) {
     await cdp.send("Runtime.enable");
     await cdp.send("Page.enable");
     await cdp.send("Page.navigate", { url: base + "/index.html" });
-    await new Promise((r) => setTimeout(r, 3500));
+    // Wait for the CONTROLLER, not for a wall-clock guess. 3.5s was enough on a
+    // warm machine and too short on a cold one, and the failure mode was a
+    // misleading TypeError deep in the eval below.
+    let appReady = false;
+    for (let i = 0; i < 60 && !appReady; i++) {
+      try {
+        appReady = await cdp.eval("typeof SightLineApp === 'object'");
+      } catch (e) { /* page still navigating */ }
+      if (!appReady) await new Promise((r) => setTimeout(r, 500));
+    }
+    if (!appReady) throw new Error("the app controller never appeared on the page");
 
     for (const s of samples) {
       const name = path.basename(s.file);
@@ -97,8 +111,21 @@ function check(desc, ok, detail) {
         const img = new Image();
         img.src = "/sample/${name}";
         await img.decode();
-        const res = await SightLineApp.runScan(img, "${name}");
+        let res = null, scanErr = "";
+        try {
+          res = await SightLineApp.runScan(img, "${name}");
+        } catch (e) {
+          scanErr = String((e && e.message) || e);
+        }
         const box = document.getElementById("warning-box");
+        if (!res) {
+          // runScan's own catch returns lastResult, which is null on a scan
+          // that threw — so a null result means the SCAN failed. Report that,
+          // instead of dying on res.ocrConfidence and blaming the harness.
+          const banner = document.getElementById("error-banner");
+          const shown = banner && !banner.hidden ? (banner.textContent || "").trim() : "";
+          return JSON.stringify({ scanError: scanErr || shown || "scan produced no result" });
+        }
         return JSON.stringify({
           ocrConf: res.ocrConfidence,
           category: res.category,
@@ -130,6 +157,11 @@ function check(desc, ok, detail) {
         });
       })()`, 300000);
       const r = JSON.parse(out);
+      if (r.scanError) {
+        fail++;
+        console.log("FAIL  " + name + ": " + r.scanError);
+        continue;
+      }
       const warned = r.warnings.length > 0;
       rows.push({ name, r, warned });
 

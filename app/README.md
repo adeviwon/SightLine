@@ -217,7 +217,7 @@ app/
 │   └── ORCHESTRATION.md  which Python file each module mirrors
 ├── models/ort.json     availability manifest for the optional models
 ├── assets/             icons (180/192/512)
-├── vendor/             tesseract.js + wasm cores, eng.traineddata.gz, pdf.js
+├── vendor/             ort wasm runtime + pdf.js (no OCR library), vendored
 └── tools/              headless test harnesses
 ```
 

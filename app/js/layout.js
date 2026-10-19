@@ -261,22 +261,55 @@ export function detectLines(gray, w, h, opts = {}) {
 }
 
 /**
- * Convert one detected box to the crop array the recogniser consumes.
+ * Crop one detected line for the recogniser.
  *
- * SCALES PROPORTIONALLY, THEN PADS. Matches build_handheld.prepare(): a crop
- * is fitted inside (maxW, 32) with a uniform scale and padded afterwards.
- * Resizing to a fixed 32-row strip while keeping full width, then truncating,
- * squashes characters horizontally -- and worse, labels the full line against
- * the pixels of only its first 320 columns.
+ * WHICH REFERENCE GOVERNS THIS, because the repo contains two that disagree:
+ *
+ *   build_dataset.crop_to_array — the SHIPPED model's training path. Word crops,
+ *     `scale = CROP_H / h`, resized to exactly 32 px tall, width clamped to
+ *     [16, 320]. This is what the ONNX graph has actually seen.
+ *   eval_ocr.py                — serving-time evaluation: resizes every band to
+ *     CROP_H, i.e. exactly the training geometry.
+ *   build_handheld.prepare     — the REJECTED real-photo experiment. Fits the crop
+ *     inside (max_w, 32) with a uniform scale and pads the remainder, because
+ *     there the label is a whole transcript line and truncating it would train
+ *     the model to hallucinate. This function used that rule; it is the wrong one
+ *     for serving the shipped model.
+ *
+ * SCALE BY HEIGHT, not "contain inside the box". The contain fit
+ * (`min(maxW/bw, cropH/bh)`) let the WIDTH decide the scale on a wide line, so
+ * text arrived 12–20 px tall inside the 32 px tensor with the unfilled rows left
+ * as 0 — and 0 is INK (not paper) once `recognizer.buildInput` maps grey to
+ * [-1, 1]. Measured on the repo's own studio_clean renders that read at 57–87%
+ * confidence with the WRONG values. Pinned by tools/crop_contract.js and the
+ * `geometry` suite in tools/ios_full_check.js.
+ *
+ * The width clamp and the horizontal squeeze past it are NOT part of that bug:
+ * training clamps at realdata.MAX_W=320 the same way, and the caller passes the
+ * ONNX graph's fixed EXPORT_W=256 because `aten::lstm` cannot export a dynamic
+ * width. Splitting wider lines into chunks and concatenating the decodes is a
+ * real improvement, but it is a pipeline change (where to cut, what overlap,
+ * how to rejoin), not a crop-rule fix.
+ *
+ * @param {Uint8Array} gray
+ * @param {number} w  page width (gray is w*h, row-major)
+ * @param {{x0:number,y0:number,x1:number,y1:number}} box
+ * @param {number} cropH  the height the model expects (recognizer.CROP_H)
+ * @param {number} maxW   the width cap — pass recognizer.EXPORT_W for the graph
+ * @returns {{data: Uint8Array, width: number}} data is cropH * width, row-major
  */
 export function cropForRecognizer(gray, w, box, cropH = 32, maxW = 320) {
   const bh = box.y1 - box.y0;
   const bw = box.x1 - box.x0;
-  if (bh <= 0 || bw <= 0) return { data: new Uint8Array(cropH * maxW), width: maxW };
+  // Degenerate box: paper, not ink. An all-zero crop is a BLACK RECTANGLE in the
+  // model's [-1,1] space (0 -> -1), which invites hallucinated characters.
+  if (bh <= 0 || bw <= 0) {
+    return { data: new Uint8Array(cropH).fill(255), width: 1 };
+  }
 
-  const scale = Math.min(maxW / bw, cropH / bh);
+  const scale = cropH / bh;                                   // height-first
   const nw = Math.max(1, Math.min(maxW, Math.round(bw * scale)));
-  const nh = Math.max(1, Math.min(cropH, Math.round(bh * scale)));
+  const nh = cropH;                                           // always full height
 
   const out = new Uint8Array(cropH * nw);
   // Box filter down to nw x nh, averaging the source footprint of each dest px.

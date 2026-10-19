@@ -10,9 +10,9 @@
  * Safari's engine, Chromium is the sanity check that a failure is not
  * engine-specific.
  *
- * Fixtures (regenerate with the commands in the header of each suite):
- *   /tmp/sightline_samples/*   bash run.sh py app/tools/render_samples.py
- *   /tmp/blank.png /tmp/noise.png /tmp/letter.pdf   bash run.sh py /tmp/mkfixtures.py
+ * Fixtures (regenerate before running):
+ *   /tmp/sightline_samples/*       bash run.sh py app/tools/render_samples.py
+ *   blank/noise/letter.pdf         bash run.sh py app/tools/make_fixtures.py
  *
  * Usage: node tools/ios_full_check.js [--engine=webkit|chromium|both] [--suites=a,b,c]
  * Exit code 0 only when every check in every suite passed.
@@ -29,32 +29,9 @@ const SAMPLES = "/tmp/sightline_samples";
 const TIMEOUT_DONE = 240000;
 
 // ── playwright-core / browsers ───────────────────────────────────────────────
-const PW_CANDIDATES = [
-  process.env.PW_CORE,
-  "/home/ubuntu/.npm/_npx/e41f203b7505f1fb/node_modules/playwright-core",
-  "/home/ubuntu/OpenMAIC/node_modules/.pnpm/playwright-core@1.58.2/node_modules/playwright-core",
-].filter(Boolean);
+const pw = require("./pw_core.js");
+const chromeBin = require("./chrome_path.js");
 
-function pw() {
-  const hit = PW_CANDIDATES.find((p) => fs.existsSync(p));
-  if (!hit) throw new Error("playwright-core not found; set PW_CORE");
-  return require(hit);
-}
-
-/** Newest installed Playwright Chromium (revisions change; never hardcode). */
-function chromeBin() {
-  if (process.env.CHROME_BIN) return process.env.CHROME_BIN;
-  const root = process.env.PLAYWRIGHT_BROWSERS_PATH
-    || path.join(os.homedir(), ".cache", "ms-playwright");
-  const versions = fs.readdirSync(root)
-    .filter((d) => /^chromium-\d+$/.test(d))
-    .sort((a, b) => Number(b.split("-")[1]) - Number(a.split("-")[1]));
-  for (const v of versions) {
-    const bin = path.join(root, v, "chrome-linux64", "chrome");
-    if (fs.existsSync(bin)) return bin;
-  }
-  throw new Error("no Playwright Chromium on disk");
-}
 
 // ── static server over app/ ──────────────────────────────────────────────────
 const MIME = {
@@ -150,7 +127,10 @@ async function scanFile(page, file) {
       error: b && !b.hidden ? (b.textContent || "").trim() : "",
       // understand() deliberately does not return the raw text; the OCR text
       // the user can inspect lives in the #ocr-text element.
+      // The app writes the literal placeholder into #ocr-text when nothing was
+      // recognised, so a length check ALONE passes on an empty read.
       ocrText: ocrEl ? (ocrEl.textContent || "").trim() : "",
+      ocrRead: !!ocrEl && !/^\(no text recognised\)$/.test((ocrEl.textContent || "").trim()),
       lastResult: lr ? {
         category: lr.category, categoryLabel: lr.categoryLabel,
         fields: (lr.fields || []).map((f) => (f && (f.value || f.text || f.raw)) || String(f)),
@@ -218,7 +198,7 @@ suite("boot — shell, service worker, layout, a11y", async (ctx, R) => {
     return { scope: reg && reg.scope, active: !!(reg && reg.active), keys };
   });
   R.check("service worker registered and active", !!sw.active, JSON.stringify(sw));
-  R.check("cache is the shipped VERSION", sw.keys.includes("sightline-v1.1.3"), JSON.stringify(sw.keys));
+  R.check("cache is the shipped VERSION", sw.keys.includes("sightline-v1.1.4"), JSON.stringify(sw.keys));
   R.check("no page errors on boot", ctx.pageErrors.length === 0, ctx.pageErrors.join(" | "));
   R.check("no console errors on boot", ctx.consoleErrors.length === 0, ctx.consoleErrors.join(" | "));
   R.check("server served every requested asset", ctx.serverState.notFound.length === 0,
@@ -252,7 +232,8 @@ suite("scan — studio_clean documents (3 types)", async (ctx, R) => {
     const got = (r.lastResult.fields || []).join(" ").toLowerCase();
     R.check(doc + ": recovers at least one ground-truth field (" + want.join("/") + ")",
       want.some((w) => got.includes(w.replace(/[,.]/g, "")) || got.includes(w)), got.slice(0, 120));
-    R.check(doc + ": OCR text produced", r.ocrText.length > 10, "ocr chars=" + r.ocrText.length);
+    R.check(doc + ": OCR text produced", r.ocrRead && r.ocrText.length > 10,
+      "ocr chars=" + r.ocrText.length + " read=" + r.ocrRead);
     R.check(doc + ": OCR confidence sane (0..1)", r.lastResult.ocrConfidence > 0 && r.lastResult.ocrConfidence <= 1,
       r.lastResult.ocrConfidence);
     R.check(doc + ": no page errors during scan", ctx.pageErrors.length === 0, ctx.pageErrors.join(" | "));
@@ -368,7 +349,8 @@ suite("pdf — a letter that arrives as a PDF", async (ctx, R) => {
   R.check("pdf scan completed without error", !r.timedOut && !r.error,
     r.timedOut ? "timed out" : r.error);
   if (r.lastResult) {
-    R.check("pdf produced OCR text", r.ocrText.length > 10, "ocr chars=" + r.ocrText.length);
+    R.check("pdf produced OCR text", r.ocrRead && r.ocrText.length > 10,
+      "ocr chars=" + r.ocrText.length + " read=" + r.ocrRead);
     R.check("pdf scan is labelled as a file, not a camera frame",
       /pdf|file/i.test(r.lastResult.sourceName + " " + (r.lastResult.pageNote || "")),
       r.lastResult.sourceName + " / " + r.lastResult.pageNote);

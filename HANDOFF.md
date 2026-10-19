@@ -114,23 +114,41 @@ real-photo corpus — which is ranked task 1 above.
 
 ## 4. What would actually move the needle, ranked
 
-0. **The recogniser is fed crops the model was never trained on.** Measured with
-   `bash run.sh ios-full` ("geometry" suite): on a 900×580 rendered page the
-   detector returns lines 10–20 px tall, and `layout.js cropForRecognizer` uses
-   `scale = min(maxW/bw, cropH/bh)`, so a wide line is scaled by WIDTH and lands
-   **12–20 px tall inside the 32 px tensor** (17/17 crops on the banking sample;
-   median 13 px), with the unfilled rows left as 0 — and `buildInput` maps 0 to
-   −1 = ink, not paper. Both reference implementations do the opposite:
-   `build_dataset.crop_to_array` uses `scale = CROP_H / h` and `eval_ocr.py`
-   resizes the band to `CROP_H` — every crop is exactly 32 px tall. The visible
-   consequence on the repo's own studio_clean renders (where `evaluate.py` scores
-   field accuracy 1.0): the app reads them at 57–87% OCR confidence with the
-   WRONG values — banking returns two 12-digit numbers instead of 40218877 /
-   40-11-04 — i.e. confidently wrong, which the confidence gate cannot catch.
-   Fix is real work, not a one-liner: scale to height 32 like the reference, and
-   because `crnn.onnx` width is FIXED at 256, split lines wider than 256 into
-   overlapping chunks and concatenate the CTC decodes instead of squeezing them.
-   Validate with the field-recovery metric the same suite already computes.
+0. **The deskew estimator was returning garbage angles on every scan — FIXED;
+   the crop rule was feeding the recogniser squashed text — FIXED. What is left
+   is the graph's fixed width and the model's own quality.**
+   Three separate defects, all found by `bash run.sh ios-full` and its unit
+   harnesses, all now green:
+   - `pipeline.estimateSkew` scored each angle by a RAW COUNT of dark samples
+     along the sheared line. That number is not comparable across angles, and
+     every tie went to the sweep's first angle: a blank page scored **-10**, an
+     axis-aligned page **-8**, a 4° page **-7**. `preprocess()` rotates by
+     whatever it returns, so **every scan was deskewed by a false angle** — which
+     is why pages that read fine in the Python reference came back as confident
+     nonsense here. It now uses a normalised projection-profile score (mean
+     square row sum per ink sample) with the **row stride at 1** — sampling every
+     3rd row put the ink on a lattice that only aligns at 0°, so a visibly tilted
+     page measured as "clean". Pinned by the "Skew estimation" group in
+     `selftest.html` (5 assertions, previously the only skew test asserted
+     `typeof === "number"`).
+   - `layout.cropForRecognizer` used a CONTAIN fit (`min(maxW/bw, cropH/bh)`), so
+     a wide line arrived **12–20 px tall inside the 32 px tensor** with the
+     unfilled rows left as 0 — and 0 is INK in `buildInput`'s [-1,1] mapping.
+     Both references (`build_dataset.crop_to_array`, `eval_ocr.py`) resize every
+     crop to exactly `CROP_H`. Fixed to scale by height; pinned by
+     `tools/crop_contract.js` (9 checks).
+   - **Chunking was tried and REVERTED on measurement.** Cutting long lines into
+     contiguous windows at true aspect ratio read them WORSE ("HSBC UK BANK PLC"
+     98% squeezed vs "MSEC UNBANE L" 54% chunked) and took the suite from 5
+     failures to 7. The negative result is recorded in `tools/crop_contract.js`.
+   What remains, ranked: (1) **the ONNX graph is fixed at 256 px wide** while
+   training clamps word crops at 320 and `eval_ocr.py` keeps full width, so a
+   full-width line is squeezed horizontally by ~3.5x — re-exporting at 320 is the
+   obvious next experiment; (2) the recogniser's own quality (71.6% line recall,
+   58.4% CER, 2.4% line-exact — `bash run.sh eval-ocr`); (3) **`evaluate.py`
+   still calls pytesseract**, so every field/word number in `artifacts/` and
+   docs 03/04 describes Tesseract, not what ships — migrating it to the CRNN is
+   open work and the docs now say so.
 1. **A medicine-label corpus.** Everything measured was measured on receipts.
    The hackathon submission says this in its own words — transfer to medicine
    labels is an assumption, not a result. Consent photographs + line labels is
@@ -166,7 +184,20 @@ lucky seed. Trust the rerun.
   (`app/tools/ios_compat_scan.js`) followed by the whole app — including real
   `crnn.onnx` inference — driven in Playwright **WebKit**, the engine iOS
   Safari uses (`app/tools/ios_webkit_check.js`). WebKit is not optional
-  coverage: Blink passes code WebKit rejects.
+  coverage: Blink passes code WebKit rejects. `bash run.sh ios-full` is the
+  broader battery (13 suites, both engines, ~15 min): the real controller, the
+  failure paths, offline, the no-SIMD device, crop geometry.
+- **`bash run.sh ios-full` needs fixtures**: `bash run.sh py
+  app/tools/render_samples.py` (the 12 rendered samples + manifest) and
+  `bash run.sh py app/tools/make_fixtures.py` (blank/speckle/PDF).
+- **Unit gates that must stay green**: `node app/tools/crop_contract.js`
+  (crop geometry), `node app/tools/recognizer_parity.js` (CTC decoder vs
+  Python), `node app/tools/gating_parity.js`, `node app/tools/warning_gate.js`
+  (the honesty invariants on all 12 samples), `node app/tools/e2e_paths.js`
+  (refusal + PDF paths, needs a local server via `SMOKE_BASE`).
+- **Never hardcode a Playwright browser path** — use `tools/chrome_path.js`,
+  and `tools/pw_core.js` for playwright-core itself. A Playwright update prunes
+  revisions it does not own and a literal path then fails with ENOENT forever.
 - **Never ship a regex lookbehind.** It is a PARSE-TIME `SyntaxError` on
   Safari < 16.4, and `pipeline.js`/`tts.js` are classic scripts, so one such
   token leaves `window.SightLine` / `window.TTS` undefined and the app dead on

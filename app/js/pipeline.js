@@ -405,8 +405,24 @@ const SightLine = (() => {
   }
 
   /**
-   * estimateSkew(): two-stage projection-profile sweep — coarse ±10° @ 1°,
-   * refine ±1° @ 0.25°. Cheaper than minAreaRect and adequate for documents.
+   * estimateSkew(): the correction angle, or 0.
+   *
+   * PROJECTION-PROFILE SCORING. For each candidate angle the sampled ink is
+   * sheared onto a row axis and accumulated; the angle that straightens the text
+   * packs the ink into the fewest rows, so the score is the MEAN SQUARE row sum
+   * per ink sample — normalised, so angles that happen to sample more pixels are
+   * not rewarded for it.
+   *
+   * The previous score was the RAW COUNT of dark samples along the sheared line.
+   * That number is not comparable across angles (it grows with how many samples
+   * an angle keeps in bounds), and it left every tie to the sweep's first angle,
+   * so a blank page scored -10 and an axis-aligned page scored -8. preprocess()
+   * then rotated the page by that false angle: text that reads fine in the
+   * Python reference came back as confident nonsense here, on every scan.
+   * Pinned by the "Skew estimation" group in selftest.html.
+   *
+   * The sweep is the documented ±8 degrees (it used to go to ±10, past the range
+   * the deskew comments promise).
    */
   function estimateSkew(grayCanvas) {
     const w = grayCanvas.width, h = grayCanvas.height;
@@ -421,23 +437,51 @@ const SightLine = (() => {
     for (let i = 0; i < lum.length; i++) hist[lum[i]]++;
     const thresh = otsu(hist, lum.length);
 
-    let bestAngle = 0, bestScore = -1;
-    const sweep = (lo, hi, step) => {
-      for (let deg = lo; deg <= hi + 1e-9; deg += step) {
-        const tan = Math.tan((deg * Math.PI) / 180);
-        let score = 0;
-        for (let y = 2; y < h - 2; y += 4) {
-          for (let x = 8; x < w - 8; x += 6) {
-            const yy = y + Math.round(tan * x);
-            if (yy < 1 || yy >= h - 1) continue;
-            if (lum[yy * w + x] < thresh) score++;
+    // Headroom so a sheared sample is never dropped. Clipping samples out of
+    // range is what made the ORIGINAL score incomparable across angles; the
+    // offset makes the profile a fixed-size array with the same ink in it at
+    // every angle. The row asked about is `Math.round(y + tan*(x-mid)) + margin`.
+    const margin = Math.ceil(Math.tan((8 * Math.PI) / 180) * (w / 2)) + 2;
+    const rows = new Float64Array(h + 2 * margin);
+    const mid = w / 2;
+
+    // ROW STRIDE MUST BE 1. The row index IS the profile axis, so sampling every
+    // 3rd row puts the ink on a lattice that only lines up exactly at 0 degrees:
+    // a 4-degree tilt measured worse than no shear at all, and the estimator
+    // answered 0 for a page that was visibly tilted. The column stride is free
+    // to be >1 — it only thins each row's count by a constant.
+    function score(deg) {
+      rows.fill(0);
+      const tan = Math.tan((deg * Math.PI) / 180);
+      let ink = 0;
+      for (let y = 0; y < h; y++) {
+        const base = y * w;
+        for (let x = 4; x < w - 4; x += 6) {
+          if (lum[base + x] < thresh) {
+            rows[Math.round(y + tan * (x - mid)) + margin]++;
+            ink++;
           }
         }
-        if (score > bestScore) { bestScore = score; bestAngle = deg; }
       }
-    };
-    sweep(-10, 10, 1);
-    sweep(bestAngle - 1, bestAngle + 1, 0.25);
+      if (!ink) return 0;                    // nothing to align: every angle ties
+      let s = 0;
+      for (let i = 0; i < rows.length; i++) s += rows[i] * rows[i];
+      return s / ink;                        // concentration per ink sample
+    }
+
+    // best starts from 0 degrees, so a page with no structure keeps "no
+    // rotation" instead of the sweep's first angle (that is how a blank page
+    // used to come back as -10).
+    let bestAngle = 0, best = score(0);
+    for (let deg = -8; deg <= 8 + 1e-9; deg += 1) {
+      if (deg === 0) continue;
+      const s = score(deg);
+      if (s > best) { best = s; bestAngle = deg; }
+    }
+    for (let deg = bestAngle - 1; deg <= bestAngle + 1 + 1e-9; deg += 0.25) {
+      const s = score(deg);
+      if (s > best) { best = s; bestAngle = deg; }
+    }
     return Math.abs(bestAngle) < 0.5 ? 0 : bestAngle;
   }
 
