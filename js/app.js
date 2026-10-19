@@ -315,6 +315,7 @@
       });
 
       render(lastResult);
+      precacheModelsOnce();
       setProgress(100, "Done in " + (ms / 1000).toFixed(1) + "s");
       announce("Scan complete. " + lastResult.categoryLabel + ". " +
         lastResult.fields.length + " key details found. Press Read Aloud to hear the summary.");
@@ -412,6 +413,31 @@
     els.ocrText.textContent = r.ocrText || "(no text recognised)";
     els.btnSpeak.hidden = false;
     els.btnRetake.hidden = false;
+  }
+
+  /**
+   * After the FIRST successful scan, ask the service worker to put the ONNX
+   * models + runtime into its own cache.
+   *
+   * This is the difference between the documented offline promise and a broken
+   * one. A scan puts the models in the HTTP cache, but an HTTP cache is
+   * evictable and is not the offline guarantee; sw.js exposes
+   * `precache-optional` for exactly this and NOTHING called it, so an installed
+   * app that had scanned once still could not scan from a cold cache. (Verified
+   * by tools/ios_full_check.js: "cold install" before the call was added, and
+   * "models are in the service-worker cache after one scan" after.)
+   *
+   * Once per session: the SW writes the same bytes on a repeat, and this is not
+   * worth a progress UI.
+   */
+  let _optionalRequested = false;
+  function precacheModelsOnce() {
+    if (_optionalRequested) return;
+    _optionalRequested = true;
+    try {
+      const sw = navigator.serviceWorker && navigator.serviceWorker.controller;
+      if (sw) sw.postMessage({ type: "precache-optional" });
+    } catch (e) { /* no service worker: http:// on a LAN IP, or a first load */ }
   }
 
   function strengthWord(c) {
