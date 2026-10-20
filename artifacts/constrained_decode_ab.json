@@ -1,0 +1,82 @@
+{
+  "kind": "sort_code",
+  "allowed": "0123456789",
+  "beam": 1,
+  "ckpt": "/home/ubuntu/Projects/sightline/models/ocr/crnn_before_render.pt",
+  "sources": {
+    "sroie": {
+      "note": "SROIE held-out word-crop test split: 282 crops with an all-digit label",
+      "n": 282,
+      "rows": {
+        "unconstrained": {
+          "n": 282,
+          "exact": 235,
+          "exact_rate": 0.8333333333333334,
+          "ci": [
+            0.7854175109566297,
+            0.8722894148372367
+          ],
+          "cer": 0.08060606060606061,
+          "strict": 235
+        },
+        "digits-only": {
+          "n": 282,
+          "exact": 235,
+          "exact_rate": 0.8333333333333334,
+          "ci": [
+            0.7854175109566297,
+            0.8722894148372367
+          ],
+          "cer": 0.06,
+          "strict": 235
+        }
+      },
+      "paired": {
+        "both_right": 235,
+        "variant_only": 0,
+        "greedy_only": 0,
+        "both_wrong": 47,
+        "changed": 14,
+        "p_exact_mcnemar": 1.0,
+        "delta_pts": 0.0
+      }
+    },
+    "render-token-probe": {
+      "note": "constructed probe (NOT the frozen split): 335 all-digit token crops rendered by the render-corpus pipeline (capture.DOCS' 38 distinct all-digit values x 9 profiles x 3 scales)",
+      "n": 335,
+      "rows": {
+        "unconstrained": {
+          "n": 335,
+          "exact": 115,
+          "exact_rate": 0.34328358208955223,
+          "ci": [
+            0.2944730814111079,
+            0.3956476121519021
+          ],
+          "cer": 0.9069925322471147,
+          "strict": 114
+        },
+        "digits-only": {
+          "n": 335,
+          "exact": 118,
+          "exact_rate": 0.3522388059701492,
+          "ci": [
+            0.30302559098268306,
+            0.4048024915195834
+          ],
+          "cer": 0.6883910386965377,
+          "strict": 118
+        }
+      },
+      "paired": {
+        "both_right": 115,
+        "variant_only": 3,
+        "greedy_only": 0,
+        "both_wrong": 217,
+        "changed": 147,
+        "p_exact_mcnemar": 0.25,
+        "delta_pts": 0.8955223880596996
+      }
+    }
+  }
+}

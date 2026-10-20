@@ -90,3 +90,26 @@ def test_lexicon_includes_expected_field_tokens():
     for t in ("SORT", "CODE", "ACCOUNT", "NUMBER", "ENDING", "BALANCE",
               "DATE", "DOB", "PHARMACY", "PRESCRIPTION"):
         assert t in toks, t
+
+
+def test_domain_lines_reads_the_train_split_only(monkeypatch):
+    """The lexicon must not learn from val or TEST labels.
+
+    Measured leak: _domain_lines() called RC.load() with no split, so the domain
+    vocabulary and the field grammar were mined from all three splits. A field
+    spotter given the test strings it will be scored on reports a recall it did
+    not earn. The shipped vocabulary is a fixed product list, so train-only costs
+    nothing.
+    """
+    import field_lexicon as FL
+    import render_corpus as RC
+    seen = []
+
+    def fake_load(*args, **kwargs):
+        seen.append(kwargs.get("split"))
+        return {"labels": ["ACCOUNT NUMBER 40218877"]}
+
+    monkeypatch.setattr(RC, "load", fake_load)
+    FL._domain_lines()
+    assert seen, "the corpus was never read — the test is not exercising the call"
+    assert all(s == "train" for s in seen), f"splits read: {seen}"

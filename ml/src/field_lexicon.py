@@ -108,7 +108,15 @@ def _domain_lines():
         print("  (capture.DOCS unavailable: %s)" % e)
     try:
         import render_corpus as RC
-        d = RC.load()
+        # TRAIN ONLY. This used to call RC.load() with no split, so the domain
+        # lexicon and the field grammar were mined from train + val + TEST labels.
+        # Any field-grammar or labelling evaluation was then partly scoring itself
+        # against strings it had been given — the same leak class this repo's
+        # leakage tests exist for. The SHIPPED vocabulary does not need this
+        # corpus at all: it is the fixed product label set (37 labels in
+        # label_spot.py, traced to capture.DOCS), so restricting this to train
+        # costs the product nothing.
+        d = RC.load(split="train")
         lines.extend(str(x) for x in d["labels"])
     except Exception as e:                       # pragma: no cover - env dependent
         print("  (render corpus labels unavailable: %s)" % e)
