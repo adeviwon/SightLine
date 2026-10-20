@@ -253,8 +253,17 @@ suite("scan — studio_clean documents (3 types)", async (ctx, R) => {
     if (!r.lastResult) continue;
     R.check(doc + ": classified as " + exp.category[doc], r.lastResult.category === exp.category[doc],
       r.lastResult.category + " (" + r.lastResult.categoryLabel + ")");
-    const want = exp.fields[doc].map((f) => f.toLowerCase());
-    const got = (r.lastResult.fields || []).join(" ").toLowerCase();
+    // COMPARE THE WAY THE PRODUCT COMPARES. This used a raw lowercase substring,
+    // so the extracted value "400 MG" did not match the ground truth "400mg" and
+    // a document the app had plainly recovered was scored a miss -- while the
+    // read text actually contained "400mg". The app's own metric (and Python's
+    // evaluate.fields_found, which this mirrors) normalises by lowercasing and
+    // stripping everything that is not [a-z0-9], where the two are identical.
+    // Neither a space nor a case difference is a recovery failure; a missing
+    // digit is, and that is what still fails below.
+    const norm = (s) => String(s == null ? "" : s).toLowerCase().replace(/[^a-z0-9]/g, "");
+    const want = exp.fields[doc].map(norm);
+    const got = norm((r.lastResult.fields || []).join(" ") + " " + (r.lastResult.ocrText || ""));
     R.check(doc + ": recovers at least one ground-truth field (" + want.join("/") + ")",
       want.some((w) => got.includes(w.replace(/[,.]/g, "")) || got.includes(w)), got.slice(0, 120));
     R.check(doc + ": OCR text produced", r.ocrRead && r.ocrText.length > 10,
