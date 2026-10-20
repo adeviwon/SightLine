@@ -94,6 +94,73 @@ def test_date_rejects_a_non_date():
     assert not FP.validate("date", "40-11-04")[0]
 
 
+@pytest.mark.parametrize("value", [
+    "15 January 2024", "1 February 2024", "3 Mar 2026", "15 Jan 24",
+    "15 January, 2024", "15 january 2024", "1 FEBRUARY 2024", "15 jan 2024",
+    "29 February 2024", "15 Jan 79", "15 Jan 80", "15th January 2024",
+    "3rd Mar 26",
+])
+def test_date_accepts_long_form_month_name_dates(value):
+    """pipeline.js's own legal Date pattern emits these; refusing them was the
+    regression this validator had, turning a correctly-read value into a
+    refusal. They must validate as real calendar dates."""
+    assert FP.validate("date", value) == (True, "ok"), value
+
+
+@pytest.mark.parametrize("value", [
+    "31 February 2024", "32 Jan 2024", "15 Foo 2024", "29 February 2023",
+    "0 January 2024", "15 Janu 2024", "January 2024", "15January 2024",
+])
+def test_date_refuses_impossible_long_form_dates(value):
+    ok, why = FP.validate("date", value)
+    assert not ok, value
+    assert why == "not a calendar date"
+
+
+# ── the app's real PATTERNS outputs must never be refused for their shape ─────
+#
+# The table below is the VERBATIM output of app/js/pipeline.js extractFields()
+# over the three clean capture documents (ml/src/capture.py DOCS:
+# PRESCRIPTION, BANK_STATEMENT, LEASE_AGREEMENT) run through normalizeOCRText +
+# classify + extractFields — seventeen values the app speaks on a clean read
+# today. Every one of them is genuinely correct, so every one MUST validate; a
+# refusal here is exactly the regression that shipped '15 January 2024' and
+# '1 February 2024' as refusals. The kind is resolved the way the app would
+# (resolve_label on the label), so the test exercises the real routing too.
+
+APP_SPOKEN_VALUES = [
+    ("Dosage", "500 mg"),
+    ("Dosage", "400 mg"),
+    ("Dosage", "1200 mg"),
+    ("Frequency", "three times daily"),
+    ("Warning", "WARNING: may cause drowsiness"),
+    ("Warning", "Do not drive or operate machinery"),
+    ("Warning", "Keep out of reach of children"),
+    ("Patient", "Jane Doe"),
+    ("Account Number", "40218877"),
+    ("Sort Code", "40-11-04"),
+    ("Card Ending", "4521"),
+    ("Case Number", "2024-CV-00456"),
+    ("Date", "15 January 2024"),
+    ("Date", "1 February 2024"),
+    ("Clause", "3.2"),
+    ("Clause", "5.1"),
+    ("Clause", "7.4"),
+]
+
+
+def test_the_apps_seventeen_spoken_values_are_never_refused():
+    """A value the app legitimately reads must never be refused for its SHAPE."""
+    assert len(APP_SPOKEN_VALUES) == 17
+    refused = []
+    for label, value in APP_SPOKEN_VALUES:
+        kind = FP.resolve_label(label)[1]
+        ok, why = FP.validate(kind, value)
+        if not ok:
+            refused.append((label, value, kind, why))
+    assert not refused, "the app speaks these values but the guard refuses them: %r" % refused
+
+
 def test_money_accepts_signs_symbols_and_iso_pairs():
     for v in ("2,500.00", "£2,500.00", "GBP -1,100.00", "GBP +12.40", "-200.00",
               "2500", "$1,204.33", "EUR 99"):

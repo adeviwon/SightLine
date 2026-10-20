@@ -15,6 +15,17 @@ The assumption it guards is the load-bearing one behind exporting at a fixed
 in padded regions, so the browser's right-pad-and-trim cannot invent
 characters. Nothing else in the codebase verifies that.
 
+IT WAS FALSE. 3 of the 4 parametrisations failed: a 2-layer BI-LSTM's backward
+pass starts at the right edge of the padded tensor, so the padding moves the
+hidden states over the CONTENT too — the valid-region logits differ by up to
+15.3, and truncating the decode to the content's frame count (which the test
+already did) only removes TRAILING characters, never the perturbation.
+The fix (ml/src/fix_padding.py) is to stop padding: the recogniser is exported
+with a dynamic width axis, so every crop is served at its own width, which is
+the condition training used. The parametrised test below now runs the serve
+helper rather than a hard-coded 256, and the padded path it replaced is kept
+measurable in test_fix_padding.test_fixed_width_padding_changes_the_decode.
+
 Run:  bash run.sh test
 """
 
@@ -29,6 +40,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 import export_onnx as X                        # noqa: E402
+import fix_padding as FP                       # noqa: E402
 import realdata as R                          # noqa: E402
 from ocr_model import build as build_model     # noqa: E402
 
@@ -173,14 +185,27 @@ def test_padding_a_real_crop_does_not_change_its_decode(content_w):
         return t[None, None] if t.ndim == 2 else t
 
     with torch.no_grad():
-        padded = np.zeros((R.CROP_H, 256), np.float32)
-        padded[:, :content_w] = crop
-        # Model output is [B, T, C]. Indexing [0] gives [T, C], so argmax(-1)
-        # ALONE reduces the class axis. The extra [0] here reduced it a second
-        # time to a scalar, and decode_greedy then iterated a 0-d array.
         a = decode_greedy(m(to_batch(crop))[0].argmax(-1).numpy())
-        b = decode_greedy(m(to_batch(padded))[0].argmax(-1).numpy(),
-                          limit=content_w // 8)
+        # THE SERVE PATH, stated as the padded-equivalent path. graph_w=None
+        # means the DYNAMIC-width graph, so the crop is fed at its own width and
+        # there is no padding to perturb the bidirectional pass.
+        #
+        # This used to build a fixed [32, 256] zero-padded tensor and decode
+        # `limit=content_w // 8`. That failed on 3 of 4 widths, and the reason
+        # matters: the limit is already applied there, so the divergence was NOT
+        # trailing characters. It was the valid region itself — a 2-layer
+        # BI-LSTM's backward pass starts at the RIGHT EDGE, i.e. inside the
+        # padding, and moves the hidden states over the content (measured max
+        # |Δ| over the valid frames: 9.10 at content_w=64, 15.28 at 200). So the
+        # assertion below is paired with a shape assertion: padding factors out
+        # only if the served tensor is exactly as wide as the content, and
+        # test_fix_padding.test_fixed_width_padding_changes_the_decode keeps the
+        # padded path measurable so this test cannot pass vacuously.
+        served, limit = FP.pad_for_export(crop, content_w, graph_w=None)
+        b = decode_greedy(m(to_batch(served))[0].argmax(-1).numpy(), limit=limit)
+    assert served.shape == (R.CROP_H, content_w), (
+        f"the serve path produced a {served.shape[1]}px tensor for a "
+        f"{content_w}px crop: padding is back, and with it the mismatch")
     assert b == a, (f"padding {content_w}->256 changed the decode: "
                     f"{a!r} vs {b!r}")
 

@@ -34,6 +34,13 @@ module can be tested with literal dicts:
 
 DESIGN RULES PINNED BY THE TESTS
 --------------------------------
+  * THE VALIDATOR RULE. A value the app can legitimately READ must never be
+    refused for its SHAPE. Refusal is reserved for a value that cannot be real
+    (an impossible calendar day, a 2-character case reference) or that
+    contradicts evidence (the two extraction paths disagreeing). The app's own
+    regex layer (pipeline.js PATTERNS) reads long-form dates — '15 January
+    2024', '1 February 2024' — and any validator that turned one of those into
+    a refusal would be a correctness regression hiding inside a safety feature.
   * Deterministic. Spots are sorted, ties break on (line_index, start, end,
     label), so a shuffled spot list gives the same dict.
   * One value region is claimed once. Two labels cannot both consume the same
@@ -121,10 +128,29 @@ def _validate_account(v: str):
 _DMY = re.compile(r"^(\d{1,2})[/-](\d{1,2})[/-](\d{2}|\d{4})$")
 _YMD = re.compile(r"^(\d{4})-(\d{1,2})-(\d{1,2})$")
 
+# Long-form month-name dates: '15 January 2024', '3 Mar 2026', '15 Jan 24',
+# '15th January, 2024'. ASCII month names only (no locale handling). The day may
+# carry an English ordinal suffix because pipeline.js's own legal Date pattern
+# emits '\d{1,2}(?:st|nd|rd|th)?'. Covers full and abbreviated month names, an
+# optional comma before the year, and a 2- or 4-digit year, case-insensitively.
+_MONTHS = {
+    "january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6,
+    "july": 7, "august": 8, "september": 9, "october": 10, "november": 11,
+    "december": 12,
+    "jan": 1, "feb": 2, "mar": 3, "apr": 4, "jun": 6, "jul": 7, "aug": 8,
+    "sep": 9, "sept": 9, "oct": 10, "nov": 11, "dec": 12,
+}
+_DMONTH = re.compile(
+    r"^(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})\.?\s*,?\s*(\d{2}|\d{4})$",
+    re.I,
+)
+
 
 def _validate_date(v: str):
-    """A real calendar date in DD/MM/YYYY, DD/MM/YY, YYYY-MM-DD or DD-MM-YYYY."""
-    tok = _first_token(v.strip())
+    """A real calendar date in DD/MM/YYYY, DD/MM/YY, YYYY-MM-DD, DD-MM-YYYY or
+    a long-form month-name date ('15 January 2024', '3 Mar 2026', '15 Jan 24')."""
+    s = v.strip()
+    tok = _first_token(s)
     m = _DMY.match(tok)
     if m:
         d, mo, y = (int(x) for x in m.groups())
@@ -133,16 +159,27 @@ def _validate_date(v: str):
         if m:
             y, mo, d = (int(x) for x in m.groups())
         else:
-            # SEPARATOR-FREE DATES, and this is not a nicety: the recogniser's
-            # output alphabet is 0-9 A-Z and space — it CANNOT emit '/' or '-'.
-            # Every date this product reads arrives as 8 digits (04021979 for
-            # 04/02/1979), so refusing them refuses every date the model is
-            # physically able to produce. Reconstruct, then validate the same way.
-            if not re.fullmatch(r"\d{8}", tok):
+            # Long-form month-name dates: the whole value, not the first token,
+            # because the value is multi-token. The app's own Date pattern reads
+            # these, so refusing them would refuse a value it reads correctly.
+            m = _DMONTH.match(s)
+            if m:
+                mo = _MONTHS.get(m.group(2).lower())
+                if mo is None:                       # e.g. '15 Foo 2024'
+                    return False, "not a calendar date"
+                d, y = int(m.group(1)), int(m.group(3))
+            elif not re.fullmatch(r"\d{8}", tok):
+                # SEPARATOR-FREE DATES, and this is not a nicety: the
+                # recogniser's output alphabet is 0-9 A-Z and space — it CANNOT
+                # emit '/' or '-'. Every date this product reads arrives as 8
+                # digits (04021979 for 04/02/1979), so refusing them refuses
+                # every date the model is physically able to produce.
+                # Reconstruct, then validate the same way.
                 return False, "not a calendar date"
-            d, mo, y = int(tok[:2]), int(tok[2:4]), int(tok[4:])
-            if d > 31 or mo > 12:                    # DDMMYYYY first (HK/UK), then
-                d, mo, y = int(tok[6:]),  int(tok[4:6]), int(tok[:4])   # YYYYMMDD
+            else:
+                d, mo, y = int(tok[:2]), int(tok[2:4]), int(tok[4:])
+                if d > 31 or mo > 12:                # DDMMYYYY first (HK/UK), then
+                    d, mo, y = int(tok[6:]), int(tok[4:6]), int(tok[:4])  # YYYYMMDD
     if y < 100:
         y += 2000
     try:

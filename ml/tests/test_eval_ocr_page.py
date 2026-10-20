@@ -71,3 +71,46 @@ def test_read_page_is_empty_on_a_blank_page(monkeypatch):
     monkeypatch.setattr(EO, "recognise",
                         lambda m, c, d: (_ for _ in ()).throw(AssertionError("called")))
     assert EO.read_page(None, "cpu", np.full((200, 300), 245, np.uint8)) == []
+
+
+def test_read_page_does_not_consult_the_locate_override(monkeypatch):
+    """A MEASURED DELETION, pinned so it cannot come back unmeasured.
+
+    Against an exact drawn ground truth (120 re-rendered test pages, 1800 lines)
+    the locate_document override costs 56 lines: line recall 1744/1800 = 0.969
+    with it against 1800/1800 without, exact McNemar p=2.776e-17, pairs (b=0,
+    c=56) -- it is never better on a single page. The loss is concentrated on
+    the low_light profile (recall 0.867, 14 of 28 pages lose lines) and it wins
+    nothing back on the 193 real hand-photographed receipts (transcript
+    count-match 16/193 with it, 20/193 without, p=0.125). locate_document() and
+    bands_in_document() stay in the module -- they are still tested, and still
+    the right tool for finding a receipt on a table -- they are just no longer
+    in the bander's path.
+
+    If this test fails, someone put the override back: re-run
+    `bash run.sh py ml/src/line_detect.py --split test --limit-pages 120` and
+    check that the paired verdict still favours dropping it before believing it.
+    """
+    called = []
+    monkeypatch.setattr(EO, "locate_document",
+                        lambda a: called.append(a) or (0, 0, a.shape[1], a.shape[0]))
+    monkeypatch.setattr(EO, "bands_in_document", lambda a, q: [(0, 5)])   # poison
+    monkeypatch.setattr(EO, "recognise",
+                        lambda model, crop, device: ("LINE", 0.9))
+
+    a = np.full((400, 640), 245, np.uint8)
+    for y in (60, 160, 260):
+        a[y:y + 30, 60:580] = 20
+
+    out = EO.read_page(None, None, a)
+    assert called == [], ("read_page consulted locate_document: the override is "
+                          "back, and it is worth 56 lines over 120 pages")
+    # The poison override returns a SINGLE 5-row band of blank paper, whose ink
+    # column count is far below read_page's 4-column floor, so it yields no
+    # reads at all. A non-empty result therefore proves the bander's own bands
+    # were the ones used. The exact band count is deliberately NOT asserted: how
+    # many bands the bander finds on a synthetic page is the bander's own tests'
+    # business, and pinning it here would fail this test for reasons that have
+    # nothing to do with the override.
+    assert out, ("read_page produced nothing -- the poison override's single blank "
+                 "band was used, so the override is back in the path")
