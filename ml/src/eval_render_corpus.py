@@ -74,12 +74,17 @@ def lev(a, b):
 def score_split(data, model, device, limit=None, show_misses=6):
     per = {}
     misses = []
+    n_calls = 0
+    n_empty = 0
     for i, (crop, label, prof) in enumerate(zip(data["crops"], data["labels"],
                                                 data["profile"])):
         if limit and i >= limit:
             break
         arr = B.crop_to_array(Image.fromarray(np.asarray(crop, dtype=np.uint8)))
         txt, _ = EO.recognise(model, arr, device)
+        n_calls += 1
+        if not str(txt).strip():
+            n_empty += 1
         got, ref = R.norm_label(txt), R.norm_label(label)
         e = 1.0 if got == ref else 0.0
         c = R.cer(got, ref)
@@ -91,6 +96,17 @@ def score_split(data, model, device, limit=None, show_misses=6):
         row["w1"] += w1
         if not e and len(misses) < show_misses:
             misses.append((ref, got))
+    # A checkpoint that reads NOTHING is not a weak model, it is a broken or
+    # mid-training file (measured: a half-saved crnn.pt loaded fine and emitted
+    # blanks for every crop, giving CER ~1.0 and 0% exact — indistinguishable from
+    # a terrible model). Refuse the measurement instead of reporting it.
+    if n_calls >= 20 and n_empty == n_calls:
+        raise SystemExit(
+            "every one of the %d crops read as EMPTY: this checkpoint is not a "
+            "measured model. It is mid-training or corrupt. Re-run against a "
+            "frozen copy (--ckpt models/ocr/crnn_before_render.pt) or wait for "
+            "training to finish." % n_calls)
+
     for row in per.values():
         n = max(1, row["n"])
         row["exact"] /= n
