@@ -210,7 +210,7 @@ suite("boot — shell, service worker, layout, a11y", async (ctx, R) => {
     return { scope: reg && reg.scope, active: !!(reg && reg.active), keys };
   });
   R.check("service worker registered and active", !!sw.active, JSON.stringify(sw));
-  R.check("cache is the shipped VERSION", sw.keys.includes("sightline-v1.1.4"), JSON.stringify(sw.keys));
+  R.check("cache is the shipped VERSION", sw.keys.includes("sightline-v1.1.5"), JSON.stringify(sw.keys));
   R.check("no page errors on boot", ctx.pageErrors.length === 0, ctx.pageErrors.join(" | "));
   R.check("no console errors on boot", ctx.consoleErrors.length === 0, ctx.consoleErrors.join(" | "));
   R.check("server served every requested asset", ctx.serverState.notFound.length === 0,

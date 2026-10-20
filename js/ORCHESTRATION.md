@@ -24,9 +24,11 @@ the whole point of the vectors in `selftest.html` being copied verbatim out of
 
 ## `js/pipeline.js` — the fallback that must always work
 
-Zero dependencies beyond a `<canvas>` and tesseract.js. Everything else is an
-accelerator layered on top of this, and the app is fully functional if every
-optional file is deleted.
+Zero dependencies beyond a `<canvas>` and our own vendored recogniser
+(`vendor/models/crnn.onnx` + `vendor/ort/`). tesseract.js used to be the OCR
+engine here and is gone — `ml/src/bundle_check.py` fails if it comes back.
+Everything else is an accelerator layered on top of this, and the app is fully
+functional if every optional file is deleted.
 
 ### Ported from `ml/src/evaluate.py`
 
