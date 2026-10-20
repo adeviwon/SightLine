@@ -49,6 +49,13 @@ HOW A SPOT BECOMES GROUND TRUTH
 
     bash run.sh py ml/src/eval_field_truth.py --split test --limit-pages 120
 
+--with-policy (Lane N) scores the SPEAK/REFUSE decision layer (field_policy.decide)
+on the same pages and the same ground truth: recall, precision, refusals and
+WRONG-BUT-SPOKEN per profile with Wilson 95% CIs and counts, paired exact
+McNemar of the policy's recall against (a) and against (c), and the two
+refusal buckets (spot right / regex wrong and the reverse) with their strings.
+Without the flag every number above is unchanged.
+
 WIRING is reused, not re-invented: render_corpus.load (corpus),
 eval_render_corpus.load_model (torn-read guard), eval_field_recovery.read_page_lines
 / spot_lines / sha256_prefix, label_spot, field_proximity, evaluate,
@@ -72,6 +79,7 @@ import compare_runs as CR             # noqa: E402  (wilson + the verdict rule)
 import eval_field_recovery as FR      # noqa: E402  (read_page_lines/spot_lines/sha)
 import eval_render_corpus as ER       # noqa: E402  (load_model: torn-read guard)
 import evaluate as E                  # noqa: E402  (fields_found IS the baseline)
+import field_policy as FPOL           # noqa: E402  (the speak/refuse decision layer)
 import field_proximity as FP          # noqa: E402
 import render_corpus as RC            # noqa: E402
 
@@ -85,6 +93,23 @@ THRESHOLDS = (0.75, 0.833)
 PRIMARY = 0.75
 
 PATHS = ("baseline", "spot", "valid")
+
+# The policy variants measured in the SAME run (same pages, same ground truth).
+# "policy" is the rule set in field_policy's docstring; the other two are the
+# trade made explicit — what it costs to speak only what can be checked.
+POLICY_VARIANTS = {
+    "policy": {},
+    "typed-only": {"speak_free_text": False},
+    "typed+strict": {"strict_critical": True, "speak_free_text": False},
+}
+
+POLICY_NOTES = {
+    "policy": "critical kinds speak on agreement or validated single path; free text "
+              "speaks if in the doc-type vocabulary and not a fragment",
+    "typed-only": "the same, minus free text: what the policy can CHECK is spoken, "
+                  "what it cannot is refused",
+    "typed+strict": "and safety-critical values speak only on two-path agreement",
+}
 
 # A substring counts as a match only when the shorter normalised string is at
 # least this long: "0" must not "recover" every number containing a zero.
@@ -190,11 +215,16 @@ def ground_truth(true_texts, ocr_lines, threshold=PRIMARY):
     return pairs, n_fp
 
 
-def score_page(true_texts, ocr_lines, doc_type, threshold=PRIMARY):
+def score_page(true_texts, ocr_lines, doc_type, threshold=PRIMARY,
+               policy_variants=None):
     """One page -> the counts the three-path table rests on.
 
     ``true_texts`` are the rendered line texts (render_corpus labels), ``ocr_lines``
     the recognised {"text", "box"} dicts, in the same page order.
+    ``policy_variants`` is None (no policy measured) or {name: decide(**kwargs)}:
+    each variant is scored against the SAME ground truth, so the policy rows and
+    the three paths above are comparable item for item (which is what licenses
+    the paired test).
     """
     true_texts = list(true_texts or [])
     ocr_lines = list(ocr_lines or [])
@@ -217,7 +247,7 @@ def score_page(true_texts, ocr_lines, doc_type, threshold=PRIMARY):
 
     base_rec, spot_rec, valid_rec = (recovered(baseline_spoken),
                                      recovered(spot_spoken), recovered(valid_spoken))
-    return {
+    row = {
         "doc_type": doc_type, "threshold": threshold,
         "gt_pairs": pairs, "gt_values": gt_values, "n_gt": len(gt_values),
         "n_spots": len(spots), "n_fp_spots": n_fp,
@@ -234,6 +264,81 @@ def score_page(true_texts, ocr_lines, doc_type, threshold=PRIMARY):
         # eval_field_recovery.paired_vs_baseline / _artifact compatibility
         "expected": gt_values, "baseline": base_rec, "recovered": valid_rec,
     }
+    if policy_variants:
+        regex_fields = FPOL.from_regex_tokens(doc_type, baseline_spoken)
+        row["policy"] = {}
+        for name, kw in policy_variants.items():
+            decisions = FPOL.decide(regex_fields, fields, doc_type=doc_type, **kw)
+            scores = _policy_scores(decisions, gt_values, " ".join(true_texts),
+                                    fields, regex_fields)
+            row["policy"][name] = scores
+            # flat alias so _artifact/paired can score this variant like any path
+            row[_slug(name) + "_recovered"] = scores["recovered"]
+    return row
+
+
+def _slug(name):
+    return "".join(ch if ch.isalnum() else "_" for ch in str(name)).strip("_")
+
+
+def _policy_scores(decisions, gt_values, true_text, fields, regex_fields):
+    """One policy variant on one page.
+
+    ``wrong`` is the product-safety number: values the policy SPOKE that convey
+    no ground-truth value. ``wrong_printed`` is the honest sub-count — a value
+    that IS printed on the page but has no ground-truth item because the label
+    that would anchor it was never spotted. It is reported, never folded in.
+    """
+    def kind(d):
+        return FPOL.kind_of(d["field"], fields.get(d["field"]))
+
+    def right(v):
+        return any(match_value(v, g) for g in gt_values)
+
+    spoken = [d for d in decisions if d["decision"] == "speak"]
+    hit = [d for d in spoken if right(d["value"])]
+    wrong = [d for d in spoken if not right(d["value"])]
+    rec = [g for g in gt_values if any(match_value(d["value"], g) for d in spoken)]
+
+    by_kind, spoken_kind = {}, {}
+    for d in wrong:
+        by_kind[kind(d)] = by_kind.get(kind(d), 0) + 1
+    for d in spoken:
+        spoken_kind[kind(d)] = spoken_kind.get(kind(d), 0) + 1
+
+    # The other path's values of THIS kind — what a refusal was weighed against.
+    rival = {}
+    for f, r in fields.items():
+        rival.setdefault(FPOL.kind_of(f, r), []).append(str(r.get("value") or ""))
+    rival_regex = {}
+    for f, raw in (regex_fields or {}).items():
+        vals = raw if isinstance(raw, (list, tuple)) else [raw]
+        rival_regex.setdefault(FPOL.kind_of(f), []).extend(str(v) for v in vals)
+
+    refusals = [d for d in decisions if d["decision"] == "refuse"]
+    contradictions, lost, b1, b2 = [], [], [], []
+    for d in refusals:
+        k = kind(d)
+        others = (rival_regex if d["source"] == "spot" else rival).get(k, [])
+        other_right = any(right(o) for o in others if o)
+        d_right = bool(d["value"]) and right(d["value"])
+        if "disagree" in d["why"]:
+            contradictions.append((d, others))
+        if d_right:
+            lost.append(d)
+        if d["source"] == "both":
+            continue                      # both paths said it: no rival to weigh
+        if d_right and not other_right:
+            b1.append((d, others))
+        elif other_right and not d_right:
+            b2.append((d, others))
+    return {"spoken": [d["value"] for d in spoken], "recovered": rec,
+            "n_spoken": len(spoken), "n_hit": len(hit),
+            "wrong": [d["value"] for d in wrong],
+            "wrong_printed": [d["value"] for d in wrong if match_value(d["value"], true_text)],
+            "refused": len(refusals), "n": len(decisions),
+            "by_kind": by_kind, "spoken_kind": spoken_kind,
+            "contradictions": contradictions, "lost": lost, "b1": b1, "b2": b2}
 
 
 # ── aggregation ───────────────────────────────────────────────────────────────
@@ -372,6 +477,134 @@ def print_paired(rows_by_th, meta, thresholds=THRESHOLDS):
           "whose 95% CIs overlap is INCONCLUSIVE.")
 
 
+# ── the policy: same pages, same ground truth, same verdict vocabulary ───────
+
+def summarise_policy(rows, name):
+    """Aggregate one policy variant over a set of page rows."""
+    out = {"pages": len(rows), "gt": 0, "spoken": 0, "hit": 0, "rec": 0,
+           "refused": 0, "n": 0, "wrong": 0, "printed": 0,
+           "by_kind": {}, "spoken_kind": {}}
+    for r in rows:
+        p = r["policy"][name]
+        out["gt"] += r["n_gt"]
+        out["spoken"] += p["n_spoken"]
+        out["hit"] += p["n_hit"]
+        out["rec"] += len(p["recovered"])
+        out["refused"] += p["refused"]
+        out["n"] += p["n"]
+        out["wrong"] += len(p["wrong"])
+        out["printed"] += len(p["wrong_printed"])
+        for k, v in p["by_kind"].items():
+            out["by_kind"][k] = out["by_kind"].get(k, 0) + v
+        for k, v in p["spoken_kind"].items():
+            out["spoken_kind"][k] = out["spoken_kind"].get(k, 0) + v
+    return out
+
+
+def print_policy(rows_by_th, meta, thresholds=THRESHOLDS):
+    """The decision layer's numbers, next to the three paths already printed."""
+    print("\n" + "=" * 176)
+    print("POLICY (field_policy.decide) — what is SPOKEN, scored against the same "
+          "rendered ground truth   %s   sha256 %s"
+          % (meta["path"], meta["sha256"]))
+    print("=" * 176)
+    print("  critical kinds = dosage money account sort_code date.  WRONG-but-spoken "
+          "= a spoken value that conveys no ground-truth value; 'printed' = of those, "
+          "the ones printed on the page (no gt item: the anchoring label was never spotted).")
+    for name in POLICY_VARIANTS:
+        print("  %-13s %s" % (name, POLICY_NOTES[name]))
+    for th in thresholds:
+        rows = rows_by_th[th]
+        profiles = sorted({r["profile"] for r in rows})
+        print("\n-- label_spot threshold %.3f --" % th)
+        print("%-13s %-15s %6s %6s %-16s %5s %6s %-16s %-14s %5s %6s %-16s %7s"
+              % ("variant", "profile", "spoken", "prec", "prec 95% CI", "gt",
+                 "recall", "recall 95% CI", "refuse (rate)", "WRONG", "wrong",
+                 "wrong 95% CI", "printed"))
+        for name in POLICY_VARIANTS:
+            for prof in profiles + ["ALL"]:
+                sub = rows if prof == "ALL" else [r for r in rows if r["profile"] == prof]
+                s = summarise_policy(sub, name)
+                ps, ph, gs, rh = s["spoken"], s["hit"], s["gt"], s["rec"]
+                w = s["wrong"]
+                print("%-13s %-15s %6d %6s %-16s %5d %6s %-16s %-14s %5d %6s %-16s %7d"
+                      % (name if prof == profiles[0] or prof == "ALL" else "",
+                         prof, ps, _r(ph, ps), _ci(wilson(ph, ps)) if ps else "n/a",
+                         gs, _r(rh, gs), _ci(wilson(rh, gs)) if gs else "n/a",
+                         "%d/%d %s" % (s["refused"], s["n"], _r(s["refused"], s["n"])),
+                         w, _r(w, ps), _ci(wilson(w, ps)) if ps else "n/a", s["printed"]))
+        s = summarise_policy(rows, "policy")
+        kinds = ", ".join("%s %d/%d" % (k, s["by_kind"].get(k, 0), s["spoken_kind"][k])
+                          for k in sorted(s["spoken_kind"]))
+        print("  policy: wrong-but-spoken by kind — %s" % kinds)
+        for name in list(POLICY_VARIANTS)[1:]:
+            v = summarise_policy(rows, name)
+            print("  %-13s refusal cost vs 'policy': spoken %d -> %d, recall %s -> %s"
+                  % (name, s["spoken"], v["spoken"], _r(s["rec"], s["gt"]),
+                     _r(v["rec"], v["gt"])))
+
+    print("\npaired against the same items, exact McNemar (compare_runs verdicts) — "
+          "recall only; the policy's trade is recall FOR safety, so a REGRESSED here "
+          "is the price, not the verdict on the product")
+    print("%-7s %-34s %10s %10s %9s %11s %s"
+          % ("thresh", "comparison", "old k/n", "new k/n", "delta", "pairs b/c",
+             "p / verdict"))
+    for th in thresholds:
+        rows = rows_by_th[th]
+        for newk, label in (("policy_recovered", "policy"),
+                            ("typed_only_recovered", "typed-only"),
+                            ("typed_strict_recovered", "typed+strict")):
+            for oldk, oldname in (("baseline_recovered", "(a) regex"),
+                                  ("valid_recovered", "(c) spot+val")):
+                r = paired(rows, oldk, newk)
+                b, c = r["discordant"] or ("-", "-")
+                p_str = "n/a" if r["p"] is None else "%.4g" % r["p"]
+                print("%-7.3f %-34s %10s %10s %+9.3f %11s p=%-8s %s"
+                      % (th, "%s -> %s" % (oldname, label),
+                         "%s/%s" % (r["k_old"], r["n"]), "%s/%s" % (r["k_new"], r["n"]),
+                         r["delta"] or 0.0, "%s/%s" % (b, c), p_str, r["verdict"]))
+    print("  Scored on RECALL (of true values recovered). Wrong-but-spoken is a "
+          "quality-of-speech number, not an item-recovery one, so it has no paired "
+          "test: it is quoted with its Wilson interval and its counts.")
+
+
+def _bucket_line(d, others, doc, prof):
+    other = ", ".join("'%s'" % o[:26] for o in others if o) or "-"
+    return ("    %-18s %-14s %-14s '%s'   other path: %s\n        why: %s"
+            % (doc, prof, d["field"], (d["value"] or "")[:26], other, d["why"][:96]))
+
+
+def print_buckets(rows_by_th, threshold=PRIMARY, limit=4):
+    """The two disagreement buckets, with the strings — the cases that decide
+    whether AGREEMENT is the right rule at all."""
+    rows = rows_by_th[threshold]
+    cont, b1, b2, lost = [], [], [], []
+    for r in rows:
+        p = r["policy"]["policy"]
+        cont += [(d, o, r["doc"], r["profile"]) for d, o in p["contradictions"]]
+        b1 += [(d, o, r["doc"], r["profile"]) for d, o in p["b1"]]
+        b2 += [(d, o, r["doc"], r["profile"]) for d, o in p["b2"]]
+        lost += [(d, r["doc"], r["profile"]) for d in p["lost"]]
+    print("\n" + "-" * 120)
+    print("DISAGREEMENTS the policy refused (label_spot %.3f) — %d contradictions fired"
+          % (threshold, len(cont)))
+    for d, o, doc, prof in cont[:limit]:
+        print(_bucket_line(d, o, doc, prof))
+    print("  bucket 1 — REFUSED, spot was RIGHT and the regex path was wrong or silent: %d"
+          % len(b1))
+    for d, o, doc, prof in b1[:limit]:
+        print(_bucket_line(d, o, doc, prof))
+    print("  bucket 2 — REFUSED, regex was RIGHT and the spot path was wrong or silent: %d"
+          % len(b2))
+    for d, o, doc, prof in b2[:limit]:
+        print(_bucket_line(d, o, doc, prof))
+    print("  (for scale: %d refused values WERE right — %.1f%% of all refusals; they "
+          "are the recall this policy gives up)" % (len(lost), 100.0 * len(lost) /
+                                                    max(1, sum(r["policy"]["policy"]["refused"]
+                                                               for r in rows))))
+    print("-" * 120)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description="field truth: score field recovery against the RENDERED line "
@@ -381,6 +614,10 @@ def main(argv=None):
                     help="cap pages (0 = the whole split)")
     ap.add_argument("--ckpt", default=DEFAULT_CKPT,
                     help="retrained recogniser (default %s)" % DEFAULT_CKPT)
+    ap.add_argument("--with-policy", action="store_true",
+                    help="also score field_policy.decide (speak/refuse) on the same "
+                         "pages and ground truth: recall, precision, refusals, "
+                         "wrong-but-spoken, paired McNemar, disagreement buckets")
     a = ap.parse_args(argv)
 
     data = RC.load(split=a.split)
@@ -432,13 +669,17 @@ def main(argv=None):
             lines = FR.read_page_lines(g["crops"], model, device)
             n_lines += len(lines)
             for th in THRESHOLDS:
-                row = score_page(g["true"], lines, g["doc_type"], th)
+                row = score_page(g["true"], lines, g["doc_type"], th,
+                                 policy_variants=POLICY_VARIANTS if a.with_policy else None)
                 row["doc"], row["profile"] = g["doc"], g["profile"]
                 rows_by_th[th].append(row)
         meta = {"path": ckpt, "sha256": FR.sha256_prefix(ckpt),
                 "pages": len(groups), "lines": n_lines}
         print_table(rows_by_th, meta)
         print_paired(rows_by_th, meta)
+        if a.with_policy:
+            print_policy(rows_by_th, meta)
+            print_buckets(rows_by_th)
     return 0
 
 
