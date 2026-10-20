@@ -201,6 +201,34 @@ function check(desc, ok, detail) {
     try { fs.rmSync(userDir, { recursive: true, force: true }); } catch (e) { /* best effort */ }
   }
 
+  // ── a pure-JS honesty pin: no document evidence -> no fields ───────────────
+  //
+  // The speckle page proves the app can hallucinate a PLAUSIBLE field from noise
+  // at a confidence INSIDE the range real reads occupy (0.678 against 0.687-0.974),
+  // so a confidence threshold cannot catch it; and the ported validators cannot
+  // either, because the invented value "110011 000" is a legal 9-digit account
+  // number and a legal identifier. Document EVIDENCE catches it: the speckle
+  // scores 0 on every document keyword while real reads score 1-17 even when they
+  // classify as the wrong type. Pinned here because this is the honesty gate and
+  // it is the cheapest place to notice a regression.
+  try {
+    const P = require(path.resolve(__dirname, "..", "js", "pipeline.js"));
+    const SL = P.SightLine || P;
+    const gibberish = "EAX CE E 0RO 121G000\n0O0TX 3AXICEC2S0 00 00\nAROE NT 10021";
+    const readable = "PRESCRIPTION\nPATIENT JANE DOE DOB 04021979\n"
+      + "RX AMOXICILLIN 500MG CAPSULES\nPRESCRIBER DR A AHMED MBBS\nDATE 01102026";
+    const g = SL.understand(gibberish);
+    const r = SL.understand(readable);
+    check("a read with no document evidence asserts no fields",
+      g.documentEvidence === 0 && g.fields.length === 0,
+      "evidence=" + g.documentEvidence + " fields=" + JSON.stringify(g.fields));
+    check("a readable document still surfaces its fields",
+      r.fields.length > 0,
+      "evidence=" + r.documentEvidence + " fields=" + JSON.stringify(r.fields.map((f) => f.value)));
+  } catch (e) {
+    check("the no-evidence gate check ran", false, e.message);
+  }
+
   const warned = rows.filter((x) => x.warned).length;
   console.log("\nwarned " + warned + "/" + rows.length + " scans");
   console.log(fail === 0 ? "ALL " + pass + " HONESTY CHECKS PASSED" : pass + " passed, " + fail + " FAILED");

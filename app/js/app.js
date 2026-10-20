@@ -294,7 +294,16 @@
       // just as uncertain as a keyword one — the user must hear the caveat,
       // not read it off a meta line. (Keyword-path confidence is floored at
       // 0.5, so this changes nothing for the fallback.)
-      if (u.classificationConfidence < 0.6) {
+      // TWO SIGNALS, TAKE THE STRONGER — a MiniLM score under 60% is not on its
+      // own grounds to nag. The keyword evidence is a second opinion, and on a
+      // clean read it is frequently the stronger one: with the export width fixed,
+      // four clean documents read at >=85% confidence WITH fields present while
+      // MiniLM still came back under 60%, and the app told the user the type was
+      // uncertain about a scan it had just read cleanly. Nag only when the read is
+      // genuinely ambiguous -- both signals weak. (The document-evidence count is
+      // what pipeline.understand computes; 0 means no keyword matched at all,
+      // which is also the case where it refuses to assert fields.)
+      if (u.classificationConfidence < 0.6 && (u.documentEvidence || 0) < 2) {
         warnings.push("The document type is uncertain — it may not be a "
           + "prescription, bank statement or contract.");
       }
