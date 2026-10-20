@@ -58,6 +58,11 @@ case "$cmd" in
   # and the corpus it is measured on. See ml/src/render_corpus.py.
   render-corpus) exec $PYRUN ml/src/render_corpus.py "$@" ;;
   eval-render) exec $PYRUN ml/src/eval_render_corpus.py "$@" ;;
+  # Lane A/E tooling: the char-LM + CTC decoders, and the run-vs-run judge that
+  # every accuracy experiment is scored by (IMPROVED / REGRESSED / INCONCLUSIVE).
+  build-lm)    exec $PYRUN ml/src/build_lm.py "$@" ;;
+  decode-ab)   exec $PYRUN ml/src/eval_decode_ab.py "$@" ;;
+  compare)     exec $PYRUN ml/src/compare_runs.py "$@" ;;
   # Generic passthrough so any module can be run through the venv with
   # PYTHONPATH stripped: bash run.sh py ml/src/realdata.py --selftest
   py)          exec $PYRUN "$@" ;;

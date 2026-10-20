@@ -58,8 +58,18 @@ capacity beyond this buys memorisation of the 260 training receipts, which the
 document-level split is specifically designed to detect.
 """
 
+import math
+
 import torch
 import torch.nn as nn
+
+# Conv widths are MULTIPLES of one base, so a capacity experiment is a single
+# knob: build(channels=16) -> 16,32,48,64,80,96,128 (the shipped stack),
+# build(channels=48) -> 48,96,...,384. Written as a ratio list rather than as
+# an expandable formula because the 6th block is x6 and the last is x8 -- the
+# gap is deliberate (see the channel-width profiling note below) and must not
+# be "regularised" into 7x.
+_CHANNEL_MULT = (1, 2, 3, 4, 5, 6, 8)
 
 
 class ConvBlock(nn.Module):
@@ -81,9 +91,13 @@ class ConvBlock(nn.Module):
         super().__init__()
         self.conv = nn.Conv2d(cin, cout, 3, stride=stride,
                               padding=1, bias=False)
-        # 8 groups: divides every channel count used here and keeps the
-        # per-group sample count large enough to be stable at batch size 1.
-        self.norm = nn.GroupNorm(8, cout)
+        # 8 groups divides every channel count the shipped stack uses (16..128
+        # are all multiples of 16). A capacity variant scales by a base that
+        # need not be a multiple of 8, and GroupNorm(8, 12) raises -- so take the
+        # largest divisor of cout up to 8. groups is NOT part of the state_dict,
+        # and for every default width gcd(8, cout) == 8, so the default model is
+        # numerically unchanged.
+        self.norm = nn.GroupNorm(math.gcd(8, cout), cout)
         self.relu = nn.ReLU(inplace=True)
         # Pooling is disabled by passing 1 (int) or a tuple of 1s. Comparing
         # with `pool > 1` is wrong for the tuple form: it raises TypeError, and
@@ -106,13 +120,20 @@ class SightLineCRNN(nn.Module):
     CRNN text recogniser. Input [B,1,32,W] -> logits [B, W/8, num_classes].
     """
 
-    def __init__(self, num_classes=38, in_ch=1, hidden=128, layers=2,
-                 dropout=0.1):
+    def __init__(self, num_classes=38, in_ch=1, hidden=128, lstm_layers=2,
+                 dropout=0.1, channels=16, input_height=32):
         super().__init__()
         # NB the name: nn.Module already reserves `.cache`, and assigning a dict
         # there shadows Module's own machinery. `_ts_by_width` avoids that.
         self._ts_by_width = {}
         self.num_classes = num_classes
+        # Kept so a capacity variant can be REBUILT identically: the export
+        # parity gate in assert_loop_matches_lstm() and anything else that needs
+        # a second instance must reproduce this model's config, not the default.
+        self.in_ch = in_ch
+        self.channels = int(channels)
+        self.input_height = int(input_height)
+        self.dropout = dropout
 
         # ── feature extraction ──────────────────────────────────────────
         # GEOMETRY, and the arithmetic is worth stating because getting it
@@ -199,21 +220,35 @@ class SightLineCRNN(nn.Module):
         # from feature width. Going thinner buys little more and starts to
         # cost accuracy. The trade is settled by validation word accuracy on a
         # real run, not by this table.
+        widths = [self.channels * m for m in _CHANNEL_MULT]
         self.cnn = nn.Sequential(
-            ConvBlock(in_ch, 16, stride=(1, 2), pool=(2, 1)),   # h/2 w/2
-            ConvBlock(16, 32, stride=(1, 2), pool=(2, 1)),      # h/2 w/2
-            ConvBlock(32, 48, stride=1, pool=1),               # refine
-            ConvBlock(48, 64, stride=1, pool=(2, 1)),          # h/2
-            ConvBlock(64, 80, stride=1, pool=(2, 1)),          # h/2
-            ConvBlock(80, 96, stride=1, pool=(2, 1)),          # h -> 1 row
-            ConvBlock(96, 128, stride=1, pool=(1, 2)),         # final w/2 only
+            ConvBlock(in_ch, widths[0], stride=(1, 2), pool=(2, 1)),  # h/2 w/2
+            ConvBlock(widths[0], widths[1], stride=(1, 2), pool=(2, 1)),  # h/2 w/2
+            ConvBlock(widths[1], widths[2], stride=1, pool=1),        # refine
+            ConvBlock(widths[2], widths[3], stride=1, pool=(2, 1)),   # h/2
+            ConvBlock(widths[3], widths[4], stride=1, pool=(2, 1)),   # h/2
+            ConvBlock(widths[4], widths[5], stride=1, pool=(2, 1)),   # h -> 1 row
+            ConvBlock(widths[5], widths[6], stride=1, pool=(1, 2)),   # final w/2 only
         )
 
         # ── sequence modelling ──────────────────────────────────────────
-        self.rnn = nn.LSTM(128, hidden, num_layers=layers, bidirectional=True,
-                           batch_first=True, dropout=dropout if layers > 1 else 0.0)
+        self.rnn = nn.LSTM(widths[-1], hidden, num_layers=lstm_layers,
+                           bidirectional=True, batch_first=True,
+                           dropout=dropout if lstm_layers > 1 else 0.0)
         self.drop = nn.Dropout(dropout)
         self.fc = nn.Linear(hidden * 2, num_classes)
+
+        # Height contract, checked at CONSTRUCTION: five floor-halvings must land
+        # the crop height on exactly 1 row (see GEOMETRY). Only heights in
+        # 32..63 do. A wrong input_height otherwise surfaces either here as
+        # "Calculated output size: (…x0x…)" far from the knob, or worse as an
+        # LSTM quietly trained on interleaved rows -- so fail where the knob is.
+        with torch.no_grad():
+            probe_h = int(self.cnn(
+                torch.zeros(1, in_ch, self.input_height, 32)).shape[2])
+        assert probe_h == 1, (
+            f"input_height={self.input_height} reduces to {probe_h} rows, not 1. "
+            f"Valid heights for this pool layout are 32..63.")
 
     def forward(self, x):
         """x: [B,1,32,W] float in [0,1] -> [B, T, num_classes] logits."""
@@ -412,14 +447,18 @@ class SightLineCRNN(nn.Module):
         comparison would silently run the loop against itself and report a
         perfect match no matter how wrong the loop was. That is exactly the
         kind of gate that must not be able to pass.
+
+        Rebuilt from self._config(), so this gate also works on a capacity
+        variant: building the DEFAULT here would make load_state_dict raise
+        (or, worse, silently compare two different architectures).
         """
         import copy
-        ref = build(self.num_classes)
+        ref = build(**self._config())
         ref.load_state_dict(copy.deepcopy(self.state_dict()))
         ref.export_safe_lstm = False
         ref.eval()
 
-        alt = build(self.num_classes)
+        alt = build(**self._config())
         alt.load_state_dict(copy.deepcopy(self.state_dict()))
         alt.export_safe_lstm = True
         alt.eval()
@@ -427,7 +466,7 @@ class SightLineCRNN(nn.Module):
 
         worst = 0.0
         for W in widths:
-            x = torch.rand(1, 1, 32, W)
+            x = torch.rand(1, self.in_ch, self.input_height, W)
             with torch.no_grad():
                 a = ref(x)
                 b = alt(x)
@@ -458,10 +497,18 @@ class SightLineCRNN(nn.Module):
         was_training = self.training
         self.eval()
         with torch.no_grad():
-            t = int(self.cnn(torch.zeros(1, 1, 32, w)).shape[3])
+            t = int(self.cnn(torch.zeros(
+                1, self.in_ch, self.input_height, w)).shape[3])
         self.train(was_training)
         self._ts_by_width[w] = t
         return t
+
+    def _config(self):
+        """Constructor arguments that reproduce THIS model (not the default)."""
+        return dict(num_classes=self.num_classes, in_ch=self.in_ch,
+                    hidden=self.rnn.hidden_size, lstm_layers=self.rnn.num_layers,
+                    dropout=self.dropout, channels=self.channels,
+                    input_height=self.input_height)
 
     def n_params(self):
         return sum(p.numel() for p in self.parameters())
@@ -496,8 +543,29 @@ class SightLineDetector(nn.Module):
         return self.head(self.stem(x))     # [B,1,H/4,W/4] logits
 
 
-def build(num_classes=38):
-    return SightLineCRNN(num_classes=num_classes)
+def build(num_classes=38, *, channels=16, lstm_layers=2, input_height=32,
+          in_ch=1, hidden=128, dropout=0.1):
+    """
+    Build the recogniser. `build()` with no arguments IS the shipped model --
+    the architecture the frozen checkpoint, the exported ONNX graph and the
+    JavaScript decoder all agree on.
+
+    The keyword-only knobs exist so a capacity experiment is a one-flag change:
+
+      channels        base conv width; every block is a fixed multiple of it,
+                      so the shipped stack is channels=16 -> 16,32,48,64,80,
+                      96,128 and channels=48 triples it.
+      lstm_layers     BiLSTM depth (default 2).
+      input_height    crop height. The pool layout lands on exactly 1 row for
+                      32..63 (five floor-halvings), so 32 and 48 both work.
+      hidden, dropout LSTM hidden size and dropout, unchanged in meaning.
+
+    Anything other than the default produces a state_dict the frozen
+    checkpoint cannot load -- which is the point: the default must not change.
+    """
+    return SightLineCRNN(num_classes=num_classes, in_ch=in_ch, hidden=hidden,
+                         lstm_layers=lstm_layers, dropout=dropout,
+                         channels=channels, input_height=input_height)
 
 
 if __name__ == "__main__":

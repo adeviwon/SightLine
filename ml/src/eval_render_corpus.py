@@ -34,9 +34,27 @@ from ocr_model import build   # noqa: E402
 
 
 def load_model(ckpt=None):
+    """Load the checkpoint, refusing a file that changed while it was being read.
+
+    THE FAILURE THIS PREVENTS (measured): loading models/ocr/crnn.pt while a
+    training run was mid-save produced GARBAGE weights with no exception — a run
+    reported 0/300 exact at CER 0.976 where the same file minutes earlier gave
+    11/300 at CER 0.590. `torch.save` is not atomic, so a partial file is a valid
+    zip with plausible tensors. Any harness that measures while training runs must
+    stat the file either side of the load and refuse the result.
+    """
+    import os
     import torch
     path = ckpt or str(EO.CKPT)
+    before = os.stat(path)
     ck = torch.load(path, map_location="cpu", weights_only=False)
+    after = os.stat(path)
+    if (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
+        raise RuntimeError(
+            "%s changed while it was being loaded (training is writing it): the "
+            "weights in memory are a torn read and any number from them is a lie. "
+            "Re-run when the training job is idle, or pass --ckpt <frozen copy>."
+            % path)
     model = build()
     model.load_state_dict(ck["model"])
     model.eval()

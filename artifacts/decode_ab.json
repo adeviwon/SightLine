@@ -1,0 +1,49 @@
+{
+  "split": "test",
+  "n": 3270,
+  "beam": 10,
+  "alpha": 0.5,
+  "lm": "/home/ubuntu/Projects/sightline/artifacts/char_lm.json",
+  "ckpt": "/home/ubuntu/Projects/sightline/models/ocr/crnn.pt",
+  "variants": {
+    "greedy": {
+      "n": 3270,
+      "exact": 99,
+      "exact_rate": 0.030275229357798167,
+      "ci": [
+        0.024931171241801203,
+        0.036721658876797084
+      ],
+      "cer": 0.6195668712278745
+    },
+    "beam10": {
+      "n": 3270,
+      "exact": 99,
+      "exact_rate": 0.030275229357798167,
+      "ci": [
+        0.024931171241801203,
+        0.036721658876797084
+      ],
+      "cer": 0.6177410356545113
+    },
+    "beam10+LM": {
+      "n": 3270,
+      "exact": 113,
+      "exact_rate": 0.0345565749235474,
+      "ci": [
+        0.028822091053443997,
+        0.04138338254063582
+      ],
+      "cer": 0.6192118476441649
+    }
+  },
+  "paired": {
+    "best": "beam10+LM",
+    "both_right": 99,
+    "variant_only": 14,
+    "greedy_only": 0,
+    "both_wrong": 3157,
+    "p_exact_mcnemar": 0.0001220703125,
+    "delta_pts": 0.4281345565749231
+  }
+}
