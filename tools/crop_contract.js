@@ -42,7 +42,10 @@ function loadLayout() {
 }
 
 const R = { CROP_H: 32 }; // realdata.CROP_H, build_dataset.CROP_H
-const MAX_W = 256;        // recognizer.js EXPORT_W — the ONNX graph is fixed width
+const MAX_W = 320;        // realdata.MAX_W — the training crop clamp, and the
+                          // width recognizer.js serves at (EXPORT_W is an alias
+                          // of it; the graph's width axis is dynamic, so each
+                          // crop is served at its own width up to this cap)
 
 let checks = 0, fails = 0;
 function check(name, cond, detail) {

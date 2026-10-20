@@ -24,7 +24,7 @@
  * sightline-* cache, so old wasm never lingers.
  */
 
-const VERSION = "v1.1.8";
+const VERSION = "v1.1.9";
 const CACHE = "sightline-" + VERSION;
 
 /** Everything required for a scan to complete with no network. */
@@ -51,6 +51,15 @@ const PRECACHE = [
   // -> "Failed to fetch dynamically imported module ocr_engine.js".
   "./js/ocr_engine.js",
   "./js/layout.js",
+  // The label-anchored extraction path (field_spot + field_guard) and the module
+  // that composes them. pipeline.js injects these three as script tags, which
+  // works ONLINE but leaves an offline cold start falling back to the regex path
+  // -- silently, and the fallback is the weaker extractor. Precaching them makes
+  // the opt-in path offline-complete. (The engine is OFF by default: recall vs
+  // safety is a product call, not a plumbing one.)
+  "./js/field_spot.js",
+  "./js/field_guard.js",
+  "./js/field_engine.js",
   "./js/ORCHESTRATION.md",
   "./assets/icon-180.png",
   "./assets/icon-192.png",
