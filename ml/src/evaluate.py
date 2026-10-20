@@ -68,7 +68,54 @@ DOC_CATEGORY = {
     "general": "general",
 }
 
-import pytesseract  # noqa: E402
+# ── WHICH ENGINE THIS HARNESS MEASURES ───────────────────────────────────────
+#
+# The brief asks for the MODEL's metrics, and this file used to answer with
+# Tesseract's: `import pytesseract` at module scope and ocr()/ocr_conf() calling
+# it. Tesseract has since been removed from the application (41.1 MB, and
+# bundle_check.py fails if it reappears), so every arm table produced here
+# described an engine the product does not contain.
+#
+# The default is now the shipped recogniser: the same checkpoint, the same page
+# reader (eval_ocr.read_page) and the same crop geometry the evaluator for real
+# photographs uses. `--engine=tesseract` keeps the old path as an explicit
+# BASELINE -- it is the number the CRNN has to beat, and it is why the
+# preprocessing arms are ordered the way they are -- but it is opt-in, and the
+# import is lazy so a machine without pytesseract can still run the default.
+OCR_ENGINE = "crnn"
+_tess_mod = None
+_crnn_state = {"model": None, "device": None}
+
+
+def _tess():
+    """Import pytesseract on demand. Only the tesseract baseline needs it."""
+    global _tess_mod
+    if _tess_mod is None:
+        import pytesseract
+        _tess_mod = pytesseract
+    return _tess_mod
+
+
+def _crnn():
+    """Load the shipped recogniser once: the same checkpoint eval_ocr scores."""
+    if _crnn_state["model"] is None:
+        import torch
+        import eval_ocr as _eo
+        from ocr_model import build
+        ck = torch.load(_eo.CKPT, map_location="cpu", weights_only=False)
+        model = build()
+        model.load_state_dict(ck["model"])
+        model.eval()
+        _crnn_state["model"] = model
+        _crnn_state["device"] = "cpu"
+    return _crnn_state["model"], _crnn_state["device"]
+
+
+def _page_lines(img):
+    """Read a page with the shipped recogniser -> [(text, confidence)]."""
+    import eval_ocr as _eo
+    model, device = _crnn()
+    return _eo.read_page(model, device, _np(img))
 
 
 # ── preprocessing arms ──────────────────────────────────────────────────
@@ -146,19 +193,45 @@ ARMS = {
 
 # ── OCR + metrics ───────────────────────────────────────────────────────
 
-def ocr(img, psm=6):
+def read(img, psm=6):
+    """Read the page ONCE with the selected engine -> (text, confidence).
+
+    The arms loop wants both, and calling ocr() and ocr_conf() separately ran the
+    page through the recogniser twice per arm.
+    """
     try:
-        return pytesseract.image_to_string(img, config=f"--oem 3 --psm {psm}")
+        if OCR_ENGINE == "crnn":
+            pairs = _page_lines(img)
+            text = " ".join(t for t, _ in pairs)
+            conf = (float(np.mean([c for _, c in pairs])) * 100.0) if pairs else 0.0
+            return text, conf
+        pytesseract = _tess()
+        text = pytesseract.image_to_string(img, config=f"--oem 3 --psm {psm}")
+        d = pytesseract.image_to_data(img, config=f"--oem 3 --psm {psm}",
+                                      output_type=pytesseract.Output.DICT)
+        confs = [float(c) for c, t in zip(d.get("conf", []), d.get("text", []))
+                 if str(c).lstrip("-").isdigit() and str(c) not in ("-1",)
+                 and str(t).strip()]
+        return text, (float(np.mean(confs)) if confs else 0.0)
     except Exception:
-        return ""
+        return "", 0.0
+
+
+def ocr(img, psm=6):
+    """Read the page with the selected engine -> text.
+
+    crnn (default): our recogniser, one line at a time, joined with spaces. One
+    pass, no segmentation mode to choose -- the detector IS the segmentation.
+    tesseract: the legacy baseline, opt-in.
+    """
+    return read(img, psm=psm)[0]
 
 
 def ocr_conf(img, psm=6):
-    try:
-        d = pytesseract.image_to_data(img, config=f"--oem 3 --psm {psm}",
-                                      output_type=pytesseract.Output.DICT)
-    except Exception:
-        return 0.0
+    """Mean reading confidence, on Tesseract's 0-100 scale so the two engines are
+    comparable in one table. The CRNN's own confidence is a mean emitted-character
+    probability in 0-1 (see eval_ocr.recognise), multiplied here by 100."""
+    return read(img, psm=psm)[1]
     confs = [float(c) for c, t in zip(d.get("conf", []), d.get("text", []))
              if str(c).lstrip("-").isdigit() and str(c) not in ("-1",) and str(t).strip()]
     return float(np.mean(confs)) if confs else 0.0
@@ -238,8 +311,7 @@ def run(n_per_profile=6, seed=123, arms=None, out_path="artifacts/eval_results.j
             for a in arms:
                 fn = ARMS[a]
                 img = fn(deg, model) if a.startswith("restorer") else fn(deg)
-                text = ocr(img)
-                conf = ocr_conf(img)
+                text, conf = read(img)
                 found = fields_found(text, dtype)
                 rows[a]["field"].append(1.0 if len(found) == len(FIELDS[dtype]) else 0.0)
                 rows[a]["word"].append(word_accuracy(gt_text, text))
@@ -286,6 +358,12 @@ def run(n_per_profile=6, seed=123, arms=None, out_path="artifacts/eval_results.j
         }
 
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    results["engine"] = OCR_ENGINE
+    results["engine_note"] = (
+        "crnn = the recogniser the application ships (eval_ocr.read_page + the "
+        "crnn.pt checkpoint); tesseract = the legacy baseline. Quote which one a "
+        "number came from."
+    )
     json.dump(results, open(out_path, "w"), indent=2)
 
     print("\n" + "=" * 74)
@@ -302,13 +380,21 @@ def run(n_per_profile=6, seed=123, arms=None, out_path="artifacts/eval_results.j
 
 
 def main():
+    global OCR_ENGINE
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=6)
     ap.add_argument("--seed", type=int, default=123)
     ap.add_argument("--arms", default="")
     ap.add_argument("--out", default="artifacts/eval_results.json")
+    ap.add_argument("--engine", choices=["crnn", "tesseract"], default=OCR_ENGINE,
+                    help="crnn (default) measures the model the app ships; "
+                         "tesseract is the legacy baseline and needs the "
+                         "pytesseract package + binary")
     a = ap.parse_args()
+    OCR_ENGINE = a.engine
     arms = [s for s in a.arms.split(",") if s] or None
+    print(f"[eval] engine: {OCR_ENGINE}"
+          + ("  (the shipped recogniser)" if OCR_ENGINE == "crnn" else "  (baseline)"))
     run(a.n, a.seed, arms, a.out)
 
 

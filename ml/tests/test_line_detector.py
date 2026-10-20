@@ -138,17 +138,24 @@ def test_line_bands_is_the_shared_implementation():
     A test that exercises a private copy of the algorithm it is testing passes
     while the shipped code diverges. This pins the call sites.
     """
-    body = Path(E.__file__).read_text().split("def eval_handheld", 1)[-1]
-    assert "line_bands(" in body, (
-        "eval_handheld stopped calling the shared line_bands(); it must not "
-        "carry its own copy of the splitting loop"
+    src = Path(E.__file__).read_text()
+    body = src.split("def eval_handheld", 1)[-1]
+    reader = src.split("def read_page", 1)[-1].split("def align_lines", 1)[0]
+    assert "read_page(" in body, (
+        "eval_handheld must use the shared page reader; a private copy of the "
+        "detect-and-crop loop is exactly how the coordinate bug survived (the "
+        "trimmed projection's band indices were used on the untrimmed array)"
     )
-    assert "ink_mask(" in body, (
-        "eval_handheld stopped calling the shared ink_mask(); a private "
-        "binarisation copy is exactly what let the paper-estimation bug hide"
+    assert "line_bands(" in reader, (
+        "read_page stopped calling the shared line_bands(); it must not carry "
+        "its own copy of the splitting loop"
     )
-    assert "medianBlur" not in body, (
-        "eval_handheld is calling cv2.medianBlur directly again instead of "
+    assert "ink_mask(" in reader, (
+        "read_page stopped calling the shared ink_mask(); a private binarisation "
+        "copy is exactly what let the paper-estimation bug hide"
+    )
+    assert "medianBlur" not in body and "medianBlur" not in reader, (
+        "the page reader is calling cv2.medianBlur directly again instead of "
         "going through ink_mask()"
     )
 

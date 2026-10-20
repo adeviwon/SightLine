@@ -12,8 +12,9 @@ the bottom and get the same output.
 |---|---|---|---|
 | classifier, held-out | accuracy | **95.8%** (±2.6) | `bash run.sh train-clf` → `artifacts/step3_classifier_metrics.json` |
 | classifier, held-out | macro-F1 | **95.7%** (±2.7) | same run — 5 seeds, n=24 test documents |
-| OCR, held-out | word accuracy | **28.0%** | `bash run.sh train-ocr` → `artifacts/ocr_training.json` (7,875 held-out crops) |
-| OCR, whole pages, detector included | word accuracy + CER | see `bash run.sh eval-ocr` | `ml/src/eval_ocr.py` — real SROIE test pages |
+| OCR, held-out crops | word accuracy | **28.0%** | `bash run.sh train-ocr` → `artifacts/ocr_training.json` (7,875 held-out crops) |
+| OCR, held-out real scans | word accuracy **29.70%**, CER **11.75%** | 361 SROIE receipts, 17,945 words | `bash run.sh eval-ocr` section A |
+| OCR, 198 hand-photographed receipts | line accuracy **1.96%**, CER **63.46%** | 60 pages, 868 detected lines | `bash run.sh eval-ocr` section B — the honest hard case |
 | the shipped app, end to end | field recovery, classification, word accuracy, CER | **table below** | `bash run.sh bench-pipeline` → `artifacts/pipeline_raw.json` |
 | one documented failure | a real misread | `ACCOUNT NUMBER 40218877` → `ICOUNT NUMBER 4021887` | `docs/03_RESULTS.md` §3 |
 
@@ -61,13 +62,31 @@ present in the read text, after `norm()`), and CER as (substitutions + insertion
 ## The honest comparison a judge should see
 
 The stage-by-stage numbers in `docs/03_RESULTS.md` were measured with a Tesseract
-arm (`ml/src/evaluate.py` calls pytesseract). The app no longer contains Tesseract:
-it ships a 942k-parameter CRNN trained on SROIE receipt crops whose held-out
-**crop** word accuracy is 28.0%. Page-level recognition is harder than crop-level
-(it adds the detector's mistakes and the squeeze to the graph's fixed 256px width),
-and the end-to-end table above is what that costs: **the swap to our own recogniser
-measurably reduced end-to-end quality.** The Tesseract arm achieved 62.2% field
-accuracy on the same sample generator; the shipped arm achieves 0%.
+arm. The app no longer contains Tesseract: it ships a 942k-parameter CRNN trained
+on SROIE receipt crops whose held-out **crop** word accuracy is 28.0%. The same
+harness now measures the shipped engine by default (`--engine=tesseract` is the
+opt-in baseline), so the comparison is direct:
+
+| engine | field accuracy | word accuracy | exact dosage | OCR conf |
+|---|---|---|---|---|
+| tesseract (the removed engine) | 62.2% | 65.4% | 84.4% | 69.7 |
+| **crnn (what we ship)** | **7.4%** | **26.4%** | **68.5%** | 82.7 |
+| crnn, no restoration (raw) | 5.6% | 26.9% | 68.5% | 85.2 |
+
+10 capture profiles × 6 documents, seed 123, sub-human profiles excluded;
+`bash run.sh eval` (default engine), artifact `artifacts/eval_results.json` with
+`"engine": "crnn"`.
+
+Page-level recognition is harder than crop-level — it adds the detector's mistakes
+and the squeeze to the graph's fixed 256px width — and the end-to-end table above is
+what that costs: **the swap to our own recogniser measurably reduced end-to-end
+quality**, from 62.2% field accuracy to 0% end to end and 7.4% at the best stage.
+
+A second finding from the re-run: the preprocessing-arm ordering in `docs/03`
+(restorer beats classical) does **not** survive the engine change. On the shipped
+recogniser `raw` ties or beats the restorer arms, which agrees with
+`app/tools/restore_ab.js`'s independent result that restoration *costs* OCR yield.
+The restorer's justification was a Tesseract-era measurement.
 
 Two consequences, both already written into `HANDOFF.md` §4:
 

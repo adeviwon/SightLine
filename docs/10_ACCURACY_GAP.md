@@ -14,7 +14,9 @@ plan, every time.
 > The application **no longer contains Tesseract**: it ships a 942k-parameter CRNN
 > (`ocr_model.py`), and that model's end-to-end field recovery on the same
 > render bench is **0.0%**, not 62.2% — measured in WebKit, detector and all, in
-> `docs/14_HACKATHON_BENCHMARK.md`. So this page documents the ceiling of the
+> `docs/14_HACKATHON_BENCHMARK.md`. Re-run stage by stage on the shipped engine
+> (`bash run.sh eval --engine=crnn`, the default) the same arms give **3.7-7.4%
+> field accuracy**, with `raw` beating the restorer arms. So this page documents the ceiling of the
 > *classical restoration* work and the shape of the gap; it does **not** describe
 > the model in `app/vendor/models/`. The Tesseract numbers remain useful as the
 > baseline the recogniser has to beat, and as the reason the preprocessing arms

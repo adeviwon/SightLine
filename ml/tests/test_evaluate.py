@@ -22,6 +22,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from PIL import Image, ImageDraw
 
 
 # Project modules live in ml/src as plain modules (not an installed package).
@@ -315,3 +316,35 @@ def test_classical_arm_preserves_size(clean_docs):
     lines, _ = clean_docs[0]
     img = capture.render_document(lines, seed=2)
     assert evaluate.ARMS["classical"](img).size == img.size
+
+
+# ── which engine the evaluation measures ─────────────────────────────────────
+# The brief asks for the MODEL's metrics. This harness used to answer with
+# Tesseract's: `import pytesseract` at module level, and ocr()/ocr_conf() calling
+# it, so every arm table in docs/ described an engine the application does not
+# contain. The shipped engine is our own CRNN, so it is the default, and the
+# Tesseract path is an explicit opt-in baseline.
+
+def test_evaluate_imports_without_pytesseract(monkeypatch):
+    """A missing pytesseract must not stop the evaluator from importing: the
+    engine it needs by default is our own model."""
+    import importlib
+    monkeypatch.setitem(sys.modules, "pytesseract", None)   # `import` now raises
+    importlib.reload(evaluate)
+    assert evaluate.OCR_ENGINE == "crnn"
+
+
+def test_the_default_engine_is_the_shipped_recogniser():
+    assert evaluate.OCR_ENGINE == "crnn", (
+        "the evaluator must measure the model the app ships by default; pass "
+        "--engine=tesseract for the legacy baseline")
+
+
+def test_ocr_reads_a_page_with_the_shipped_recogniser_without_tesseract(monkeypatch):
+    monkeypatch.setitem(sys.modules, "pytesseract", None)
+    img = Image.new("L", (420, 120), 245)
+    ImageDraw.Draw(img).text((20, 40), "ACCOUNT 40218877", fill=0)
+    text = evaluate.ocr(img)
+    assert isinstance(text, str)
+    conf = evaluate.ocr_conf(img)
+    assert 0.0 <= conf <= 100.0, conf

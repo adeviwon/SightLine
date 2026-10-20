@@ -243,6 +243,65 @@ def bands_in_document(gray, quad):
             if s < len(valid) and valid[s:s + max(1, e - s)].any()]
 
 
+@torch.no_grad()
+def read_page(model, device, a):
+    """Detect the text lines on one page and read each -> [(text, confidence)].
+
+    Extracted from eval_handheld so the evaluator and the app-facing code path
+    share ONE reader: the same detection, the same crop geometry, the same width
+    clamp. Two copies of this drifted apart before.
+    """
+    H, W = a.shape
+    ink = ink_mask(a)
+    binv = (ink.astype(np.uint8)) * 255
+    # Trim to the ink extent, and REMEMBER BY HOW MUCH. The projection below is
+    # computed on the trimmed array, so every band index it produces is in
+    # TRIMMED space: cropping the original array with it lands `off` rows too
+    # high. On a photo with table above the receipt that is a window of blank
+    # paper, every line reads as nothing, and the page score collapses for a
+    # reason that looks like a model failure. Adding the offset back is the whole
+    # fix (test_eval_ocr_page.py pins it).
+    off = 0
+    ys = np.where(binv.sum(axis=1) > W * 0.02)[0]
+    if len(ys) > 20:
+        off = max(0, ys[0] - 5)
+        binv = binv[off:min(H, ys[-1] + 6), :]
+    proj = (binv > 0).sum(axis=1)
+    bands = [(y0 + off, y1 + off) for (y0, y1) in line_bands(proj)]
+    # bands_in_document works on the ORIGINAL array, so its coordinates are
+    # already absolute and must not be offset again.
+    quad = locate_document(a)
+    if quad is not None:
+        located = bands_in_document(a, quad)
+        if located:
+            bands = located
+
+    out = []
+    for (y0, y1) in bands:
+        strip = ink[y0:y1, :]
+        cols = np.where(strip.sum(axis=0) > 0)[0]
+        if len(cols) < 4:
+            continue
+        pad = max(2, int((y1 - y0) * 0.10))
+        x0 = max(0, int(cols[0]) - pad)
+        x1 = min(a.shape[1], int(cols[-1]) + pad + 1)
+        band = a[y0:y1, x0:x1]
+        if band.size == 0:
+            continue
+        band = cv2.resize(band, (band.shape[1], R.CROP_H),
+                          interpolation=cv2.INTER_AREA)
+        w = min(R.MAX_W, max(R.MIN_W, band.shape[1]))
+        if band.shape[1] > R.MAX_W:
+            band = band[:, :R.MAX_W]
+        else:
+            band = np.pad(band, ((0, 0), (0, w - band.shape[1])))
+        txt, conf = recognise(model, band, device)
+        if txt.strip():
+            out.append((txt.strip(), float(conf)))
+
+    return out
+
+
 def align_lines(got, want):
     """
     Pair detected lines with transcript lines in two passes.
@@ -451,87 +510,16 @@ def eval_handheld(model, device, limit=60):
     for name, jp, lines in pages[:limit]:
         img = Image.open(jp).convert("L")
         a = np.asarray(img, np.uint8)
-        H, W = a.shape
 
-        # Binarise so INK is the foreground, then take the IMAGE half of
-        # cv2.threshold's return value.
-        #
-        # Two bugs lived here and both are silent:
-        #   1. `_, binv = cv2.threshold(...)` is correct -- but any code that
-        #      reads the FIRST element as the image gets a scalar float and
-        #      every projection computed from it is meaningless. cv2.threshold
-        #      returns (threshold_value, image), in that order.
-        #   2. These are DARK photos: the receipt is bright paper on a black
-        #      table. Under THRESH_BINARY the paper and the table both become
-        #      foreground, the row projection is full width everywhere, there
-        #      are no dark gaps between text lines, and the band finder
-        #      returns NOTHING. BINARY_INV is correct for the polarity but
-        #      still marks the paper as a solid block.
-        # So: local contrast against a median-blurred paper estimate, which
-        # isolates ink regardless of how dark the surrounding table is.
-        ink = ink_mask(a)
-        binv = (ink.astype(np.uint8)) * 255
-        # Crop to the receipt: rows where ink spans a real fraction of width.
-        # The page is tilted, so use a LOW bar -- the top and bottom of a
-        # receipt contain little text.
-        ys = np.where(binv.sum(axis=1) > W * 0.02)[0]
-        if len(ys) > 20:
-            binv = binv[max(0, ys[0] - 5):min(H, ys[-1] + 6), :]
-
-        # Horizontal projection -> contiguous ink bands are text lines.
-        # line_bands() is the shared implementation, so the tests that pin the
-        # paper-estimation fix and the sweep that chose its constants exercise
-        # the same code that runs here rather than a private copy.
-        proj = (binv > 0).sum(axis=1)
-        bands = line_bands(proj)
-
-        # Localise the receipt and re-project inside it, when the document can
-        # be located. The full-width projection above sums ink across the WHOLE
-        # frame, so scene content beside the receipt -- 1002-receipt was shot
-        # next to a bowl of noodles -- puts ink in every row and the profile
-        # never drops to a splittable gap.
-        quad = locate_document(a)
-        if quad is not None:
-            located = bands_in_document(a, quad)
-            if located:
-                bands = located
-
-        if not bands:
+        # ONE page reader, shared with the fallback path in evaluate.py. This
+        # used to be a private copy of it, which is how the coordinate bug above
+        # survived: the trimmed projection's band indices were used to crop the
+        # untrimmed array, so anything above the receipt pushed the crop off the
+        # text. read_page() adds the offset back and is pinned by tests.
+        got_lines = [t for t, _ in read_page(model, device, a)]
+        if not got_lines:
             empty_pages += 1
             continue
-
-        got_lines = []
-        for (y0, y1) in bands:
-            # Crop to the INK EXTENT horizontally. Using the full page width
-            # (750 px of which the text may occupy 400) hands the recogniser
-            # mostly-empty margins, and worse, pads/crops it so the text lands
-            # at a different scale than any training crop. A 3% pad on each
-            # side also guards against clipping descenders and italic tails.
-            strip = ink[y0:y1, :]
-            cols = np.where(strip.sum(axis=0) > 0)[0]
-            if len(cols) < 4:
-                continue                     # a speck, not a text line
-            pad = max(2, int((y1 - y0) * 0.10))
-            x0 = max(0, int(cols[0]) - pad)
-            x1 = min(a.shape[1], int(cols[-1]) + pad + 1)
-
-            # GRAYSCALE, not the binary mask. The model was trained on
-            # grayscale crops; handing it a 0/255 mask destroys the tonal
-            # information the restoration network and the recogniser both
-            # rely on, and reads nothing. This was the cause of the 140
-            # 'read-nothing' results.
-            band = a[y0:y1, x0:x1]
-            band = cv2.resize(band, (band.shape[1], R.CROP_H),
-                              interpolation=cv2.INTER_AREA)
-            # pad/crop to the recogniser's width window
-            w = min(R.MAX_W, max(R.MIN_W, band.shape[1]))
-            if band.shape[1] > R.MAX_W:
-                band = band[:, :R.MAX_W]
-            else:
-                band = np.pad(band, ((0, 0), (0, w - band.shape[1])))
-            txt, _ = recognise(model, band, device)
-            if txt.strip():
-                got_lines.append(txt.strip())
 
         # Score line-by-line with an ALIGNMENT, not by position, and count
         # unmatched lines on both sides separately so a recall failure is

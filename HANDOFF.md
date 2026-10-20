@@ -181,7 +181,10 @@ lucky seed. Trust the rerun.
 Tesseract any more. The shipped 942k-parameter CRNN's own end-to-end figure, driven
 through the real app in WebKit on 12 rendered documents, is **0.0% field recovery,
 33.3% classification, 3.6% word accuracy, 70.8% CER** — `docs/14_HACKATHON_BENCHMARK.md`,
-artifact `artifacts/hackathon_metrics.json`. Quote the engine with the number, or
+artifact `artifacts/hackathon_metrics.json`. Re-measured stage by stage on the
+shipped engine (`bash run.sh eval`, default `--engine=crnn`) the preprocessing arms
+give 3.7-7.4% field accuracy against the Tesseract arm's 62.2%, and `raw` beats the
+restorer arms. Quote the engine with the number, or
 quote a number that is not the product's.
 
 The brief's step-3 metrics and their sources, in one command:

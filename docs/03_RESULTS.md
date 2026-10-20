@@ -284,15 +284,36 @@ real text, just the wrong band:
 number is not zero. The band misalignment in line 2 is the detector pairing
 the wrong crop with the right label.
 
-### Why we are not quoting a field-accuracy number yet
+### The field-accuracy number for the SHIPPED engine (it is now measured)
 
-End-to-end field accuracy cannot be honestly computed for the custom OCR path
-yet, because the recogniser is not accurate enough for the number to mean
-anything. Quoting it would require a detector well above 85% recall first. The
-historical end-to-end figures in section 4 are **Tesseract** results and must
-not be presented as ours.
+The historical figures in section 4 are **Tesseract** results. The shipped engine
+is our own CRNN, and it has now been measured the same way, on the same
+generator, with the same all-or-nothing rule:
+
+| engine | field accuracy | word accuracy | exact dosage | OCR conf |
+|---|---|---|---|---|
+| tesseract (legacy, section 4) | 62.2% | 65.4% | 84.4% | 69.7 |
+| **crnn (shipped)** | **7.4%** | **26.4%** | **68.5%** | 82.7 |
+| crnn, no restoration (raw) | 5.6% | 26.9% | 68.5% | 85.2 |
+
+`bash run.sh eval --engine=crnn` (default), 10 capture profiles x 6 documents,
+sub-human profiles excluded; artifact `artifacts/eval_results.json` carries
+`"engine": "crnn"`. And end to end — detector, recogniser, classifier and field
+extraction in the real app, in WebKit — the shipped engine recovers **0.0%** of
+ground-truth fields (`docs/14_HACKATHON_BENCHMARK.md`).
+
+So the honest statement is not "we cannot measure it", it is: **the classifier
+clears the brief's bar; the recognition stage does not, and it is 8x worse than
+the engine this project replaced.** Section 4's ordering of the preprocessing arms
+(restorer > classical) also does not survive the engine change: on the shipped
+recogniser `raw` ties or beats the restorer arms, which matches
+`tools/restore_ab.js`'s finding that restoration costs OCR yield.
 
 ## 4. End-to-end accuracy (LEGACY — TESSERACT PATH, NOT OURS)
+
+> The shipped engine's equivalent table is in section 3 above. This section is
+> kept because it is the baseline the recogniser has to beat, and because the
+> preprocessing-arm ordering it established is what section 3 now revises.
 
 The metric that matters: **field accuracy** — the fraction of documents where *every* key field is recovered. All-or-nothing, because a blind user who hears the wrong dosage is worse off than one who hears none.
 
