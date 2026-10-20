@@ -206,15 +206,67 @@ def load(out_dir=None, split=None):
     return data
 
 
+def write_cache(data=None, out_path=None, corpus_dir=None):
+    """Pack the corpus into the TRAINER'S cache schema.
+
+    `train_ocr.py --data a,b,c` already concatenates several caches and
+    normalises the two schemas it has seen (`receipts` for receipts, `page` for
+    pages). Emitting that same contract is why the rendered documents can join
+    the training set without touching the trainer at all:
+
+        bash run.sh py ml/src/train_ocr.py --data artifacts/ocr_train.npz,\
+            data/render_corpus/crops_train.npz --epochs 40
+
+    Crops are resized with `build_dataset.crop_to_array` — the SAME transform
+    training uses on receipts — so the two sources are geometrically identical
+    and the model cannot tell which one it is looking at.
+    """
+    import build_dataset as B
+    from PIL import Image
+
+    data = data if data is not None else load(corpus_dir)
+    crops = [B.crop_to_array(Image.fromarray(np.asarray(c, np.uint8)))
+             for c in data["crops"]]
+    if not crops:
+        raise SystemExit("empty corpus: build it first (render-corpus --pages N)")
+    maxw = max(c.shape[1] for c in crops)
+    packed = np.zeros((len(crops), crops[0].shape[0], maxw), np.uint8)
+    for i, c in enumerate(crops):
+        packed[i, :, :c.shape[1]] = c
+    out_path = Path(out_path or (Path(corpus_dir or OUT) / "crops_train.npz"))
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        out_path,
+        images=packed,
+        widths=np.array([c.shape[1] for c in crops], np.int32),
+        labels=np.array([str(x) for x in data["labels"]], dtype=object),
+        variants=np.array([str(x) for x in data["profile"]], dtype=object),
+        splits=np.array([str(x) for x in data["split"]], dtype=object),
+        page=np.array([str(x) for x in data["doc"]], dtype=object),
+    )
+    return out_path
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pages", type=int, default=400, help="pages PER document type")
     ap.add_argument("--profiles", default="", help="comma-separated; default the 4 mildest")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out", default=str(OUT))
+    ap.add_argument("--cache-only", action="store_true",
+                    help="skip rendering; pack the corpus already on disk into "
+                         "the trainer's cache schema")
     a = ap.parse_args()
+    if a.cache_only:
+        p = write_cache(corpus_dir=a.out)
+        z = np.load(p, allow_pickle=True)
+        print("wrote %s  %d crops  maxW %d  splits %s"
+              % (p, z["images"].shape[0], z["images"].shape[2],
+                 {s: int((z["splits"] == s).sum()) for s in ("train", "val", "test")}))
+        return
     profs = [p for p in a.profiles.split(",") if p] or None
     build(n_pages=a.pages, profiles=profs, seed=a.seed, out_dir=a.out)
+    write_cache(corpus_dir=a.out)
 
 
 if __name__ == "__main__":

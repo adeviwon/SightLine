@@ -73,3 +73,31 @@ def test_build_splits_by_page_never_by_crop(tmp_path):
     back = np.load(tmp_path / "crops.npz", allow_pickle=True)
     assert back["labels"].shape == d["labels"].shape
     json.loads((tmp_path / "index.json").read_text())
+
+
+def test_write_cache_matches_the_trainer_schema(tmp_path):
+    """`train_ocr.py --data a,b,c` concatenates caches, so ours must be one.
+
+    It reads images/widths/labels/variants/splits and a source key
+    (`receipts`, or `page` when there is none), and it filters crops whose label
+    is longer than the model's timesteps. A schema mismatch would either crash or
+    silently train on none of this corpus, which is the kind of failure this file
+    exists to prevent.
+    """
+    d = RC.build(n_pages=6, profiles=["studio_clean"], seed=5, out_dir=tmp_path)
+    p = RC.write_cache(d, tmp_path / "crops_train.npz")
+    z = np.load(p, allow_pickle=True)
+    assert {"images", "widths", "labels", "variants", "splits", "page"} <= set(z.files)
+    assert z["images"].shape[1] == R.CROP_H, "crops must be packed CROP_H tall"
+    assert z["images"].shape[2] <= R.MAX_W, "packed width must respect MAX_W"
+    n = z["images"].shape[0]
+    assert n == len(z["labels"]) == z["widths"].shape[0] == len(z["splits"])
+    for lab in list(z["labels"])[:50]:
+        assert R.encode(str(lab)), "a label the model cannot encode is untrainable"
+    for w in z["widths"]:
+        assert 1 <= int(w) <= z["images"].shape[2]
+    assert {str(s) for s in z["splits"]} <= {"train", "val", "test"}
+    # every page stays on one side of the split
+    seen = {}
+    for page, split in zip(z["page"], z["splits"]):
+        assert seen.setdefault(str(page), str(split)) == str(split)
