@@ -296,3 +296,37 @@ def REPO_CKPT():
     if not p.exists():
         return None
     return torch.load(str(p), map_location="cpu", weights_only=False)["model"]
+
+def test_verify_crnn_fails_when_the_graph_is_narrower_than_the_training_clamp():
+    """The check that did not exist, and the one that matters most.
+
+    Nothing verified the SERVED WIDTH before this, which is exactly how a 256px
+    graph shipped against 320px training crops: crop_to_array builds training
+    crops at natural width clamped to MAX_W, the corpus median IS that clamp, and
+    a narrower graph silently truncates the tail off every wider crop. Measured on
+    200 held-out crops: 44.7% exact line match at natural width against 0.0% cut
+    to 256, with the read changed on 200 of 200.
+
+    A gate that cannot fail is worse than no gate, because it is read as
+    reassurance -- this file already documents one inverted gate that never ran on
+    any checkpoint. So the failure direction is pinned here, not just the pass.
+    """
+    ck = REPO_CKPT()
+    if ck is None:
+        pytest.skip("no trained checkpoint")
+    m = build_model(R.NUM_CLASSES)
+    m.load_state_dict(ck)
+    m.eval()
+    # MUST be in export mode, the same mode export_crnn exports in. The graph
+    # carries the explicit-loop LSTM while the default is the FUSED one, and they
+    # differ by ~1.05e-4 -- just past export_crnn's 1e-4 tolerance, so a fused
+    # model makes the parity check fail for a reason that has nothing to do with
+    # the width. Without this the test below "fails" on a correct graph.
+    if hasattr(m, "set_export_mode"):
+        m.set_export_mode(True)
+
+    assert X.verify_crnn(m, width=int(X._training_clamp())) is not False, (
+        "verify_crnn rejected a graph exported at the training clamp")
+    assert X.verify_crnn(m, width=256) is False, (
+        "verify_crnn PASSED on a 256px graph while training built crops at "
+        f"{X._training_clamp()}px -- this is the exact defect that shipped")
