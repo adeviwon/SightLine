@@ -38,6 +38,7 @@ USE
 import argparse
 import json
 import random
+import zlib
 import sys
 from pathlib import Path
 
@@ -80,6 +81,13 @@ def line_bands(lines, scale=1.0):
     lh = int(30 * scale)
     y0 = int(28 * scale)
     return [(y0 + i * lh - 3, y0 + i * lh + int(fs * 1.6)) for i in range(len(lines))]
+
+
+def font_for_page(page_id):
+    """The typeface for one page. Deterministic in the page id, so a rebuild is
+    reproducible; a page is set in ONE family so its glyphs are consistent."""
+    import capture as C
+    return C.FONTS[zlib.crc32(str(page_id).encode()) % len(C.FONTS)]
 
 
 def page_crops(gray, lines, scale=1.0, min_ink_px=3):
@@ -148,14 +156,16 @@ def build(n_pages=400, profiles=None, seed=0, out_dir=None, width=900,
                 for i in range(n_pages) for _, dtype in capture.DOCS]
     splits = assign_splits(page_ids)
 
-    crops, labels, docs, profs, spl = [], [], [], [], []
+    crops, labels, docs, profs, spl, fonts = [], [], [], [], [], []
     for pid in page_ids:
         dtype = pid.rsplit("-", 1)[0]
         lines = next(l for l, d in capture.DOCS if d == dtype)
         scale = rng.choice(scales)
         profile = profiles[rng.randrange(len(profiles))]
+        page_font = font_for_page(pid)
         clean = capture.render_document(lines, width=width,
-                                        seed=page_seed(pid), scale=scale)
+                                        seed=page_seed(pid), scale=scale,
+                                        font=page_font)
         deg = capture.apply_profile(clean, seed=page_seed(pid, 1),
                                     **capture.CAPTURE_PROFILES[profile])
         gray = np.asarray(deg.convert("L"), dtype=np.uint8)
@@ -165,6 +175,7 @@ def build(n_pages=400, profiles=None, seed=0, out_dir=None, width=900,
             docs.append(pid)
             profs.append(profile)
             spl.append(splits[pid])
+            fonts.append(page_font)
         if verbose and len(docs) and len(docs) % 500 < len(lines):
             print("  %d crops from %d pages" % (len(docs), page_ids.index(pid) + 1))
 
@@ -177,6 +188,7 @@ def build(n_pages=400, profiles=None, seed=0, out_dir=None, width=900,
         "doc": np.array(docs, dtype=object),
         "profile": np.array(profs, dtype=object),
         "split": np.array(spl, dtype=object),
+        "font": np.array(fonts, dtype=object),
     }
     out_dir = Path(out_dir or OUT)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -188,7 +200,10 @@ def build(n_pages=400, profiles=None, seed=0, out_dir=None, width=900,
         "scales": list(scales),
         "seed": seed,
         "split_counts": {s: int((data["split"] == s).sum()) for s in ("train", "val", "test")},
-        "note": "labels are drawn from capture.render_document; splits are by page",
+        "fonts": sorted(set(fonts)),
+        "font_counts": {Path(f).stem: int((data["font"] == f).sum()) for f in set(fonts)},
+        "note": "labels are drawn from capture.render_document; splits are by page; "
+                "one typeface per page (the alphabet-confusion lever)",
     }, indent=2) + "\n")
     if verbose:
         print("wrote %d crops from %d pages -> %s"
@@ -199,7 +214,10 @@ def build(n_pages=400, profiles=None, seed=0, out_dir=None, width=900,
 def load(out_dir=None, split=None):
     """Read the corpus back; optionally one split only."""
     d = np.load(Path(out_dir or OUT) / "crops.npz", allow_pickle=True)
-    data = {k: d[k] for k in ("crops", "labels", "doc", "profile", "split")}
+    keys = ["crops", "labels", "doc", "profile", "split"]
+    if "font" in d.files:
+        keys.append("font")
+    data = {k: d[k] for k in keys}
     if split:
         m = data["split"] == split
         data = {k: v[m] for k, v in data.items()}

@@ -101,3 +101,43 @@ def test_write_cache_matches_the_trainer_schema(tmp_path):
     seen = {}
     for page, split in zip(z["page"], z["splits"]):
         assert seen.setdefault(str(page), str(split)) == str(split)
+
+
+# ── the alphabet-confusion lever: one typeface per page ───────────────────────
+
+def test_default_render_is_unchanged_when_no_font_is_given():
+    """capture.render_document(font=None) must be byte-identical to the old render.
+
+    Everything already measured — SROIE caches, repro-check, the frozen
+    checkpoint's own training data — was produced by the font=None path. If this
+    drifts, every stored number becomes unattributable.
+    """
+    import hashlib
+    import capture as C
+    lines = C.PRESCRIPTION
+    a = C.render_document(lines, seed=7).tobytes()
+    b = C.render_document(lines, seed=7).tobytes()
+    assert a == b, "render_document is not deterministic"
+    # and the pinned-family path must actually differ, or the lever is a no-op
+    c = C.render_document(lines, seed=7, font=C.FONTS[1]).tobytes()
+    assert c != a, "font= changed nothing: the multi-font lever would be a no-op"
+    assert hashlib.sha256(a).hexdigest()[:12] != hashlib.sha256(c).hexdigest()[:12]
+
+
+def test_corpus_records_one_font_per_page(tmp_path):
+    """The font must be in the artifact, or per-font accuracy is unanswerable."""
+    import capture as C
+    import render_corpus as RC
+    data = RC.build(n_pages=6, seed=5, out_dir=tmp_path, verbose=False)
+    fonts = list(data["font"])
+    assert len(fonts) == len(data["labels"])
+    for f in set(fonts):
+        assert Path(f).exists(), f
+    # a page's crops share a font; the corpus as a whole does not
+    by_doc = {}
+    for doc, f in zip(data["doc"], fonts):
+        by_doc.setdefault(str(doc), set()).add(f)
+    assert all(len(v) == 1 for v in by_doc.values()), "one page changed font mid-page"
+    assert len(set(fonts)) >= 2, "only one typeface in the corpus: nothing was widened"
+    idx = json.loads((tmp_path / "index.json").read_text())
+    assert idx["font_counts"] and len(idx["fonts"]) >= 2

@@ -40,8 +40,53 @@ FONT_CANDIDATES = [
     "/usr/share/fonts/TTF/DejaVuSans.ttf",
 ]
 
+# THE ALPHABET-CONFUSION CAUSE, and the reason this list exists. Every render in
+# this repo used ONE typeface family (DejaVu/Liberation Sans — the same grotesque
+# shape, differing only in weight), so the recogniser learned exactly one glyph
+# prior and digit-ised our letters on anything else: PRESCRIPTION ->
+# PRE5CR1P710N, DATE01102026 -> 0A7E01102026 (S->5 T->7 O->0 I->1 G->6).
+#
+# The recogniser sees fonts; it has only ever seen one. These are the families
+# installed here, spanning serif / sans / mono / narrow / oblique, which is the
+# cheapest way to widen that prior without a new dataset. render_corpus.py picks
+# one per page so a page's glyphs stay internally consistent (a real document is
+# not set in five fonts) while the corpus as a whole is not.
+FONTS = [
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSerif.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeMono.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSansNarrow-Regular.ttf",
+]
 
-def _font(size=20, bold=False):
+
+def _font(size=20, bold=False, family=None):
+    """A font at this size. `family` pins the typeface; None keeps the old choice.
+
+    With family=None the search order is exactly what it always was (DejaVuSans-
+    Bold for bold text, then the candidates in order), so existing renders are
+    byte-identical. Passing a path from FONTS renders in that family, preferring
+    its bold sibling for the heading when one exists.
+    """
+    if family:
+        if bold:
+            stem, _, ext = family.rpartition(".")
+            sib = stem.replace("-Regular", "") + "-Bold." + ext
+            for cand in (sib, family):
+                try:
+                    return ImageFont.truetype(cand, size)
+                except OSError:
+                    continue
+        else:
+            try:
+                return ImageFont.truetype(family, size)
+            except OSError:
+                pass
     paths = [FONT_CANDIDATES[1]] + FONT_CANDIDATES if bold else FONT_CANDIDATES
     for fp in paths:
         try:
@@ -105,7 +150,8 @@ DOCS = [(PRESCRIPTION, "prescription"), (BANK_STATEMENT, "banking"),
         (LEASE_AGREEMENT, "legal")]
 
 
-def render_document(lines, width=900, seed=None, bg=248, ink=28, scale=1.0):
+def render_document(lines, width=900, seed=None, bg=248, ink=28, scale=1.0,
+                    font=None):
     """Render a clean document with jittered baseline/spacing (seeded)."""
     rng = random.Random(seed)
     fs = max(12, int(19 * scale))
@@ -113,7 +159,7 @@ def render_document(lines, width=900, seed=None, bg=248, ink=28, scale=1.0):
     height = int(90 + len(lines) * lh + 40)
     img = Image.new("RGB", (width, height), (bg, bg, bg))
     d = ImageDraw.Draw(img)
-    head, body = _font(fs + 2, True), _font(fs)
+    head, body = _font(fs + 2, True, font), _font(fs, False, font)
     y = int(28 * scale)
     for i, line in enumerate(lines):
         f = head if i == 0 else body
