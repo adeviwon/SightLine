@@ -208,6 +208,18 @@ def test_camera_profiles_actually_changed():
     for k in RP.CAMERA:
         assert RP.AFTER[k] != RP.BEFORE[k], k
         assert RP.AFTER[k] == RP.TUNED[k], k
+    # AND the live table must be IN STEP with TUNED, which is the integration
+    # guard: BEFORE is frozen history (see the archive comment in the module), so
+    # nothing else would notice capture.py drifting back or being half-edited. The
+    # non-camera profiles must be untouched at the same time.
+    for k in RP.CAMERA:
+        assert RP.capture.CAPTURE_PROFILES[k] == RP.TUNED[k], (
+            k + ": capture.py and retune_profiles.TUNED disagree -- integrate the "
+            "three-line diff or revert it, but do not leave them half-applied")
+    for k in RP.BEFORE:
+        if k not in RP.CAMERA:
+            assert RP.capture.CAPTURE_PROFILES[k] == RP.BEFORE[k], (
+                k + " is not a camera profile and must stay byte-identical")
 
 
 def test_tuned_profiles_are_less_blurred_than_the_shipped_ones():

@@ -75,7 +75,29 @@ CAMERA = ("handheld_light", "handheld_heavy", "low_light")
 SHOWN = ("studio_clean", "handheld_light", "handheld_heavy", "low_light")
 
 # ── BEFORE: the shipped capture profile table, verbatim ──────────────────────
-BEFORE = {k: dict(v) for k, v in capture.CAPTURE_PROFILES.items()}
+# ARCHIVED SHIPPED VALUES, written down rather than read from capture.py.
+#
+# This used to be `{k: dict(v) for k, v in capture.CAPTURE_PROFILES.items()}`, which
+# worked only until the re-tune was INTEGRATED -- after that the live table holds the
+# new values, so BEFORE == AFTER and the whole before/after comparison silently
+# became a no-op (it did: test_camera_profiles_actually_changed went red the moment
+# the three-line edit landed in capture.py). A measurement's "before" must be a
+# record of what shipped, not a read of what is there now, or the baseline moves
+# with the experiment. Keep this frozen; it is a historical fact, not a setting.
+BEFORE = {
+    "studio_clean":    dict(),
+    "handheld_light":  dict(defocus=1.6, motion=7, motion_angle=22, iso=400),
+    "handheld_heavy":  dict(defocus=2.4, motion=11, motion_angle=35, iso=1200),
+    "low_light":       dict(defocus=2.0, motion=9, iso=3200, light=0.55, noise_iso=6400),
+    "hand_shadow":     dict(hand_shadow=True, light=0.30),
+    "off_axis":        dict(perspective=0.045, rot=4.0),
+    "glossy_glare":    dict(glare=True, light=0.25),
+    "jpeg_social":     dict(jpeg=55, defocus=1.2),
+    "paper_texture":   dict(noise_iso=1600, light=0.25, jpeg=70),
+    "worst_case":      dict(defocus=3.0, motion=13, iso=3200, hand_shadow=True,
+                            light=0.5, noise_iso=6400, perspective=0.05, rot=6.0,
+                            glare=True, jpeg=50),
+}
 
 # ── AFTER: the three camera-like profiles, re-tuned ──────────────────────────
 #
