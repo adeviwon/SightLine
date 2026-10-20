@@ -188,3 +188,25 @@ def test_real_artifacts_of_both_shapes_compare_without_error():
     assert sn == "hackathon"
     assert rows
     assert all(r["verdict"] for r in rows)
+
+def test_mcnemar_exact_survives_a_thousand_discordant_pairs():
+    """Regression: `2.0 ** n` raised OverflowError for n > 1023.
+
+    Hit for real on a paired run with 1,152 values ("Numerical result out of
+    range"), which killed the verdict for a measurement that was otherwise fine.
+    The exact test must work at every n -- falling back to the chi-square
+    approximation is what this function exists to avoid, since the approximation
+    invents significance exactly when the discordant count is small.
+    """
+    import math
+    # The case that crashed: n = 1152, one side empty.
+    p = C.mcnemar_exact(1152, 0)
+    assert 0.0 <= p < 1e-300
+    # Balanced -> certainly not significant, and it must not raise.
+    assert C.mcnemar_exact(600, 600) == 1.0
+    # Exactness holds at scale: compare against the direct binomial sum in
+    # Fraction arithmetic, which cannot overflow at all.
+    from fractions import Fraction
+    n, k = 1200, 20
+    tail = sum(Fraction(math.comb(n, i), 1 << n) for i in range(k + 1))
+    assert C.mcnemar_exact(k, n - k) == float(min(Fraction(1), 2 * tail))

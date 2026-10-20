@@ -248,4 +248,9 @@ def mcnemar_exact(b: int, c: int) -> float:
         return 1.0
     k = min(b, c)
     tail = sum(math.comb(n, i) for i in range(k + 1))
-    return min(1.0, 2.0 * tail / (2 ** n))
+    # Integer arithmetic end to end: `2.0 ** n` raises OverflowError for n > 1023
+    # (hit for real on a 1,152-item paired run), and `2.0 * tail` overflows too once
+    # the tail is past the double range. Python ints are arbitrary precision, and
+    # int/int true division rounds the quotient (<= 2 here) correctly, so this is
+    # exact for every n -- the numerator and denominator never become floats.
+    return min(1.0, (2 * tail) / (1 << n))
