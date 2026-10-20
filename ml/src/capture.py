@@ -322,9 +322,20 @@ def ImageChops_add(a, b):
 
 CAPTURE_PROFILES = {
     "studio_clean":    dict(),
-    "handheld_light":  dict(defocus=1.6, motion=7, motion_angle=22, iso=400),
-    "handheld_heavy":  dict(defocus=2.4, motion=11, motion_angle=35, iso=1200),
-    "low_light":       dict(defocus=2.0, motion=9, iso=3200, light=0.55, noise_iso=6400),
+    # RE-TUNED against measured real photographs (ml/src/retune_profiles.py --compare).
+    # The shipped values made a 7x7 bokeh disc plus a 7-11px motion smear, which
+    # destroyed the histogram bimodality so Otsu counted sensor noise and shadow as
+    # INK: 0.63 against a real photo's 0.23, 42-67x off real on sharpness, and the
+    # severity ladder was BROKEN (low_light, the darkest profile, reported the LOWEST
+    # ink). These parameters are physical capture knobs only -- no post-hoc rescaling
+    # of any statistic -- and bring the worst deviation to 1.6x with the ladder monotone.
+    "handheld_light":  dict(defocus=0.5, iso=400, light=0.08),
+    "handheld_heavy":  dict(defocus=0.7, motion=2, motion_angle=35, iso=1600, light=0.25),
+    # low_light keeps 4.34x residual sharpness deviation on purpose: Otsu ink rises
+    # monotonically with blur, so matching sharpness would drop its ink BELOW
+    # handheld_heavy and break the required severity ordering. Ordered ladder over a
+    # tighter sharpness match, with the cost stated rather than hidden.
+    "low_light":       dict(defocus=1.0, motion=3, motion_angle=35, iso=3200, light=0.55, noise_iso=6400),
     "hand_shadow":     dict(hand_shadow=True, light=0.30),
     "off_axis":        dict(perspective=0.045, rot=4.0),
     "glossy_glare":    dict(glare=True, light=0.25),
