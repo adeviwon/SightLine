@@ -65,7 +65,11 @@ print(json.dumps({
   // stripping the keyword leaves bare declarations in the function scope rather
   // than properties on module.exports. Collect them explicitly instead of
   // relying on module.exports, which would stay empty.
-  const wanted = ["CHARSET", "BLANK", "CROP_H", "EXPORT_W", "WIDTH_DIVISOR",
+  const wanted = ["CHARSET", "BLANK", "CROP_H", "EXPORT_W", "TRAINING_CLAMP",
+                  // TRAINING_CLAMP added with the width-adaptive change: this
+                  // harness builds JS from a WHITELIST, so a name missing here reads
+                  // as undefined and any assertion on it fails for the wrong reason.
+                  "WIDTH_DIVISOR",
                   "decodeGreedy", "timestepsFor", "recognise", "init"];
   const sandbox = { window: undefined, navigator: { hardwareConcurrency: 4 },
                     console };
@@ -127,7 +131,15 @@ print(json.dumps({
     check(`timestepsFor(${w}) = ${expected}`, t === expected,
           `got ${t}`);
   }
-  check("EXPORT_W is 256", JS.EXPORT_W === 256, `got ${JS.EXPORT_W}`);
+  // DERIVED, not a literal. This asserted "EXPORT_W is 256" and went red the
+  // moment the graph moved to the training clamp -- a check failing for a reason
+  // unrelated to what it tests, which is how checks get ignored. EXPORT_W is now
+  // an alias of TRAINING_CLAMP, and the invariant worth asserting is that the
+  // clamp is the crop cap the training data was built with (realdata.MAX_W).
+  check("EXPORT_W is the training clamp", JS.EXPORT_W === JS.TRAINING_CLAMP,
+        `EXPORT_W=${JS.EXPORT_W} TRAINING_CLAMP=${JS.TRAINING_CLAMP}`);
+  check("TRAINING_CLAMP is realdata.MAX_W (320)", JS.TRAINING_CLAMP === 320,
+        `got ${JS.TRAINING_CLAMP}`);
   check("CROP_H is 32", JS.CROP_H === 32, `got ${JS.CROP_H}`);
 
   console.log("\nthe specific case that motivated the gate:");

@@ -286,8 +286,11 @@ export function detectLines(gray, w, h, opts = {}) {
  *
  * The width clamp and the horizontal squeeze past it are NOT part of that bug:
  * training clamps at realdata.MAX_W=320 the same way, and the caller passes the
- * ONNX graph's fixed EXPORT_W=256 because `aten::lstm` cannot export a dynamic
- * width. Splitting wider lines into chunks and concatenating the decodes is a
+ * served width -- recognizer.js EXPORT_W, an alias of that same clamp. (The graph's
+ * width axis is dynamic and the app serves each crop at its own width; the earlier
+ * note here said the width was fixed because `aten::lstm` cannot export a dynamic
+ * sequence length, which was a mode artefact, not a limitation -- see
+ * ml/src/export_dynamic.py.) Splitting wider lines into chunks and concatenating the decodes is a
  * real improvement, but it is a pipeline change (where to cut, what overlap,
  * how to rejoin), not a crop-rule fix.
  *

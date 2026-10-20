@@ -266,6 +266,67 @@ const SightLine = (() => {
     return fields;
   }
 
+  // ── Field engine: the measured extraction path, opt-in ────────────────
+  //
+  // The app ships the WEAKEST of the three measured extraction paths. The two
+  // better halves are already in app/js and nothing called them: field_spot.js
+  // (closed-vocabulary label spotting + the label-proximity value read) and
+  // field_guard.js (typed validation + the speak/refuse policy), each proven
+  // against the Python it was ported from by its own golden vectors. The one
+  // missing piece was the composition — app/js/field_engine.js — and this is its
+  // switch.
+  //
+  // WHY IT IS OFF BY DEFAULT. An unmeasured path must not silently become the
+  // product's voice, and with the flag off the `fields` this function returns is
+  // byte-for-byte what shipped, so every gate that reads u.fields is unaffected.
+  // Measured with it on (120 held-out pages, 696 true label/value pairs, ground
+  // truth = the value the renderer actually drew): recall 0.705 at precision
+  // 0.793 against the whole-page regex's 0.240 at 0.965, with wrong-but-spoken
+  // cut from 39% of spoken values to 4.3% (typed-only) and ZERO wrong dosages.
+  //
+  // FREE TEXT IS A SEPARATE FLAG and stays off until someone asks for it: Lane N
+  // measured that turning it on buys +0.26 recall for 128 extra wrong free-text
+  // values. The default speaks only what the policy can CHECK.
+  const FIELD_ENGINE = {
+    enabled: false,
+    speakFreeText: false,     // typed-only
+    threshold: null,          // null = field_spot's own default (0.75)
+  };
+
+  /** label_spot's document-type key for an app category (the evaluate.FIELDS keys). */
+  function fieldDocType(category) {
+    return category === "medical" ? "prescription" : String(category || "");
+  }
+
+  /**
+   * fieldEngineFields(): the values the policy SPEAKS for a page, in the shipped
+   * field-row shape. `null` when the engine module is not on the page, so the
+   * caller falls back to the regex and a script that failed to load degrades
+   * instead of throwing.
+   *
+   * The policy's regex path is fed EXACTLY what the Python measurement fed it —
+   * evaluate.fields_found's tokens mapped by field_guard.fromRegexTokens
+   * (ml/src/field_policy.py REGEX_TOKENS) — which is what makes this call and
+   * `bash run.sh py ml/src/eval_field_truth.py` comparable at all. The token
+   * table is not re-derived here: field_guard owns it, next to the policy.
+   */
+  function fieldEngineFields(text, category) {
+    const FE = typeof globalThis !== "undefined" ? globalThis.SightLineFieldEngine : undefined;
+    const FG = typeof globalThis !== "undefined" ? globalThis.SightLineFieldGuard : undefined;
+    if (!FE || !FG) return null;
+    const docType = fieldDocType(category);
+    const regexFields = FG.fromRegexTokens(docType, fields_found(text, docType));
+    const out = FE.extractFromText(text, {
+      docType: docType,
+      regexFields: regexFields,
+      speakFreeText: FIELD_ENGINE.speakFreeText,
+      threshold: FIELD_ENGINE.threshold,
+    });
+    return out.decisions
+      .filter(function (d) { return d.decision === "speak"; })
+      .map(function (d) { return { label: d.field, value: d.value, confidence: 0.9 }; });
+  }
+
   // ── NER ───────────────────────────────────────────────────────────────
 
   const ORGS = "HSBC|Barclays|Lloyds|NatWest|Santander|NHS|Halifax|TSB|Monzo|Revolut";
@@ -1027,9 +1088,19 @@ const SightLine = (() => {
     // stay consistent: weak model AND no keyword evidence means refuse.
     const modelConfident = !!(override && override.category
       && (override.confidence || 0) >= 0.6);
-    const fields = (documentEvidence === 0 && !modelConfident)
-      ? []
-      : extractFields(normalized, cls.category);
+    // WHICH EXTRACTOR SPEAKS. With the flag off this is byte-for-byte what
+    // shipped. With it on, the speak/refuse policy decides over BOTH paths
+    // (fieldEngineFields above); the no-evidence gate still applies first, so a
+    // read with no document evidence still asserts nothing.
+    let fields;
+    if (documentEvidence === 0 && !modelConfident) {
+      fields = [];
+    } else if (FIELD_ENGINE.enabled) {
+      const eng = fieldEngineFields(normalized, cls.category);
+      fields = eng === null ? extractFields(normalized, cls.category) : eng;
+    } else {
+      fields = extractFields(normalized, cls.category);
+    }
     const entities = extractEntities(normalized);
     const summary = buildSummary(cls.category, fields);
     return {
@@ -1085,6 +1156,9 @@ const SightLine = (() => {
     // pipeline
     normalizeOCRText, classify, extractFields, extractEntities, buildSummary,
     understand, scan,
+    // the opt-in measured path (field_spot + field_guard via field_engine.js):
+    // FIELD_ENGINE is the switch, fieldEngineFields the call the app makes.
+    FIELD_ENGINE, fieldEngineFields, fieldDocType,
     // preprocess primitives (exposed for restorer.js + selftest)
     assessQuality, estimateSkew, otsu, median3, unsharp, clahe, binarize,
     toGrayCanvas, makeCanvas, _ctx2d, preprocess,
@@ -1099,3 +1173,42 @@ if (typeof module !== "undefined" && module.exports) module.exports = SightLine;
 // distinct, and restorer.js/classifier.js resolve the pipeline through
 // globalThis.SightLine. Setting only window left them without a handle.
 if (typeof globalThis !== "undefined") globalThis.SightLine = SightLine;
+
+// ── Bring the field engine onto the page (browser only) ────────────────────
+//
+// field_engine.js composes field_spot.js + field_guard.js, and all three are
+// CLASSIC IIFE scripts like this one: they publish on globalThis and have no
+// exports, so they cannot be `import`ed as ES modules. index.html does not list
+// them and this lane does not own index.html, so they are appended here, in
+// dependency order, as real classic scripts. Order matters twice: field_spot
+// captures field_guard's global when it evaluates, and field_engine captures
+// both — and a classic script without async/defer executes in insertion order,
+// so the chain needs nothing else. (Each is appended only after the previous
+// one settles, so a slow sibling can never run out of order.)
+//
+// FAILURE IS DEGRADATION, NOT A CRASH. If a file is missing the opt-in path is
+// simply unavailable (SightLineFieldEngine is undefined, fieldEngineFields
+// returns null, understand() falls back to the regex) — the same rule the ONNX
+// accelerators follow. Nothing is thrown, and the engine is off by default
+// anyway, so with the flag off this changes no output anywhere.
+if (typeof module === "undefined" && typeof document !== "undefined") {
+  (function loadFieldEngine() {
+    const files = ["field_guard.js", "field_spot.js", "field_engine.js"];
+    const parent = document.head || document.documentElement;
+    let base = "./";
+    for (const old of document.getElementsByTagName("script")) {
+      const i = String(old.src || "").indexOf("/js/");
+      if (i !== -1) { base = String(old.src).slice(0, i + 1); break; }
+    }
+    let n = 0;
+    const next = function () {
+      if (n >= files.length || !parent) return;
+      const s = document.createElement("script");
+      s.src = base + "js/" + files[n++];
+      s.onload = next;
+      s.onerror = next;        // missing file -> path unavailable, regex intact
+      parent.appendChild(s);
+    };
+    next();
+  })();
+}

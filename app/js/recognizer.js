@@ -11,20 +11,33 @@
  * search, no lexicon, no autoregressive loop. That is what makes one ONNX file
  * viable inside browser WASM on a phone with no GPU.
  *
- * THE FIXED-WIDTH CONTRACT — read this before changing anything
- * ------------------------------------------------------------
- * The exported graph takes EXACTLY [1, 1, 32, 320]. Width is NOT dynamic,
- * because aten::lstm cannot be traced with a dynamic sequence length:
+ * THE WIDTH CONTRACT — read this before changing anything
+ * -------------------------------------------------------
+ * The graph's width axis decides how this module builds its tensor, and it is
+ * READ FROM THE SESSION at init (engineWidth()) instead of being assumed:
  *
- *     'stack expects each tensor to be equal size, but got
- *      torch.Size([Min(((((((s0 - 1)//4)) - 1)//2)) + 1, ...), 1, 128])'
+ *   fixed width N      build the tensor and the row stride at N, right-pad
+ *                      shorter crops, trim the decode to
+ *                      Ttrue = min(timestepsFor(contentWidth), T).
+ *   symbolic ('width') build them at contentWidth and feed the crop at its
+ *                      NATURAL width — no padding at all — and decode all T.
+ *                      T already IS this crop's timestep count, so the trim has
+ *                      nothing to mask; it must NOT be reused as one either:
+ *                      timestepsFor FLOORS w/8 while the conv stack gives
+ *                      ceil(w/8) at some widths (T=6 at w=47, 8 at w=63, against
+ *                      floor(47/8)=5, floor(63/8)=7), so masking the dynamic
+ *                      path would drop a real timestep and read short.
  *
- * and torch.export cannot unroll a loop over a symbolic bound:
+ * BOTH modes live here at once on purpose, because the fix is meant to be a
+ * FILE REPLACEMENT, not a code patch. app/models/crnn.onnx is fixed-320 today
+ * and stays fixed-320 until the running retrain finishes: models/ocr/crnn.pt is
+ * rewritten every epoch, so the dynamic graph must be re-exported from the
+ * FINAL checkpoint. `artifacts/crnn_dynamic.onnx` is a proof artifact — copying
+ * it over app/models/crnn.onnx is a separate, later action, and nothing in this
+ * module depends on it having happened.
  *
- *     'The inequality, Eq((((x/4)//2)) - 20, 0), cannot be solved using
- *      solve_univariate_inequality'
- *
- * 320 IS THE TRAINING WIDTH AND IT IS NOT NEGOTIABLE. build_dataset.crop_to_array
+ * WHY THE WIDTH IS NOT FIXED FOREVER, AND WHY PADDING IS NOT SELF-CORRECTING
+ * 320 IS THE TRAINING CLAMP AND IT IS NOT NEGOTIABLE. build_dataset.crop_to_array
  * builds every training crop at its natural width CLAMPED to MAX_W = 320, and
  * the corpus median IS that clamp: of 3,270 held-out crops only 40 (1.2%) are
  * <= 256px, and the median and max are both 320. This graph was exported at 256
@@ -34,19 +47,32 @@
  * 256, with the read changed on 200 of 200: 'PATIENT JANE DOE DOB 04021979' came
  * back as 'PERIENT JANE DOE 2O08010', 'DATE 01102026' as 'DATE 01020'.
  *
- * PADDING IS NOT SELF-CORRECTING, which was the other half of that mistake. The
- * loss being CTC does not save it: a padded region emits blanks so the LOSS
- * ignores it, but this CRNN carries a two-layer BIDIRECTIONAL LSTM whose
- * backward pass starts at the RIGHT EDGE, i.e. inside the padding, so padded
- * zeros move the hidden states across the VALID frames (measured max |delta|
- * 9.10 at content 64, 15.28 at 200, in logit units -- enough to change the
- * decoded string). The width is the training clamp so that nothing is truncated;
- * padding is kept small for the same reason, not because it is harmless.
+ * The root cause of the FIXED width was never the LSTM op: `SightLineCRNN.
+ * set_export_mode(True)` runs an explicit per-timestep Python LSTM loop, and
+ * tracing THAT unrolls the recurrence and bakes T into the graph (the torch and
+ * dynamo errors quoted in ml/src/export_dynamic.py). Tracing the FUSED nn.LSTM
+ * lowers to a real ONNX LSTM op whose sequence axis is dynamic natively, so the
+ * graph accepts [B, 1, 32, W] for any W and computes what eager PyTorch
+ * computes. That is the whole mechanism, re-verified in the browser by
+ * app/tools/dynamic_width_check.js.
  *
- * We still trim the decode to the crop's true timestep count
- * T = ceil(contentWidth / 8). Without the trim, a narrow crop would be read as
- * timesteps of padding, and any residual signal there becomes invented
- * characters.
+ * Padding up to a fixed width is NOT inert, which is the reason to prefer the
+ * natural width at all. The loss being CTC does not save it: a padded region
+ * emits blanks so the LOSS ignores it, but this CRNN carries a two-layer
+ * BIDIRECTIONAL LSTM whose backward pass starts at the RIGHT EDGE, i.e. inside
+ * the padding, so padded zeros move the hidden states across the VALID frames
+ * (measured max |delta| 9.10 at content 64, 15.28 at 200, in logit units --
+ * enough to change the decoded string). 74.7% of held-out crops are padded at
+ * all against the 320 clamp, and on crops the clamp does NOT truncate the padded
+ * serve path scores crop-level exact 19.0% / CER 0.308 against 30.5% / 0.198 at
+ * natural width, agreeing with the natural decode on only 43% of crops. The
+ * fixed path is what the app runs until the swap; it is a known loss, not a
+ * neutral default.
+ *
+ * The fixed path's trim is still required: without it a narrow crop would be
+ * read as timesteps of padding, and any residual signal there becomes invented
+ * characters. timestepsFor FLOORS (MaxPool2d floors, so a clean w/8 formula
+ * mis-trims odd widths); it is a mask, not the model's own timestep count.
  *
  * CHARSET — 37 symbols, and that is deliberate
  * --------------------------------------------
@@ -75,12 +101,42 @@ const MODEL_URL = new URL("../models/crnn.onnx", import.meta.url).href;
 export const CHARSET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 export const BLANK = 0;
 export const CROP_H = 32;
-export const EXPORT_W = 320;      // must match export_crnn(width=realdata.MAX_W)
+
+// The TRAINING CLAMP (realdata.MAX_W) — NOT the served width. build_dataset
+// clamps every training crop to it, so it is the widest crop the model was ever
+// trained on AND the crop cap app/js/ocr_engine.js passes to cropForRecognizer.
+// Nothing in this module builds a tensor at it: the tensor width is the graph's
+// own (engineWidth()). Serving at the clamp is what re-introduces the padding
+// loss below, so this constant must never travel back into the tensor shape.
+export const TRAINING_CLAMP = 320;
+
+// Legacy name, kept because app/js/ocr_engine.js imports it and passes it as
+// cropForRecognizer's maxW. That crop cap is all it is now — it is NOT the
+// tensor width, and buildInput does not take it.
+export const EXPORT_W = TRAINING_CLAMP;
+
 export const WIDTH_DIVISOR = 8;   // timesteps = contentWidth / 8
 
 let session = null;
 let initPromise = null;
-const cache = new Map();          // contentWidth -> padded Float32Array
+
+// The graph's width axis, read from the session itself at init:
+//   undefined  not read yet (before init, and after reset())
+//   null       the axis is SYMBOLIC -> serve every crop at its natural width
+//   number     the axis is FIXED at that width -> pad up to it and trim
+let graphWidth;
+
+/**
+ * The width this session is actually served at: 'dynamic' when the graph's
+ * width axis is symbolic, otherwise the fixed number.
+ *
+ * Exported so the app's meta line and the browser harness assert what was
+ * CHOSEN rather than trusting a constant — a silent fallback to a hardcoded
+ * width is the exact failure class this module is being changed to remove.
+ */
+export function engineWidth() { return graphWidth === null ? "dynamic" : graphWidth; }
+
+const cache = new Map();          // tensor width -> Float32Array scratch buffer
 
 /**
  * WebAssembly SIMD feature probe.
@@ -120,13 +176,72 @@ export const NO_SIMD_MESSAGE =
   "Update iOS, or open the app in a newer browser.";
 
 /**
+ * The probe widths used to read the graph's width axis from the session.
+ *
+ * Deliberately NOT round numbers: an exported graph's fixed width is the clamp
+ * or a bucket (256, 320, 192, ...), and a probe that happened to equal it would
+ * read as "dynamic" off a single run that only proved the graph accepts its own
+ * width. Both are above MIN_W, so neither can be refused for being degenerate.
+ */
+const PROBE_WIDTHS = [41, 63];
+
+/**
+ * Read the graph's declared input width FROM the session.
+ *
+ * onnxruntime-web 1.20.1 exposes NO input-shape metadata. VERIFIED, not assumed
+ * (webkit and chromium, the vendored app/vendor/ort/ort.min.mjs 1.20.1): an
+ * InferenceSession carries only `handler`, `run`, `release`, `inputNames` and
+ * `outputNames`; `inputNames` is ["input"] with no dims, `inputMetadata` does
+ * not exist, and the wasm handler has no shape accessor either.
+ *
+ * What the runtime DOES do is validate tensor dims at run() and report the
+ * graph's OWN number — the same declaration the exporter wrote:
+ *
+ *   failed to call OrtRun(). ERROR_CODE: 2, ERROR_MESSAGE: Got invalid
+ *   dimensions for input: input for the following indices
+ *    index: 3 Got: 63 Expected: 320
+ *
+ * So ask the session the only way it answers: run a zero tensor at a width the
+ * graph is not. If BOTH probes run, the axis is symbolic; a refusal names the
+ * fixed width. Two probes because one successful run cannot tell a dynamic axis
+ * from a fixed one that happens to equal the probe width. A refused run does not
+ * damage the session — verified: the same session returns a correct 320-wide
+ * [1,40,38] result immediately after two refusals, in both engines.
+ *
+ * @returns {Promise<number|null>} the fixed width, or null when it is symbolic.
+ */
+async function readGraphWidth(s) {
+  for (const w of PROBE_WIDTHS) {
+    try {
+      await s.run({
+        input: new ORT.Tensor("float32", new Float32Array(CROP_H * w), [1, 1, CROP_H, w]),
+      });
+    } catch (e) {
+      const msg = e && e.message ? e.message : String(e);
+      const m = /index:\s*3\s+Got:\s*\d+\s+Expected:\s*(\d+)/.exec(msg);
+      if (!m) {
+        throw new Error("the graph refused width " + w
+          + " but did not declare its own: " + msg);
+      }
+      return Number(m[1]);
+    }
+  }
+  return null;                    // every probe ran: the width axis is symbolic
+}
+
+/**
  * Load the ONNX session once. Concurrent callers share one promise.
  *
  * A failed load resolves to null and sets `lastError` rather than throwing, so
  * the pipeline can fall back rather than break -- the app degrades, it never
  * shows a broken state.
+ *
+ * @param {string} [modelUrl]  overrides MODEL_URL. Only the browser harness
+ *   (app/tools/dynamic_width_check.js) passes this, to drive THIS module
+ *   against both a fixed-width and a dynamic-width graph; the app calls init()
+ *   bare. Pair with reset(), which clears the memoised session.
  */
-export async function init() {
+export async function init(modelUrl = MODEL_URL) {
   if (session) return session;
   if (initPromise) return initPromise;
   initPromise = (async () => {
@@ -159,9 +274,25 @@ export async function init() {
       // rare one.
       const threads = Math.max(1, Math.min(4, (navigator.hardwareConcurrency || 2) - 1));
       env.wasm.numThreads = (typeof SharedArrayBuffer !== "undefined" && globalThis.crossOriginIsolated) ? threads : 1;
-      session = await ORT.InferenceSession.create(MODEL_URL, {
+      session = await ORT.InferenceSession.create(modelUrl, {
         executionProviders: ["wasm"],
       });
+      // Ask the graph what width it takes, ONCE, before any crop is served.
+      try {
+        graphWidth = await readGraphWidth(session);
+      } catch (e) {
+        // The session will not say. TRAINING_CLAMP is what the shipped artifact
+        // is, so assuming it keeps this build working rather than disabling OCR
+        // — but say so loudly: a wrong width corrupts the tensor silently.
+        graphWidth = TRAINING_CLAMP;
+        console.warn("recognizer: could not read the graph's width ("
+          + (e && e.message ? e.message : String(e)) + "); assuming the training clamp "
+          + TRAINING_CLAMP);
+      }
+      console.info("recognizer: engine.width = " + engineWidth()
+        + (graphWidth === null
+          ? " (symbolic width axis: every crop is served at its natural width)"
+          : " (fixed width axis: crops are padded up to it and the decode trimmed)"));
       return session;
     } catch (e) {
       lastError = e && e.message ? e.message : String(e);
@@ -192,28 +323,40 @@ export function timestepsFor(contentWidth) {
 }
 
 /**
- * Build the [1,1,32,EXPORT_W] input tensor for one crop.
+ * Build the [1,1,32,w] input tensor for one crop.
+ *
+ * `w` is the SESSION's width (engineWidth()) — never a constant. In the fixed
+ * mode it is the graph's own number and a shorter crop is right-padded with
+ * zeros; in the dynamic mode it IS contentWidth, so nothing is padded. The row
+ * stride is `w`, so the tensor shape and the stride cannot disagree with each
+ * other or with the graph.
  *
  * Input is normalised to [-1,1] because every crop is dark ink on light paper,
  * so +1 is "paper" and -1 is "ink". Matching the Python training transform
  * exactly matters: a different scale here produces confidently wrong text.
+ * A zero tail in NORMALISED space is mid-grey, which is what train_ocr.collate
+ * pads with — deliberately not paper.
  */
-function buildInput(gray, contentWidth) {
-  let padded = cache.get(contentWidth);
-  if (!padded) {
-    padded = new Float32Array(1 * 1 * CROP_H * EXPORT_W);
-    cache.set(contentWidth, padded);
+function buildInput(gray, contentWidth, w) {
+  // ponytail: keyed by tensor width, so the dynamic mode keeps one buffer per
+  // distinct crop width (<= 40 KB each). Same entry count as the old
+  // EXPORT_W-sized cache and smaller buffers; cap it if a page ever segments
+  // thousands of distinct widths.
+  let buf = cache.get(w);
+  if (!buf) {
+    buf = new Float32Array(CROP_H * w);
+    cache.set(w, buf);
   } else {
-    padded.fill(0);           // clear any previous content
+    buf.fill(0);              // clear the previous crop, padding included
   }
   for (let y = 0; y < CROP_H; y++) {
     const srcRow = y * contentWidth;
-    const dstRow = y * EXPORT_W;
+    const dstRow = y * w;
     for (let x = 0; x < contentWidth; x++) {
-      padded[dstRow + x] = (gray[srcRow + x] / 255 - 0.5) / 0.5;
+      buf[dstRow + x] = (gray[srcRow + x] / 255 - 0.5) / 0.5;
     }
   }
-  return padded;
+  return buf;
 }
 
 /**
@@ -241,8 +384,9 @@ export function decodeGreedy(indices, limit) {
  * Recognise one word crop.
  *
  * @param {Uint8Array} gray  CROP_H * contentWidth grayscale bytes, ink dark.
- * @param {number} contentWidth  the crop's real width (NOT the padded EXPORT_W).
- * @returns {Promise<{text: string, confidence: number, chars: number}>}
+ * @param {number} contentWidth  the crop's real width (never the tensor width).
+ * @returns {Promise<{text: string, confidence: number, chars: number,
+ *   timesteps: number}>}
  *
  * Confidence is the mean max-probability over timesteps that EMIT a character.
  * Averaging over ALL timesteps -- the obvious implementation -- reports a LOW
@@ -254,21 +398,33 @@ export async function recognise(gray, contentWidth) {
   const s = await init();
   if (!s) return { text: "", confidence: 0, chars: 0, error: lastError };
 
-  const input = buildInput(gray, contentWidth);
+  // Serve at the width the GRAPH declared: its own fixed number (right-pad the
+  // crop up to it) or the crop's natural width (nothing to pad). engineWidth()
+  // is the same decision, made once, in one place.
+  const w = graphWidth === null ? contentWidth : graphWidth;
+  const input = buildInput(gray, contentWidth, w);
   try {
     const res = await s.run({
-      input: new ORT.Tensor("float32", input, [1, 1, CROP_H, EXPORT_W]),
+      input: new ORT.Tensor("float32", input, [1, 1, CROP_H, w]),
     });
     const logits = res.logits;
     const T = logits.dims[1];
     const C = logits.dims[2];
     const data = logits.data;
 
+    // The padded tail must not be decoded: training never supervised it.
+    // (This exact line is pinned by app/tools/ocr_input_contract.js.)
     const Ttrue = Math.min(timestepsFor(contentWidth), T);
-    const idx = new Int32Array(Ttrue);
+    // That trim is a MASK FOR PADDING, so it applies to the fixed path only. At
+    // natural width there is no padding and T IS this crop's timestep count --
+    // and timestepsFor is not that count: it floors w/8 while the conv stack
+    // gives ceil(w/8) at some widths (T=6 at w=47 against floor(47/8)=5), so
+    // masking here would drop a real timestep and read the tail short.
+    const decodeT = graphWidth === null ? T : Ttrue;
+    const idx = new Int32Array(decodeT);
     let confSum = 0, emitted = 0;
 
-    for (let t = 0; t < Ttrue; t++) {
+    for (let t = 0; t < decodeT; t++) {
       const base = t * C;
       let best = 0, bestVal = -Infinity;
       // Second pass over the same row for the probability of the winner.
@@ -287,12 +443,12 @@ export async function recognise(gray, contentWidth) {
       }
     }
 
-    const text = decodeGreedy(idx, Ttrue);
+    const text = decodeGreedy(idx, decodeT);
     return {
       text,
       confidence: emitted ? confSum / emitted : 0,
       chars: text.length,
-      timesteps: Ttrue,
+      timesteps: decodeT,
     };
   } catch (e) {
     lastError = e && e.message ? e.message : String(e);
@@ -303,10 +459,10 @@ export async function recognise(gray, contentWidth) {
 /**
  * Recognise a batch of crops.
  *
- * Sequential rather than parallel ONNX calls: a single 320-wide graph is small
- * enough that N concurrent sessions thrash WASM memory on a phone, and the
- * worker is already off the UI thread. Measured on the desktop harness this is
- * faster than Promise.all at realistic crop counts.
+ * Sequential rather than parallel ONNX calls: one graph is small enough that N
+ * concurrent sessions thrash WASM memory on a phone, and the worker is already
+ * off the UI thread. Measured on the desktop harness this is faster than
+ * Promise.all at realistic crop counts.
  */
 export async function recogniseAll(crops) {
   const out = [];
@@ -331,6 +487,7 @@ export function reset() {
   session = null;
   initPromise = null;
   lastError = null;
+  graphWidth = undefined;      // next init() re-reads it from ITS session
   cache.clear();
   if (s && typeof s.release === "function") {
     try {
@@ -342,9 +499,9 @@ export function reset() {
 
 // Exported for the browser self-test harness.
 const SightLineRecognizer = {
-  CHARSET, BLANK, CROP_H, EXPORT_W, WIDTH_DIVISOR,
+  CHARSET, BLANK, CROP_H, EXPORT_W, TRAINING_CLAMP, WIDTH_DIVISOR,
   init, isReady, getError, recognise, recogniseAll,
-  decodeGreedy, timestepsFor, reset,
+  decodeGreedy, timestepsFor, engineWidth, reset,
   simdSupported, NO_SIMD_MESSAGE,
 };
 if (typeof window !== "undefined") window.SightLineRecognizer = SightLineRecognizer;

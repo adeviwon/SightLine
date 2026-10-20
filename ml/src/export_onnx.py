@@ -470,8 +470,19 @@ def export_crnn(ckpt="models/ocr/crnn.pt", opset=17, width=None):
 
     WHY WIDTH IS FIXED RATHER THAN DYNAMIC
     ---------------------------------------
-    A dynamic width is the obvious choice and it does not export. Two separate
-    failures, both traced to the same root:
+    A dynamic width IS possible and is the better target -- this docstring used to
+    claim it "does not export", which was true only of the mode used here. The
+    failures below come from set_export_mode(True), which traces an explicit
+    per-timestep Python LSTM loop and therefore bakes T into the graph; the FUSED
+    nn.LSTM lowers to a real ONNX LSTM op with a natively dynamic sequence axis.
+    Proven end to end: ml/src/export_dynamic.py exports ['batch', 1, 32, 'width'],
+    it matches PyTorch to <=3.2e-05 at every width including 47 and 63 where T is
+    not floor(w/8), and onnxruntime-web's WASM backend runs it on BOTH webkit and
+    chromium with browser decodes identical to the reference (app/tools/
+    dynamic_width_check.js). Keep the fixed-width path below for the shipped graph;
+    check the export MODE before recording a capability as impossible.
+
+    The failures that made the fixed width look necessary, both traced to one root:
 
       fused nn.LSTM:  "stack expects each tensor to be equal size, but got
                       torch.Size([Min(((((((s0 - 1)//4)) - 1)//2)) + 1,
