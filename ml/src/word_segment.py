@@ -13,6 +13,35 @@ gaps and labels each crop with the individual word — a different experiment
 whose failure mode is over/under-splitting, not a cut through a glyph.
 
 Pure function over a uint8 array. No PIL, no I/O, deterministic.
+
+MEASURED VERDICT: DO NOT WIRE THIS INTO THE PRODUCT (yet).
+----------------------------------------------------------
+A/B on 200 held-out line crops, frozen checkpoint, calibrated gap threshold
+(0.42 of line height, 6px floor — the sweep is at MIN_GAP_FRAC), same crops:
+
+    words found / label words      1,007 / 965   (1.04x overall)
+      per profile                  studio_clean 0.82x (under-splits, 24 lines)
+                                   handheld_heavy 1.64x, handheld_light 1.43x
+                                   low_light 0.34x (38 under-split lines)
+    paired, "all words of the line read exactly" vs "the line read exactly":
+      both correct            2
+      word ok / line bad      0    <- word reading rescued NOTHING
+      line ok / word bad      5    <- word reading LOST five lines
+      both wrong            193
+    McNemar chi2 (continuity-corrected) 3.20, b=0 c=5
+
+So splitting a line into words does not buy accuracy here — it costs a little.
+That is consistent with the chunking result already recorded in
+app/tools/crop_contract.js, and the mechanism is the same: when the recogniser
+cannot read the glyphs, shorter crops do not help it read them. Tesseract's
+advantage is not "it works on words", it is a font-agnostic feature set plus a
+WORD lexicon pruning the output; segmentation alone copies the cheap half.
+
+Honest sample caveat: 5 discordant pairs, p ~ 0.07 — not significant. It is
+"no gain, directionally worse", not a proven loss. Revisit only if a retrained
+model reads clean text at high accuracy, where segmentation might matter again;
+and revisit the LEXICON (field_lexicon.py) as a decoder prior rather than as a
+crop generator, which is where the published gains actually are.
 """
 
 import numpy as np

@@ -62,6 +62,7 @@ if [ ! -f "artifacts/ocr_train.npz" ]; then
   exit 1
 fi
 
+export PYTHONUNBUFFERED=1   # without this `| tee` held every epoch line for 70 min
 echo "[retrain] training $EPOCHS epochs on SROIE + our rendered documents"
 echo "[retrain] log: $LOG"
 bash run.sh py ml/src/train_ocr.py \

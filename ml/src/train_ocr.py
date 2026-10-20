@@ -349,6 +349,7 @@ def main():
 
     CKPT.mkdir(parents=True, exist_ok=True)
     best = -1.0
+    best_cer = float("inf")
     hist = []
     t0 = time.time()
 
@@ -387,22 +388,36 @@ def main():
 
         val = evaluate(model, val_ds, val_ds.idx, device)
         acc = val["word_acc"]
+        cer = val["cer"]
         hist.append({"epoch": ep, "loss": tot / max(nb, 1),
-                     "val_word_acc": acc, "val_cer": val["cer"]})
+                     "val_word_acc": acc, "val_cer": cer})
+        # SAVE ON EITHER METRIC IMPROVING. Word accuracy is an exact-match metric,
+        # so it sits at exactly 0.0 for the first many epochs while CER falls —
+        # with a word-acc-only rule NOTHING is saved during that whole stretch and
+        # models/ocr/crnn.pt keeps whatever degenerate all-blank checkpoint scored
+        # 0 first. That happened: a 30-epoch run saved once, at 17:34, and never
+        # again for the next 70 minutes while the log stayed silent.
         flag = ""
-        if acc > best:
-            best = acc
+        if acc > best or (acc >= best and cer < best_cer):
+            best, best_cer = acc, cer
             torch.save({"model": model.state_dict(),
                         "num_classes": R.NUM_CLASSES,
                         "charset": R.CHARSET,
-                        "epoch": ep, "val_word_acc": acc, "val_cer": val["cer"],
+                        "epoch": ep, "val_word_acc": acc, "val_cer": cer,
                         "params": n_params,
                         "seeder": "seedutil-v1"},
                        CKPT / "crnn.pt")
             flag = "  <- best, saved"
+        # ALWAYS keep the latest, so a run in progress is inspectable with
+        # --ckpt models/ocr/crnn_last.pt instead of guesswork from a silent log.
+        torch.save({"model": model.state_dict(),
+                    "num_classes": R.NUM_CLASSES, "charset": R.CHARSET,
+                    "epoch": ep, "val_word_acc": acc, "val_cer": cer,
+                    "params": n_params, "seeder": "seedutil-v1"},
+                   CKPT / "crnn_last.pt")
         print(f"  ep{ep:3}  loss {tot/max(nb,1):7.4f}  "
-              f"val word-acc {acc*100:5.1f}%  CER {val['cer']*100:5.2f}%  "
-              f"{time.time()-t_ep:5.1f}s{flag}")
+              f"val word-acc {acc*100:5.1f}%  CER {cer*100:5.2f}%  "
+              f"{time.time()-t_ep:5.1f}s{flag}", flush=True)
 
     test = evaluate(model, test_ds, test_ds.idx, device)
     print(f"\nbest val word-acc  {best*100:.2f}%")
