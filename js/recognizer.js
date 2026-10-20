@@ -13,7 +13,7 @@
  *
  * THE FIXED-WIDTH CONTRACT — read this before changing anything
  * ------------------------------------------------------------
- * The exported graph takes EXACTLY [1, 1, 32, 256]. Width is NOT dynamic,
+ * The exported graph takes EXACTLY [1, 1, 32, 320]. Width is NOT dynamic,
  * because aten::lstm cannot be traced with a dynamic sequence length:
  *
  *     'stack expects each tensor to be equal size, but got
@@ -24,17 +24,29 @@
  *     'The inequality, Eq((((x/4)//2)) - 20, 0), cannot be solved using
  *      solve_univariate_inequality'
  *
- * So a narrow crop is RIGHT-PADDED to 256. That is safe BECAUSE THE LOSS IS
- * CTC: a right-padded region is blank page, a trained model emits the blank
- * symbol there, and the decoder drops consecutive blanks by construction, so
- * padding contributes no characters. This would NOT be safe for an
- * encoder-decoder with attention, which is why the reasoning is written down
- * instead of being assumed.
+ * 320 IS THE TRAINING WIDTH AND IT IS NOT NEGOTIABLE. build_dataset.crop_to_array
+ * builds every training crop at its natural width CLAMPED to MAX_W = 320, and
+ * the corpus median IS that clamp: of 3,270 held-out crops only 40 (1.2%) are
+ * <= 256px, and the median and max are both 320. This graph was exported at 256
+ * before, on the belief that 256 sat "above the median crop". It sat BELOW it, so
+ * the app truncated the tail off ~99% of lines before the model saw them. On 200
+ * held-out crops, exact line match was 44.7% at natural width and 0.0% cut to
+ * 256, with the read changed on 200 of 200: 'PATIENT JANE DOE DOB 04021979' came
+ * back as 'PERIENT JANE DOE 2O08010', 'DATE 01102026' as 'DATE 01020'.
  *
- * Because of that, we still trim to the crop's true timestep count
- * T = ceil(contentWidth / 8) before decoding. Without the trim, a 64 px crop
- * in a 256 px tensor would be read as 32 timesteps of padding, and any
- * residual signal there becomes invented characters.
+ * PADDING IS NOT SELF-CORRECTING, which was the other half of that mistake. The
+ * loss being CTC does not save it: a padded region emits blanks so the LOSS
+ * ignores it, but this CRNN carries a two-layer BIDIRECTIONAL LSTM whose
+ * backward pass starts at the RIGHT EDGE, i.e. inside the padding, so padded
+ * zeros move the hidden states across the VALID frames (measured max |delta|
+ * 9.10 at content 64, 15.28 at 200, in logit units -- enough to change the
+ * decoded string). The width is the training clamp so that nothing is truncated;
+ * padding is kept small for the same reason, not because it is harmless.
+ *
+ * We still trim the decode to the crop's true timestep count
+ * T = ceil(contentWidth / 8). Without the trim, a narrow crop would be read as
+ * timesteps of padding, and any residual signal there becomes invented
+ * characters.
  *
  * CHARSET — 37 symbols, and that is deliberate
  * --------------------------------------------
@@ -63,7 +75,7 @@ const MODEL_URL = new URL("../models/crnn.onnx", import.meta.url).href;
 export const CHARSET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 export const BLANK = 0;
 export const CROP_H = 32;
-export const EXPORT_W = 256;      // must match export_crnn(width=256)
+export const EXPORT_W = 320;      // must match export_crnn(width=realdata.MAX_W)
 export const WIDTH_DIVISOR = 8;   // timesteps = contentWidth / 8
 
 let session = null;
@@ -180,7 +192,7 @@ export function timestepsFor(contentWidth) {
 }
 
 /**
- * Build the [1,1,32,256] input tensor for one crop.
+ * Build the [1,1,32,EXPORT_W] input tensor for one crop.
  *
  * Input is normalised to [-1,1] because every crop is dark ink on light paper,
  * so +1 is "paper" and -1 is "ink". Matching the Python training transform
@@ -229,7 +241,7 @@ export function decodeGreedy(indices, limit) {
  * Recognise one word crop.
  *
  * @param {Uint8Array} gray  CROP_H * contentWidth grayscale bytes, ink dark.
- * @param {number} contentWidth  the crop's real width (NOT the padded 256).
+ * @param {number} contentWidth  the crop's real width (NOT the padded EXPORT_W).
  * @returns {Promise<{text: string, confidence: number, chars: number}>}
  *
  * Confidence is the mean max-probability over timesteps that EMIT a character.
@@ -291,7 +303,7 @@ export async function recognise(gray, contentWidth) {
 /**
  * Recognise a batch of crops.
  *
- * Sequential rather than parallel ONNX calls: a single 256-wide graph is small
+ * Sequential rather than parallel ONNX calls: a single 320-wide graph is small
  * enough that N concurrent sessions thrash WASM memory on a phone, and the
  * worker is already off the UI thread. Measured on the desktop harness this is
  * faster than Promise.all at realistic crop counts.

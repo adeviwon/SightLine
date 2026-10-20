@@ -707,11 +707,27 @@ const SightLine = (() => {
       if (q.blurry || q.noisy) restored = unsharp(restored, 1.8, 2);
     }
 
+    // THE UNPROCESSED IMAGE IS A CANDIDATE, and it used to be unreachable. On our
+    // own rendered documents with the shipped checkpoint (artifacts/eval_results
+    // .json, engine "crnn") the raw deskewed grayscale measures BEST: 5.6% field
+    // accuracy / 26.9% word, against classical 5.6/23.9, restorer 7.4/26.4 and
+    // restorer_clahe 3.7/23.5. This function applied CLAHE to everything and
+    // offered the engine only [clahe, clahe+otsu] -- its two worst inputs -- so
+    // the best-measured configuration could not be reached at all.
+    //
+    // Deskew stays in every candidate: rotation is geometry, not photometry, and
+    // estimateSkew was fixed to stop rotating by a false angle (see the "Skew
+    // estimation" group in selftest.html). Ranking is unchanged; structure_score
+    // still chooses, now over three candidates instead of two.
+    const raw = deskewed;
     const enhanced = clahe(restored);
     const binary = binarize(enhanced);
 
-    const candidates = [enhanced, binary];
+    const candidates = [raw, enhanced, binary];
+    // Reporting names, in candidate order. The old two-entry list labelled the
+    // second slot "restorer_clahe" whichever image it actually was.
     const arms = [
+      "raw",
       restoreMode === "classical" ? "classical" : "restorer_clahe",
       "restorer_clahe",
     ];
@@ -981,7 +997,39 @@ const SightLine = (() => {
       }
       source = "keywords";
     }
-    const fields = extractFields(normalized, cls.category);
+    // A FIELD IS ONLY MEANINGFUL INSIDE A DOCUMENT TYPE, and this is the gate
+    // that says so.
+    //
+    // THE DEFECT IT FIXES. On a pure-speckle page the recogniser hallucinates
+    // glyph-like text ("EAX CE E 0RO 121G000 ...") at 0.678 confidence, and the
+    // app then surfaced an invented field ("110011 000"). Neither available
+    // signal catches that: a confidence threshold cannot, because real reads
+    // span 0.687-0.974 and the hallucination sits INSIDE that range, and the
+    // ported validators cannot, because "110011 000" is a legal 9-digit account
+    // number and a legal identifier. What does separate them is document
+    // EVIDENCE -- the speckle scores 0 on every document keyword, while real
+    // reads score 1-17 even when they classify as the wrong type.
+    //
+    // So a read with no document evidence asserts no fields. It still reports
+    // the recognised text and still says it could not identify the document; it
+    // simply does not claim specifics. Measured cost on the 12-document bench:
+    // 1 of 12 affected, and that document surfaced no fields anyway.
+    const documentEvidence = Object.values(classify_doc_scores(normalized))
+      .reduce((a, b) => a + b, 0);
+    //
+    // A MODEL OPINION IS ONLY EVIDENCE WHEN IT IS CONFIDENT. The first version of
+    // this bypassed the gate for ANY override, and that is exactly how the
+    // speckle page still invented a field after the gate was added: app.js passes
+    // MiniLM's category as an override whenever the model returns one, including
+    // when it is barely above chance. A weak opinion about a text that contains no
+    // document keyword is not evidence, so the bypass requires the model to be
+    // confident -- the same 0.6 threshold the nag rule in app.js uses, so the two
+    // stay consistent: weak model AND no keyword evidence means refuse.
+    const modelConfident = !!(override && override.category
+      && (override.confidence || 0) >= 0.6);
+    const fields = (documentEvidence === 0 && !modelConfident)
+      ? []
+      : extractFields(normalized, cls.category);
     const entities = extractEntities(normalized);
     const summary = buildSummary(cls.category, fields);
     return {
@@ -991,6 +1039,7 @@ const SightLine = (() => {
       categoryLabel: CATEGORY_LABELS[cls.category],
       classificationConfidence: cls.confidence,
       classificationSource: source,
+      documentEvidence: documentEvidence,
       fields,
       entities,
       summary,

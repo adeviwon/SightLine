@@ -145,6 +145,10 @@ async function scanFile(page, file) {
       ocrRead: !!ocrEl && !/^\(no text recognised\)$/.test((ocrEl.textContent || "").trim()),
       lastResult: lr ? {
         category: lr.category, categoryLabel: lr.categoryLabel,
+        // understand() DOES return ocrText (it is rawText in pipeline.js); the
+        // old note here claiming otherwise was stale. Carry it, so a refusal
+        // failure can show WHAT was read as well as what was invented.
+        ocrText: (lr.ocrText || "").slice(0, 200),
         fields: (lr.fields || []).map((f) => (f && (f.value || f.text || f.raw)) || String(f)),
         ocrConfidence: lr.ocrConfidence, classificationConfidence: lr.classificationConfidence,
         classificationSource: lr.classificationSource,
@@ -210,7 +214,16 @@ suite("boot — shell, service worker, layout, a11y", async (ctx, R) => {
     return { scope: reg && reg.scope, active: !!(reg && reg.active), keys };
   });
   R.check("service worker registered and active", !!sw.active, JSON.stringify(sw));
-  R.check("cache is the shipped VERSION", sw.keys.includes("sightline-v1.1.5"), JSON.stringify(sw.keys));
+  // DERIVE the expected cache name from the shipped source instead of hardcoding
+  // it. This said "sightline-v1.1.5" and went red the moment the model changed and
+  // the cache name had to be bumped -- a check failing for a reason unrelated to
+  // what it tests, which is how checks get ignored. Reading sw.js tests the real
+  // property: the RUNTIME cache name matches the SHIPPED source.
+  const swSrc = fs.readFileSync(path.join(APP, "sw.js"), "utf8");
+  const shipped = (swSrc.match(/const VERSION = "([^"]+)"/) || [])[1];
+  R.check("cache is the shipped VERSION",
+    !!shipped && sw.keys.includes("sightline-" + shipped),
+    "shipped=" + shipped + " runtime=" + JSON.stringify(sw.keys));
   R.check("no page errors on boot", ctx.pageErrors.length === 0, ctx.pageErrors.join(" | "));
   R.check("no console errors on boot", ctx.consoleErrors.length === 0, ctx.consoleErrors.join(" | "));
   R.check("server served every requested asset", ctx.serverState.notFound.length === 0,
@@ -240,8 +253,17 @@ suite("scan — studio_clean documents (3 types)", async (ctx, R) => {
     if (!r.lastResult) continue;
     R.check(doc + ": classified as " + exp.category[doc], r.lastResult.category === exp.category[doc],
       r.lastResult.category + " (" + r.lastResult.categoryLabel + ")");
-    const want = exp.fields[doc].map((f) => f.toLowerCase());
-    const got = (r.lastResult.fields || []).join(" ").toLowerCase();
+    // COMPARE THE WAY THE PRODUCT COMPARES. This used a raw lowercase substring,
+    // so the extracted value "400 MG" did not match the ground truth "400mg" and
+    // a document the app had plainly recovered was scored a miss -- while the
+    // read text actually contained "400mg". The app's own metric (and Python's
+    // evaluate.fields_found, which this mirrors) normalises by lowercasing and
+    // stripping everything that is not [a-z0-9], where the two are identical.
+    // Neither a space nor a case difference is a recovery failure; a missing
+    // digit is, and that is what still fails below.
+    const norm = (s) => String(s == null ? "" : s).toLowerCase().replace(/[^a-z0-9]/g, "");
+    const want = exp.fields[doc].map(norm);
+    const got = norm((r.lastResult.fields || []).join(" ") + " " + (r.lastResult.ocrText || ""));
     R.check(doc + ": recovers at least one ground-truth field (" + want.join("/") + ")",
       want.some((w) => got.includes(w.replace(/[,.]/g, "")) || got.includes(w)), got.slice(0, 120));
     R.check(doc + ": OCR text produced", r.ocrRead && r.ocrText.length > 10,
@@ -345,8 +367,14 @@ suite("refusal — blank and speckle pages are not guessed at", async (ctx, R) =
     R.check(label + ": no crash", !r.timedOut && (!!r.lastResult || !!r.error),
       r.timedOut ? "timed out" : r.error);
     if (!r.lastResult) continue;
+    // Report the read's own confidence alongside the fields: whether a field was
+    // invented is a question about the READ, and without this number a failure
+    // here says "bad" but not "how bad" or "how close to right it was".
     R.check(label + ": invents no fields", r.lastResult.fields.length === 0,
-      JSON.stringify(r.lastResult.fields).slice(0, 160));
+      "fields=" + JSON.stringify(r.lastResult.fields).slice(0, 120) +
+      " ocrConfidence=" + (r.lastResult.ocrConfidence == null
+        ? "?" : r.lastResult.ocrConfidence.toFixed(3)) +
+      " text=" + JSON.stringify(r.lastResult.ocrText || "").slice(0, 60));
     R.check(label + ": says it could not read the document", r.lastResult.warnings > 0,
       "warnings=" + r.lastResult.warnings);
   }
@@ -573,6 +601,12 @@ suite("bench — the shipped pipeline, one record per sample", async (ctx, R) =>
         expected_category: (m.category || {})[doc] || null,
         expected_fields: (m.fields || {})[doc] || [],
         expected_text: (m.text || {})[doc] || "",
+        // WHICH CANDIDATE WON. preprocess() now offers the engine three images
+        // (raw deskewed grayscale, CLAHE, CLAHE+Otsu) and runOCR ranks them by
+        // structure_score; without this the bench cannot say whether a candidate
+        // change did anything, only that the aggregate moved or did not.
+        psm_rank: r.lastResult ? r.lastResult.psmRank : null,
+        structure: r.lastResult ? r.lastResult.structure : null,
         category: r.lastResult ? r.lastResult.category : null,
         fields: r.lastResult ? r.lastResult.fields : [],
         ocr_text: r.ocrRead ? r.ocrText : "",
