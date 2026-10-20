@@ -287,3 +287,21 @@ def test_self_check_runs_and_covers_at_least_twelve_cases(capsys):
     printed = capsys.readouterr().out
     assert "self-test ok" in printed
     assert printed.count("same-line-right") >= 8
+
+
+def test_dates_without_separators_are_accepted_because_the_model_cannot_emit_them():
+    """The recogniser's alphabet is 0-9 A-Z and space: '/' cannot be produced.
+
+    Every date this product reads therefore arrives as 8 digits. Refusing them
+    refused every date the model is able to emit — measured on a perfect read of
+    a rendered prescription, where DATE 01102026 was rejected as 'not a calendar
+    date' while the page had been transcribed character-for-character.
+    """
+    import field_proximity as FP
+    assert FP.validate("date", "04021979") == (True, "ok")      # DDMMYYYY
+    assert FP.validate("date", "01102026") == (True, "ok")
+    assert FP.validate("date", "20261001") == (True, "ok")      # YYYYMMDD
+    # and an impossible day is still refused, separator-free or not
+    assert FP.validate("date", "31022026")[0] is False
+    assert FP.validate("date", "32012026")[0] is False          # day 32
+    assert FP.validate("date", "01992026")[0] is False          # month 99 -> invalid either way

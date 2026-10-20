@@ -130,9 +130,19 @@ def _validate_date(v: str):
         d, mo, y = (int(x) for x in m.groups())
     else:
         m = _YMD.match(tok)
-        if not m:
-            return False, "not a calendar date"
-        y, mo, d = (int(x) for x in m.groups())
+        if m:
+            y, mo, d = (int(x) for x in m.groups())
+        else:
+            # SEPARATOR-FREE DATES, and this is not a nicety: the recogniser's
+            # output alphabet is 0-9 A-Z and space — it CANNOT emit '/' or '-'.
+            # Every date this product reads arrives as 8 digits (04021979 for
+            # 04/02/1979), so refusing them refuses every date the model is
+            # physically able to produce. Reconstruct, then validate the same way.
+            if not re.fullmatch(r"\d{8}", tok):
+                return False, "not a calendar date"
+            d, mo, y = int(tok[:2]), int(tok[2:4]), int(tok[4:])
+            if d > 31 or mo > 12:                    # DDMMYYYY first (HK/UK), then
+                d, mo, y = int(tok[6:]),  int(tok[4:6]), int(tok[:4])   # YYYYMMDD
     if y < 100:
         y += 2000
     try:
