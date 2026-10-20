@@ -56,7 +56,21 @@ present):
 3. **Real hand-held photos (20 pages) — recall 67.9–71.6%, line-exact
    1.8–2.4%, CER 56.5–58.4%** — and the app **refuses** a field it is not
    confident about. Say the gap before a judge does.
-4. **Payload 26.68 MB** — the "it fits on a phone" proof.
+4. **Payload 26.68 MB** — a fact about the download, not a design constraint.
+
+> ### No payload budget
+>
+> There is **no size cap** on this project, and there is no gate enforcing one:
+> `ml/src/bundle_check.py` asserts that every shipped model LOADS and runs, never
+> that the payload is small. Sizes are reported because a judge may ask; they are
+> not a reason to reject an approach.
+>
+> Decisions that were previously justified by size are therefore open again, and
+> must now be settled on accuracy: the removal of Tesseract (~41 MB),
+> the refusal of OpenCV.js (~9 MB) for preprocessing, and INT8 quantisation of the
+> MiniLM encoder (86.8 MB → 22.16 MB). Re-open them with a measurement, not a
+> feeling — `bash run.sh bench-hackathon` for the end-to-end number and
+> `bash run.sh eval-render` for the recogniser's.
 
 **Do not quote a single held-out score without its context.** Field extraction
 is all-or-nothing by design, which is a much harder bar than per-character

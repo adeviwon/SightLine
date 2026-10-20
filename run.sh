@@ -54,6 +54,10 @@ case "$cmd" in
   # required metric with its source. See docs/14_HACKATHON_BENCHMARK.md.
   bench-pipeline) exec node app/tools/ios_full_check.js --engine=webkit --suites=bench --json=artifacts/pipeline_raw.json ;;
   bench-hackathon) exec $PYRUN ml/src/bench_hackathon.py "$@" ;;
+  # The recogniser's accuracy on OUR OWN documents (crop-level, detector excluded),
+  # and the corpus it is measured on. See ml/src/render_corpus.py.
+  render-corpus) exec $PYRUN ml/src/render_corpus.py "$@" ;;
+  eval-render) exec $PYRUN ml/src/eval_render_corpus.py "$@" ;;
   # Generic passthrough so any module can be run through the venv with
   # PYTHONPATH stripped: bash run.sh py ml/src/realdata.py --selftest
   py)          exec $PYRUN "$@" ;;

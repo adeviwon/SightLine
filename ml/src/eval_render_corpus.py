@@ -1,0 +1,136 @@
+"""
+eval_render_corpus.py — the recogniser's accuracy ON OUR OWN DOCUMENTS.
+
+The number that matters for reliability, measured where the product actually
+operates. Crop-level on purpose: every crop is the true ink box of a line we
+rendered, labelled by the text we drew, so this isolates the RECOGNISER from the
+line detector. (End-to-end, detector included, is `bash run.sh bench-pipeline`.)
+
+Reports, per capture profile and overall:
+  * exact match  — the product metric: a field is right or it is wrong, and one
+                   wrong character in "40218877" is a wrong field
+  * CER          — the instrument panel (see eval_ocr.py's header)
+  * within 1 edit — how close the model is when it is wrong: the difference
+                   between "needs a better decoder" and "needs more training"
+
+    bash run.sh py ml/src/render_corpus.py --pages 120     # build the corpus
+    bash run.sh eval-render                                # score it
+"""
+
+import argparse
+import sys
+from pathlib import Path
+
+import numpy as np
+from PIL import Image
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import build_dataset as B     # noqa: E402
+import eval_ocr as EO         # noqa: E402
+import realdata as R          # noqa: E402
+import render_corpus as RC    # noqa: E402
+from ocr_model import build   # noqa: E402
+
+
+def load_model(ckpt=None):
+    import torch
+    path = ckpt or str(EO.CKPT)
+    ck = torch.load(path, map_location="cpu", weights_only=False)
+    model = build()
+    model.load_state_dict(ck["model"])
+    model.eval()
+    return model, "cpu"
+
+
+def lev(a, b):
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
+
+
+def score_split(data, model, device, limit=None, show_misses=6):
+    per = {}
+    misses = []
+    for i, (crop, label, prof) in enumerate(zip(data["crops"], data["labels"],
+                                                data["profile"])):
+        if limit and i >= limit:
+            break
+        arr = B.crop_to_array(Image.fromarray(np.asarray(crop, dtype=np.uint8)))
+        txt, _ = EO.recognise(model, arr, device)
+        got, ref = R.norm_label(txt), R.norm_label(label)
+        e = 1.0 if got == ref else 0.0
+        c = R.cer(got, ref)
+        w1 = 1.0 if lev(got, ref) <= 1 else 0.0
+        row = per.setdefault(prof, {"n": 0, "exact": 0.0, "cer": 0.0, "w1": 0.0})
+        row["n"] += 1
+        row["exact"] += e
+        row["cer"] += c
+        row["w1"] += w1
+        if not e and len(misses) < show_misses:
+            misses.append((ref, got))
+    for row in per.values():
+        n = max(1, row["n"])
+        row["exact"] /= n
+        row["cer"] /= n
+        row["w1"] /= n
+    return per, misses
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--split", default="test")
+    ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--ckpt", default="")
+    ap.add_argument("--out", default="")
+    a = ap.parse_args()
+
+    data = RC.load(split=a.split)
+    n = data["crops"].shape[0]
+    if not n:
+        print("no crops: build the corpus first "
+              "(bash run.sh py ml/src/render_corpus.py --pages 120)")
+        return 1
+    model, device = load_model(a.ckpt or None)
+    per, misses = score_split(data, model, device, limit=a.limit or None)
+
+    print("=" * 74)
+    print("CRNN on OUR OWN RENDERED DOCUMENTS — split=%s, %d crops, checkpoint %s"
+          % (a.split, n if not a.limit else min(n, a.limit),
+             Path(a.ckpt or EO.CKPT).name))
+    print("=" * 74)
+    print("%-16s %6s %10s %8s %10s" % ("profile", "n", "exact", "CER", "<=1 edit"))
+    tot = {"n": 0, "exact": 0.0, "cer": 0.0, "w1": 0.0}
+    for prof in sorted(per):
+        r = per[prof]
+        print("%-16s %6d %9.1f%% %7.2f %9.1f%%"
+              % (prof, r["n"], 100 * r["exact"], r["cer"], 100 * r["w1"]))
+        for k in tot:
+            tot[k] += r[k] * (r["n"] if k != "n" else 1)
+    n_tot = max(1, tot["n"])
+    print("-" * 74)
+    print("%-16s %6d %9.1f%% %7.2f %9.1f%%"
+          % ("ALL", tot["n"], 100 * tot["exact"] / n_tot, tot["cer"] / n_tot,
+             100 * tot["w1"] / n_tot))
+    if misses:
+        print("\nfirst misses (ground truth -> read):")
+        for ref, got in misses:
+            print("  %-34s -> %s" % (ref[:34], got[:34]))
+
+    if a.out:
+        import json
+        Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+        Path(a.out).write_text(json.dumps(
+            {"split": a.split, "ckpt": str(a.ckpt or EO.CKPT), "per_profile": per,
+             "overall": {k: (tot[k] / n_tot if k != "n" else tot["n"]) for k in tot}},
+            indent=2) + "\n")
+        print("\nwrote " + a.out)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
