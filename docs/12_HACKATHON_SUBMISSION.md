@@ -158,14 +158,20 @@ driving the real app in WebKit (iOS Safari's engine) over 12 rendered documents:
 
 | metric | value |
 |---|---|
-| field recovery | **0.0%** |
-| classification | **33.3%** |
-| word accuracy | **3.6%** |
-| CER | **70.8%** |
+| field recovery | **12.5%** |
+| classification | **50.0%** |
+| word accuracy | **22.4%** |
+| CER | **57.5%** |
 
-All 12 scans completed without a crash or a failed scan; the reading is what
-fails. 3 document types × 4 capture profiles; row-level evidence in
-`artifacts/hackathon_metrics.json`.
+All 12 scans completed without a crash or a failed scan. 3 document types x 4
+capture profiles; raw records in `artifacts/pipeline_raw_final.json`, row-level
+evidence in `artifacts/hackathon_metrics.json`.
+
+These read 0.0% / 33.3% / 3.6% / 70.8% until the graph's export width was fixed:
+it was a FIXED 256px against 320px training crops (the corpus median IS the clamp,
+and 98.8% of held-out crops are wider than 256), so the app fed the model the
+first 256px of nearly every line and the read changed on 200 of 200 held-out
+crops. See `docs/14` for the full before/after and the arithmetic.
 
 That gap is the project's main open problem and it is quantified, not hidden:
 the recogniser was trained on receipt crops and scores 28.0% word accuracy on

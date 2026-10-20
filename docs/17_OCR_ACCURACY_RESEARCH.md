@@ -53,7 +53,7 @@
 | corpus-size + homography effect | +3.05 pp accuracy, −3.95 pp CER (epoch 20 → 39) | `docs/03_RESULTS.md` §3 |
 | **domain gap** | SROIE scan 11.95% CER vs hand-photographed **56.5% CER** | `docs/03_RESULTS.md` §3 |
 | field accuracy, shipped engine | **7.4%** (Tesseract arm on the same generator: 62.2%) | `docs/03_RESULTS.md` §3 |
-| end-to-end, real app in WebKit | **0.0%** field recovery, 3.6% word accuracy, 70.8% CER | `HANDOFF.md` §5, `docs/14` |
+| end-to-end, real app in WebKit | **12.5%** field recovery, 22.4% word accuracy, 57.5% CER (was 0.0/3.6/70.8 before the export-width fix) | `HANDOFF.md` §5, `docs/14` |
 | detector ceiling on real photos | 67.9–71.6% line recall, 1.8–2.4% line exact | `docs/03_RESULTS.md` §3 |
 
 Labels are charset-clean by construction: `render_corpus.train_label` upper-cases and

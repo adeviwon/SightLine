@@ -179,9 +179,13 @@ lucky seed. Trust the rerun.
 `docs/01`'s 62.2% end-to-end field accuracy and `docs/10`'s arm table come from
 **Tesseract** (`ml/src/evaluate.py` calls pytesseract). The app does not contain
 Tesseract any more. The shipped 942k-parameter CRNN's own end-to-end figure, driven
-through the real app in WebKit on 12 rendered documents, is **0.0% field recovery,
-33.3% classification, 3.6% word accuracy, 70.8% CER** — `docs/14_HACKATHON_BENCHMARK.md`,
-artifact `artifacts/hackathon_metrics.json`. Re-measured stage by stage on the
+through the real app in WebKit on 12 rendered documents, is **12.5% field recovery,
+50.0% classification, 22.4% word accuracy, 57.5% CER** — `docs/14_HACKATHON_BENCHMARK.md`,
+raw records `artifacts/pipeline_raw_final.json`. Those read 0.0% / 33.3% / 3.6% /
+70.8% until the export width was fixed: the ONNX graph was baked at a FIXED 256px
+while training built crops at the 320px clamp, so the app fed the model the first
+256px of nearly every line (the read changed on 200/200 held-out crops). That one
+constant, not the model, was the gap against the Python path's 26.9%. Re-measured stage by stage on the
 shipped engine (`bash run.sh eval`, default `--engine=crnn`) the preprocessing arms
 give 3.7-7.4% field accuracy against the Tesseract arm's 62.2%, and `raw` beats the
 restorer arms. Quote the engine with the number, or

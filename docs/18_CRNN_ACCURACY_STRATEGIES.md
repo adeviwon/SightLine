@@ -24,7 +24,7 @@
 | model | 942,166 params, 37-symbol charset, CTC, 3.84 MB ONNX | `docs/17` §1, §5 |
 | training data | 52,554 crops from 420 SROIE receipts (294/63/63 by receipt) | `docs/03_RESULTS.md` §3 |
 | held-out SROIE word accuracy / CER | **29.30% / 11.95%** (17,945 words) | `docs/03_RESULTS.md` §3 |
-| hand-photographed CER / app end-to-end | **56.5% CER**; **0.0%** field recovery, 70.8% CER | `docs/03_RESULTS.md` §3, `docs/14` |
+| hand-photographed CER / app end-to-end | **56.5% CER**; **12.5%** field recovery, 57.5% CER (was 0.0/70.8 before the export-width fix) | `docs/03_RESULTS.md` §3, `docs/14` |
 | our own rendered corpus | 22,800 crops / 1,500 pages — train 16,317 / val 3,213 / **test 3,270**, 4 mildest profiles, splits **by page** | `[measured here]` `data/render_corpus/index.json` |
 
 Cost baseline throughout: **~250 s/epoch, 4 cores, no GPU** (`docs/03_RESULTS.md` §3).
@@ -385,7 +385,9 @@ Against our two measured CERs:
   prediction — realistic errors are correlated.
 - **Hand-photographed, 56.5% CER** → implies **0.13%** exact at L=8. There is no
   coincidence where the current model reads a photographed dosage correctly, and the
-  0.0% field recovery in `docs/14` is that arithmetic, not a bug.
+  field recovery in `docs/14` is that arithmetic, not a bug. (The 0.0% it used to
+  read was mostly the export-width truncation: the graph was baked at 256px against
+  320px training crops, so 98.8% of lines lost their tail before the model saw them.)
 
 **So the last 10 points to 80–90% word-exact require CER ≈ 1–3%** — a **4–10×
 reduction** from the current 11.95% on the easy domain, and far more on photographs.

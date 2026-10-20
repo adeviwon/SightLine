@@ -26,17 +26,40 @@ what came out. `bash run.sh bench-hackathon` scores those records:
 
 | profile | n | field recovery | classification | word accuracy | CER |
 |---|---|---|---|---|---|
-| studio_clean | 3 | 0.0% | 66.7% | 10.3% | 43.6% |
-| handheld_light | 3 | 0.0% | 0.0% | 1.7% | 81.2% |
-| off_axis | 3 | 0.0% | 33.3% | 1.6% | 85.4% |
-| jpeg_social | 3 | 0.0% | 33.3% | 0.9% | 73.2% |
-| **all samples** | **12** | **0.0%** | **33.3%** | **3.6%** | **70.8%** |
+| studio_clean | 3 | 33.3% | 100.0% | 61.1% | 16.8% |
+| handheld_light | 3 | 0.0% | 0.0% | 3.5% | 73.9% |
+| off_axis | 3 | 0.0% | 33.3% | 8.7% | 85.4% |
+| jpeg_social | 3 | 16.7% | 66.7% | 16.1% | 54.0% |
+| **all samples** | **12** | **12.5%** | **50.0%** | **22.4%** | **57.5%** |
 
-The app ran 12/12 samples without a crash or a failed scan. **The reading is the
-problem: it recovers no ground-truth field on any document, including the clean
-ones.** Row-level evidence is in `artifacts/hackathon_metrics.json` (each sample's
-expected fields, extracted fields and confidence) and the raw records in
-`artifacts/pipeline_raw.json`.
+Raw records: `artifacts/pipeline_raw_final.json`. Row-level evidence in
+`artifacts/hackathon_metrics.json`.
+
+### These numbers used to read 0.0% / 33.3% / 3.6% / 70.8%, and the cause was one constant
+
+The app's ONNX graph was exported at a FIXED 256px while `build_dataset.crop_to_array`
+builds every training crop at its NATURAL width clamped to `MAX_W = 320` — and the
+corpus median IS that clamp (only 40 of 3,270 held-out crops are <= 256px). So the
+app fed the model the first 256px of nearly every line. On 200 held-out crops,
+crop-level exact match was **44.7% at natural width against 0.0% cut to 256**, and
+the read changed on **200/200**: `PATIENT JANE DOE DOB 04021979` came back as
+`PERIENT JANE DOE 2O08010`, `DATE 01102026` as `DATE 01020`, `PRESCRIBER DR A AHMED
+MBBS` as `PRESCRIBER DR A AHMNT`.
+
+Every symptom previously attributed to the model — `STATEMENI OT ACCOUN`, "read
+tokens 19-54 against 73-90 ground-truth words", "the CRNN digit-ises our letters" —
+was the tail never reaching it. The end-to-end effect of the fix, same 12
+documents, same metric, is the table above: word accuracy **3.6% -> 22.4%**, mean
+CER **70.8% -> 57.5%**, read tokens **468 -> 680 (+45%)**, and on the clean profile
+**10.3% -> 61.1%** word accuracy with classification **66.7% -> 100%** (which also
+confirms the document classifier was being fed the truncation, not failing on its
+own — MiniLM measures 95.8% macro-F1 on real text).
+
+The graph is now exported at the training clamp, and `export_crnn`/`verify_crnn`
+default their width to `realdata.MAX_W` so the number cannot drift from the data
+again. `ml/tests/test_graph_width_contract.py` asserts EQUALITY with the clamp; the
+old assertion was `width <= MAX_W`, which any narrower graph satisfies — it passed
+hardest on the worst value, which is how 256 shipped.
 
 Words are scored with `evaluate.word_accuracy` (fraction of ground-truth words
 present in the read text, after `norm()`), and CER as (substitutions + insertions
