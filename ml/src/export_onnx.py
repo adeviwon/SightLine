@@ -443,7 +443,28 @@ def verify_quantization(enc, head, tok):
     return ok, abs(acc32 - accq)
 
 
-def export_crnn(ckpt="models/ocr/crnn.pt", opset=17, width=256):
+def _training_clamp():
+    """
+    The crop width the recogniser was TRAINED at: realdata.MAX_W (320).
+
+    The graph width must be exactly this, not "a bit less", and the reason is
+    measured rather than aesthetic. build_dataset.crop_to_array builds every
+    training crop at its natural width CLAMPED to MAX_W, so the training
+    distribution is "natural, up to 320" -- and the corpus median IS the clamp:
+    in crops_train.npz only 40 of 3,270 test crops (1.2%) are <= 256px, the median
+    is 320 and the max is 320. A graph narrower than the clamp therefore TRUNCATES
+    the tail off almost every line before the model sees it, which is not a
+    rounding error: on 200 held-out crops, exact line match was 44.7% at natural
+    width against 0.0% cut to 256, with the read changed on 200 of 200 crops.
+    'PATIENT JANE DOE DOB 04021979' read as 'PERIENT JANE DOE 2O08010' and
+    'DATE 01102026' as 'DATE 01020'. The app shipped 256 because the note here
+    claimed it sat "above the median crop". It sat below it.
+    """
+    from realdata import MAX_W
+    return int(MAX_W)
+
+
+def export_crnn(ckpt="models/ocr/crnn.pt", opset=17, width=None):
     """
     Export the CRNN recogniser to ONNX for the browser.
 
@@ -466,19 +487,25 @@ def export_crnn(ckpt="models/ocr/crnn.pt", opset=17, width=256):
     fine at dynamic width, and so does conv+permute+the height assert. Only the
     recurrent stage refuses. So the fix belongs there, not in the conv stack.
 
-    THE FIX: export at one fixed width (256 px, above the median crop and
-    within MAX_W) and let the app right-pad shorter crops up to it.
+    THE FIX: export at one fixed width -- and that width is THE TRAINING CLAMP,
+    realdata.MAX_W (320), not a value chosen to be "above the median crop". See
+    _training_clamp() for the measurement: 98.8% of held-out crops exceed 256px,
+    the median is 320, and a 256 graph cut the tail off nearly every line
+    (44.7% exact at natural width against 0.0% cut to 256, on 200 crops).
 
-    Padding is self-correcting BECAUSE THE LOSS IS CTC: a right-padded region
-    is blank page, and a trained CTC model emits the blank symbol there. The
-    decoder then drops consecutive blanks by construction, so the padding
-    contributes no characters. This is the one property that makes a
-    fixed-width CTC recogniser safe, and it is why a fixed-width export is
-    legitimate here and would NOT be for an encoder-decoder with attention.
+    PADDING IS NOT SELF-CORRECTING, and this block used to claim it was. "The
+    loss is CTC, so a padded region emits blanks and the decoder drops them" is
+    true of the LOSS and false of the MODEL: this CRNN carries a two-layer
+    BIDIRECTIONAL LSTM whose backward pass starts at the RIGHT EDGE, i.e. inside
+    the padding, so the padded zeros move the hidden states across the VALID
+    frames. Measured max |delta| over the valid frames: 9.10 at content 64,
+    15.28 at 200 (logit units) -- enough to change the decoded string. The width
+    is the training clamp so that nothing is TRUNCATED; padding is minimised for
+    the same reason, not because it is harmless.
 
     The app must still pass the TRUE width to the decoder when trimming: it
     computes T = ceil(content_width / 8) and drops timesteps beyond that, so a
-    64 px crop in a 256 px tensor is not read as 32 timesteps of noise.
+    narrow crop is not read as timesteps of padding.
 
     _inline_external_data() is applied for the same reason as the restorer:
     onnxruntime-web cannot mount Python-style external .onnx.data sidecars
@@ -487,6 +514,8 @@ def export_crnn(ckpt="models/ocr/crnn.pt", opset=17, width=256):
     """
     import onnxruntime  # noqa: F401  (presence check)
     from ocr_model import build
+    if width is None:
+        width = _training_clamp()
     path = ONNX_DIR / "crnn.onnx"
     if not Path(ckpt).exists():
         print(f"[export] crnn.onnx  SKIPPED -- no checkpoint at {ckpt}")
@@ -518,7 +547,7 @@ def export_crnn(ckpt="models/ocr/crnn.pt", opset=17, width=256):
     return path, model
 
 
-def verify_crnn(model, tol=1e-4, width=256):
+def verify_crnn(model, tol=1e-4, width=None):
     """
     Prove the ONNX recogniser computes the same thing as PyTorch.
 
@@ -529,6 +558,8 @@ def verify_crnn(model, tol=1e-4, width=256):
     """
     import onnxruntime as ort
     from realdata import decode_greedy
+    if width is None:
+        width = _training_clamp()
     sess = ort.InferenceSession(str(ONNX_DIR / "crnn.onnx"),
                                 providers=["CPUExecutionProvider"])
     ok = True
@@ -649,7 +680,7 @@ def _emits_any_blank(model):
     needing a training-history file at export time.
     """
     with torch.no_grad():
-        out = model(torch.rand(1, 1, 32, 256)).argmax(-1)[0].numpy()
+        out = model(torch.rand(1, 1, 32, _training_clamp())).argmax(-1)[0].numpy()
     return bool((out == 0).any())
 
 

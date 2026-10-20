@@ -22,15 +22,28 @@
  *   the problem into detect-then-recognise makes the ceiling explicit and
  *   therefore fixable.
  *
- * WHAT THE FIXED WIDTH MEANS. `crnn.onnx` takes exactly [1,1,32,256]. Width is
- * fixed because `aten::lstm` cannot export with a dynamic sequence length and
- * an explicit gate loop cannot unroll over a symbolic bound. So each line crop
- * is scaled proportionally to preserve aspect ratio, right-padded to 256, and
- * the decoder trims to the crop's true timestep count (width/8). Padding is
- * safe because a trained CTC model emits the BLANK symbol there -- which is
- * verified, not assumed: see `verify_crnn`'s padding invariant in
- * `ml/src/export_onnx.py`, which compares a real crop padded to 256 against the
- * same crop at its own width.
+ * WHAT THE FIXED WIDTH MEANS. `crnn.onnx` takes exactly [1,1,32,320]. Width is
+ * fixed because `aten::lstm` cannot export with a dynamic sequence length and an
+ * explicit gate loop cannot unroll over a symbolic bound. So each line crop is
+ * scaled proportionally to preserve aspect ratio, right-padded to 320, and the
+ * decoder trims to the crop's true timestep count (width/8).
+ *
+ * 320 IS THE TRAINING CLAMP (realdata.MAX_W), and that is the whole point of the
+ * number: build_dataset.crop_to_array builds training crops at natural width
+ * clamped to 320, and the corpus median IS the clamp, so at 320 essentially no
+ * crop is truncated and essentially none is padded. This paragraph used to say
+ * "right-padded to 256" and justify it by saying padding is safe because a
+ * trained CTC model emits BLANK there. That was wrong twice over. 256 sat BELOW
+ * the median crop, so the app truncated the tail off ~99% of lines before the
+ * model saw them (200 held-out crops: 44.7% exact at natural width, 0.0% cut to
+ * 256, the read changed on 200/200). And padding is NOT inert: the CRNN carries
+ * a 2-layer BIDIRECTIONAL LSTM whose backward pass starts at the RIGHT EDGE --
+ * inside the padding -- so padded zeros move the hidden states across the VALID
+ * frames. `verify_crnn`'s padding invariant in `ml/src/export_onnx.py` MEASURES
+ * exactly that and reports LEAK for a narrow crop padded to the graph width. It
+ * is a measurement, not a reassurance: at a 320 graph the leak is confined to
+ * crops narrower than 320 (about 1% of them), which is what makes it tolerable
+ * rather than absent.
  *
  * NO MULTI-PASS. The previous implementation ran tesseract.js four times per
  * candidate (PSM 3, 6, 11, 4) and ranked the results. There is no segmentation

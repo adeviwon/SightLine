@@ -71,7 +71,7 @@ A **CRNN with CTC loss**, trained from scratch in PyTorch.
   decoding is **non-autoregressive** — one forward pass, not 32. A transformer
   decoder would autoregress and miss the latency budget.
 - **Shape.** CNN (7 blocks, 16→128 channels) → 2-layer BiLSTM (hidden 128) →
-  linear → 38 classes. **942,166 parameters.** Input `[1,1,32,256]`, output
+  linear → 38 classes. **942,166 parameters.** Input `[1,1,32,320]`, output
   `[1,32,38]`.
 - **Training data.** ICDAR 2019 SROIE — **52,554 crops from 420 receipts**,
   11 augmentation variants including perspective warps driven by **199 real

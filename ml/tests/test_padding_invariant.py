@@ -248,10 +248,15 @@ def test_verify_crnn_reports_false_when_the_invariant_is_broken():
     class LeakyModel(torch.nn.Module):
         """Emits blanks only in the padded tail -- the exact leak we fear."""
 
-        def __init__(self, real, export_w=256):
+        def __init__(self, real, export_w=None):
+            # Take the served width from the SAME source verify_crnn uses, so this
+            # stub cannot drift from the graph. It hardcoded 256 once; when the
+            # graph moved to the training clamp the stub kept padding at 256, the
+            # leak it simulates never fired, and a gate that must be able to fail
+            # quietly stopped being tested.
             super().__init__()
             self.real = real
-            self.export_w = export_w
+            self.export_w = int(X._training_clamp()) if export_w is None else int(export_w)
 
         def forward(self, x):
             b, _, _, w = x.shape
@@ -276,7 +281,7 @@ def test_verify_crnn_reports_false_when_the_invariant_is_broken():
     # Force the RUN branch without depending on a trained head's behaviour.
     X._emits_any_blank = lambda model: True
     try:
-        assert X.verify_crnn(leaky, width=256) is False, (
+        assert X.verify_crnn(leaky, width=int(X._training_clamp())) is False, (
             "verify_crnn passed on a model that invents characters in its "
             "padded region -- the gate cannot fail, so it proves nothing"
         )

@@ -145,3 +145,56 @@ def test_dynamic_graph_feeds_a_natural_width_and_a_padded_one_alike():
     for w in (47, 64, 200):
         y = s.run(None, {"input": rng.uniform(-1, 1, (1, 1, 32, w)).astype(np.float32)})[0]
         assert y.shape == (1, FP.timesteps(w), R.NUM_CLASSES), (w, y.shape)
+
+
+# ── the browser fixture must describe the graph the browser actually runs ────
+
+FIXTURE = ROOT / "artifacts" / "dynamic_width_fixture.json"
+
+
+@pytest.mark.skipif(not (DYNAMIC.exists() and FIXTURE.exists()),
+                    reason="run `bash run.sh py ml/src/export_dynamic.py` first")
+def test_browser_fixture_matches_the_dynamic_graph_it_claims():
+    """
+    app/tools/dynamic_width_check.js loads the fixture's crop bytes and requires
+    its decodes to equal the fixture's Python reference. If the fixture drifts
+    from the artifact, the browser check passes or fails for the wrong reason —
+    so re-derive both arms here from the artifact itself.
+
+      py_natural[W]  the dynamic graph at the crop's own width
+      py_shipped[W]  the SHIPPED path: right-pad to 256, decode TimestepsFor(W)
+                     frames (floor(W/8), which is what recognizer.js computes)
+
+    A fixture written for a stale checkpoint is exactly the failure this
+    catches, which is how the artifact on disk was found to be stale.
+    """
+    import base64
+    import json
+    import onnxruntime as ort
+    from realdata import decode_greedy
+
+    fx = json.loads(FIXTURE.read_text())
+    s = ort.InferenceSession(str(DYNAMIC), providers=["CPUExecutionProvider"])
+    for W in fx["widths"]:
+        k = str(W)
+        u8 = np.frombuffer(base64.b64decode(fx["crops"][k]), np.uint8)
+        assert u8.size == 32 * W, (k, u8.size)
+        x = ((u8.reshape(32, W).astype(np.float32) / 255.0) - 0.5) / 0.5
+        nat = s.run(None, {"input": x[None, None]})[0][0].argmax(-1)
+        assert nat.shape[0] == FX_TIMESTEPS(W), (W, nat.shape)
+        assert decode_greedy(nat) == fx["py_natural"][k], (
+            f"width {W}: fixture natural decode {fx['py_natural'][k]!r} is not "
+            f"what crnn_dynamic.onnx produces ({decode_greedy(nat)!r}) — the "
+            f"fixture was written against a different export")
+        pad = np.zeros((1, 1, 32, 256), np.float32)
+        pad[0, 0, :, :W] = x
+        sh = s.run(None, {"input": pad})[0][0].argmax(-1)
+        lim = min(max(1, W // 8), sh.shape[0])
+        assert decode_greedy(sh, limit=lim) == fx["py_shipped"][k], (
+            f"width {W}: fixture shipped decode {fx['py_shipped'][k]!r} is not "
+            f"what the padded graph produces ({decode_greedy(sh, limit=lim)!r})")
+
+
+def FX_TIMESTEPS(w: int) -> int:
+    """The dynamic graph's frame count at a natural width (== the model's)."""
+    return build_model(R.NUM_CLASSES).timesteps(w)
