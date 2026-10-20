@@ -163,7 +163,7 @@
         "fields": [],
         "ocr_confidence": 0.8718335355287261,
         "error": null,
-        "ms": 2993
+        "ms": 8932
       },
       {
         "doc": "prescription",
@@ -180,7 +180,7 @@
         ],
         "ocr_confidence": 0.720248543124467,
         "error": null,
-        "ms": 4635
+        "ms": 8138
       },
       {
         "doc": "prescription",
@@ -194,7 +194,7 @@
         "fields": [],
         "ocr_confidence": 0.5343349276205425,
         "error": null,
-        "ms": 1379
+        "ms": 2651
       },
       {
         "doc": "prescription",
@@ -208,7 +208,7 @@
         "fields": [],
         "ocr_confidence": 0.695954172556722,
         "error": null,
-        "ms": 5178
+        "ms": 9753
       },
       {
         "doc": "banking",
@@ -222,7 +222,7 @@
         "fields": [],
         "ocr_confidence": 0.9118094027266336,
         "error": null,
-        "ms": 2342
+        "ms": 4082
       },
       {
         "doc": "banking",
@@ -236,7 +236,7 @@
         "fields": [],
         "ocr_confidence": 0.7075696042504194,
         "error": null,
-        "ms": 4699
+        "ms": 7919
       },
       {
         "doc": "banking",
@@ -250,7 +250,7 @@
         "fields": [],
         "ocr_confidence": 0.6864775990635338,
         "error": null,
-        "ms": 1622
+        "ms": 2838
       },
       {
         "doc": "banking",
@@ -266,7 +266,7 @@
         ],
         "ocr_confidence": 0.784058514072413,
         "error": null,
-        "ms": 5743
+        "ms": 10939
       },
       {
         "doc": "legal",
@@ -282,7 +282,7 @@
         ],
         "ocr_confidence": 0.7854206467643265,
         "error": null,
-        "ms": 1935
+        "ms": 3485
       },
       {
         "doc": "legal",
@@ -296,7 +296,7 @@
         "fields": [],
         "ocr_confidence": 0.7111868547263194,
         "error": null,
-        "ms": 4477
+        "ms": 7950
       },
       {
         "doc": "legal",
@@ -310,7 +310,7 @@
         "fields": [],
         "ocr_confidence": 0.6577694498389909,
         "error": null,
-        "ms": 1201
+        "ms": 2275
       },
       {
         "doc": "legal",
@@ -324,7 +324,7 @@
         "fields": [],
         "ocr_confidence": 0.7340600346095876,
         "error": null,
-        "ms": 5072
+        "ms": 8940
       }
     ]
   },

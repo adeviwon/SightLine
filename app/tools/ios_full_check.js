@@ -573,6 +573,12 @@ suite("bench — the shipped pipeline, one record per sample", async (ctx, R) =>
         expected_category: (m.category || {})[doc] || null,
         expected_fields: (m.fields || {})[doc] || [],
         expected_text: (m.text || {})[doc] || "",
+        // WHICH CANDIDATE WON. preprocess() now offers the engine three images
+        // (raw deskewed grayscale, CLAHE, CLAHE+Otsu) and runOCR ranks them by
+        // structure_score; without this the bench cannot say whether a candidate
+        // change did anything, only that the aggregate moved or did not.
+        psm_rank: r.lastResult ? r.lastResult.psmRank : null,
+        structure: r.lastResult ? r.lastResult.structure : null,
         category: r.lastResult ? r.lastResult.category : null,
         fields: r.lastResult ? r.lastResult.fields : [],
         ocr_text: r.ocrRead ? r.ocrText : "",

@@ -707,11 +707,27 @@ const SightLine = (() => {
       if (q.blurry || q.noisy) restored = unsharp(restored, 1.8, 2);
     }
 
+    // THE UNPROCESSED IMAGE IS A CANDIDATE, and it used to be unreachable. On our
+    // own rendered documents with the shipped checkpoint (artifacts/eval_results
+    // .json, engine "crnn") the raw deskewed grayscale measures BEST: 5.6% field
+    // accuracy / 26.9% word, against classical 5.6/23.9, restorer 7.4/26.4 and
+    // restorer_clahe 3.7/23.5. This function applied CLAHE to everything and
+    // offered the engine only [clahe, clahe+otsu] -- its two worst inputs -- so
+    // the best-measured configuration could not be reached at all.
+    //
+    // Deskew stays in every candidate: rotation is geometry, not photometry, and
+    // estimateSkew was fixed to stop rotating by a false angle (see the "Skew
+    // estimation" group in selftest.html). Ranking is unchanged; structure_score
+    // still chooses, now over three candidates instead of two.
+    const raw = deskewed;
     const enhanced = clahe(restored);
     const binary = binarize(enhanced);
 
-    const candidates = [enhanced, binary];
+    const candidates = [raw, enhanced, binary];
+    // Reporting names, in candidate order. The old two-entry list labelled the
+    // second slot "restorer_clahe" whichever image it actually was.
     const arms = [
+      "raw",
       restoreMode === "classical" ? "classical" : "restorer_clahe",
       "restorer_clahe",
     ];
