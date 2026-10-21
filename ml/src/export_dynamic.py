@@ -3,25 +3,33 @@ export_dynamic.py — re-export the CRNN with a DYNAMIC width axis.
 
 WHY THIS FILE EXISTS
 --------------------
-`app/models/crnn.onnx` (the shipped artifact) declares a FIXED input width of
-256, so `recognizer.js` right-pads every crop up to 256 and decodes that padded
-tensor. Right-padding is NOT inert here: the recurrent stage is a 2-layer
+The shipped graph `app/models/crnn.onnx` USED TO declare a FIXED input width of
+256, so `recognizer.js` right-padded every crop up to 256 and decoded that
+padded tensor. Right-padding is NOT inert here: the recurrent stage is a 2-layer
 BIDIRECTIONAL LSTM, so the backward pass starts at the RIGHT EDGE of the padded
 tensor — inside the zero padding — and moves the hidden states over the CONTENT
 too. Measured max |Δ| over the valid frames: 9.10 at content_w=64, 15.28 at
 200. Truncating the decode to the content's frames (which the app already does)
 removes trailing characters but cannot undo that perturbation.
 
-The root cause of the fixed width is `SightLineCRNN.set_export_mode(True)`: the
+The root cause of that fixed width was `SightLineCRNN.set_export_mode(True)`: the
 explicit per-timestep Python LSTM loop (`_lstm_loop`) unrolls the recurrence at
 trace time, which BAKES T into the graph. Tracing the FUSED `nn.LSTM` instead
 (export mode OFF) lets torch emit a real ONNX `LSTM` op, whose sequence axis is
 dynamic natively — so the graph accepts [B, 1, 32, W] for ANY W and computes
 what eager PyTorch computes.
 
-So the fix is a re-export with `dynamic_axes` on width (dim 3) and batch (dim 0),
-writing to `artifacts/crnn_dynamic.onnx`. The shipped `app/models/crnn.onnx` is
-DELIBERATELY NOT overwritten by this module.
+The fix was a re-export with `dynamic_axes` on width (dim 3) and batch (dim 0),
+writing to `artifacts/crnn_dynamic.onnx`. THAT EXPORT IS NOW THE SHIPPED GRAPH:
+`app/models/crnn.onnx` is the dynamic-width file -- input `[batch, 1, 32, width]`
+(symbolic width), 3,785,916 B, byte-identical to `artifacts/crnn_dynamic.onnx`
+(sha256 `e4e6370a…`). The app serves each crop at its natural width; nothing is
+right-padded.
+
+This module still writes ONLY `artifacts/crnn_dynamic.onnx` (DYNAMIC_ONNX) and
+does not touch `app/models/crnn.onnx` (SHIPPED_ONNX). Promoting a re-export to
+the shipped bundle is a deliberate, separate copy of artifacts/crnn_dynamic.onnx
+over app/models/crnn.onnx -- this module will not do that for you.
 
 WHAT IT PROVIDES
 ----------------

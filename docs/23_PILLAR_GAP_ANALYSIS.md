@@ -354,7 +354,7 @@ verifiable in minutes (`docs/PRIVACY.md` §4 Check A/C); 26.68 MB payload
    real pages are resolution-bound and unfixable by any detector.
 3. **Our own numbers disagree with each other.** `docs/03` §3 reports 29.30% /
    11.95% and a 20-page set at 71.6% recall / 58.4% CER / 2.4% line-exact;
-   `docs/14` reports 29.70% / 11.75% and a **60-page** set at 1.96% / 63.46%;
+   `docs/14` now reports 29.30% / 11.95% and the 20-page (67.9%/1.8%/56.5%) and 193-page set-B (71.6%/2.4%/58.4%) readings — the 60-page set and 1.96%/63.46% it used to cite are gone;
    `docs/12` §3 reports **12.5%** end-to-end field recovery while `docs/03` §3
    reports **0.0%** end to end. Every one of those was measured; none of them
    agree. `docs/13`'s own rule — "every on-screen number must appear in
@@ -519,7 +519,7 @@ and to confirm our placement in the capped track.
 **3. Reconcile the numbers into one table.**
 *Exact artefact:* one Markdown table (add it to `docs/03_RESULTS.md` or a short
 `docs/19`-style file that `docs/03` links to) with columns: metric, value, which
-corpus (20 pages vs 60 pages vs 12 rendered docs vs 17,945 words), the exact
+corpus (20 pages vs 193 pages vs 12 rendered docs vs 17,945 words), the exact
 command, and the date measured. Then correct or cross-reference `docs/12` §3,
 `docs/13`'s shot list, `docs/14` and `docs/11` §6 so no two documents disagree.
 *Done when:* `grep -rn` for `29.3` / `29.7` / `58.4` / `63.46` / `12.5%` / `0.0%`
@@ -615,7 +615,7 @@ Ordered by probability × damage. Every mitigation is something we can do before
 | 3 | **iOS Safari quirks / version floor** | WASM SIMD requires **iOS 16.4+**; a lookbehind regex once made the app completely dead on older Safari while every Chromium test passed (`docs/04` §2) | Confirm both demo phones are ≥16.4. Run `bash run.sh ios-check` before travelling. Never demo in private browsing (service workers disabled). Never demo from a plain LAN-IP load. |
 | 4 | **Phone battery / memory pressure** | three ORT sessions in the wasm heap; Safari jettisons suspended tabs under pressure (`docs/04` §2) | Charge both phones above 80% plus a power bank (`docs/05` pre-flight). Rehearse a force-quit-and-recover. Know the escape hatch: the **Skip classifier** toggle drops the 22.9 MB encoder from the pipeline. |
 | 5 | **No installable app / judge cannot use it on their own phone** | it is a URL, not an App Store listing; iOS install requires **Safari** (not Chrome), Share → Add to Home Screen (`docs/04` §2) | Hand over our own already-installed phone. Carry a printed QR to the HTTPS URL for judges who want it on their device. Never ask a judge to install during the pitch. |
-| 6 | **Our numbers contradict each other under questioning** | `docs/03` 29.30%/11.95% & 20-page vs `docs/14` 29.70%/11.75% & 60-page; `docs/12` 12.5% vs `docs/03` 0.0% end to end (`docs/14`) | Action 3 in §4 — one authoritative table, every other doc pointing at it. Do not answer a numbers question from memory; answer from the table. |
+| 6 | **Our numbers contradict each other under questioning** — LARGELY FIXED 2026-10-21 | the docs/03-vs-docs/14 rows were reconciled (29.30%/11.95% is word-level; docs/14 now carries the same row) and the end-to-end 12.5%/0.0% rows were replaced by the 45.9%/0.303 shipped build; the remaining exposure is the epoch-39-vs-29 lineage and the un-artifacted SROIE row (see docs/03's provenance note) | Action 3 in §4 — one authoritative table, every other doc pointing at it. Do not answer a numbers question from memory; answer from the table. |
 | 7 | **Deck fails on the shared presentation laptop** | finalist slides are pre-loaded onto a shared machine, 48 h ahead, and the live demo needs our own laptop (FAQ) | Send the PDF **and** a font-embedded copy 48 h early; verify it on a machine without our fonts; assume no clicker and no speaker notes on screen. |
 | 8 | **Open Challenge placement / eligibility** | capped at 5 university teams, allocated on an 80-word problem statement due 24 Sept 2026 (third-party brief); the anchor must be a **2025** Policy Address priority *not already covered by challenges 1–5*, and Challenge 1 is "Agetech… gerontechnology… ageing-in-place" — which is arguably where "AI reads a prescription to an elderly visually-impaired user" already sits | Confirm our placement and our track in writing with `imperialhackathon@imperial.ac.uk`. Prepare a two-sentence gap argument for why vision loss plus document reading plus medical-safety refusal is not covered by an ageing-in-place challenge, or be ready to present the same project under Challenge 1. |
 | 9 | **Absent team at the Grand Final** | in-person pitches only; no remote participation; all presenting members must attend (FAQ) | Lock attendance now, including travel from Macau. Nominate a second speaker so any single absence does not remove a STEMB discipline from the room. |

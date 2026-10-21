@@ -32,7 +32,7 @@ of it returns.
 | claim | number |
 |---|---|
 | Classifier accuracy / macro-F1 — 5 seeds, held-out n=24 (`ml/experiments/step3_f1.py`) | **95.8% (sd 2.63) / 95.7% (sd 2.72)** — the stored eval once said 100%; that was one lucky seed, re-measured and published |
-| Held-out scan OCR, epoch 39, 17,945 test words (`docs/03_RESULTS.md` §3) | word accuracy **29.30%**, CER **11.95%** |
+| Held-out scan OCR, epoch 39 — the PRE-retrain baseline's ledger row; the SHIPPED graph is epoch 29 (16/16 provenance), 17,945 test words (`docs/03_RESULTS.md` §3) | word accuracy **29.30%**, CER **11.95%** |
 | Real hand-held photos, 20 pages (`docs/03_RESULTS.md` §3) | detection recall **67.9%**, line-exact **1.8%**, CER **56.5%** |
 | Browser payload | **26.45 MiB** models + tokenizer (27,735,952 B) · **≈37.2 MiB** installed on device |
 
@@ -42,7 +42,7 @@ of it returns.
 > lines and **statistically insignificant** (McNemar p = 1.000, §6); the
 > headline now quotes the baseline, **67.9% / 1.8% / 56.5%**, matching `docs/12`
 > and `docs/13`. Those figures are the 20-page set (`docs/03_RESULTS.md` §3);
-> `docs/14` records a *different*, 60-page real-photo reading (1.96% line-exact /
+> `docs/14` records a *different* real-photo reading (the 193-page set-B at 71.6% / 2.4% / 58.4%; there is no 60-page set — an earlier draft conflated two sets) (
 > 63.46% CER) — the cross-corpus label is flagged in `docs/23`. The payload
 > row used to say **26.68 MB**, which counted the model weights only and silently
 > excluded the **10.73 MiB** ONNX-runtime WASM the app cannot infer without; the
@@ -437,7 +437,7 @@ figure in §1–§10 is one of these three kinds, and the kind is stated:
 
 **Verified from disk or a passing check in this session**
 - Model byte counts — read from `app/models/*.onnx`, listed in §4 in exact bytes
-- CRNN 942,166 params · 38 classes · 37 symbols · epoch 39 — from `state_dict`
+- CRNN 942,166 params · 38 classes · 37 symbols · the shipped graph is the epoch-29 render-retrain export (`crnn_epoch29_final.pt`, val_word_acc 36.19%, dynamic width) — verified by output provenance; epoch 39 is the pre-retrain baseline
 - Restorer 37,793 params — from `SightLineNet()`
 - 26.45 MiB models + tokenizer (27,735,952 B), ≈37.2 MiB installed with the
   ONNX-runtime WASM, no external sidecars — `bundle-check`, `du -sb app`
@@ -453,7 +453,7 @@ figure in §1–§10 is one of these three kinds, and the kind is stated:
 - 67.9% detection recall · 1.8% line accuracy · 56.5% CER — full 20-page
   hand-photographed set (`docs/03_RESULTS.md` §3); the localisation variant's
   71.6% / 2.4% / 58.4% is within noise (McNemar p = 1.000). The delivered
-  benchmark's *60-page* real-photo reading is `docs/14` (1.96% / 63.46%); the
+  benchmark's 193-page set-B real-photo reading is `docs/14` (71.6% / 2.4% / 58.4%); the
   two corpora are reconciled in `docs/23`
 - McNemar p = 1.000 · Wilson intervals — computed from the aligned-line counts
 - 47.3% blank fraction, all 38 classes used — measured on real training crops

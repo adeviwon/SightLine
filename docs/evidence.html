@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SightLine — evidence sheet</title>
+<style>
+  :root {
+    --bg:#0a0a0a; --panel:#14181c; --panel2:#1c2228; --line:#2b343c;
+    --text:#f2f5f7; --muted:#a8b3bd; --accent:#58c7ff; --ok:#3ddc9a;
+    --warn:#ffc84d; --err:#ff8a8a;
+  }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    margin:0; background:var(--bg); color:var(--text);
+    font:15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width:1000px; margin:0 auto; padding:34px 22px 60px; }
+  h1 { font-size:24px; margin:0 0 6px; letter-spacing:-.2px; }
+  h1 span { color:var(--accent); }
+  h2 { font-size:16px; margin:38px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--line);
+       text-transform:none; letter-spacing:.2px; }
+  h3 { font-size:14px; margin:22px 0 8px; color:var(--muted); font-weight:600; }
+  p { margin:9px 0; }
+  .lead { color:var(--muted); margin:0 0 14px; }
+  .meta { color:var(--muted); font-size:12.5px; margin:0 0 6px; }
+  code, pre { font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  code { font-size:12.5px; background:var(--panel2); border:1px solid var(--line);
+         border-radius:5px; padding:1px 5px; color:var(--text); word-break:break-word; }
+  pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+        padding:11px 13px; overflow-x:auto; font-size:12.5px; line-height:1.5; color:var(--text); }
+  pre code { background:none; border:0; padding:0; }
+  table { border-collapse:collapse; width:100%; margin:12px 0 6px; font-size:13.5px; }
+  caption { caption-side:top; text-align:left; color:var(--muted); font-size:12.5px; padding:0 0 6px; }
+  th, td { border:1px solid var(--line); padding:6px 9px; text-align:left; vertical-align:top; }
+  thead th { background:var(--panel2); font-weight:600; }
+  tbody tr:nth-child(even) td { background:var(--panel); }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .src { color:var(--muted); font-size:12px; }
+  .good { color:var(--ok); }
+  .bad { color:var(--err); }
+  .warn { color:var(--warn); }
+  ul, ol { margin:9px 0 9px 22px; padding:0; }
+  li { margin:5px 0; }
+  .note { background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--accent);
+          border-radius:6px; padding:11px 13px; margin:14px 0; }
+  .foot { margin-top:44px; padding-top:14px; border-top:1px solid var(--line); color:var(--muted); font-size:12.5px; }
+  a { color:var(--accent); }
+  @media print {
+    :root { --bg:#fff; --panel:#fff; --panel2:#f3f5f7; --line:#b9c2ca; --text:#101418; --muted:#4a555e;
+            --accent:#0b5f8a; --ok:#0d6b47; --warn:#8a5a00; --err:#8c1f1f; }
+    body { font-size:11.5px; }
+    main { max-width:none; padding:0 6mm; }
+    h2 { page-break-after:avoid; }
+    table, pre, .note { page-break-inside:avoid; }
+    a { color:#101418; text-decoration:none; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>SightLine — <span>evidence sheet</span></h1>
+  <p class="meta">Repository: <a href="https://github.com/adeviwon/SightLine">github.com/adeviwon/SightLine</a> ·
+     commit <code>7b7980e</code> (branch <code>pwa</code>) · 2026-10-21 · Imperial Hackathon Hong Kong &amp; Macau 2026</p>
+  <p class="lead">One page, one purpose: every claim we make, and the file in this repository that contains it.
+     Where a number was not already written down, it was computed from the artifact with the repository's own
+     scoring code — the command is in §5, and it prints what is printed here.</p>
+
+  <h2>1. What it is</h2>
+  <p>SightLine is an installable web app (PWA) that photographs a document, recognises the text and reads it
+     aloud — for people who cannot read the page, including people with visual impairment. It runs entirely on
+     the phone: after the first install there is no network call, no upload, and no OCR library — recognition is
+     our own 942,166-parameter CRNN+CTC network (37-symbol alphabet, digits/letters/space) shipped as a
+     self-contained ONNX graph, with a build gate that fails the build if a third-party OCR engine reappears.</p>
+  <table>
+    <caption>What runs where (each figure with its source).</caption>
+    <thead><tr><th>Item</th><th>Value</th><th class="src">Source in this repo</th></tr></thead>
+    <tbody>
+      <tr><td>Live app (open on a phone, then add to Home Screen)</td>
+          <td><a href="https://adeviwon.github.io/SightLine/">https://adeviwon.github.io/SightLine/</a></td>
+          <td class="src"><code>README.md</code></td></tr>
+      <tr><td>Recogniser</td><td>942,166 parameters, 37 symbols, CTC; held-out crop word accuracy 28.0% on 7,875 crops</td>
+          <td class="src"><code>artifacts/ocr_training.json</code>; <code>docs/14_HACKATHON_BENCHMARK.md</code></td></tr>
+      <tr><td>Installed payload</td><td>26.68 MB, self-contained (models + tokenizer); 0 bytes leave the phone</td>
+          <td class="src"><code>docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md</code>; <code>docs/13_ECC_CODE_REVIEW.md</code> (<code>bundle-check</code>)</td></tr>
+      <tr><td>Where inference happens</td><td>In the phone's browser, in WASM (onnxruntime-web), from the service-worker cache; after install the app never reaches the network</td>
+          <td class="src"><code>app/sw.js</code> (<code>caches.match</code>, cache-only); <code>docs/PRIVACY.md</code></td></tr>
+      <tr><td>Desktop layout analysis (where available)</td><td>Optional, off-device, and not part of the phone path; the phone path is the one measured below</td>
+          <td class="src"><code>docs/01_ARCHITECTURE.md</code></td></tr>
+      <tr><td>Build gate against vendored OCR</td><td>Build fails if Tesseract or another OCR library returns to the bundle</td>
+          <td class="src"><code>ml/src/bundle_check.py</code> via <code>bash run.sh bundle-check</code>; <code>HANDOFF.md</code> §6</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. The measured results</h2>
+  <p><strong>What the bench is.</strong> <code>bash run.sh bench-pipeline</code> drives the real app —
+     <code>app/</code>, unmodified — in Playwright <strong>WebKit</strong>, the engine iOS Safari uses, over
+     <strong>12 rendered documents</strong> (3 document types &times; 4 capture profiles: <code>studio_clean</code>,
+     <code>handheld_light</code>, <code>off_axis</code>, <code>jpeg_social</code>), and writes one raw record per
+     sample. <code>ml/src/bench_hackathon.py</code> then scores those records — the browser computes no metrics, so
+     the two cannot drift apart. No sample is excluded: all 12 profiles are in the headline, 0 errors.</p>
+
+  <h3>The headline, stage by stage: four defects fixed, four measurements</h3>
+  <p>Each row is a frozen artifact from the point in the work where that fix landed. Same 12 documents, same
+     metric, same engine. The last row is what the app does today on this bench.</p>
+  <table>
+    <caption>Headline end-to-end numbers. Word accuracy and CER are the definitions in
+      <code>ml/src/bench_hackathon.py</code> (word accuracy: fraction of ground-truth words present in the read,
+      after <code>norm()</code>; CER: (substitutions + insertions + deletions) / ground-truth characters on
+      normalised text).</caption>
+    <thead><tr>
+      <th>Stage</th><th class="num">Word acc.</th><th class="num">CER</th>
+      <th class="num">Expected fields recovered</th><th class="num">Docs emitting &ge;1 field</th>
+      <th class="num">Classif.</th><th class="num">Errors</th><th class="src">Artifact</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>Start of this work (fixed 256px graph, no ranking raw arm, deskew sign inverted)</td>
+          <td class="num">3.6%</td><td class="num">0.708</td><td class="num">0 / 24</td><td class="num">3</td>
+          <td class="num">33.3%</td><td class="num">0</td><td class="src"><code>artifacts/pipeline_raw.json</code></td></tr>
+      <tr><td>+ dynamic-width graph (padding no longer leaks through the BiLSTM)</td>
+          <td class="num">17.1%</td><td class="num">0.600</td><td class="num">1 / 24</td><td class="num">4</td>
+          <td class="num">58.3%</td><td class="num">0</td><td class="src"><code>artifacts/pipeline_raw_dynamic.json</code></td></tr>
+      <tr><td>+ the raw image is back in the OCR candidate list</td>
+          <td class="num">35.0%</td><td class="num">0.465</td><td class="num">4 / 24</td><td class="num">7</td>
+          <td class="num">66.7%</td><td class="num">0</td><td class="src"><code>artifacts/pipeline_raw_rawarm.json</code></td></tr>
+      <tr><td>+ deskew no longer doubles the tilt (what ships today)</td>
+          <td class="num good">45.9%</td><td class="num good">0.303</td><td class="num">5 / 24</td><td class="num">9</td>
+          <td class="num">83.3%</td><td class="num">0</td><td class="src"><code>artifacts/pipeline_raw_deskew.json</code></td></tr>
+    </tbody>
+  </table>
+  <p class="src">Reading the two field columns: “expected fields recovered” counts how many of the 24 ground-truth
+     values (12 documents &times; 2) the app actually got right — a value counts when it matches exactly, or when
+     it is a masked suffix of the expected one (the app is allowed to mask sensitive values) —
+     rule: <code>bench_hackathon._recovered</code>, which is the rule
+     <code>bash run.sh bench-hackathon</code> prints. “Docs emitting &ge;1 field” counts records that produced any
+     field value at all, right or wrong: at the starting stage 3 documents emitted 4 values and <strong>all four
+     were wrong</strong>, which is the distinction that column exists to keep visible.</p>
+
+  <h3>Per-profile breakdown</h3>
+  <table>
+    <caption>Same four artifacts, split by capture profile. Word accuracy / CER, fields recovered, and document
+      classification per profile (3 documents per profile).</caption>
+    <thead><tr>
+      <th>Profile</th><th>Stage</th><th class="num">Word acc.</th><th class="num">CER</th>
+      <th class="num">Fields</th><th class="num">Classif.</th><th class="src">Artifact</th>
+    </tr></thead>
+    <tbody>
+      <tr><td rowspan="4"><code>studio_clean</code></td>
+          <td>start</td><td class="num">10.3%</td><td class="num">0.436</td><td class="num">0 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw.json</code></td></tr>
+      <tr><td>dynamic</td><td class="num">49.9%</td><td class="num">0.236</td><td class="num">1 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_dynamic.json</code></td></tr>
+      <tr><td>raw arm</td><td class="num">52.3%</td><td class="num">0.225</td><td class="num">2 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_rawarm.json</code></td></tr>
+      <tr><td>deskew</td><td class="num">52.3%</td><td class="num">0.225</td><td class="num">2 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+
+      <tr><td rowspan="4"><code>handheld_light</code></td>
+          <td>start</td><td class="num">1.7%</td><td class="num">0.812</td><td class="num">0 / 6</td><td class="num">0%</td><td class="src"><code>pipeline_raw.json</code></td></tr>
+      <tr><td>dynamic</td><td class="num">1.2%</td><td class="num">0.760</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw_dynamic.json</code></td></tr>
+      <tr><td>raw arm</td><td class="num">46.5%</td><td class="num">0.376</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_rawarm.json</code></td></tr>
+      <tr><td>deskew</td><td class="num">46.5%</td><td class="num">0.376</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+
+      <tr><td rowspan="4"><code>jpeg_social</code></td>
+          <td>start</td><td class="num">0.9%</td><td class="num">0.732</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw.json</code></td></tr>
+      <tr><td>dynamic</td><td class="num">16.4%</td><td class="num">0.523</td><td class="num">0 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_dynamic.json</code></td></tr>
+      <tr><td>raw arm</td><td class="num">39.8%</td><td class="num">0.378</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_rawarm.json</code></td></tr>
+      <tr><td>deskew</td><td class="num">39.8%</td><td class="num">0.378</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+
+      <tr><td rowspan="4"><code>off_axis</code> (4&deg; tilt + perspective)</td>
+          <td>start</td><td class="num">1.6%</td><td class="num">0.854</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw.json</code></td></tr>
+      <tr><td>dynamic</td><td class="num">1.1%</td><td class="num">0.882</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw_dynamic.json</code></td></tr>
+      <tr><td>raw arm</td><td class="num">1.1%</td><td class="num">0.882</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw_rawarm.json</code></td></tr>
+      <tr><td>deskew</td><td class="num good">45.1%</td><td class="num good">0.234</td><td class="num">1 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+    </tbody>
+  </table>
+  <p class="src">The <code>handheld_light</code> and <code>jpeg_social</code> rows are unchanged between the last
+     two stages, which is the expected shape: those profiles sit at ~0&deg; skew, where
+     <code>estimateSkew()</code> returns exactly 0 and the deskew fix is unreachable
+     (<code>app/js/pipeline.js</code>, “It is unreachable on the working profiles, which is why it went
+     unnoticed”).</p>
+
+  <h3>What this bench proves, and what it does not</h3>
+  <p>Proves: the shipped app's entire path — preprocess, line detection, recognition, field extraction,
+     classification — on these 12 rendered documents, in WebKit, reproducibly
+     (<code>bash run.sh bench-pipeline</code> then <code>bash run.sh bench-hackathon</code>).</p>
+  <ul>
+    <li><strong>It is not a generalisation claim.</strong> The recogniser never trained on these renders, but the
+        classifier's templates <em>are</em> in its corpus, so its end-to-end agreement here is not held-out
+        evidence; the classifier's held-out figure is 95.8% accuracy / 95.7% macro-F1 over 5 seeds on n=24
+        documents, and it carries its own caveat — a near-perfect score on 24 documents means the task is easy,
+        not that the model is strong (<code>artifacts/step3_classifier_metrics.json</code>,
+        <code>docs/14_HACKATHON_BENCHMARK.md</code>).</li>
+    <li><strong>Word accuracy is bag-of-words containment, not reading order.</strong> It counts how many
+        ground-truth words appear anywhere in the read text after <code>norm()</code>. A scrambled read can score
+        high on it. Treat it as recall of vocabulary, not as comprehension.</li>
+    <li><strong>12 documents is small (3 per profile).</strong> No per-profile difference here is statistically
+        resolvable, and no confidence interval is claimed on n=3. The per-profile table is a description, not an
+        inference.</li>
+    <li><strong>The hard case is not in this table.</strong> The app was also measured with the whole-page Python
+        harness on hand-photographed pages: on the <strong>20-page</strong> set, detector recall
+        <strong>67.9%</strong>, line-exact <strong>1.8%</strong>, CER <strong>56.5%</strong>; the
+        <strong>193-page</strong> set-B reproduction of the shipped checkpoint reads line recall
+        <strong>71.6%</strong>, line-exact <strong>2.4%</strong>, CER <strong>58.4%</strong>. Both are real, on
+        different page sets — and either way it is the honest number for real photographs, far worse than anything
+        above (<code>docs/14_HACKATHON_BENCHMARK.md</code>; <code>docs/03_RESULTS.md</code> §3;
+        <code>HANDOFF.md</code> §3).</li>
+    <li><strong>These artifacts are frozen copies.</strong> Re-running <code>bash run.sh bench-pipeline</code>
+        overwrites <code>artifacts/pipeline_raw.json</code>; the four stage files were copied aside at the moment
+        each fix landed, so the progression stays readable. Re-running can only differ because the app changed —
+        which is the point of publishing it.</li>
+  </ul>
+
+  <h2>3. What we got wrong and fixed</h2>
+  <p>Four train/serve contract defects. Each one is a case where what the app fed the model was not what the model
+     was trained on, and each one was found by measurement, not by reading the code. In this project the input
+     contract has outranked the model every time (<code>docs/18_CRNN_ACCURACY_STRATEGIES.md</code> §0).</p>
+  <table>
+    <caption>The four defects, in the order they were found, with the magnitude each one was measured to have.</caption>
+    <thead><tr><th>Defect</th><th>What was actually wrong</th><th>Measured magnitude</th><th class="src">Source</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>(a) The exported graph was a fixed 256px</td>
+        <td>Training built every crop at its natural width clamped to <code>MAX_W = 320</code>, and the corpus
+            median <em>is</em> that clamp (of 3,270 held-out crops only 40 are &le;256px). The ONNX graph was baked
+            at 256, so the app fed the model the first 256px of nearly every line — the tail was cut off before the
+            model ever saw it.</td>
+        <td>Crop-level exact match <strong>44.7% at natural width vs 0.0% cut to 256</strong>; the read changed on
+            <strong>200 of 200</strong> crops (<code>PATIENT JANE DOE DOB 04021979</code> &rarr;
+            <code>PERIENT JANE DOE 2O08010</code>; <code>DATE 01102026</code> &rarr; <code>DATE 01020</code>).
+            End-to-end, same 12 documents: word accuracy <strong>3.6% &rarr; 22.4%</strong>, mean CER
+            <strong>70.8% &rarr; 57.5%</strong>, read tokens <strong>468 &rarr; 680 (+45%)</strong>. The graph is
+            now exported at the training clamp, and the contract test asserts <em>equality</em> with it — the old
+            assertion was <code>width &lt;= MAX_W</code>, which any narrower graph satisfies, and it passed
+            hardest on the worst value.</td>
+        <td class="src"><code>docs/14_HACKATHON_BENCHMARK.md</code>;
+            <code>app/js/recognizer.js</code>; <code>ml/src/export_onnx.py</code>;
+            <code>ml/tests/test_graph_width_contract.py</code>;
+            <code>artifacts/pipeline_raw_final.json</code></td>
+      </tr>
+      <tr>
+        <td>(b) Right-padding leaked through the backward pass</td>
+        <td>The CRNN carries a two-layer <em>bidirectional</em> LSTM, whose backward pass starts at the right edge —
+            inside the padding. CTC blanks the padded region for the loss, so training never noticed; at serve time
+            the padded zeros moved the hidden states across the valid frames.</td>
+        <td>Padded serve path <strong>19.0% crop-level exact / CER 0.308</strong> against
+            <strong>30.5% / 0.198</strong> at natural width, agreeing with the natural decode on only
+            <strong>43%</strong> of crops; measured max |delta| 9.10 at content 64 and 15.28 at 200 (logit units),
+            enough to change the decoded string. 74.7% of held-out crops are padded at all against the 320 clamp.
+            Fixed by exporting a dynamic-width graph; padding is now a known loss, not a neutral default.</td>
+        <td class="src"><code>app/js/recognizer.js</code>; <code>ml/src/export_dynamic.py</code>;
+            <code>ml/tests/test_padding_invariant.py</code>;
+            <code>docs/18_CRNN_ACCURACY_STRATEGIES.md</code> §0.1</td>
+      </tr>
+      <tr>
+        <td>(c) The OCR candidate list <em>replaced</em> the preprocessed list</td>
+        <td>With the restorer on, the app substituted the restorer's three candidates for the preprocessed ones —
+            and none of those three is the raw image. So the ranking could only choose among three degraded
+            variants of each page and never saw the unprocessed deskewed image at all. The ranking rule was
+            innocent: raw wins on the rule's own objective once it is allowed to compete.</td>
+        <td>On the app's own 12 documents, 145 paired crops, with the crop set, crop geometry and model held
+            fixed and only the page transform varied: <strong>raw 45.5% exact line match</strong> vs
+            <strong>11.0% for the arm it was actually picking</strong> (tile-CLAHE 40.7%, CLAHE+Otsu 13.8%). The
+            shipped ranking picked one of the three restored arms on <strong>12 of 12</strong> documents, costing
+            <strong>34.5 points</strong> of exact line match, <strong>29.6 points</strong> of word accuracy and
+            <strong>9 of 24</strong> fields — while not even winning on <code>structure_score</code>, the ranking's
+            own objective (103 tokens against raw's 146). Fixed by prepending the raw candidate; the rule was left
+            alone.</td>
+        <td class="src"><code>app/js/app.js</code> (comment and the one-line fix);
+            <code>app/js/pipeline.js</code> (same fix for the non-restorer path)</td>
+      </tr>
+      <tr>
+        <td>(d) Deskew applied its own estimate with the sign inverted</td>
+        <td><code>rotate()</code> takes the angle in the opposite sense to the one <code>estimateSkew()</code>
+            measures, so applying the estimate directly rotated the page <em>away</em> from straight and doubled
+            the tilt. The estimator was never wrong: it returned the right magnitude, and re-estimating the app's
+            own deskewed output returned 6.5–9.0&deg;. Preceding that, the estimator scored each angle by a raw
+            count of dark samples, which is not comparable across angles and left every tie to the sweep's first
+            angle — a blank page scored &minus;10, an axis-aligned page &minus;8, a 4&deg; page &minus;7. It now
+            uses a normalised projection-profile score, and the gate that would have caught the sign is a
+            <em>round trip</em> (apply, re-estimate, require ~0), not “is the angle plausible”.</td>
+        <td><code>off_axis</code> word accuracy <strong>1.1% &rarr; 45.1%</strong> (start &rarr; today); the old
+            expression destroyed the two pages whose raw detection was already marginal (legal 3 &rarr; 0 bands,
+            prescription 1 &rarr; 0). Bench-wide: word accuracy <strong>35.0% &rarr; 45.9%</strong>, CER
+            <strong>0.465 &rarr; 0.303</strong>.</td>
+        <td class="src"><code>app/js/pipeline.js</code> (the negation and the measured off_axis table, both in the
+            comment); <code>app/tools/deskew_verify.js</code> (the round-trip assertion);
+            <code>app/tools/offaxis_detect.js</code> (records the 1.1% starting state and the shear-sign finding);
+            <code>HANDOFF.md</code> §4 item 0; values computed from
+            <code>artifacts/pipeline_raw_rawarm.json</code> and <code>artifacts/pipeline_raw_deskew.json</code></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="src">Full detail, including the measurements that were tried and reverted, is in
+     <code>docs/18_CRNN_ACCURACY_STRATEGIES.md</code> and <code>docs/14_HACKATHON_BENCHMARK.md</code>; the commit
+     log is the primary record. Nothing in this section is a claim about the model — every one of the four was an
+     interface defect between training and serving.</p>
+
+  <h2>4. Why not Tesseract or Google Lens</h2>
+  <p>The differentiation we claim is architectural and verifiable, not a benchmark win:</p>
+  <ul>
+    <li><strong>On-device by construction.</strong> There is no upload target, because there is nowhere to upload
+        to: the service worker serves from cache only, inference runs in WASM on the phone, and after install the
+        app works in airplane mode. A cloud OCR service (Google Lens and friends) cannot make that claim — the page
+        image leaves the device.</li>
+    <li><strong>No vendored OCR engine.</strong> Tesseract was removed; the recogniser is a network we trained
+        ourselves. <code>bash run.sh bundle-check</code> fails the build if a third-party OCR engine comes back —
+        a gate, not a promise (<code>ml/src/bundle_check.py</code>; <code>docs/13_ECC_CODE_REVIEW.md</code>).</li>
+    <li><strong>Refusal over guessing.</strong> The app is built to say it could not read something rather than
+        assert a value it is not sure of (see §6). That is the opposite of the default behaviour of a general
+        OCR service, which returns its best guess with no notion of “do not act on this”.</li>
+    <li><strong>Weights and algorithm we can read end to end.</strong> 942,166 parameters, 37 symbols, a
+        self-contained ONNX graph, an in-repo export and a parity test against the browser decoder.</li>
+  </ul>
+  <p><strong>And the honest part, because a judge will ask it — now measured, not asserted.</strong>
+     <code>ml/src/tesseract_compare.py</code> ran <strong>Tesseract 4.1.1</strong> (leptonica-1.82.0,
+     <code>eng</code> only, default LSTM, CLI) and our shipped graph over the <em>same</em> 12 documents,
+     the <em>same</em> detected crops and the <em>same</em> ground truth: 188 scored lines
+     (<code>docs/24_ENGINE_HEAD_TO_HEAD.md</code>; <code>artifacts/engine_head_to_head.json</code>). Every
+     figure below is the artifact's, unrounded:</p>
+  <table>
+    <caption>Same documents, same pixels, same ground truth — only the engine varies. Tesseract's winning rows
+      stay in, at the top, where they belong.</caption>
+    <thead><tr><th>arm</th><th class="num">line exact</th><th class="num">line exact (punct-blind)</th>
+      <th class="num">word acc.</th><th class="num">CER</th><th class="num">fields</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Tesseract — whole page, <code>--psm 3</code></strong> (its fair integration)</td>
+          <td class="num">72.9%</td><td class="num">75.5%</td><td class="num">80.1%</td><td class="num">0.134</td><td class="num">79.2%</td></tr>
+      <tr><td><strong>Tesseract — native-resolution line crops</strong> (its fair input)</td>
+          <td class="num">64.4%</td><td class="num">68.6%</td><td class="num">75.3%</td><td class="num">0.164</td><td class="num">70.8%</td></tr>
+      <tr><td>Tesseract — the <em>identical</em> 32 px crops we read (unfair to Tesseract, reported anyway)</td>
+          <td class="num">17.6%</td><td class="num">23.9%</td><td class="num">49.8%</td><td class="num">0.357</td><td class="num">29.2%</td></tr>
+      <tr><td>ours — CRNN on 32 px crops, raw deskewed page (what ships)</td>
+          <td class="num">11.7%</td><td class="num">41.0%</td><td class="num">61.2%</td><td class="num">0.197</td><td class="num">83.3%</td></tr>
+    </tbody>
+  </table>
+  <p class="src">Field recovery is over 24 ground-truth values (2 per document) — on that column a one-field lead
+     is noise, not a win. Word accuracy and CER are the repository's own definitions
+     (<code>ml/src/evaluate.py</code>, <code>ml/src/bench_hackathon.py</code>). Line crops and whole pages are
+     quoted separately because they are different integrations, not because one flatters us.</p>
+  <ul>
+    <li><strong>Tesseract wins the aggregate, and we say that first.</strong> 72.9% of lines exactly against our
+        11.7%, CER 0.134 against 0.197, 80.1% word accuracy against 61.2%. On a clean, flat scan it is the better
+        reader, and no measurement of ours will change that
+        (<code>docs/24_ENGINE_HEAD_TO_HEAD.md</code> §3 and §5 state the same thing).</li>
+    <li><strong>The fairness correction — stated, not hidden.</strong> Our alphabet is 37 symbols (0-9, A-Z,
+        space): it <em>structurally cannot emit punctuation</em>. 120 of the 188 scored rows contain punctuation,
+        so they can never be a string-exact match however correct the read is — that alone is the whole distance
+        between 11.7% and 41.0% line exact. On the identical-pixel control, punctuation-blind, ours takes
+        <strong>48 lines Tesseract misses and loses 16</strong>
+        (<code>artifacts/engine_head_to_head.json</code>,
+        <code>paired.identical_pixels_ours_vs_tess_arm_a_punct_blind</code>). The strict column is not withdrawn —
+        it is what an engine with no punctuation gets, and it is printed beside the blind one.</li>
+    <li><strong>Where the split actually lands.</strong> On the one profile that models a real hand-held capture
+        (<code>handheld_light</code>: defocus 0.5, ISO 400, light 0.08) ours reads <strong>68.4% word accuracy
+        and 83.3% of fields</strong> against Tesseract's <strong>12.4–23.6% and 0–16.7%</strong> — a 5.5&times;
+        word-accuracy gap, in the direction a phone app lives in. The mechanism is the binarisation stage between
+        the pixels and Tesseract's net: leptonica thresholds a mildly defocused, noisy page, the strokes break up,
+        and its LSTM then decodes plausible English over the broken mask. Our model is fed the grayscale crop
+        directly, with no thresholding step.</li>
+    <li><strong>The safety fact.</strong> On the clean page Tesseract read
+        <code>Rx  Amoxicillin 500mg capsules</code> as <code>RX AMOXICILLIN 300MG CAPSULES</code> — a
+        plausible-word substitution of the dosage, on the exact field this product exists to protect. Its language
+        model makes a wrong read still look like text, so nothing in the output says which word is the invention.
+        Ours emits no character outside its 37-symbol alphabet (0.0% punctuation in its output), drops no line on
+        any profile, and the app refuses a field it cannot verify (§6).</li>
+  </ul>
+  <p>Plainly: <strong>Tesseract is stronger on clean, flat scans; we are stronger on real hand-held captures, we
+     never invent a punctuation mark or a digit, and we degrade instead of hallucinating.</strong> We do
+     <em>not</em> claim to beat Tesseract overall. The decision this measurement supports is
+     <em>which</em> engine for <em>which</em> product: a vendored engine means a second WASM runtime plus its
+     language data — <code>eng.traineddata</code> 4,113,088 B and <code>osd.traineddata</code> 10,562,727 B on
+     the box it was measured on — and the build gate refuses to let an OCR library into the bundle
+     (<code>docs/24_ENGINE_HEAD_TO_HEAD.md</code> §5; <code>ml/src/bundle_check.py</code>).</p>
+  <p class="src">Superseding note: the earlier comparison recorded in this repository — Tesseract field accuracy
+     62.2% against our 7.4% at the best <code>evaluate.py</code> stage
+     (<code>docs/14_HACKATHON_BENCHMARK.md</code>, “The honest comparison a judge should see”;
+     <code>artifacts/eval_results.json</code>) — was measured before the recogniser was retrained and before the
+     four train/serve defects in §3 were fixed, so it is misleading in both directions. The table above is its
+     replacement, and it is the one to quote. Re-derive it with
+     <code>./.venv/bin/python ml/src/tesseract_compare.py</code> — 12 documents, 188 ground-truth lines, no
+     number on this sheet taken on trust.</p>
+
+  <h2>5. How to verify us in three steps</h2>
+  <ol>
+    <li><strong>Open the live app</strong> — <a href="https://adeviwon.github.io/SightLine/">https://adeviwon.github.io/SightLine/</a> —
+        on a phone, and add it to the Home Screen. It installs.</li>
+    <li><strong>Turn on airplane mode.</strong> Nothing about the app changes: there is no network call left to
+        make (<code>docs/PRIVACY.md</code> §offline, §airplane mode).</li>
+    <li><strong>Photograph a document and listen.</strong> You should hear the recognised text read aloud. We also
+        suggest including one deliberately hard photo, where the app <em>refuses</em> — “could not read that,
+        please check with a pharmacist”. That refusal is the design, not a bug
+        (<code>docs/13_ROUND1_SUBMISSION_KIT.md</code> §demo run sheet).</li>
+  </ol>
+
+  <h3>The two-minute repository check</h3>
+  <pre><code># 1. score the raw pipeline records already in the repo (reads artifacts/, ~10 s, no browser)
+bash run.sh bench-hackathon
+#    prints the Imperial step-3 block: classifier 95.8% (n=24, 5 seeds),
+#    recogniser 28.0% held-out crop word accuracy, and the shipped-app end-to-end line.
+#    It NAMES anything it could not measure and exits non-zero instead of defaulting it to zero.
+
+# 2. re-drive the app yourself (Playwright WebKit = iOS Safari's engine, ~4 min)
+bash run.sh bench-pipeline     # overwrites artifacts/pipeline_raw.json
+bash run.sh bench-hackathon    # score what you just produced
+
+# 3. the unit gates the fixes are pinned by (each prints "N/N checks passed" and exits non-zero on failure)
+node app/tools/crop_contract.js         # crop geometry (9 checks)
+node app/tools/recognizer_parity.js     # browser CTC decoder vs the Python reference
+node app/tools/warning_gate.js          # the honesty invariants, on all 12 samples</code></pre>
+  <p>And the bridge between this sheet and the artifacts — this exact command reproduces every number in §2 from
+     a stage artifact, using the repository's own metric functions (imported, not re-implemented):</p>
+  <pre><code>./.venv/bin/python -c "import sys,json;sys.path.insert(0,'ml/src');import bench_hackathon as B;print(B.aggregate_pipeline(json.load(open('artifacts/pipeline_raw_deskew.json')))['headline'])"
+
+# prints:
+# {'n': 12, 'errors': 0, 'field_recovery': 0.20833333333333334, 'classification': 0.8333333333333334,
+#  'word_accuracy': 0.45942654983750875, 'cer': 0.30305363644199385}
+# -> 45.9% word accuracy, CER 0.303, 5 of 24 expected fields, 83.3% classification, 12 documents, 0 errors</code></pre>
+
+  <h2>6. The safety design</h2>
+  <p>This app reads things people will act on — a dose, an account number, a date. A phone app must not be the last
+     check on a dose: the consequence of an invented “500 mg” is a person taking the wrong amount, and nobody in
+     the loop is in a position to catch it. So the design rule is <strong>refusal over guessing</strong>: when the
+     app cannot read a document, it says so and asserts nothing. It still reports what it saw as text; it does not
+     invent a value.</p>
+  <p><strong>The measurement that forced the design.</strong> A confidence threshold is the obvious gate, and it
+     does not work here. On a pure-speckle page (no text at all) the recogniser emitted glyph-like text —
+     “EAX CE E 0RO 121G000 …” — at <strong>0.678 confidence</strong>, <em>inside</em> the 0.687–0.974 band that
+     real reads occupy, and the invented value it produced passed every shape validator: it was a legal 9-digit
+     account number and a legal identifier. Neither available signal separates a hallucination from a read. What
+     does separate them is <strong>document evidence</strong>: the speckle page scores 0 on every document keyword,
+     while real reads score 1–17 even when they classify as the wrong type. So a read with no document evidence
+     asserts no fields — the gate is on evidence, not on confidence. Measured cost of that gate on the
+     12-document bench: 1 of 12 documents affected, and it surfaced no fields anyway.</p>
+  <ul>
+    <li>Rule and defect: <code>app/js/pipeline.js</code> (“A FIELD IS ONLY MEANINGFUL INSIDE A DOCUMENT TYPE”),
+        the document-evidence gate, plus the follow-on fix that a model override only bypasses the gate when the
+        model is confident (&ge;0.6) — a weak model opinion about a text with no document keyword is not evidence.</li>
+    <li>The same finding, recorded: <code>docs/18_CRNN_ACCURACY_STRATEGIES.md</code> §0.1 (“Confidence cannot gate
+        correctness”, “What DOES separate a hallucination from a read is document EVIDENCE”); the band 0.687–0.974
+        is also the confidence range of real reads in <code>artifacts/pipeline_raw_final.json</code>.</li>
+    <li>Pinned by a gate, not a comment: <code>node app/tools/warning_gate.js</code> asserts the honesty invariants
+        on all 12 samples, and <code>node app/tools/e2e_paths.js</code> covers the refusal path
+        (<code>HANDOFF.md</code> §6).</li>
+    <li>No data leaves the device, so the safety story has no privacy side-condition:
+        <code>docs/PRIVACY.md</code>; <code>app/sw.js</code> serves from cache only.</li>
+  </ul>
+
+  <h2>7. The policy anchor — and why it is the 2025 edition</h2>
+  <p>The Open Challenge rule names one edition, verbatim: the problem must be <em>“explicitly anchored in a
+     priority from either the Hong Kong or Macau <strong>2025</strong> Policy Address that is not already covered
+     by the five prescribed challenges”</em> (official FAQ, read 2026-10-21). So the <strong>2025</strong> edition
+     leads this sheet — every anchor below is quoted verbatim from the official 2025 text with that text's own
+     paragraph number — and the <strong>2026</strong> edition is presented as the funded
+     <em>follow-through</em>, never as the anchor. Full provenance, both PDFs and their SHA-256s:
+     <code>docs/19_POLICY_ANCHOR.md</code> §0.1–§0.2; the 2025 PDF is
+     <a href="https://www.policyaddress.gov.hk/2025/public/pdf/policy/policy-full_en.pdf">policy-full_en.pdf</a>,
+     118 pp, sha256 <code>c4ecaf20…18f3ec</code>.</p>
+  <table>
+    <caption>The three 2025 anchors, each mapped to a feature that already exists in the app — not to an
+      aspiration.</caption>
+    <thead><tr><th>¶ (2025)</th><th>The priority, as printed</th><th>What it anchors in SightLine</th></tr></thead>
+    <tbody>
+      <tr><td class="num">¶75</td>
+          <td>AI application: <em>“…render carer support through an AI chatbot to give carers more convenient
+              access to information”</em>; generative AI in clinical workflows</td>
+          <td>a carer or patient getting information from the phone they already own, with no network — the exact
+              use case</td></tr>
+      <tr><td class="num">¶227</td>
+          <td>Healthcare reform for an ageing society, incl. <em>“enhancing ophthalmic services”</em> and
+              <em>“a new high-capacity ambulatory cataract surgery centre”</em> (¶226 opens the healthcare
+              section, so the ophthalmic measures sit in ¶227)</td>
+          <td>the only directly vision-facing commitment in either edition</td></tr>
+      <tr><td class="num">¶266</td>
+          <td>Working Group on Ageing Society Strategies — <em>“…elderly care, healthcare, housing, culture and
+              leisure, and gerontechnology”</em>; <em>“by 2046, people aged 65 and above will account for 36% of
+              our total population”</em></td>
+          <td>gerontechnology for older people is the group's named remit; the 36% is the growth case</td></tr>
+    </tbody>
+  </table>
+  <p><strong>The 2026 edition is the follow-through — the money, not the anchor.</strong> ¶113 allocates
+     <strong>$300 million</strong> to the “AI for Welfare Lab” (WelfareHK.ai) and ¶398–400 earmark
+     <strong>$100 million</strong> for the Gerontechnology Promotion Scheme, with ¶398 letting subsidised welfare
+     units procure or rent gerontechnology — a paying buyer for a 26.7 MB installable PWA
+     (<code>docs/19_POLICY_ANCHOR.md</code> §4). The two editions are <em>not</em> numbered alike: the 2026 items
+     this repository originally cited — 2026 ¶108 (AI in healthcare) and ¶113 — do not exist as those items in
+     the 2025 text, which is exactly why the 2025 paragraph numbers above are the ones on the slide and in the
+     proposal (<code>docs/13_ROUND1_SUBMISSION_KIT.md</code>, policy-anchoring section).</p>
+  <p class="src">Mapping strength, stated for the Q&amp;A rather than discovered in it: ¶75 and ¶266 are strong
+     (named AI-for-carers text; gerontechnology named as a remit), ¶227 is strong and vision-specific, and the
+     stretched mappings this project deliberately does <em>not</em> use — 2026 ¶377 (rehabilitation
+     <em>places</em>), ¶437 (internal government AI projects), ¶441–442 (critical-infrastructure cybersecurity) —
+     are named as stretches in <code>docs/19_POLICY_ANCHOR.md</code> §6. Neither edition names the visually
+     impaired anywhere; that gap is the open-challenge case, and it is stated rather than papered over
+     (<code>docs/19_POLICY_ANCHOR.md</code> §7).</p>
+
+  <div class="foot">
+    <p>Repository: <a href="https://github.com/adeviwon/SightLine">github.com/adeviwon/SightLine</a> ·
+       commit <code>7b7980e</code> (<code>refs/heads/pwa</code>) · 2026-10-21 · SightLine, Imperial Hackathon
+       Hong Kong &amp; Macau 2026.</p>
+    <p>Numbers in §2 were produced by the repository's own scoring functions
+       (<code>ml/src/bench_hackathon.py</code>, imported rather than re-implemented) from the four
+       <code>artifacts/pipeline_raw*.json</code> files named beside every row; the command that reproduces them is in
+       §5. Numbers in §3, §4 and §7 are quoted from the file named beside them. Anything we could not trace to a file in
+       this repository is not on this sheet.</p>
+  </div>
+
+</main>
+</body>
+</html>

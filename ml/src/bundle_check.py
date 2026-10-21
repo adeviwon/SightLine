@@ -157,32 +157,61 @@ def main():
         print(f"  FAIL head inference: {type(e).__name__}: {e}")
         failures.append(f"head inference: {e}")
 
-    # The recogniser's input shape is a HARD CONTRACT with the browser, not a
-    # preference: app/js/recognizer.js builds exactly [1,1,32,256] because the
-    # exported graph cannot have a dynamic sequence length (aten::lstm refuses,
-    # and torch.export cannot unroll a symbolic loop bound). If a re-export
-    # changes that width, the JS stops matching and the app silently mis-trims
-    # timesteps -- inventing characters from padding. Asserted here so the
-    # failure is a build error rather than a wrong dosage on a phone.
+    # The recogniser's WIDTH axis is a HARD CONTRACT with the browser, not a
+    # preference. The app serves every crop at its natural width and feeds the
+    # graph [1, 1, 32, W] directly (recognizer.js), so the width axis on the
+    # shipped graph must be either SYMBOLIC or exactly the training clamp
+    # MAX_W = 320 (realdata.MAX_W; build_dataset.crop_to_array clamps every crop
+    # to [MIN_W, MAX_W] = [16, 320], so 320 is the widest input the model was
+    # ever trained for):
+    #
+    #   * symbolic  -> the dynamic-width export; any W up to the clamp is legal
+    #                  and nothing is right-padded. THIS IS WHAT SHIPS.
+    #   * == 320    -> a fixed graph baked at the training clamp; the JS must
+    #                  pad to 320 to match. Legal, but not what we ship.
+    #   * anything else (e.g. the old fixed 256) -> the JS pads/packs for a width
+    #                  the graph was not trained for, and the app silently
+    #                  mis-trims timesteps -- inventing characters from padding.
+    #
+    # This is an inference-time gate, so it MUST be able to fail: a re-export
+    # that re-introduces a fixed width other than MAX_W is a real defect. (An
+    # earlier version of this check asserted the input was literally
+    # [1,1,32,256] and claimed the sequence axis "cannot" be dynamic; that was
+    # true of the OLD aten::lstm-loop trace and is FALSE of the fused-LSTM ONNX
+    # export that ships, so the old assertion had stopped testing the contract
+    # it described.)
+    CRNN_MAX_W = 320                      # realdata.MAX_W, the training clamp
     try:
         c = ort.InferenceSession(str(APP_MODELS / "crnn.onnx"),
                                  providers=["CPUExecutionProvider"])
+        wdim = list(c.get_inputs()[0].shape)[3]
+        # symbolic (a dim_param string, or None on some ORT builds) or the clamp
+        w_ok = (wdim is None or isinstance(wdim, str)
+                or int(wdim) == CRNN_MAX_W)
         cx = np.random.default_rng(2).random((1, 1, 32, 256)).astype(np.float32)
         cl = c.run(None, {"input": cx})[0]
         finite = bool(np.isfinite(cl).all())
         shape_ok = (cl.ndim == 3 and cl.shape[0] == 1
                     and cl.shape[2] == 38)
         # 256 px of crop -> 32 timesteps, i.e. W/8. If this drifts, the JS
-        # decoder's timestepsFor() is wrong for every crop.
+        # decoder's timestepsFor() is wrong for every crop. Still true for the
+        # dynamic graph, which computes T = W/8 from the fed width.
         ts_ok = cl.shape[1] == 32
-        print(f"  {'OK  ' if finite and shape_ok and ts_ok else 'FAIL'} crnn "
+        print(f"  {'OK  ' if finite and shape_ok and ts_ok and w_ok else 'FAIL'} "
+              f"crnn width={wdim!r} (symbolic or {CRNN_MAX_W})  "
               f"(1,1,32,256) -> logits {tuple(cl.shape)}  "
               f"expect (1,32,38)  finite={finite}")
         if not (finite and shape_ok):
             failures.append(f"crnn bad logits {cl.shape}")
         if not ts_ok:
             failures.append(
-                f"crnn timesteps {cl.shape[1]} != 32; export width must stay 256")
+                f"crnn timesteps {cl.shape[1]} != 32 at 256px; the W/8 "
+                f"timestep contract recognizer.js relies on has drifted")
+        if not w_ok:
+            failures.append(
+                f"crnn input width axis is fixed at {wdim!r}, neither symbolic "
+                f"nor the training clamp {CRNN_MAX_W}; recognizer.js serves "
+                f"natural widths and the graph would mis-trim timesteps")
     except Exception as e:
         print(f"  FAIL crnn inference: {type(e).__name__}: {e}")
         failures.append(f"crnn inference: {e}")

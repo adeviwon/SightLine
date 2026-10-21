@@ -59,7 +59,9 @@ manifest claimed it did not.
 
 | file | what | committed? |
 |---|---|---|
-| `models/ocr/crnn.pt` | the trained recogniser (942,166 params, epoch 39) | yes |
+| `models/ocr/crnn_epoch29_final.pt` | **the shipped recogniser's source** (942,166 params, epoch 29, val_word_acc 36.19%) | yes |
+| `models/ocr/crnn.pt` | a LIVE training target — rewritten by whichever run is active, NOT the shipped source | yes |
+| `models/ocr/crnn_before_render.pt` | the frozen PRE-render-retrain baseline (epoch 39, val 28.55%) kept for the paired comparison | yes |
 | `app/models/crnn.onnx` | browser recogniser, 3,785,916 B, dynamic width | yes |
 | `app/models/minilm_encoder.onnx` | MiniLM int8, 22.9 MB | yes |
 | `app/models/minilm_head.onnx` | our 49,796-param head | yes |

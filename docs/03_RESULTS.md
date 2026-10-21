@@ -151,7 +151,16 @@ clamp `realdata.MAX_W = 320`, or the axis must be symbolic) and by
 
 ### The domain gap, measured
 
-The same checkpoint (epoch 39), two held-out sets:
+<!-- PROVENANCE CORRECTED 2026-10-21: the SHIPPED graph was exported from
+     `models/ocr/crnn_epoch29_final.pt` -- epoch 29, val_word_acc 36.19% -- verified by
+     output provenance (it reproduces the shipped app/models/crnn.onnx decode on 16/16
+     held-out crops; `crnn_before_render.pt`, epoch 39 / val 28.55%, reproduces it on
+     0/16). Epoch 39 is therefore the PRE-render-retrain baseline, not the shipped model.
+     The `epoch 39` rows below are the SROIE-only run's own ledger; the command that
+     produced them (`bash run.sh eval-ocr`) left no artifact, so re-run it to attribute
+     that word-level number to the shipped checkpoint rather than assuming it. -->
+
+The same checkpoint (epoch 39 — see the provenance note above), two held-out sets:
 
 | held-out set | what it is | CER |
 |---|---|---|

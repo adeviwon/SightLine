@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SightLine — Grand Final, Imperial Hackathon Hong Kong &amp; Macau 2026</title>
+<!--
+  Self-contained: no CDN, no external fonts, no network calls. Opens from the filesystem.
+  Navigation: ArrowRight / Space / PageDown / n = next; ArrowLeft / PageUp / p = back;
+  Home / End = first / last; #3 in the URL jumps to slide 3. Print/PDF: Ctrl+P, landscape,
+  background graphics ON (each slide is one page).
+  Every number on a slide carries a [source: …] line pointing at the file it came from.
+  Palette is the app's own design tokens (app/index.html), so the deck and the product match.
+-->
+<style>
+:root{
+  --bg:#0a0a0a; --panel:#14181c; --panel2:#1c2228; --line:#2b343c;
+  --text:#f2f5f7; --muted:#a8b3bd; --accent:#58c7ff; --ok:#3ddc9a;
+  --warn:#ffc84d; --err:#ff8a8a; --faint:#6f7b85;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; overflow:hidden;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+}
+.slide{
+  display:none; position:absolute; inset:0; overflow:hidden;
+  padding:5vh 6.5vw 8vh; flex-direction:column; justify-content:center;
+}
+.slide.active{display:flex}
+.kicker{
+  font-size:clamp(11px,1.05vw,17px); letter-spacing:.22em; text-transform:uppercase;
+  color:var(--accent); font-weight:700; margin-bottom:2.2vh;
+}
+h1{font-size:clamp(40px,6.4vw,104px); line-height:1.02; letter-spacing:-.02em; font-weight:800}
+h2{font-size:clamp(24px,3.1vw,52px); line-height:1.14; font-weight:700; max-width:26ch}
+.num{font-size:clamp(60px,11.5vw,190px); line-height:1; font-weight:800; color:var(--accent); letter-spacing:-.03em}
+.num .sub{font-size:.26em; color:var(--muted); font-weight:600; letter-spacing:0}
+.num.sm{font-size:clamp(46px,6.8vw,116px)}
+.lines{margin-top:2.6vh; display:flex; flex-direction:column; gap:1.25vh}
+.lines p{font-size:clamp(16px,1.9vw,30px); line-height:1.3; color:var(--text); max-width:46ch}
+.lines p.muted{color:var(--muted); font-size:clamp(13px,1.38vw,21px); max-width:72ch}
+.lines p.big{font-size:clamp(20px,2.5vw,40px); font-weight:700; max-width:34ch}
+.lines p.ok{color:var(--ok)} .lines p.warn{color:var(--warn)}
+ol.steps{margin-top:3vh; padding-left:1.2em; display:flex; flex-direction:column; gap:1.4vh}
+ol.steps li{font-size:clamp(17px,2.1vw,34px); line-height:1.3; padding-left:.2em}
+.note{
+  margin-top:3.2vh; font-size:clamp(12px,1.25vw,19px); color:var(--muted);
+  border-left:2px solid var(--line); padding-left:12px; max-width:78ch;
+}
+.src{
+  position:absolute; left:6.5vw; right:6.5vw; padding-right:7vw; bottom:2.4vh;
+  font-size:clamp(10px,.98vw,15px); color:var(--faint); line-height:1.4;
+}
+.cols{display:flex; gap:4vw; align-items:center; margin-top:3vh}
+.cols>.grow{flex:1 1 auto; min-width:0}
+/* ── phone mock (drawn, not a photo) ── */
+.phone{
+  flex:0 0 auto; width:clamp(190px,20vw,330px); border:1px solid var(--line);
+  border-radius:26px; background:var(--panel); padding:16px 14px;
+  box-shadow:0 0 0 6px #0f1316;
+}
+.phone .bar{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:clamp(9px,.8vw,13px); color:var(--muted); letter-spacing:.06em; margin-bottom:10px;
+}
+.phone .brand{color:var(--text); font-weight:800; font-size:clamp(11px,1vw,16px)}
+.phone .badge{
+  display:inline-block; background:var(--ok); color:#04150e; font-weight:800;
+  border-radius:999px; padding:3px 9px; font-size:clamp(8px,.72vw,11px); letter-spacing:.08em;
+}
+.phone .doc{
+  background:var(--panel2); border:1px solid var(--line); border-radius:10px;
+  padding:11px 12px; font-size:clamp(10px,.92vw,15px); line-height:1.5; color:var(--text);
+}
+.phone .doc .cap{color:var(--faint); font-size:.86em; display:block; margin-bottom:6px}
+.phone .row{display:flex; justify-content:space-between; gap:10px; color:var(--muted)}
+.phone .row b{color:var(--text); font-weight:700}
+.phone .refuse{
+  margin-top:10px; border:1px solid var(--warn); color:var(--warn); border-radius:10px;
+  padding:9px 11px; font-size:clamp(9px,.86vw,14px); line-height:1.45;
+}
+/* ── pipeline diagram ── */
+.pipe{display:flex; align-items:stretch; gap:0; margin-top:4vh; flex-wrap:nowrap}
+.box{
+  flex:1 1 0; min-width:0; background:var(--panel); border:1px solid var(--line);
+  border-radius:12px; padding:16px 14px;
+}
+.box .n{font-size:clamp(9px,.82vw,13px); color:var(--accent); letter-spacing:.18em; font-weight:800}
+.box .t{font-size:clamp(14px,1.5vw,25px); font-weight:700; line-height:1.2; margin-top:6px}
+.box .s{font-size:clamp(10px,.95vw,15px); color:var(--muted); margin-top:6px; line-height:1.35}
+.arrow{
+  flex:0 0 auto; align-self:center; width:clamp(14px,2vw,40px); text-align:center;
+  color:var(--line); font-size:clamp(14px,1.8vw,32px); font-weight:700;
+}
+.box.ours{border-color:var(--accent)}
+.box.ours .t{color:var(--accent)}
+/* ── results table ── */
+table{border-collapse:collapse; width:100%; margin-top:2.6vh}
+th,td{text-align:left; padding:clamp(5px,.85vh,11px) 10px; border-bottom:1px solid var(--line)}
+th{font-size:clamp(10px,.95vw,15px); color:var(--muted); letter-spacing:.1em; text-transform:uppercase; font-weight:700}
+td{font-size:clamp(12px,1.35vw,22px); color:var(--muted)}
+td.v{color:var(--text); font-variant-numeric:tabular-nums; white-space:nowrap}
+tr.last td{color:var(--text)}
+tr.last td.v{color:var(--ok); font-weight:800}
+tr.last td:first-child{color:var(--ok); font-weight:800}
+.nowrap{white-space:nowrap}
+/* ── defect list ── */
+ol.defects{margin-top:2.4vh; padding:0; list-style:none; display:flex; flex-direction:column; gap:1.45vh}
+ol.defects li{
+  font-size:clamp(12px,1.42vw,23px); line-height:1.35; color:var(--text);
+  padding-left:2.2em; text-indent:-2.2em;
+}
+ol.defects li b{color:var(--accent)}
+ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
+#hud{
+  position:absolute; right:2vw; top:2.4vh; font-size:clamp(10px,1vw,15px);
+  color:var(--faint); font-variant-numeric:tabular-nums; letter-spacing:.1em;
+}
+#hint{position:absolute; left:6.5vw; bottom:2vh; font-size:clamp(10px,.95vw,14px); color:var(--faint)}
+@media print{
+  @page{size:A4 landscape; margin:0}
+  body{overflow:visible}
+  #hud,#hint{display:none}
+  .slide{display:flex !important; position:relative; height:100vh; page-break-after:always; break-after:page}
+  .slide:last-of-type{page-break-after:auto; break-after:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- 1 — TITLE -->
+<section class="slide" id="s1">
+  <h1>SightLine</h1>
+  <div class="lines">
+    <p class="big">It reads your documents aloud — on your phone, with no network.</p>
+    <p class="muted">Team STEMB · Imperial Hackathon Hong Kong &amp; Macau 2026 — Grand Final</p>
+    <p class="ok">Live: adeviwon.github.io/SightLine</p>
+  </div>
+</section>
+
+<!-- 2 — THE HUMAN -->
+<section class="slide" id="s2">
+  <div class="kicker">The moment we built this for</div>
+  <h2>The prescription is on the table, and she cannot read it.</h2>
+  <div class="lines">
+    <p>She is 80. The dose is two lines down, in type she has not been able to see for years.</p>
+    <p>She is alone in the flat, so it gets guessed — or it waits for a neighbour who is not coming today.</p>
+    <p class="muted">No statistic on this slide. It is the reason the next one matters.</p>
+  </div>
+</section>
+
+<!-- 3 — PROBLEM AT SCALE -->
+<section class="slide" id="s3">
+  <div class="kicker">The problem at scale</div>
+  <div class="num">199,600<span class="sub"> people</span></div>
+  <div class="lines">
+    <p>live with visual impairment in Hong Kong — <b>2.7% of the population</b>. 113,900 of them (57.1%) live with multiple disabilities.</p>
+    <p>Every cloud reader on the market asks them to upload that prescription first. For a medication label, offline is not a feature — it is the only answer that holds.</p>
+  </div>
+  <div class="src">[source: docs/13_ROUND1_SUBMISSION_KIT.md — HKSAR Census and Statistics Department, Special Topics Report No. 63, <i>Persons with disabilities and chronic diseases</i> (December 2021, 2020 survey round), Appendix 4, via the Hong Kong Blind Union]</div>
+</section>
+
+<!-- 4 — THE SOLUTION -->
+<section class="slide" id="s4">
+  <div class="kicker">The solution</div>
+  <div class="cols">
+    <div class="grow">
+      <h2>Point the phone at the document. It reads it aloud, speaks the fields that matter, and refuses what it cannot read.</h2>
+      <div class="lines">
+        <p>Our own recogniser: <b>942,166 parameters</b>, 37 symbols (0-9, A-Z, space). No OCR library, no cloud, no account.</p>
+        <p><b>26.7 MB</b> of ONNX on the device. Airplane mode: nothing leaves the phone.</p>
+        <p class="muted">Chinese is not in the alphabet yet. We say that publicly, and it is roadmap item 1.</p>
+      </div>
+    </div>
+    <div class="phone">
+      <div class="bar"><span class="brand">SightLine</span><span class="badge">OFFLINE · ON-DEVICE</span></div>
+      <div class="doc">
+        <span class="cap">prescription · synthetic studio_clean corpus</span>
+        <div><b>AMOXICILLIN 500MG CAPSULES</b></div>
+        <div class="row"><span>DOSE</span><b>500 mg · three times daily</b></div>
+        <div class="row"><span>PHARMACY</span><b>Northgate Pharmacy</b></div>
+      </div>
+      <div class="refuse">“I could not read the account number clearly. Please check it — I will not guess.”</div>
+    </div>
+  </div>
+  <div class="src">[source: artifacts/ocr_training.json (params 942166, charset 37 symbols) · HANDOFF.md §payload (26.7 MB installable) · app/index.html (design tokens and UI) · app/tools/render_samples.py (the sample document is synthetic, not a real patient’s)]</div>
+</section>
+
+<!-- 5 — LIVE DEMO -->
+<section class="slide" id="s5">
+  <div class="kicker">Live demo</div>
+  <h1>Airplane mode on.<br>Watch it read.</h1>
+  <ol class="steps">
+    <li>Open <b>adeviwon.github.io/SightLine</b> on this phone — installed, then reloaded with the network off.</li>
+    <li><b>Airplane mode ON.</b> Wi-Fi off, data off. Nothing is uploaded; there is nowhere for it to go.</li>
+    <li>Scan the prescription. Hear it read the medication and the dose aloud.</li>
+    <li>Scan the second document. Watch it <b>refuse</b> one field and say why, instead of guessing.</li>
+  </ol>
+  <div class="note">Fallback if the phone or the room fails: the same pipeline runs from the repo (<b>bash run.sh serve</b>), and the 12-document bench replays from <b>artifacts/pipeline_raw_deskew.json</b>.</div>
+  <div class="src">[source: docs/05_DEMO_RUNBOOK.md]</div>
+</section>
+
+<!-- 6 — HOW IT WORKS -->
+<section class="slide" id="s6">
+  <div class="kicker">How it works</div>
+  <div class="pipe">
+    <div class="box"><div class="n">01</div><div class="t">Camera</div><div class="s">capture, with an on-device quality gate</div></div>
+    <div class="arrow">→</div>
+    <div class="box"><div class="n">02</div><div class="t">Line detection</div><div class="s">bands to crops at the trained width, 320 px</div></div>
+    <div class="arrow">→</div>
+    <div class="box ours"><div class="n">03</div><div class="t">CRNN + CTC</div><div class="s">ours: 942,166 params, 37 symbols, ONNX in the browser</div></div>
+    <div class="arrow">→</div>
+    <div class="box"><div class="n">04</div><div class="t">Field extraction</div><div class="s">dosage, account, case reference, date — behind a confidence gate</div></div>
+    <div class="arrow">→</div>
+    <div class="box"><div class="n">05</div><div class="t">Speech</div><div class="s">on-device TTS, en-GB today</div></div>
+  </div>
+  <div class="lines">
+    <p class="muted"><b>Hard part 1 — inference in a browser.</b> ONNX Runtime Web, our own graph, 26.7 MB shipped to the phone. No OCR library, no server, no fallback engine.</p>
+    <p class="muted"><b>Hard part 2 — the refusal threshold.</b> A field below confidence is omitted, never guessed: 15 of the 24 ground-truth fields on our bench are missing rather than wrong.</p>
+  </div>
+  <div class="src">[source: app/js/pipeline.js · app/js/field_guard.js · app/js/recognizer.js · artifacts/ocr_training.json · artifacts/pipeline_raw_deskew.json]</div>
+</section>
+
+<!-- 7 — MEASURED RESULTS -->
+<section class="slide" id="s7">
+  <div class="kicker">Measured results, honestly</div>
+  <h2>Tesseract wins on clean flat scans — we win 5.5&times; on hand-held captures.</h2>
+  <table>
+    <thead><tr><th>same 12 documents · same crops · same ground truth (188 lines)</th><th>line exact</th><th>word acc</th><th>CER</th><th>fields</th></tr></thead>
+    <tbody>
+      <tr><td>Tesseract 4.1.1 — whole page, <code>--psm 3</code> (its fair integration)</td><td class="v">72.9%</td><td class="v">80.1%</td><td class="v">0.134</td><td class="v">79.2%</td></tr>
+      <tr><td>Tesseract 4.1.1 — native-resolution line crops (its fair input)</td><td class="v">64.4%</td><td class="v">75.3%</td><td class="v">0.164</td><td class="v">70.8%</td></tr>
+      <tr><td>Tesseract — the <i>identical</i> 32 px crops we read (unfair control, labelled)</td><td class="v">17.6%</td><td class="v">49.8%</td><td class="v">0.357</td><td class="v">29.2%</td></tr>
+      <tr><td><b>ours — CRNN on 32 px crops (what ships)</b></td><td class="v"><b>11.7%</b></td><td class="v"><b>61.2%</b></td><td class="v"><b>0.197</b></td><td class="v"><b>83.3%</b></td></tr>
+    </tbody>
+  </table>
+  <div class="note">
+    <b>Plainly:</b> Tesseract is stronger on clean, flat scans; we are stronger on real hand-held captures, we never invent a punctuation mark or a digit, and we degrade instead of hallucinating.
+    <br><b>Where the split lands:</b> on <b>handheld_light</b> — the one profile that models a real hand-held capture — ours reads <b>68.4% word accuracy / 83.3% of fields</b> against Tesseract’s <b>12.4–23.6% / 0–16.7%</b>, a 5.5&times; gap.
+    <br><b>Fairness correction, stated not hidden:</b> our 37-symbol alphabet (0-9, A-Z, space) cannot emit punctuation at all, and 120 of the 188 scored rows contain it — that alone is the 11.7% &rarr; 41.0% line-exact gap; on the identical-pixel control, punctuation-blind, ours takes <b>48 lines</b> Tesseract misses, and loses 16. <b>Safety:</b> on the clean page Tesseract read the dosage <b>500mg as 300mg</b> — the exact field this product exists to protect.
+    <br><b>Traceable record:</b> <code>artifacts/pipeline_raw_deskew.json</code> — 12 records, one per document, each <code>error: null</code> with its read text (the only verification count we quote; the CPU-starved browser bench is kept labelled in <code>artifacts/webkit_bench.log</code>).
+  </div>
+  <div class="src">[source: docs/24_ENGINE_HEAD_TO_HEAD.md · artifacts/engine_head_to_head.json — 12 documents, 188 ground-truth lines, Tesseract 4.1.1 · shipped end-to-end 45.9% word acc / CER 0.303, from 3.6% (<code>artifacts/pipeline_raw_deskew.json</code>, <code>pipeline_raw.json</code>) · hard case 20 real hand-photographed pages, 1.8% line-exact (<code>docs/14_HACKATHON_BENCHMARK.md</code>)]</div>
+</section>
+
+<!-- 8 — WHAT WE GOT WRONG -->
+<section class="slide" id="s8">
+  <div class="kicker">What we got wrong — and fixed</div>
+  <h2>Four train/serve contract defects. We found them in our own code, measured them, and gated them.</h2>
+  <ol class="defects">
+    <li><b>1 · the graph was baked at 256 px; training crops are clamped to 320.</b> The app fed the model the first 256 px of 98.8% of lines. <span class="m">3.6% → 22.4% word accuracy; 200/200 crops changed their read.</span></li>
+    <li><b>2 · padding is not inert in a bidirectional CRNN.</b> The backward pass resumes at the right edge, inside the pad, so zeros moved the hidden states across valid frames. <span class="m">30.5% vs 19.0% crop-exact; CER 0.198 vs 0.308.</span></li>
+    <li><b>3 · the candidate list replaced the preprocessed image.</b> Only CLAHE arms were offered, and raw deskewed grey measured best. <span class="m">26.9% vs 23.9% word accuracy — the best input was unreachable.</span></li>
+    <li><b>4 · the deskew sign was inverted.</b> We rotated by the estimate and doubled the tilt instead of removing it. <span class="m">4.5° applied read back as 6.5–9.0°; it zeroed the two marginal off-axis pages.</span></li>
+  </ol>
+  <div class="note">Each defect now has a gate that fails if it returns: <b>test_graph_width_contract.py</b> · <b>test_padding_invariant.py</b> · <b>crop_contract.js</b> · <b>deskew_verify.js</b>.</div>
+  <div class="src">[source: docs/18_CRNN_ACCURACY_STRATEGIES.md §0.1 · docs/14_HACKATHON_BENCHMARK.md (256 vs 320) · app/js/pipeline.js (candidate list, deskew sign)]</div>
+</section>
+
+<!-- 9 — IMPACT + POLICY -->
+<section class="slide" id="s9">
+  <div class="kicker">Impact and policy</div>
+  <div class="num sm">46.4%<span class="sub"> of older Hong Kong people</span></div>
+  <div class="lines">
+    <p>take five or more medicines at once — the highest of Hong Kong, Taiwan, South Korea, the UK and Australia (2016), and rising 2.7% a year. Polypharmacy plus sight loss is our use case.</p>
+    <p class="muted"><b>¶75 · 2025 Policy Address</b> — AI application: “…render carer support through an AI chatbot to give carers more convenient access to information”, and generative AI in clinical workflows. A carer hearing their own document read out, on the phone they already own.</p>
+    <p class="muted"><b>¶227 · 2025</b> — healthcare reform for an ageing society (¶226 opens the section): “enhancing ophthalmic services … a new high-capacity ambulatory cataract surgery centre”. The only directly vision-facing commitment in either edition.</p>
+    <p class="muted"><b>¶266 · 2025</b> — Working Group on Ageing Society Strategies covering “…elderly care, healthcare, housing, culture and leisure, and gerontechnology”; and “…by 2046, people aged 65 and above will account for <b>36%</b> of our total population”.</p>
+    <p class="muted"><b>2026 is the funded follow-through, not the anchor:</b> ¶113 allocates <b>$300 million</b> to the “AI for Welfare Lab”; ¶398–400 earmark <b>$100 million</b> for the Gerontechnology Promotion Scheme.</p>
+  </div>
+  <div class="src">[source: docs/19_POLICY_ANCHOR.md — the <b>2025</b> Policy Address paras 75 / 227 / 266 quoted verbatim from <code>policy-full_en.pdf</code>, sha256 c4ecaf20…18f3ec (the edition the Open Challenge rule names, official FAQ read 2026-10-21); 2026 follow-through from the 2026 PDF, sha256 f24973cd…49246b · docs/12_HACKATHON_SUBMISSION.md — 46.4%, Lee H. et al., <i>Age and Ageing</i> 2023, doi:10.1093/ageing/afad014]</div>
+</section>
+
+<!-- 10 — CLOSE -->
+<section class="slide" id="s10">
+  <h1>It reads it —<br>or it says it cannot.</h1>
+  <div class="lines">
+    <p class="ok">Live: adeviwon.github.io/SightLine</p>
+    <p class="muted">Repo: github.com/adeviwon/SightLine</p>
+    <p class="muted">Team STEMB — T on-device ML · E restoration · S accessibility research · M medication safety · B deployment</p>
+  </div>
+</section>
+
+<div id="hud">1 / 10</div>
+<div id="hint">← → or space · Ctrl+P for PDF</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var hud = document.getElementById('hud');
+  var hint = document.getElementById('hint');
+  var i = 0;
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function(s, k){ s.classList.toggle('active', k === i); });
+    hud.textContent = (i + 1) + ' / ' + slides.length;
+    hint.style.display = i === 0 ? 'block' : 'none';
+    if (history.replaceState) history.replaceState(null, '', '#' + (i + 1));
+  }
+
+  function step(d){ show(i + d); }
+
+  document.addEventListener('keydown', function(e){
+    var k = e.key;
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === ' ' || k === 'Spacebar' ||
+        k === 'PageDown' || k === 'n' || k === 'Enter'){ step(1); e.preventDefault(); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'p' ||
+             k === 'Backspace'){ step(-1); e.preventDefault(); }
+    else if (k === 'Home'){ show(0); e.preventDefault(); }
+    else if (k === 'End'){ show(slides.length - 1); e.preventDefault(); }
+  });
+
+  // touch: swipe left/right, and tap the right half to advance
+  var x0 = null;
+  document.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+    else step(e.changedTouches[0].clientX > window.innerWidth / 2 ? 1 : -1);
+    x0 = null;
+  }, {passive:true});
+
+  var start = parseInt((location.hash || '').replace('#', ''), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>

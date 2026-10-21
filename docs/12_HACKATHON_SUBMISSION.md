@@ -160,7 +160,7 @@ medicine label, and it is **not** end-to-end accuracy.
 | checkpoint | corpus | word accuracy | CER |
 |---|---|---|---|
 | epoch 20 | 30,021 crops / 260 receipts | 26.25% | 15.90% |
-| **epoch 39** | **52,554 crops / 420 receipts** | **29.30%** | **11.95%** |
+| **epoch 39** (pre-retrain baseline — the shipped graph is epoch 29, see docs/03) | **52,554 crops / 420 receipts** | **29.30%** | **11.95%** |
 
 Read against the crop level, where the same recogniser looks much better: on the
 trainer's own 7,875 held-out crops it records **28.0%** word accuracy

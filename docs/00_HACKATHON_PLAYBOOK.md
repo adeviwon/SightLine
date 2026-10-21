@@ -51,7 +51,7 @@ present):
    macro-F1 95.7% (sd 2.72)**, per `ml/experiments/step3_f1.py`. Stable and
    honest; never quote the 100% seed — the submission discloses that
    correction on purpose.
-2. **Held-out scan OCR, epoch 39, 17,945 test words — word accuracy 29.30%,
+2. **Held-out scan OCR, epoch 39 (the PRE-retrain baseline's row — the shipped graph is epoch 29; see docs/03's provenance note), 17,945 test words — word accuracy 29.30%,
    CER 11.95%** (`docs/03_RESULTS.md` §3). This answers "did you actually train
    something that reads?"
 3. **Real hand-held photos (20 pages) — recall 67.9%, line-exact 1.8%,
@@ -59,7 +59,7 @@ present):
    not confident about. Say the gap before a judge does. *(Corrected 2026-10-21:
    this used to quote the localisation variant's 71.6% / 2.4% / 58.4%, whose
    whole gain is two lines and statistically insignificant — McNemar p = 1.000.
-   Those are the 20-page set; `docs/14` records a 60-page reading.)*
+   Those are the 20-page set; `docs/14` also records the 193-page set-B reproduction (71.6% / 2.4% / 58.4%).)*
 4. **Payload — 26.45 MiB of models + tokenizer, ≈37.2 MiB installed on device.**
    *(Corrected 2026-10-21: the old "26.68 MB" counted the weights only and
    excluded the 10.73 MiB ONNX-runtime WASM the app cannot infer without.)* A
