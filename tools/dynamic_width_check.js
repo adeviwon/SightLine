@@ -152,10 +152,37 @@ async function inPage(cfg) {
     out.ok = out.ok && rec.engineWidth() === "dynamic";
     for (const r of dynRows) out.ok = out.ok && r.match && r.tMatch && !r.error;
 
-    // ── branch 2: the SHIPPED fixed-width graph ───────────────────────────
+    // ── branch 2: the SHIPPED graph, in whatever mode IT declares ─────────
+    //
+    // This branch used to assume the shipped file was FIXED width, and it broke the
+    // instant that file was swapped for the dynamic export: it built a tensor dim
+    // from engineWidth(), which is then the STRING 'dynamic', and ORT refused with
+    // "dims[3] must be an integer, got: dynamic" -- the harness passing a string
+    // where a dimension belongs, not the app failing. The branch now follows the
+    // artifact: if the shipped graph declares a symbolic axis, the property to prove
+    // is the natural-width one, on the file that actually ships.
     rec.reset();
     await rec.init(cfg.fixedUrl);
-    const fixedWidth = rec.engineWidth();
+    const shippedWidth = rec.engineWidth();
+
+    if (shippedWidth === "dynamic") {
+      const shippedRows = [];
+      for (const W of cfg.widths) {
+        const k = String(W);
+        const r = await rec.recognise(crop(k), W);
+        shippedRows.push({
+          w: W, got: r.text, py: cfg.pyNatural[k], match: r.text === cfg.pyNatural[k],
+          t: r.timesteps, pyT: cfg.pyNaturalT[k], tMatch: r.timesteps === cfg.pyNaturalT[k],
+          error: r.error || null,
+        });
+      }
+      out.branches.shipped = { engineWidth: shippedWidth, mode: "dynamic", rows: shippedRows };
+      out.branches.fixed = null;
+      for (const r of shippedRows) out.ok = out.ok && r.match && r.tMatch && !r.error;
+      return out;
+    }
+
+    const fixedWidth = shippedWidth;
 
     // The graph's OWN number, read independently of the app: ORT names the
     // declared width when it refuses a tensor built at another one. If the app
@@ -285,6 +312,23 @@ function printReport(r) {
       + (x.error ? "  error: " + x.error : ""));
   }
 
+  if (b.shipped) {
+    const sh = b.shipped;
+    console.log("\n  SHIPPED graph (app/models/crnn.onnx) — declares a SYMBOLIC width axis,"
+                + " so it must serve the NATURAL width");
+    console.log("    app engine.width = " + JSON.stringify(sh.engineWidth) + "  mode = " + sh.mode);
+    console.log("    " + H("W", 4) + " " + H("app text", 24) + " " + H("torch @natural", 24)
+                + " " + H("T", 3) + " " + H("torch T", 3) + "  text  T");
+    for (const x of (sh.rows || [])) {
+      ok = ok && x.match && x.tMatch && !x.error;
+      console.log("    " + String(x.w).padStart(4) + " " + H(JSON.stringify(x.got), 24) + " "
+        + H(JSON.stringify(x.py), 24) + " " + H(x.t, 3) + " " + H(x.pyT, 3) + "  "
+        + (x.match ? "OK " : "NO ") + "  " + (x.tMatch ? "OK" : "NO")
+        + (x.error ? "  error: " + x.error : ""));
+    }
+  }
+
+  if (b.fixed) {
   const f = b.fixed || {};
   console.log("\n  FIXED graph (app/models/crnn.onnx) — must PAD to the graph's own width");
   console.log("    app engine.width = " + JSON.stringify(f.engineWidth)
@@ -301,6 +345,8 @@ function printReport(r) {
       + H(JSON.stringify(x.pyShipped), 24) + "  " + (x.match ? "OK " : "NO ") + "     "
       + (x.agreesWithNatural ? "yes" : "no")
       + (x.error ? "  error: " + x.error : ""));
+  }
+
   }
 
   ok = ok && r.rows_ok === true;
