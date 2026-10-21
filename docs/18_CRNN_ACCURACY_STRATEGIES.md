@@ -31,6 +31,49 @@ Cost baseline throughout: **~250 s/epoch, 4 cores, no GPU** (`docs/03_RESULTS.md
 So one 40-epoch run is **≈2.8 CPU-hours**, and every training item below is priced
 against that.
 
+### 0.1 What is now SETTLED — do not re-run these
+
+Written the day the input contract turned out to matter more than the model. Each
+line is measured, and each cost real time to establish.
+
+| settled | measured | where |
+|---|---|---|
+| **The export width was the single largest lever, and it was not a model change.** The ONNX graph was baked at a FIXED 256px while `crop_to_array` builds training crops at their natural width clamped to `MAX_W=320`, and the corpus median IS that clamp (98.8% of held-out crops exceed 256). The app fed the model the first 256px of nearly every line. | end-to-end word accuracy **3.6% -> 22.4%**, mean CER **70.8% -> 57.5%**, read tokens **468 -> 680 (+45%)**; crop-level exact **0.0% -> 44.7%** at the trained width; the read changed on **200/200** crops | `docs/14`, commits `7b08286` `4afb877` |
+| **The served width must EQUAL the training clamp, and a one-sided assertion cannot catch it.** `width <= MAX_W` is satisfied trivially by any narrower graph — it passed hardest on the worst value. The exporter now derives the width from `realdata.MAX_W`, and the contract test asserts equality. | 42.0x / 67.2x deviation removed | `ml/tests/test_graph_width_contract.py`, skill §20a |
+| **Padding is NOT inert, and the dynamic-width graph is the fix.** The CRNN's 2-layer bidirectional LSTM resumes its backward pass from the right edge, i.e. inside the padding, so padded zeros move the hidden states across the VALID frames. | padded **19.0% exact / CER 0.308** vs natural **30.5% / 0.198**, agreeing on only 43% of crops | `ml/src/export_dynamic.py`, lane V |
+| **A dynamic width DOES export and DOES run on iOS's engine — the old note was a mode artefact.** `set_export_mode(True)` traces an explicit per-timestep loop that bakes T; the FUSED `nn.LSTM` lowers to a real ONNX LSTM op with a dynamic axis. | matches PyTorch to <=3.2e-05 at every width (incl. 47/63 where T is NOT `floor(w/8)`); runs in onnxruntime-web WASM on **webkit AND chromium** | `app/tools/dynamic_width_check.js` |
+| **A second independent read rescues NOTHING.** Of the values reader-1 got wrong, reader-2 got right: zero. Different preprocessing of ONE checkpoint is not an independent witness. | rescued **0** of 3, refused 7 values r1 had right, paired McNemar REGRESSED p=1.4e-20 for ~3x the compute | skill §21 |
+| **Agreement-as-a-requirement is a regression; as a veto it is free.** Both paths read the SAME recognition pass, so agreement detects PARSE disagreement and can never detect a RECOGNITION error. | contradictions fired **0** times in 120 pages; demanding agreement refused **142 correct** dates to remove 8 wrong ones | skill §21, lane N |
+| **Confidence cannot gate correctness.** The distributions overlap and the gate has no separating line. | wrong values median conf **0.884** vs **0.962** right; a hallucination on pure speckle sat at **0.678**, INSIDE the real range 0.687-0.974 | skill §9 |
+| **What DOES separate a hallucination from a read is document EVIDENCE.** No keyword scores at all => refuse to assert fields, whatever the classifier says. | speckle 0 evidence / real reads 1-17, even when the type is wrong | `app/js/pipeline.js`, commit `778b31f` |
+| **The label-anchored extraction path is ported and at ZERO divergence** — so its remaining question is the recall/safety trade, not correctness. | typed-only **332 spoken / 0.943 precision / 0.448 recall / 19 wrong** in BOTH languages, decision sets identical **120/120 pages** | `app/js/field_engine.js`, lane Y |
+| **The synthetic camera profiles were 17-67x harsher than real photographs.** Otsu ink read 0.63 where real reads 0.23: noise and shadow were being counted AS INK because a 7x7 bokeh disc plus a 7-11px smear had destroyed the histogram's bimodality. Severity order was BROKEN. | worst deviation **42.0x -> 1.6x** (light), **67.2x -> 1.6x** (heavy), **16.8x -> 4.3x** (low_light); ladder now monotone | `ml/src/retune_profiles.py`, `ml/src/capture.py`, commit `20ee66c` |
+| **Real-photograph pages are lost to LOCALISATION, not to banding.** No bander can fix a page whose ink projection never drops — autocorrelation locks onto the ~8px stroke period, not the 40-50px line pitch. | **177 of 193** pages dropped on a count mismatch; seven banding variants all INCONCLUSIVE or REGRESSED | `ml/src/line_detect.py`, skill §10 |
+| **The ink-density offset is a RENDERER property, not a profile bug.** Every synthetic profile sits 1.2-1.8x above real ink, including an undegraded `studio_clean`. | 0.271 vs 0.227 at trainer geometry | `ml/src/retune_profiles.py` |
+
+**The pattern, stated once so it is not rediscovered a fourth time:** in this project
+the input contract has outranked the model every single time. Three separate
+train/serve DISTRIBUTION mismatches — the served width (98.8% of crops truncated),
+the padding (11.5 points of crop-level exact match), and the degradation profiles
+(17-67x too harsh) — each moved more than every decoder, architecture and policy
+experiment combined. **Measure what the model is actually fed, against what it was
+trained on, before optimising the model.**
+
+### 0.2 The queue, in order
+
+1. **Re-export the dynamic graph from the FINAL retrain checkpoint and swap it**
+   (`export_dynamic.py` -> copy over `app/models/crnn.onnx` -> bump `app/sw.js`
+   VERSION). `recognizer.js` is already width-adaptive, so this is a file
+   replacement; it recovers the padding loss in §0.1.
+2. **Rebuild the corpus with the re-tuned profiles and retrain**, scoring on BOTH
+   the old and the new corpus (both are preserved as `*_oldprofiles.npz`) so the A/B
+   is not confounded by the corpus change. `low_light` and `handheld_heavy` CER are
+   the two rows that test the profile prediction.
+3. **Rectify the real photographs** to unlock real-degradation training data
+   (177/193 pages currently unusable).
+4. **Decide the extraction trade** (typed-only 0.448 recall / 19 wrong, or free text
+   0.749 / 129) — a product call, not a measurement.
+
 ---
 
 ## 1. Closed-vocabulary and constrained decoding
