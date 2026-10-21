@@ -240,7 +240,32 @@
           },
         });
         engine.restorer = r.engine;
-        if (r.candidates) ocrCandidates = r.candidates;
+        // PREPEND THE UNPROCESSED IMAGE. This used to REPLACE the list, and
+        // armRestorerClahe's three candidates contain no raw slot, so the ranking
+        // could only ever choose among degraded variants -- it never saw the deskewed
+        // grayscale at all. Measured by holding the crop set, the crop geometry and
+        // the model fixed and varying ONLY the page transform, on the app's own 12
+        // documents (145 paired crops):
+        //     raw          exact 45.5%  lineCER 0.161  word 49.8%  fields 12/24
+        //     tile_clahe   exact 40.7%  lineCER 0.180  word 46.8%  fields 12/24
+        //     clahe_otsu   exact 13.8%  lineCER 0.444  word 25.0%  fields  5/24
+        //     restored     exact 11.0%  lineCER 0.610  word 20.2%  fields  3/24
+        // and the shipped ranking picked one of the three RESTORED arms on 12 of 12
+        // documents, costing 34.5 points of exact line match, 29.6 points of word
+        // accuracy and 9 of 24 fields -- while not even winning on structure_score,
+        // the ranking's OWN objective (103 tokens against raw's 146).
+        //
+        // The ranking rule is deliberately NOT touched, and does not need to be: raw
+        // wins on structure_score outright, so the existing rule selects it as soon as
+        // it is allowed to see it. Changing the candidate LIST does not weaken the
+        // guard; changing the RULE would.
+        //
+        // This is not a new idea -- pipeline.js's own comment documents exactly this
+        // fix for the non-restorer path ("THE UNPROCESSED IMAGE IS A CANDIDATE, and it
+        // used to be unreachable ... Ranking is unchanged; structure_score still
+        // chooses, now over three candidates instead of two"). app.js's ONNX branch is
+        // what silently re-introduced the omission by substituting the restorer's list.
+        if (r.candidates) ocrCandidates = [pp.candidates[0]].concat(r.candidates);
       }
       await frame();
 
