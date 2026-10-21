@@ -8,28 +8,64 @@ reads it back to you in plain speech. No account, no internet, no upload.
 
 Built for the **Imperial College London Hackathon (Hong Kong & Macau)**.
 
-**Live install (HTTPS, camera-ready):** open <https://adeviwon.github.io/SightLine/> on a phone, add to Home Screen — it installs and then works in airplane mode.
+**Try it now — no install, no account:** open
+<https://adeviwon.github.io/SightLine/> on a phone, add to Home Screen. It
+installs, then works in airplane mode. That URL is the demo; the mic drop is
+turning the network off and scanning anyway.
 
 > **AI agent taking over?** Read [`AGENTS.md`](AGENTS.md) first — verified
 > state, standing rules, known traps, and ranked open work with done-criteria.
 
 ---
 
-## Start here
+## The result, first
 
-| I want to… | Read |
-|---|---|
-| **Hackathon submission** (the 5 required steps, start here) | [`docs/12_HACKATHON_SUBMISSION.md`](docs/12_HACKATHON_SUBMISSION.md) |
-| **Show a judge** (start here — one document, the whole project) | [`docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md`](docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md) |
-| **Win the hackathon** (strategy and pitch) | [`docs/00_HACKATHON_PLAYBOOK.md`](docs/00_HACKATHON_PLAYBOOK.md) |
-| Understand how it works | [`docs/01_ARCHITECTURE.md`](docs/01_ARCHITECTURE.md) |
-| Understand the ML | [`docs/02_ML_PIPELINE.md`](docs/02_ML_PIPELINE.md) |
-| See measured results | [`docs/03_RESULTS.md`](docs/03_RESULTS.md) |
-| Run it on a phone | [`docs/04_RUNNING_ON_IOS_AND_ANDROID.md`](docs/04_RUNNING_ON_IOS_AND_ANDROID.md) |
-| Run the demo for judges | [`docs/05_DEMO_RUNBOOK.md`](docs/05_DEMO_RUNBOOK.md) |
-| Retrain the models | [`docs/06_RETRAINING.md`](docs/06_RETRAINING.md) |
-| Check our claims | [`docs/07_EVALUATION_METHODOLOGY.md`](docs/07_EVALUATION_METHODOLOGY.md) |
-| Fix something | [`docs/08_TROUBLESHOOTING.md`](docs/08_TROUBLESHOOTING.md) |
+Measured by driving the **shipped app** in **WebKit** (the engine iOS Safari
+uses) over 12 rendered documents — 3 types × 4 capture profiles, one record per
+document. Reproduce it: `bash run.sh bench-pipeline && bash run.sh bench-hackathon`.
+
+| metric | shipped now | first benched | source |
+|---|---|---|---|
+| **word accuracy** (normalised token recall — see below) | **45.9%** | 3.6% | `artifacts/pipeline_raw_deskew.json` / `pipeline_raw.json` |
+| **CER** | **0.303** | 0.708 | same two files |
+| **ground-truth fields present in the read text** | **9 of 24** | 0 of 24 | same (stricter extracted-field metric: 5 of 24) |
+| **document classification (app, end to end)** | **83.3%** | 33.3% | same |
+| cleanest profile (`studio_clean`) | **52.3%**, 100% classified correctly | 10.3% | same |
+| the recogniser alone, 300 paired held-out crops | **57.0% exact line match, CER 0.156** | 3.3% (pre-retrain, same 300 crops) | `app/tools/arm_ab.js` for the 57.0%; the before-value is the project's paired measurement, not a tracked file |
+| document classifier, held-out text, 5 seeds (n=24) | **95.8% accuracy, 95.7% macro-F1** (±2.6) | a stored 100% from one lucky seed | `artifacts/step3_classifier_metrics.json` |
+
+**Read the metric, not just the number.** `word_accuracy` above is a
+**normalised token recall** — the fraction of ground-truth words present in the
+read text after punctuation and case are stripped — **not** exact-word match.
+Both metric definitions live in `ml/src/bench_hackathon.py`; the browser side
+computes no metrics on purpose, so the two cannot drift apart.
+
+**The trajectory is the result.** `3.6% → 22.4% → 17.1% → 35.0% → 45.9%` on the
+same 12 documents: four train/serve contract defects we found in our own code
+and fixed (the served width, inert-looking right-padding, an image transform
+applied at serve but never at train, and a deskew correction applied backwards),
+plus one retrain step that **regressed** and is kept in the record. Raw records
+for every step are in `artifacts/`; the full table with sources is
+[`docs/12_HACKATHON_SUBMISSION.md`](docs/12_HACKATHON_SUBMISSION.md) §3.
+
+**And what it still fails at**, because a judge should hear it from us first:
+
+- **Real hand-photographed pages.** The line detector is the ceiling: **67.9%
+  detection recall, 1.8% line-exact, 56.5% CER** on 275 lines from 20
+  hand-photographed receipts ([`docs/03_RESULTS.md`](docs/03_RESULTS.md) §3).
+  Three of those 20 pages are resolution-bound — 12–17 px per line against a
+  32 px recogniser input — and no crop rule or model can repair them.
+- **Night and heavy-handheld captures.** In our own harness
+  (`bash run.sh eval --engine=crnn`, `artifacts/eval_results.json`) `low_light`
+  and `handheld_heavy` are the two weakest profiles: **2.2%** and **2.0%** word
+  accuracy on the raw arm. They are reported, not excluded.
+- **Chinese.** The recogniser's alphabet is `0-9 A-Z` and space — **37 symbols,
+  zero CJK characters**. A 繁體中文 medicine label cannot be read at all today.
+  This is the most serious gap in the project and it is a data problem, not an
+  architecture one.
+- **The target.** The brief asks for ≥95% end-to-end text accuracy. We are at
+  45.9% on our own renders and 1.8% line-exact on real photographs. That gap is
+  the honest headline, and it is quantified rather than hidden.
 
 ---
 
@@ -68,64 +104,63 @@ airplane mode mid-demo.
 
 | Model | Framework | Params | What it does | Where it runs |
 |---|---|---|---|---|
+| **CRNN + CTC** (the recogniser) | PyTorch → ONNX | **942,166** | Reads text lines; 37-symbol alphabet (`0-9 A-Z` + space); dynamic width, `[1,1,32,width]` | Phone CPU (WASM) |
 | **SightLineNet** | PyTorch → ONNX | 37,793 | Restores blurry/noisy/shadowed photos before OCR | Phone CPU (WASM) |
 | **MiniLM-L6-v2 + head** | sentence-transformers → ONNX | 22.7M frozen + 49,796 trained | Classifies the document (banking / medical / legal / general) | Phone CPU (WASM) |
 
-Both are trained from real code in this repository, exported to ONNX, and
+All three are trained from real code in this repository, exported to ONNX, and
 **numerically verified against their PyTorch originals** before shipping.
-See [`docs/03_RESULTS.md`](docs/03_RESULTS.md) for measured numbers.
+
+**Install size, as a fact rather than a boast:** models + tokenizer =
+**26.4 MB** (`bash run.sh bundle-check` prints 27,735,952 B), and the ONNX
+runtime's single non-JSEP wasm adds **10.73 MiB**
+(`ort-wasm-simd-threaded.wasm`, 11,246,032 B) — **≈37.2 MiB total** on the
+phone, paid once. Nothing else is fetched at any point.
+
+See [`docs/03_RESULTS.md`](docs/03_RESULTS.md) for every measured number and
+[`docs/14_HACKATHON_BENCHMARK.md`](docs/14_HACKATHON_BENCHMARK.md) for the
+end-to-end benchmark and its caveats.
 
 ---
 
-## Accuracy: what we measured, honestly
+## The honesty policy
 
-**Read [`docs/10_ACCURACY_GAP.md`](docs/10_ACCURACY_GAP.md) before quoting any
-number.**
+SightLine reports what it can actually do, including where it fails.
 
-| Requirement | Status |
+- Every accuracy number in this repo comes from a **seeded, reproducible run**.
+  Re-run it yourself.
+- A **held-out test set** is used for the headline number, never the set used
+  to pick the model.
+- Capture conditions a **human cannot read** are labelled `SUB-HUMAN` and
+  excluded from the headline — reported separately, not quietly dropped.
+- When confidence is low, SightLine **says so and asks for a retake** instead
+  of inventing a dosage. A wrong number spoken aloud is worse than no number.
+- Numbers we got wrong are kept visible: the stored 100% classifier score (one
+  lucky seed) and every failed fix are recorded in
+  [`docs/12_HACKATHON_SUBMISSION.md`](docs/12_HACKATHON_SUBMISSION.md) §6 and
+  [`docs/18_CRNN_ACCURACY_STRATEGIES.md`](docs/18_CRNN_ACCURACY_STRATEGIES.md).
+
+If a number in this repository cannot be reproduced with the documented
+command, that is a bug — please open an issue.
+
+---
+
+## Start here
+
+| I want to… | Read |
 |---|---|
-| Trained models, ONNX-exported, int8, parity + inference verified | ✅ done — `bash run.sh bundle-check` |
-| Runs offline on iOS and Android | ✅ verified in **WebKit** (the engine iOS Safari uses) *and* headless Chromium — `bash run.sh ios-check` ⚠️ *not on physical iPhone/Android hardware* |
-| iOS floor for the neural path | ⚠️ **iOS 16.4+** — `ort-wasm-simd-threaded.wasm` requires WASM SIMD, which Safari shipped in 16.4 (March 2023). Older iOS is detected at startup and told why instead of failing mid-scan. |
-| Zero network calls after install | ✅ verified by static audit + source |
-| Reproducible evaluation | ✅ fixed — `bash run.sh repro-check` |
-| Document classification ≥ 95% | ✅ **95.0% mean** across 5 seeds (min 91.7%, CI 86.7–100%), macro F1 0.947 |
-| **End-to-end text accuracy on blurry images ≥ 95%** | ❌ **62.2% best arm — and that arm is Tesseract**, see below — reproducible, and short of target |
-
-The end-to-end number is the real one, and it is not close to 95%. Two caveats
-that belong next to it: the arm it comes from is **Tesseract, which the app no
-longer ships** (`ml/src/evaluate.py` still calls pytesseract — see
-[`docs/03_RESULTS.md`](docs/03_RESULTS.md) section 5), and the shipped
-recogniser's own measured numbers are the receipt line figures in
-`docs/03_RESULTS.md` section 3. On the browser pipeline's own rendered samples
-(`bash run.sh ios-full`), a clean render reads at high confidence but lossily —
-`ACCOUNT NUMBER 40218877` comes back as `ICOUNT NUMBER 4021887` — so the field
-extractor declines rather than guesses. On a realistic handheld capture it
-usually recovers nothing at all: `handheld_light`, `handheld_heavy` and
-`low_light` score **0% on every preprocessing arm**. A typical failure is one
-wrong digit — `2024-CV-00456` read as `2024-CV-00458` — which is why the app
-**omits a field it cannot read** rather than speaking a wrong one.
-
-Where the restorer genuinely helps, measured per profile:
-
-| Profile | raw | restorer | |
-|---|---|---|---|
-| hand_shadow | 20% | **80%** | the model rescues shadowed captures (this IS the +4.4) |
-| jpeg_social | 100% | 80% | restoration *hurts* compressed-but-legible text |
-| everything else | — | — | tie |
-
-That is a +4.4 point headline built from one profile. Three things are known
-and fixable:
-
-1. **Restore on optical blur only, not high-frequency loss generally.** The
-   current gate treats JPEG compression like blur (both collapse
-   variance-of-Laplacian) and over-restores text that OCR reads fine
-   un-restored. This is why `jpeg_social` regresses.
-2. The restorer is selected on **PSNR**, when it should be selected on **field
-   accuracy** — it scores −55.76 dB on undamaged input and +5.81 dB on badly
-   damaged input, and PSNR averages those into a number describing neither.
-3. `off_axis` and `jpeg_social` failures are partly geometric (skew, layout),
-   and no amount of denoising fixes those.
+| **Hackathon submission** (the 5 required steps, start here) | [`docs/12_HACKATHON_SUBMISSION.md`](docs/12_HACKATHON_SUBMISSION.md) |
+| **Show a judge** (start here — one document, the whole project) | [`docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md`](docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md) |
+| **Round 1 deliverables** (150-word proposal, video shot list, countdown) | [`docs/13_ROUND1_SUBMISSION_KIT.md`](docs/13_ROUND1_SUBMISSION_KIT.md) |
+| **Win the hackathon** (strategy and pitch) | [`docs/00_HACKATHON_PLAYBOOK.md`](docs/00_HACKATHON_PLAYBOOK.md) |
+| Understand how it works | [`docs/01_ARCHITECTURE.md`](docs/01_ARCHITECTURE.md) |
+| Understand the ML | [`docs/02_ML_PIPELINE.md`](docs/02_ML_PIPELINE.md) |
+| See measured results | [`docs/03_RESULTS.md`](docs/03_RESULTS.md) |
+| Run it on a phone | [`docs/04_RUNNING_ON_IOS_AND_ANDROID.md`](docs/04_RUNNING_ON_IOS_AND_ANDROID.md) |
+| Run the demo for judges | [`docs/05_DEMO_RUNBOOK.md`](docs/05_DEMO_RUNBOOK.md) |
+| Retrain the models | [`docs/06_RETRAINING.md`](docs/06_RETRAINING.md) |
+| Check our claims | [`docs/07_EVALUATION_METHODOLOGY.md`](docs/07_EVALUATION_METHODOLOGY.md) |
+| Fix something | [`docs/08_TROUBLESHOOTING.md`](docs/08_TROUBLESHOOTING.md) |
 
 ---
 
@@ -137,18 +172,15 @@ sightline/
 │   ├── index.html          #   UI
 │   ├── js/                 #   pipeline, ONNX inference, fallbacks
 │   ├── sw.js               #   service worker — the offline guarantee
+│   ├── models/             #   exported ONNX graphs (committed)
 │   └── vendor/             #   ORT wasm + pdf.js (vendored, no OCR library)
 ├── ml/
-│   ├── src/
-│   │   ├── corpus.py       # document corpus + OCR-noise augmentation
-│   │   ├── capture.py      # simulated phone-capture degradations
-│   │   ├── model.py        # SightLineNet architecture
-│   │   ├── train_classifier.py   # MiniLM fine-tune (3-way split + k-fold CV)
-│   │   ├── train_restorer.py     # restorer training
-│   │   ├── evaluate.py     # end-to-end accuracy harness
-│   │   └── export_onnx.py  # ONNX export + parity verification
-│   ├── models/             # trained weights (committed)
+│   ├── src/                # corpus.py, capture.py, ocr_model.py,
+│   │                       # train_ocr.py, bench_hackathon.py, export_onnx.py
 │   └── tests/              # pytest suite
+├── models/ocr/crnn_epoch29_final.pt  # THE SHIPPED recogniser's source (942,166 params, epoch 29)
+├── models/ocr/crnn.pt      # live training target — overwritten by whichever run is active; NOT the shipped source
+├── artifacts/              # raw benchmark records + training metrics
 ├── docs/                   # everything above
 └── run.sh                  # every command you need
 ```
@@ -161,7 +193,9 @@ sightline/
 # 1. Install (creates a venv, installs PyTorch CPU + deps)
 bash setup_env.sh
 
-# 2. Train both models from scratch (~2 minutes on a laptop CPU)
+# 2. Train the classifier + restorer and run every gate
+#    (the OCR recogniser is a separate, long CPU run: `bash run.sh train-ocr 40`,
+#     ~2.8 h on 4 cores, no GPU)
 bash run.sh all
 
 # 3. Run the app
@@ -172,18 +206,11 @@ Full instructions: [`docs/04_RUNNING_ON_IOS_AND_ANDROID.md`](docs/04_RUNNING_ON_
 
 ---
 
-## The honesty policy
+## Platform note
 
-SightLine reports what it can actually do, including where it fails.
-
-- Every accuracy number in this repo comes from a **seeded, reproducible run**
-  of `ml/src/evaluate.py`. Re-run it yourself.
-- A **held-out test set** is used for the headline number, never the set used
-  to pick the model.
-- Capture conditions a **human cannot read** are labelled `SUB-HUMAN` and
-  excluded from the headline — reported separately, not quietly dropped.
-- When confidence is low, SightLine **says so and asks for a retake** instead
-  of inventing a dosage. A wrong number spoken aloud is worse than no number.
-
-If a number in this repository cannot be reproduced with the documented
-command, that is a bug — please open an issue.
+The neural path needs **iOS 16.4+**: `ort-wasm-simd-threaded.wasm` requires
+WASM SIMD, which Safari shipped in 16.4 (March 2023). Older iOS is detected at
+startup and told why, instead of failing mid-scan. Android Chrome is not
+affected. Verified in **WebKit** (the engine iOS Safari uses) *and* headless
+Chromium — but **not yet on physical iPhone/Android hardware**, which is a
+known gap, not a claim.
