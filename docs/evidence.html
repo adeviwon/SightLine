@@ -83,7 +83,7 @@
           <td class="src"><code>README.md</code></td></tr>
       <tr><td>Recogniser</td><td>942,166 parameters, 37 symbols, CTC; held-out crop word accuracy 28.0% on 7,875 crops</td>
           <td class="src"><code>artifacts/ocr_training.json</code>; <code>docs/14_HACKATHON_BENCHMARK.md</code></td></tr>
-      <tr><td>Installed payload</td><td>26.68 MB, self-contained (models + tokenizer); 0 bytes leave the phone</td>
+      <tr><td>Installed payload</td><td>26.45 MiB of models + tokenizer, self-contained; ≈37.2 MiB installed once the 10.73 MiB onnxruntime wasm is counted; 0 bytes leave the phone</td>
           <td class="src"><code>docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md</code>; <code>docs/13_ECC_CODE_REVIEW.md</code> (<code>bundle-check</code>)</td></tr>
       <tr><td>Where inference happens</td><td>In the phone's browser, in WASM (onnxruntime-web), from the service-worker cache; after install the app never reaches the network</td>
           <td class="src"><code>app/sw.js</code> (<code>caches.match</code>, cache-only); <code>docs/PRIVACY.md</code></td></tr>

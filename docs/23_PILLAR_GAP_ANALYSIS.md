@@ -340,7 +340,7 @@ where it is not yet good enough.
 
 **What we have.** A PWA that installs from a URL on both platforms with no app
 store (`docs/04`); zero network calls after install, enforced in `app/sw.js` and
-verifiable in minutes (`docs/PRIVACY.md` §4 Check A/C); 26.68 MB payload
+verifiable in minutes (`docs/PRIVACY.md` §4 Check A/C); 26.45 MiB payload (models + tokenizer), ≈37.2 MiB installed with the wasm runtime
 (`docs/11` §4); 278 tests plus a 191/191 WebKit battery; a cost model with
 **zero marginal inference cost** and under US$1,000 for year one
 (`docs/12` §5); a demo runbook with contingencies (`docs/05`).
