@@ -13,17 +13,34 @@ predates the rewrite and contains two claims we no longer make: an unverified
 "50,000 visually impaired" and an "85–95% confidence" OCR claim from the
 Tesseract era. Both are corrected here.
 
-## Verified population figure (use this, cite this)
+## Verified population figures (use these, cite these — and know WHICH definition)
 
-**199,600 people with visual impairment in Hong Kong — 2.7% of the
-population.** 113,900 of them (57.1%) have multiple disabilities.
+**199,600 people report long-term seeing difficulty in Hong Kong (2.7%); 113,900 of them
+(57.1%) have multiple disabilities.** This is STR No. 63's **Appendix 4** figure under the
+report's **2013 original definition** (difficulty with or without correcting glasses, or
+with visual aids). The **same report's own headline** — main body para 5.5 and the summary
+page — is **47,600 (0.6%)** under the **updated definition** ("a lot of difficulty" even
+when corrected). **Cite the definition with the number, always.** A judge who opens STR
+No. 63 and finds 47,600 / 0.6% with no explanation reads the difference as an inflated
+claim, and the report itself warns that under the original definition "more persons who may
+not be commonly regarded as persons with disabilities may have been included".
 
-Source: HKSAR **Census and Statistics Department**, Special Topics Report
-No. 63, *Persons with disabilities and chronic diseases* (December 2021,
-2020 survey round), Appendix 4 — via the Hong Kong Blind Union statistics
-page (hkbu.org.hk/en/knowledge/statistics).
+Three figures that carry the pitch harder than a prevalence rate — same primary sources,
+full table with URLs and caveats in `docs/20_IMPACT_EVIDENCE.md`:
 
-## 150-word proposal (final draft — 148 words, verified with `wc -w` 2026-10-21)
+- **Three in four are 65 or over** (122,900 aged 70+; median age 74) — the product's user.
+- **188,569 people aged 65+ live alone** (2021 Census, 13.0% of the 65+ population, up 58%
+  from 2011), 53,750 of them aged 80+ — "alone, and cannot read the label".
+- **89.7% of Hong Kong's 65+ already carry a smartphone** (C&SD Thematic Household Survey
+  No. 86, June 2026) — the offline PWA needs no new device, no account and no network.
+
+Source: HKSAR **Census and Statistics Department**, Special Topics Report No. 63,
+*Persons with disabilities and chronic diseases* (December 2021, 2020 survey round),
+Appendix 4 (the 2.7% figure, Table A4.1a) and main body para 5.5 (the 0.6% figure) — via
+the Hong Kong Blind Union statistics page (hkbu.org.hk/en/knowledge/statistics), which
+reproduces Appendix 4 without disclosing which definition it uses.
+
+## 150-word proposal (final draft — 149 words, verified with `wc -w` 2026-10-21)
 
 > In Hong Kong, 199,600 people report long-term seeing difficulty, three in
 > four of them aged 65 or over. Most cannot read a prescription, a bank
@@ -49,7 +66,7 @@ so a beat that runs long is a filming problem, not a script problem.
 
 | # | time | shot (camera/framing) | on screen | voice-over |
 |---|---|---|---|---|
-| 1 | 0:00–0:25 | Close-up, low light: Mrs. Chan (78, Wong Tai Sin), alone, holding a prescription | ambient only | "Mrs. Chan is 78. In Hong Kong, 199,600 people live with visual impairment. Her prescription might as well be blank to her." (22) |
+| 1 | 0:00–0:25 | Close-up, low light: Mrs. Chan (78, Wong Tai Sin), alone, holding a prescription | ambient only | "Mrs. Chan is 78. In Hong Kong, 199,600 people report long-term seeing difficulty, three in four of them over 65. Her prescription might as well be blank to her." (28) |
 | 2 | 0:25–0:50 | Push-in on the prescription → stylised cloud-upload animation | "199,600 HK residents with visual impairment — 2.7% of the population" (C&SD 2021) | "Today's apps upload her prescription and her bank statement to a server. Offline is the only answer that needs no trust." (21) |
 | 3 | 0:50–1:00 | Locked-off phone on desk; finger taps airplane mode | **Airplane mode ON — held full screen** | "Everything after this happens on the phone. Nothing leaves the device." (11) |
 | 4 | 1:00–2:20 | Screen recording + over-the-shoulder on the filming phone | Install from `https://adeviwon.github.io/SightLine/`, scan → spoken result. Include one deliberate hard photo where the app **refuses** | "Install from this URL, straight to airplane mode. That is our own recogniser reading, our own classifier naming the document, our own voice. Now the hard one: a tilted page in poor light. 'I could not read that label clearly — please check it with a pharmacist.' That is the design, not a bug: a wrong dose spoken confidently is worse than no dose. It reads, it says what it found, and it refuses what it cannot verify." (78) |
