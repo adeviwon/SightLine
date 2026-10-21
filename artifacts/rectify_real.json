@@ -1,0 +1,120 @@
+{
+  "before": {
+    "pages": 20,
+    "crops": 394,
+    "dropped": {
+      "total": 173,
+      "under": 137,
+      "over": 36,
+      "other": 0
+    }
+  },
+  "after": {
+    "pages": 36,
+    "crops": 672,
+    "dropped": {
+      "total": 157,
+      "under": 136,
+      "over": 21,
+      "other": 0
+    }
+  },
+  "bander_sweep": {
+    "shipped": {
+      "match": 27,
+      "n": 193,
+      "under": 112,
+      "over": 54,
+      "rate": 0.13989637305699482
+    },
+    "merge_thin": {
+      "match": 36,
+      "n": 193,
+      "under": 136,
+      "over": 21,
+      "rate": 0.18652849740932642
+    },
+    "split_tall": {
+      "match": 33,
+      "n": 193,
+      "under": 88,
+      "over": 72,
+      "rate": 0.17098445595854922
+    }
+  },
+  "best_bander": "merge_thin",
+  "real_stats": {
+    "ink_mean": 0.21986239797671325,
+    "ink_median": 0.2093464401533019,
+    "contrast_mean": 75.53662952922639,
+    "contrast_median": 74.39446640014648,
+    "sharp_mean": 832.637542522857,
+    "sharp_median": 622.3620478630066,
+    "n": 672
+  },
+  "synth": {
+    "studio_clean": {
+      "before": {
+        "ink": 0.271,
+        "contrast": 137.8,
+        "sharp": 5249.5
+      },
+      "after": {
+        "ink": 0.271,
+        "contrast": 137.8,
+        "sharp": 5249.5
+      }
+    },
+    "handheld_light": {
+      "before": {
+        "ink": 0.6293,
+        "contrast": 43.1,
+        "sharp": 21.2
+      },
+      "after": {
+        "ink": 0.3325,
+        "contrast": 96.5,
+        "sharp": 1469.7
+      }
+    },
+    "handheld_heavy": {
+      "before": {
+        "ink": 0.6507,
+        "contrast": 32.9,
+        "sharp": 13.3
+      },
+      "after": {
+        "ink": 0.3553,
+        "contrast": 78.6,
+        "sharp": 740.7
+      }
+    },
+    "low_light": {
+      "before": {
+        "ink": 0.4558,
+        "contrast": 35.1,
+        "sharp": 53.1
+      },
+      "after": {
+        "ink": 0.417,
+        "contrast": 43.1,
+        "sharp": 205.2
+      }
+    }
+  },
+  "cache": {
+    "path": "/home/ubuntu/Projects/sightline/data/real_corpus/crops_rectified.npz",
+    "crops": 672,
+    "pages": 36,
+    "split_counts": {
+      "train": 473,
+      "val": 84,
+      "test": 115
+    },
+    "pages_by_split": {
+      "train": 25,
+      "val": 5,
+      "test": 6
+    }
+  }
+}
