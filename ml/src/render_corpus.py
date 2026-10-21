@@ -150,7 +150,19 @@ def build(n_pages=400, profiles=None, seed=0, out_dir=None, width=900,
     Returns the dict that was written: crops (object array of uint8 arrays),
     labels, doc (page id), profile, split.
     """
-    profiles = list(profiles or PROFILES[:4])
+    # DEFAULT TO EVERY PROFILE THE APP CAN SERVE, not the first four.
+    #
+    # This was `PROFILES[:4]` (studio_clean, handheld_light, handheld_heavy,
+    # low_light) and the omission was invisible: measured against the app's own crop
+    # population, 58 of 155 crops (37.4%) come from profiles the corpus never
+    # contained -- jpeg_social 47 and off_axis 11 -- and jpeg_social sits
+    # 1.3x/1.9x/1.8x corpus-IQR off its nearest corpus profile on ink, contrast AND
+    # sharpness at once. A corpus built from a silent subset of the worlds the
+    # product is served is the same train/serve distribution mismatch that has
+    # moved more than any model change in this project, four times over.
+    # `bash run.sh py ml/src/profile_coverage.py` prints the coverage table and
+    # names any profile missing from the corpus; run it after a rebuild.
+    profiles = list(profiles or PROFILES)
     rng = random.Random(seed)
     page_ids = ["%s-%04d" % (dtype, i)
                 for i in range(n_pages) for _, dtype in capture.DOCS]
