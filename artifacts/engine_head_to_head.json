@@ -1,0 +1,4578 @@
+{
+  "schema_version": 1,
+  "generated_by": "ml/src/tesseract_compare.py",
+  "engines": {
+    "ours": {
+      "model": "app/models/crnn.onnx",
+      "bytes": 3785916,
+      "input": [
+        "batch",
+        1,
+        32,
+        "width"
+      ],
+      "dynamic_width": true,
+      "runtime": "onnxruntime CPUExecutionProvider (the browser runs the same graph in onnxruntime-web)",
+      "charset": "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ ",
+      "params": 942166,
+      "note": "trained from scratch; no OCR library ships in the app bundle"
+    },
+    "tesseract": {
+      "version_verbatim": "tesseract 4.1.1\n leptonica-1.82.0\n  libgif 5.1.9 : libjpeg 8d (libjpeg-turbo 2.1.1) : libpng 1.6.37 : libtiff 4.3.0 : zlib 1.2.11 : libwebp 1.2.2 : libopenjp2 2.4.0\n Found AVX2\n Found AVX\n Found FMA\n Found SSE\n Found libarchive 3.6.0 zlib/1.2.11 liblzma/5.2.5 bz2lib/1.0.8 liblz4/1.9.3 libzstd/1.4.8",
+      "languages": [
+        "eng",
+        "osd"
+      ],
+      "traineddata_bytes": {
+        "eng": 4113088,
+        "osd": 10562727
+      },
+      "oem": "default (LSTM, oem 1, Tesseract 4.x)",
+      "invocation": "tesseract <png> stdout -l eng --psm {7 for a line crop, 3 for a page}, OMP_THREAD_LIMIT=1"
+    }
+  },
+  "bench": {
+    "documents": 12,
+    "doc_types": [
+      "banking",
+      "legal",
+      "prescription"
+    ],
+    "profiles": [
+      "handheld_light",
+      "jpeg_social",
+      "off_axis",
+      "studio_clean"
+    ],
+    "gt_lines": 188,
+    "distinct_gt_lines": 47,
+    "scored_rows_with_punctuation": 120,
+    "detected_bands": 193,
+    "samples_dir": "/tmp/sightline_samples",
+    "ground_truth": "ml/src/capture.py DOCS via /tmp/sightline_samples/gt_lines.json (the lines the renderer DREW)",
+    "crop_set_fixed": "lines detected ONCE per page on the deskewed grayscale; every arm crops the same boxes",
+    "metric_definitions": {
+      "word_accuracy": "fraction of GT words present in the arm's read text after norm() (evaluate.word_accuracy -- the app's own definition)",
+      "cer": "edit distance / GT characters on norm()ed text (bench_hackathon.cer)",
+      "field_recovery": "fraction of the doc's evaluate.FIELDS values present in the read text (norm substring, as js/pipeline.js fields_found)",
+      "line_exact": "GT lines aligned to engine lines with difflib (stdlib), uppercased both sides; a missed or merged band costs one line"
+    }
+  },
+  "app_end_to_end_reference": {
+    "source": "artifacts/pipeline_raw_deskew.json (the shipped browser pipeline, restorer + candidate election, own detection)",
+    "word_accuracy": 0.4594,
+    "cer": 0.3031,
+    "field_recovery": 0.2083,
+    "n_docs": 12,
+    "why_not_a_row_in_the_table": "it includes the app's restorer and its three-candidate election, so it is not a single-engine row; it is the reference our harness numbers sit beside"
+  },
+  "arms": {
+    "ours_c32_raw": {
+      "arm": "ours_c32_raw",
+      "label": "ours: CRNN on 32px crops (raw deskewed page)",
+      "n_docs": 12,
+      "line_exact": 22,
+      "n_gt_lines": 188,
+      "n_engine_lines": 193,
+      "line_exact_rate_gt": 0.11702127659574468,
+      "line_exact_norm": 77,
+      "line_exact_norm_rate_gt": 0.4095744680851064,
+      "word_accuracy": 0.6116085263345538,
+      "cer": 0.19714785530713305,
+      "field_recovery": 0.8333333333333334,
+      "punct_chars": 0,
+      "text_chars": 4979,
+      "punct_rate": 0.0,
+      "by_profile": {
+        "handheld_light": {
+          "word_accuracy": 0.6837042521974029,
+          "cer": 0.148052458873103,
+          "line_exact_rate_gt": 0.1276595744680851,
+          "line_exact_norm_rate_gt": 0.425531914893617,
+          "field_recovery": 0.8333333333333334
+        },
+        "jpeg_social": {
+          "word_accuracy": 0.7340628299532409,
+          "cer": 0.0795655377787166,
+          "line_exact_rate_gt": 0.14893617021276595,
+          "line_exact_norm_rate_gt": 0.5531914893617021,
+          "field_recovery": 1.0
+        },
+        "off_axis": {
+          "word_accuracy": 0.4297640105859284,
+          "cer": 0.36959407864946203,
+          "line_exact_rate_gt": 0.0851063829787234,
+          "line_exact_norm_rate_gt": 0.2553191489361702,
+          "field_recovery": 0.6666666666666666
+        },
+        "studio_clean": {
+          "word_accuracy": 0.5989030126016427,
+          "cer": 0.1913793459272505,
+          "line_exact_rate_gt": 0.10638297872340426,
+          "line_exact_norm_rate_gt": 0.40425531914893614,
+          "field_recovery": 0.8333333333333334
+        }
+      }
+    },
+    "ours_c32_clahe": {
+      "arm": "ours_c32_clahe",
+      "label": "ours: CRNN on 32px crops (CLAHE page, app candidate 1)",
+      "n_docs": 12,
+      "line_exact": 22,
+      "n_gt_lines": 188,
+      "n_engine_lines": 193,
+      "line_exact_rate_gt": 0.11702127659574468,
+      "line_exact_norm": 77,
+      "line_exact_norm_rate_gt": 0.4095744680851064,
+      "word_accuracy": 0.6016598790571394,
+      "cer": 0.20111486638235054,
+      "field_recovery": 0.8333333333333334,
+      "punct_chars": 0,
+      "text_chars": 4983,
+      "punct_rate": 0.0,
+      "by_profile": {
+        "handheld_light": {
+          "word_accuracy": 0.629772237991416,
+          "cer": 0.16701665956483366,
+          "line_exact_rate_gt": 0.0851063829787234,
+          "line_exact_norm_rate_gt": 0.3829787234042553,
+          "field_recovery": 0.8333333333333334
+        },
+        "jpeg_social": {
+          "word_accuracy": 0.7407311421010051,
+          "cer": 0.07719449674711769,
+          "line_exact_rate_gt": 0.19148936170212766,
+          "line_exact_norm_rate_gt": 0.574468085106383,
+          "field_recovery": 1.0
+        },
+        "off_axis": {
+          "word_accuracy": 0.4335294198307897,
+          "cer": 0.3706027817333571,
+          "line_exact_rate_gt": 0.0851063829787234,
+          "line_exact_norm_rate_gt": 0.2765957446808511,
+          "field_recovery": 0.6666666666666666
+        },
+        "studio_clean": {
+          "word_accuracy": 0.6026067163053465,
+          "cer": 0.18964552748409372,
+          "line_exact_rate_gt": 0.10638297872340426,
+          "line_exact_norm_rate_gt": 0.40425531914893614,
+          "field_recovery": 0.8333333333333334
+        }
+      }
+    },
+    "tess_c32_raw": {
+      "arm": "tess_c32_raw",
+      "label": "tesseract arm (a): the identical 32px crops (its worst input)",
+      "n_docs": 12,
+      "line_exact": 33,
+      "n_gt_lines": 188,
+      "n_engine_lines": 193,
+      "line_exact_rate_gt": 0.17553191489361702,
+      "line_exact_norm": 45,
+      "line_exact_norm_rate_gt": 0.2393617021276596,
+      "word_accuracy": 0.49803399289700656,
+      "cer": 0.3572229890583212,
+      "field_recovery": 0.2916666666666667,
+      "punct_chars": 252,
+      "text_chars": 4813,
+      "punct_rate": 0.05235819655100769,
+      "by_profile": {
+        "handheld_light": {
+          "word_accuracy": 0.07443607991553197,
+          "cer": 0.7603070662631368,
+          "line_exact_rate_gt": 0.02127659574468085,
+          "line_exact_norm_rate_gt": 0.02127659574468085,
+          "field_recovery": 0.0
+        },
+        "jpeg_social": {
+          "word_accuracy": 0.899845050529982,
+          "cer": 0.022174350607176374,
+          "line_exact_rate_gt": 0.40425531914893614,
+          "line_exact_norm_rate_gt": 0.5957446808510638,
+          "field_recovery": 0.5
+        },
+        "off_axis": {
+          "word_accuracy": 0.5808616836014097,
+          "cer": 0.34330042210381784,
+          "line_exact_rate_gt": 0.19148936170212766,
+          "line_exact_norm_rate_gt": 0.23404255319148937,
+          "field_recovery": 0.5
+        },
+        "studio_clean": {
+          "word_accuracy": 0.43699315754110274,
+          "cer": 0.30311011725915377,
+          "line_exact_rate_gt": 0.0851063829787234,
+          "line_exact_norm_rate_gt": 0.10638297872340426,
+          "field_recovery": 0.16666666666666666
+        }
+      }
+    },
+    "tess_nat_raw": {
+      "arm": "tess_nat_raw",
+      "label": "tesseract arm (b): native-resolution line crops (its fair input)",
+      "n_docs": 12,
+      "line_exact": 121,
+      "n_gt_lines": 188,
+      "n_engine_lines": 193,
+      "line_exact_rate_gt": 0.6436170212765957,
+      "line_exact_norm": 129,
+      "line_exact_norm_rate_gt": 0.6861702127659575,
+      "word_accuracy": 0.7534918480123959,
+      "cer": 0.16383324774714075,
+      "field_recovery": 0.7083333333333334,
+      "punct_chars": 287,
+      "text_chars": 5496,
+      "punct_rate": 0.0522197962154294,
+      "by_profile": {
+        "handheld_light": {
+          "word_accuracy": 0.1239321513294116,
+          "cer": 0.6265935117168104,
+          "line_exact_rate_gt": 0.02127659574468085,
+          "line_exact_norm_rate_gt": 0.02127659574468085,
+          "field_recovery": 0.0
+        },
+        "jpeg_social": {
+          "word_accuracy": 0.9647030592236071,
+          "cer": 0.0026347193440577083,
+          "line_exact_rate_gt": 0.8723404255319149,
+          "line_exact_norm_rate_gt": 0.9361702127659575,
+          "field_recovery": 1.0
+        },
+        "off_axis": {
+          "word_accuracy": 0.9819202764408242,
+          "cer": 0.01537844271977138,
+          "line_exact_rate_gt": 0.9361702127659575,
+          "line_exact_norm_rate_gt": 0.9787234042553191,
+          "field_recovery": 1.0
+        },
+        "studio_clean": {
+          "word_accuracy": 0.9434119050557407,
+          "cer": 0.01072631720792346,
+          "line_exact_rate_gt": 0.7446808510638298,
+          "line_exact_norm_rate_gt": 0.8085106382978723,
+          "field_recovery": 0.8333333333333334
+        }
+      }
+    },
+    "tess_page_raw": {
+      "arm": "tess_page_raw",
+      "label": "tesseract arm (c): whole page --psm 3 (the drop-in integration)",
+      "n_docs": 12,
+      "line_exact": 137,
+      "n_gt_lines": 188,
+      "n_engine_lines": 189,
+      "line_exact_rate_gt": 0.7287234042553191,
+      "line_exact_norm": 142,
+      "line_exact_norm_rate_gt": 0.7553191489361702,
+      "word_accuracy": 0.8012399385687057,
+      "cer": 0.1340055491416494,
+      "field_recovery": 0.7916666666666666,
+      "punct_chars": 246,
+      "text_chars": 5514,
+      "punct_rate": 0.04461371055495103,
+      "by_profile": {
+        "handheld_light": {
+          "word_accuracy": 0.23649128580635428,
+          "cer": 0.5360221965665976,
+          "line_exact_rate_gt": 0.0425531914893617,
+          "line_exact_norm_rate_gt": 0.0425531914893617,
+          "field_recovery": 0.16666666666666666
+        },
+        "jpeg_social": {
+          "word_accuracy": 0.9864864864864865,
+          "cer": 0.0,
+          "line_exact_rate_gt": 0.9574468085106383,
+          "line_exact_norm_rate_gt": 1.0,
+          "field_recovery": 1.0
+        },
+        "off_axis": {
+          "word_accuracy": 0.990990990990991,
+          "cer": 0.0,
+          "line_exact_rate_gt": 0.9574468085106383,
+          "line_exact_norm_rate_gt": 0.9787234042553191,
+          "field_recovery": 1.0
+        },
+        "studio_clean": {
+          "word_accuracy": 0.990990990990991,
+          "cer": 0.0,
+          "line_exact_rate_gt": 0.9574468085106383,
+          "line_exact_norm_rate_gt": 1.0,
+          "field_recovery": 1.0
+        }
+      }
+    }
+  },
+  "paired": {
+    "identical_pixels_ours_vs_tess_arm_a_strict": {
+      "arm_a": "ours_c32_raw",
+      "arm_b": "tess_c32_raw",
+      "comparison": "strict",
+      "both_right": 10,
+      "a_only": 12,
+      "b_only": 23,
+      "both_wrong": 143,
+      "n_gt_lines": 188,
+      "examples": {
+        "both_wrong": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PATIENT ANE DOE DOB 04021979",
+            "tess": "PATIENT\u2019 LANE UNE LB (4/2/1979"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "DATE: 01/10/7076"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRIBER DR A AHMED MBBS",
+            "tess": "PRESCRIBER HR A ANMED MRS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NOFTHOATE HARMACY",
+            "tess": "PHARMACY: NORTNDARE RNARMACY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMOXICHIN J0UHO CBOSUIES",
+            "tess": "AX MTTOXCHIT] JUUING CADSU/ES"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "BAK OECAOSDETE IESCSD IT T00",
+            "tess": "WAKE (TIE CACSUIE (TITRE LITTES (ANY WILL TOU)"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMDIETE IE TUL 0AY COUSE",
+            "tess": "LOMDIELE IE TULL / DAY COURSE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EVERY ID NOUS GS REOU FE 1O 161",
+            "tess": "PVETV O10 OTOUTS AS TRCUITEC 10) ALL)"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "WARNING: may cause drowsiness",
+            "ours": "WARNING MAY CAUSE DROWSINESS",
+            "tess": "WARNIN(G MAY CAUSE DROWSINESS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Do not drive or operate machinery",
+            "ours": "DO NO ORIVE OF ODERAIE MBCMIBER",
+            "tess": "UO NOLOTIVE OF ODE ALE MACHINLELY"
+          }
+        ],
+        "ours_only": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX IBUPROFEN 400MG TABLETS",
+            "tess": "RY LOUNROREN 400MA TANLETS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Maximum 1200mg in 24 hours",
+            "ours": "MAXIMUM 1200MG IN 24 HOURS",
+            "tess": "MAXIMUM L200MA IN 24 HOURS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "PRESCRIPTION",
+            "ours": "PRESCRIPTION",
+            "tess": "PERN EST"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX IBUPROFEN 400MG TABLETS",
+            "tess": ""
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Keep out of reach of children",
+            "ours": "KEEP OUT OF REACH OF CHILDREN",
+            "tess": "LAREN EEE FORE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX IBUPROFEN 400MG TABLETS",
+            "tess": "RY IBUPROFEN 400MA TABLETS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMPLETE THE FULL 7 DAY COURSE",
+            "tess": "COMPLETE THE FULL / DAY COURSE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX IBUPROFEN 400MG TABLETS",
+            "tess": "RX IBUPROFEN 400MA TABLETS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Maximum 1200mg in 24 hours",
+            "ours": "MAXIMUM 1200MG IN 24 HOURS",
+            "tess": "MAXIMUM 1200MA IN 24 HOURS"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "HSBC UK BANK PLC",
+            "ours": "HSBC UK BANK PLC",
+            "tess": "HSA UE BANE PLC"
+          }
+        ],
+        "tess_only": [
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "DATE: 01/10/2026"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "DATE: 01/10/2026"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EYVERY 6TO 8 HOURS S REQUIRED FORPAIN",
+            "tess": "EVERY 6 TO 8 HOURS AS REQUIRED FOR PAIN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "WARNING: may cause drowsiness",
+            "ours": "WARNING MAY CAUSE DRCWSINESS",
+            "tess": "WARNING: MAY CAUSE DROWSINESS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Do not drive or operate machinery",
+            "ours": "DO NO DRIVE OR OPERATE MACHINERY",
+            "tess": "DO NOT DRIVE OR OPERATE MACHINERY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Keep out of reach of children",
+            "ours": "KEEP OUT OF REACH OF CHIDREN",
+            "tess": "KEEP OUT OF REACH OF CHILDREN"
+          },
+          {
+            "doc": "banking",
+            "profile": "studio_clean",
+            "gt": "Sort Code: 40-11-04",
+            "ours": "SORT CODE 401104",
+            "tess": "SORT CODE: 40-11-04"
+          },
+          {
+            "doc": "banking",
+            "profile": "off_axis",
+            "gt": "Account Holder: John Smith",
+            "ours": "ACCOUNT HOLDER JOHN SMITH",
+            "tess": "ACCOUNT HOLDER: JOHN SMITH"
+          },
+          {
+            "doc": "banking",
+            "profile": "off_axis",
+            "gt": "Account Number: 40218877",
+            "ours": "ACCOUNT NUMBER 40218877",
+            "tess": "ACCOUNT NUMBER: 40218877"
+          },
+          {
+            "doc": "banking",
+            "profile": "off_axis",
+            "gt": "Sort Code: 40-11-04",
+            "ours": "SORT CODE 401104",
+            "tess": "SORT CODE: 40-11-04"
+          }
+        ]
+      }
+    },
+    "identical_pixels_ours_vs_tess_arm_a_punct_blind": {
+      "arm_a": "ours_c32_raw",
+      "arm_b": "tess_c32_raw",
+      "comparison": "blind",
+      "both_right": 29,
+      "a_only": 48,
+      "b_only": 16,
+      "both_wrong": 95,
+      "n_gt_lines": 188,
+      "examples": {
+        "both_wrong": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PATIENT ANE DOE DOB 04021979",
+            "tess": "PATIENT\u2019 LANE UNE LB (4/2/1979"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NOFTHOATE HARMACY",
+            "tess": "PHARMACY: NORTNDARE RNARMACY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMOXICHIN J0UHO CBOSUIES",
+            "tess": "AX MTTOXCHIT] JUUING CADSU/ES"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "BAK OECAOSDETE IESCSD IT T00",
+            "tess": "WAKE (TIE CACSUIE (TITRE LITTES (ANY WILL TOU)"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMDIETE IE TUL 0AY COUSE",
+            "tess": "LOMDIELE IE TULL / DAY COURSE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EVERY ID NOUS GS REOU FE 1O 161",
+            "tess": "PVETV O10 OTOUTS AS TRCUITEC 10) ALL)"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Do not drive or operate machinery",
+            "ours": "DO NO ORIVE OF ODERAIE MBCMIBER",
+            "tess": "UO NOLOTIVE OF ODE ALE MACHINLELY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Keep out of reach of children",
+            "ours": "KEE OUT OT REBCH OT CHOREN",
+            "tess": "APBD OUT OT TRACT) OF COTE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PERENT JANE DOE DOB 04021979",
+            "tess": ""
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRBER DR A AHMED MBS",
+            "tess": "MI EET YI EE"
+          }
+        ],
+        "ours_only": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "DATE: 01/10/7076"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRIBER DR A AHMED MBBS",
+            "tess": "PRESCRIBER HR A ANMED MRS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX IBUPROFEN 400MG TABLETS",
+            "tess": "RY LOUNROREN 400MA TANLETS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Maximum 1200mg in 24 hours",
+            "ours": "MAXIMUM 1200MG IN 24 HOURS",
+            "tess": "MAXIMUM L200MA IN 24 HOURS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Pharmacist: R. Silva  GPhC 20441",
+            "ours": "PHARMACIST R SILVA GPHC 20441",
+            "tess": "PHARMACIET: RK SIVA GPAC (4D)"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "PRESCRIPTION",
+            "ours": "PRESCRIPTION",
+            "tess": "PERN EST"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "WATE CI 1A."
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX IBUPROFEN 400MG TABLETS",
+            "tess": ""
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Keep out of reach of children",
+            "ours": "KEEP OUT OF REACH OF CHILDREN",
+            "tess": "LAREN EEE FORE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX IBUPROFEN 400MG TABLETS",
+            "tess": "RY IBUPROFEN 400MA TABLETS"
+          }
+        ],
+        "tess_only": [
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EYVERY 6TO 8 HOURS S REQUIRED FORPAIN",
+            "tess": "EVERY 6 TO 8 HOURS AS REQUIRED FOR PAIN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "WARNING: may cause drowsiness",
+            "ours": "WARNING MAY CAUSE DRCWSINESS",
+            "tess": "WARNING: MAY CAUSE DROWSINESS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Do not drive or operate machinery",
+            "ours": "DO NO DRIVE OR OPERATE MACHINERY",
+            "tess": "DO NOT DRIVE OR OPERATE MACHINERY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Keep out of reach of children",
+            "ours": "KEEP OUT OF REACH OF CHIDREN",
+            "tess": "KEEP OUT OF REACH OF CHILDREN"
+          },
+          {
+            "doc": "banking",
+            "profile": "jpeg_social",
+            "gt": "Account Holder: John Smith",
+            "ours": "ACCOUNT HOLDER JOHN SMTH",
+            "tess": "ACCOUNT HOLDER JOHN SMITH"
+          },
+          {
+            "doc": "banking",
+            "profile": "jpeg_social",
+            "gt": "Withdrawals total      GBP -1,434.18",
+            "ours": "WITHDRAWASTOTAL GBP 143418",
+            "tess": "WITHDRAWALS TOTAL GBP +1. 434.18"
+          },
+          {
+            "doc": "banking",
+            "profile": "jpeg_social",
+            "gt": "Closing Balance        GBP 2,682.55",
+            "ours": "COSING BALANCE GBP 268255",
+            "tess": "CLOSING BALANCE = GBP. 2.682. 55"
+          },
+          {
+            "doc": "legal",
+            "profile": "off_axis",
+            "gt": "BETWEEN: The Landlord (1) and The Tenant (2)",
+            "ours": "BETWEEN THELANDLORD1 ANDTHE EMANT 2",
+            "tess": "BETWEEN: THE LANDLORD (1) AND THE TENANT (2)"
+          },
+          {
+            "doc": "legal",
+            "profile": "off_axis",
+            "gt": "Either party may terminate with two months",
+            "ours": "ETHERPARY MAYTEMNATEYTS THO MORTIS",
+            "tess": "EITHER PARTY MAY TERMINATE WITH TWO MONTHS"
+          },
+          {
+            "doc": "legal",
+            "profile": "jpeg_social",
+            "gt": "BETWEEN: The Landlord (1) and The Tenant (2)",
+            "ours": "BETWEEN THE LANDLORD 1 AND THE TNANT 2",
+            "tess": "BETWEEN: THE LANDLORD (1) AND THE TENANT (2)"
+          }
+        ]
+      }
+    },
+    "best_ours_vs_fair_tess_strict": {
+      "arm_a": "ours_c32_clahe",
+      "arm_b": "tess_nat_raw",
+      "comparison": "strict",
+      "both_right": 17,
+      "a_only": 5,
+      "b_only": 104,
+      "both_wrong": 62,
+      "n_gt_lines": 188,
+      "examples": {
+        "tess_only": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PATIENT ANE DOE DOB 04021979",
+            "tess": "PATIENT: JANE DOE DOB: 04/02/1979"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "DATE: 01/10/2026"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRIBER DR A AHMED MBBS",
+            "tess": "PRESCRIBER: DR A. AHMED, MBBS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NOFTHOATE HARMACY",
+            "tess": "PHARMACY: NORTHGATE PHARMACY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "WARNING: may cause drowsiness",
+            "ours": "WARNING MAY CAUSE DROWSINESS",
+            "tess": "WARNING: MAY CAUSE DROWSINESS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Do not drive or operate machinery",
+            "ours": "DO NO ORIVE OF ODERAIE MBCMIBER",
+            "tess": "DO NOT DRIVE OR OPERATE MACHINERY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Pharmacist: R. Silva  GPhC 20441",
+            "ours": "PHARMACIST R SILVA GPHC 20441",
+            "tess": "PHARMACIST: R. SILVA GPHC 20441"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PATENT ANE DOE D0804021979",
+            "tess": "PATIENT: JANE DOE DOB: 04/02/1979"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "DATE: 01/10/2026"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NORTHGATE PHARMACY",
+            "tess": "PHARMACY: NORTHGATE PHARMACY"
+          }
+        ],
+        "both_wrong": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMOXICHIN J0UHO CBOSUIES",
+            "tess": "RX AMOXICILLIN 300MG CAPSULES"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "BAK OECAOSDETE IESCSD IT T00",
+            "tess": "LAKE ONE CAPSULE THREE TIMES DALLY WITH FOODQ"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMDIETE IE TUL 0AY COUSE",
+            "tess": "COMPLETE THE FULL / DAY COURSE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EVERY ID NOUS GS REOU RE 1O 161",
+            "tess": "EVERY 6 TO 8 NOURS AS REQUIRED FOR PAIN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Keep out of reach of children",
+            "ours": "KEE OUT OT REBCH OT CHOREN",
+            "tess": "KEEP OUT OF REACH OF CNILAREN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PERENT JANE DOE DOB 04021979",
+            "tess": "PEBERT BRE DEE OOS MOD 1S"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "OETE GL IOE0GO8"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRBER DR A AMED MBBS",
+            "tess": "PSESCESER OF A ARMED \u201cESS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NORTHDATE PHAMAY",
+            "tess": "MERE) VAT GETE PEMA:"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMXCILLIN 500MG CAPSULES",
+            "tess": "RY EMCEE OY CAOEWVE"
+          }
+        ],
+        "ours_only": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Maximum 1200mg in 24 hours",
+            "ours": "MAXIMUM 1200MG IN 24 HOURS",
+            "tess": "MAXIMUM 1200MGQ IN 24 HOURS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "PRESCRIPTION",
+            "ours": "PRESCRIPTION",
+            "tess": ""
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX IBUPROFEN 400MG TABLETS",
+            "tess": "RX IBUPROFEN 400MG TABIETS"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "HSBC UK BANK PLC",
+            "ours": "HSBC UK BANK PLC",
+            "tess": "SEC UK BANE PLC"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Statement of Account",
+            "ours": "STATEMENT OF ACCOUNT",
+            "tess": "QERWRET WF ACO"
+          }
+        ]
+      }
+    },
+    "best_ours_vs_fair_tess_punct_blind": {
+      "arm_a": "ours_c32_clahe",
+      "arm_b": "tess_nat_raw",
+      "comparison": "blind",
+      "both_right": 57,
+      "a_only": 20,
+      "b_only": 72,
+      "both_wrong": 39,
+      "n_gt_lines": 188,
+      "examples": {
+        "tess_only": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PATIENT ANE DOE DOB 04021979",
+            "tess": "PATIENT: JANE DOE DOB: 04/02/1979"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NOFTHOATE HARMACY",
+            "tess": "PHARMACY: NORTHGATE PHARMACY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Do not drive or operate machinery",
+            "ours": "DO NO ORIVE OF ODERAIE MBCMIBER",
+            "tess": "DO NOT DRIVE OR OPERATE MACHINERY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PATENT ANE DOE D0804021979",
+            "tess": "PATIENT: JANE DOE DOB: 04/02/1979"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMOXIXILIN 500M0 CADSULES",
+            "tess": "RX AMOXICILLIN 500MG CAPSULES"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "BAKE ONE GOSUETERE TINESCDALYWTH TOD",
+            "tess": "TAKE ONE CAPSULE THREE TIMES DAILY WITH FOOD"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMPLETE THE FUL 7 DAY COURSE",
+            "tess": "COMPLETE THE FULL 7 DAY COURSE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "DREDB R R FODO A",
+            "tess": "EVERY 6 TO 8 HOURS AS REQUIRED FOR PAIN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Maximum 1200mg in 24 hours",
+            "ours": "UIMIRE I TO D A",
+            "tess": "MAXIMUM 1200MG IN 24 HOURS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "WARNING: may cause drowsiness",
+            "ours": "WII DI EN O A",
+            "tess": "WARNING: MAY CAUSE DROWSINESS"
+          }
+        ],
+        "both_wrong": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMOXICHIN J0UHO CBOSUIES",
+            "tess": "RX AMOXICILLIN 300MG CAPSULES"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "BAK OECAOSDETE IESCSD IT T00",
+            "tess": "LAKE ONE CAPSULE THREE TIMES DALLY WITH FOODQ"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMDIETE IE TUL 0AY COUSE",
+            "tess": "COMPLETE THE FULL / DAY COURSE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EVERY ID NOUS GS REOU RE 1O 161",
+            "tess": "EVERY 6 TO 8 NOURS AS REQUIRED FOR PAIN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Keep out of reach of children",
+            "ours": "KEE OUT OT REBCH OT CHOREN",
+            "tess": "KEEP OUT OF REACH OF CNILAREN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PERENT JANE DOE DOB 04021979",
+            "tess": "PEBERT BRE DEE OOS MOD 1S"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRBER DR A AMED MBBS",
+            "tess": "PSESCESER OF A ARMED \u201cESS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NORTHDATE PHAMAY",
+            "tess": "MERE) VAT GETE PEMA:"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMXCILLIN 500MG CAPSULES",
+            "tess": "RY EMCEE OY CAOEWVE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "STE DNE COWDETHE THEL DALYAST TOTL",
+            "tess": "WEE ORE (EMT WE TEWS DE: AE) ET TE"
+          }
+        ],
+        "ours_only": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Maximum 1200mg in 24 hours",
+            "ours": "MAXIMUM 1200MG IN 24 HOURS",
+            "tess": "MAXIMUM 1200MGQ IN 24 HOURS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "PRESCRIPTION",
+            "ours": "PRESCRIPTION",
+            "tess": ""
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "OETE GL IOE0GO8"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRIBER DR A AHMED MBBS",
+            "tess": "PRESCRIBER: DR A. ANMED, MBBS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "jpeg_social",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX IBUPROFEN 400MG TABLETS",
+            "tess": "RX IBUPROFEN 400MG TABIETS"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "HSBC UK BANK PLC",
+            "ours": "HSBC UK BANK PLC",
+            "tess": "SEC UK BANE PLC"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Statement of Account",
+            "ours": "STATEMENT OF ACCOUNT",
+            "tess": "QERWRET WF ACO"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Sort Code: 40-11-04",
+            "ours": "SORT CODE 401104",
+            "tess": "SET CODE 43-11-06"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Period: 01/03 - 31/03/2026",
+            "ours": "PERIOD 010331032026",
+            "tess": "SERET O10} JL ORION"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Opening Balance        GBP 1,204.33",
+            "ours": "OPENING BALANCE GBP 120433",
+            "tess": "QEESEE GEERCE GRP 1D RD"
+          }
+        ]
+      }
+    },
+    "ours_vs_tesseract_drop_in_page_strict": {
+      "arm_a": "ours_c32_clahe",
+      "arm_b": "tess_page_raw",
+      "comparison": "strict",
+      "both_right": 20,
+      "a_only": 2,
+      "b_only": 117,
+      "both_wrong": 49,
+      "n_gt_lines": 188,
+      "examples": {
+        "tess_only": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PATIENT ANE DOE DOB 04021979",
+            "tess": "PATIENT: JANE DOE DOB: 04/02/1979"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "DATE: 01/10/2026"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRIBER DR A AHMED MBBS",
+            "tess": "PRESCRIBER: DR A. AHMED, MBBS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NOFTHOATE HARMACY",
+            "tess": "PHARMACY: NORTHGATE PHARMACY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMOXICHIN J0UHO CBOSUIES",
+            "tess": "RX AMOXICILLIN 500MG CAPSULES"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "BAK OECAOSDETE IESCSD IT T00",
+            "tess": "TAKE ONE CAPSULE THREE TIMES DAILY WITH FOOD"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMDIETE IE TUL 0AY COUSE",
+            "tess": "COMPLETE THE FULL 7 DAY COURSE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EVERY ID NOUS GS REOU RE 1O 161",
+            "tess": "EVERY 6 TO 8 HOURS AS REQUIRED FOR PAIN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "WARNING: may cause drowsiness",
+            "ours": "WARNING MAY CAUSE DROWSINESS",
+            "tess": "WARNING: MAY CAUSE DROWSINESS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Do not drive or operate machinery",
+            "ours": "DO NO ORIVE OF ODERAIE MBCMIBER",
+            "tess": "DO NOT DRIVE OR OPERATE MACHINERY"
+          }
+        ],
+        "both_wrong": [
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PERENT JANE DOE DOB 04021979",
+            "tess": "PEMERT BRE OE OOS OACD ISTE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "DATE SLID"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRBER DR A AMED MBBS",
+            "tess": "PRESCRIBER OF A ARMEN MESS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NORTHDATE PHAMAY",
+            "tess": "PENME) NOM GETE PEMA,"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMXCILLIN 500MG CAPSULES",
+            "tess": "RY AME CE OEY CAPSVER"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "STE DNE COWDETHE THEL DALYAST TOTL",
+            "tess": "WEE ORE CAMTUE TEWE TE: AE AT TE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMPLETETHE FILL7 DAY COURSE",
+            "tess": "COMPETE HE SUI * AN, CARE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX BUPROFEN 400MG TABLETS",
+            "tess": "RY RERCTE 2G EEN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EVERY T HOURS AS REOURNDFO PAIN",
+            "tess": "EVERY 6 TE 8 SOURS A: REQURED TE PER"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Maximum 1200mg in 24 hours",
+            "ours": "MAXMUM 1200MG ON 24 HOURS",
+            "tess": "MARRE LEG 6 NE"
+          }
+        ],
+        "ours_only": [
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "HSBC UK BANK PLC",
+            "ours": "HSBC UK BANK PLC",
+            "tess": "NSEC UK BANK PLC"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Statement of Account",
+            "ours": "STATEMENT OF ACCOUNT",
+            "tess": "SERENE OF KCORT"
+          }
+        ]
+      }
+    },
+    "ours_vs_tesseract_drop_in_page_punct_blind": {
+      "arm_a": "ours_c32_clahe",
+      "arm_b": "tess_page_raw",
+      "comparison": "blind",
+      "both_right": 61,
+      "a_only": 16,
+      "b_only": 81,
+      "both_wrong": 30,
+      "n_gt_lines": 188,
+      "examples": {
+        "tess_only": [
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PATIENT ANE DOE DOB 04021979",
+            "tess": "PATIENT: JANE DOE DOB: 04/02/1979"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NOFTHOATE HARMACY",
+            "tess": "PHARMACY: NORTHGATE PHARMACY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMOXICHIN J0UHO CBOSUIES",
+            "tess": "RX AMOXICILLIN 500MG CAPSULES"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "BAK OECAOSDETE IESCSD IT T00",
+            "tess": "TAKE ONE CAPSULE THREE TIMES DAILY WITH FOOD"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMDIETE IE TUL 0AY COUSE",
+            "tess": "COMPLETE THE FULL 7 DAY COURSE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EVERY ID NOUS GS REOU RE 1O 161",
+            "tess": "EVERY 6 TO 8 HOURS AS REQUIRED FOR PAIN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Do not drive or operate machinery",
+            "ours": "DO NO ORIVE OF ODERAIE MBCMIBER",
+            "tess": "DO NOT DRIVE OR OPERATE MACHINERY"
+          },
+          {
+            "doc": "prescription",
+            "profile": "studio_clean",
+            "gt": "Keep out of reach of children",
+            "ours": "KEE OUT OT REBCH OT CHOREN",
+            "tess": "KEEP OUT OF REACH OF CHILDREN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PATENT ANE DOE D0804021979",
+            "tess": "PATIENT: JANE DOE DOB: 04/02/1979"
+          },
+          {
+            "doc": "prescription",
+            "profile": "off_axis",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMOXIXILIN 500M0 CADSULES",
+            "tess": "RX AMOXICILLIN 500MG CAPSULES"
+          }
+        ],
+        "both_wrong": [
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+            "ours": "PERENT JANE DOE DOB 04021979",
+            "tess": "PEMERT BRE OE OOS OACD ISTE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "ours": "PRESCRBER DR A AMED MBBS",
+            "tess": "PRESCRIBER OF A ARMEN MESS"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Pharmacy: Northgate Pharmacy",
+            "ours": "PHARMACY NORTHDATE PHAMAY",
+            "tess": "PENME) NOM GETE PEMA,"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Rx  Amoxicillin 500mg capsules",
+            "ours": "RX AMXCILLIN 500MG CAPSULES",
+            "tess": "RY AME CE OEY CAPSVER"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Take one capsule three times daily with food",
+            "ours": "STE DNE COWDETHE THEL DALYAST TOTL",
+            "tess": "WEE ORE CAMTUE TEWE TE: AE AT TE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Complete the full 7 day course",
+            "ours": "COMPLETETHE FILL7 DAY COURSE",
+            "tess": "COMPETE HE SUI * AN, CARE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Rx  Ibuprofen 400mg tablets",
+            "ours": "RX BUPROFEN 400MG TABLETS",
+            "tess": "RY RERCTE 2G EEN"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Every 6 to 8 hours as required for pain",
+            "ours": "EVERY T HOURS AS REOURNDFO PAIN",
+            "tess": "EVERY 6 TE 8 SOURS A: REQURED TE PER"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Maximum 1200mg in 24 hours",
+            "ours": "MAXMUM 1200MG ON 24 HOURS",
+            "tess": "MARRE LEG 6 NE"
+          },
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "WARNING: may cause drowsiness",
+            "ours": "WJARNING HAY CHAUDE DROWSINETD",
+            "tess": "ARNG SE CECE SOETREN:"
+          }
+        ],
+        "ours_only": [
+          {
+            "doc": "prescription",
+            "profile": "handheld_light",
+            "gt": "Date: 01/10/2026",
+            "ours": "DATE 01102026",
+            "tess": "DATE SLID"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "HSBC UK BANK PLC",
+            "ours": "HSBC UK BANK PLC",
+            "tess": "NSEC UK BANK PLC"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Statement of Account",
+            "ours": "STATEMENT OF ACCOUNT",
+            "tess": "SERENE OF KCORT"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Sort Code: 40-11-04",
+            "ours": "SORT CODE 401104",
+            "tess": "SORT CAGE 23.218"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Period: 01/03 - 31/03/2026",
+            "ours": "PERIOD 010331032026",
+            "tess": "PERES CLO} SLOP"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "Opening Balance        GBP 1,204.33",
+            "ours": "OPENING BALANCE GBP 120433",
+            "tess": "GEENEG IEEE 8 GBP 1LD\u00c9 DD"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "01/03 SALARY CREDIT   GBP 2,900.00",
+            "ours": "0103 SALARY CREDIT GBP 290000",
+            "tess": "CLO SALARY CREDIT GSP 2 900 0D"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "01/03 RENT DD 1100     GBP -1,100.00",
+            "ours": "0103 RENT DD 1100 GBP 110000",
+            "tess": "SUSPRENTOO INS GE. 19O00"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "08/03 TESCO STORES     GBP -44.19",
+            "ours": "0803 TESCO STORES GBP 4419",
+            "tess": "CSCS TESCO STORES GRP 4219"
+          },
+          {
+            "doc": "banking",
+            "profile": "handheld_light",
+            "gt": "22/03 CASHBACK         GBP +12.40",
+            "ours": "2203 CASHBACK GBP 1240",
+            "tess": "I203 CASNRAK PELLE"
+          }
+        ]
+      }
+    }
+  },
+  "error_profiles": {
+    "ours_c32_raw": {
+      "line_exact_rate_gt": 0.11702127659574468,
+      "line_exact_norm_rate_gt": 0.4095744680851064,
+      "wrong_lines": [
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+          "hyp": "PATIENT ANE DOE DOB 04021979",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Pharmacy: Northgate Pharmacy",
+          "hyp": "PHARMACY NOFTHOATE HARMACY",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Rx  Amoxicillin 500mg capsules",
+          "hyp": "RX AMOXICHIN J0UHO CBOSUIES",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Take one capsule three times daily with food",
+          "hyp": "BAK OECAOSDETE IESCSD IT T00",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Complete the full 7 day course",
+          "hyp": "COMDIETE IE TUL 0AY COUSE",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Every 6 to 8 hours as required for pain",
+          "hyp": "EVERY ID NOUS GS REOU FE 1O 161",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Do not drive or operate machinery",
+          "hyp": "DO NO ORIVE OF ODERAIE MBCMIBER",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Keep out of reach of children",
+          "hyp": "KEE OUT OT REBCH OT CHOREN",
+          "empty": false
+        }
+      ],
+      "punct_rate": 0.0,
+      "missed_chars_by_gt_char": {
+        "alpha_A": 150,
+        "alpha_E": 144,
+        "alpha_R": 136,
+        "alpha_T": 128,
+        "alpha_S": 123,
+        "alpha_O": 122,
+        "alpha_N": 111,
+        "alpha_P": 110,
+        "alpha_I": 109,
+        "alpha_D": 106,
+        "alpha_C": 100,
+        "alpha_H": 88
+      },
+      "dropped_lines": 0,
+      "inserted_lines": 5
+    },
+    "ours_c32_clahe": {
+      "line_exact_rate_gt": 0.11702127659574468,
+      "line_exact_norm_rate_gt": 0.4095744680851064,
+      "wrong_lines": [
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+          "hyp": "PATIENT ANE DOE DOB 04021979",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Pharmacy: Northgate Pharmacy",
+          "hyp": "PHARMACY NOFTHOATE HARMACY",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Rx  Amoxicillin 500mg capsules",
+          "hyp": "RX AMOXICHIN J0UHO CBOSUIES",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Take one capsule three times daily with food",
+          "hyp": "BAK OECAOSDETE IESCSD IT T00",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Complete the full 7 day course",
+          "hyp": "COMDIETE IE TUL 0AY COUSE",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Every 6 to 8 hours as required for pain",
+          "hyp": "EVERY ID NOUS GS REOU RE 1O 161",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Do not drive or operate machinery",
+          "hyp": "DO NO ORIVE OF ODERAIE MBCMIBER",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Keep out of reach of children",
+          "hyp": "KEE OUT OT REBCH OT CHOREN",
+          "empty": false
+        }
+      ],
+      "punct_rate": 0.0,
+      "missed_chars_by_gt_char": {
+        "alpha_A": 150,
+        "alpha_E": 144,
+        "alpha_R": 136,
+        "alpha_T": 128,
+        "alpha_S": 123,
+        "alpha_O": 122,
+        "alpha_N": 111,
+        "alpha_P": 110,
+        "alpha_I": 109,
+        "alpha_D": 105,
+        "alpha_C": 100,
+        "digit_0": 87
+      },
+      "dropped_lines": 0,
+      "inserted_lines": 5
+    },
+    "tess_c32_raw": {
+      "line_exact_rate_gt": 0.17553191489361702,
+      "line_exact_norm_rate_gt": 0.2393617021276596,
+      "wrong_lines": [
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+          "hyp": "PATIENT\u2019 LANE UNE LB (4/2/1979",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Date: 01/10/2026",
+          "hyp": "DATE: 01/10/7076",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+          "hyp": "PRESCRIBER HR A ANMED MRS",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Pharmacy: Northgate Pharmacy",
+          "hyp": "PHARMACY: NORTNDARE RNARMACY",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Rx  Amoxicillin 500mg capsules",
+          "hyp": "AX MTTOXCHIT] JUUING CADSU/ES",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Take one capsule three times daily with food",
+          "hyp": "WAKE (TIE CACSUIE (TITRE LITTES (ANY WILL TOU)",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Complete the full 7 day course",
+          "hyp": "LOMDIELE IE TULL / DAY COURSE",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Rx  Ibuprofen 400mg tablets",
+          "hyp": "RY LOUNROREN 400MA TANLETS",
+          "empty": false
+        }
+      ],
+      "punct_rate": 0.05235819655100769,
+      "missed_chars_by_gt_char": {
+        "alpha_A": 142,
+        "alpha_E": 130,
+        "alpha_R": 124,
+        "alpha_S": 119,
+        "alpha_T": 116,
+        "alpha_O": 115,
+        "alpha_P": 109,
+        "alpha_N": 107,
+        "alpha_I": 104,
+        "alpha_C": 93,
+        "alpha_D": 90,
+        "alpha_L": 83
+      },
+      "dropped_lines": 0,
+      "inserted_lines": 5
+    },
+    "tess_nat_raw": {
+      "line_exact_rate_gt": 0.6436170212765957,
+      "line_exact_norm_rate_gt": 0.6861702127659575,
+      "wrong_lines": [
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Rx  Amoxicillin 500mg capsules",
+          "hyp": "RX AMOXICILLIN 300MG CAPSULES",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Take one capsule three times daily with food",
+          "hyp": "LAKE ONE CAPSULE THREE TIMES DALLY WITH FOODQ",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Complete the full 7 day course",
+          "hyp": "COMPLETE THE FULL / DAY COURSE",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Every 6 to 8 hours as required for pain",
+          "hyp": "EVERY 6 TO 8 NOURS AS REQUIRED FOR PAIN",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Maximum 1200mg in 24 hours",
+          "hyp": "MAXIMUM 1200MGQ IN 24 HOURS",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "gt": "Keep out of reach of children",
+          "hyp": "KEEP OUT OF REACH OF CNILAREN",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "PRESCRIPTION",
+          "hyp": "",
+          "empty": true
+        },
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+          "hyp": "PEBERT BRE DEE OOS MOD 1S",
+          "empty": false
+        }
+      ],
+      "punct_rate": 0.0522197962154294,
+      "missed_chars_by_gt_char": {
+        "alpha_R": 57,
+        "alpha_A": 57,
+        "alpha_E": 56,
+        "alpha_T": 53,
+        "alpha_S": 51,
+        "alpha_O": 49,
+        "alpha_P": 49,
+        "alpha_N": 45,
+        "alpha_I": 44,
+        "alpha_D": 41,
+        "alpha_C": 38,
+        "alpha_H": 36
+      },
+      "dropped_lines": 0,
+      "inserted_lines": 5
+    },
+    "tess_page_raw": {
+      "line_exact_rate_gt": 0.7287234042553191,
+      "line_exact_norm_rate_gt": 0.7553191489361702,
+      "wrong_lines": [
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "Patient: Jane Doe   DOB: 04/02/1979",
+          "hyp": "PEMERT BRE OE OOS OACD ISTE",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "Date: 01/10/2026",
+          "hyp": "DATE SLID",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "PRESCRIBER: Dr A. Ahmed, MBBS",
+          "hyp": "PRESCRIBER OF A ARMEN MESS",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "Pharmacy: Northgate Pharmacy",
+          "hyp": "PENME) NOM GETE PEMA,",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "Rx  Amoxicillin 500mg capsules",
+          "hyp": "RY AME CE OEY CAPSVER",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "Take one capsule three times daily with food",
+          "hyp": "WEE ORE CAMTUE TEWE TE: AE AT TE",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "Complete the full 7 day course",
+          "hyp": "COMPETE HE SUI * AN, CARE",
+          "empty": false
+        },
+        {
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "gt": "Rx  Ibuprofen 400mg tablets",
+          "hyp": "RY RERCTE 2G EEN",
+          "empty": false
+        }
+      ],
+      "punct_rate": 0.04461371055495103,
+      "missed_chars_by_gt_char": {
+        "alpha_A": 43,
+        "alpha_E": 42,
+        "alpha_R": 41,
+        "alpha_T": 39,
+        "alpha_S": 37,
+        "alpha_P": 36,
+        "alpha_O": 34,
+        "alpha_N": 34,
+        "alpha_D": 31,
+        "alpha_I": 30,
+        "digit_0": 29,
+        "alpha_C": 29
+      },
+      "dropped_lines": 0,
+      "inserted_lines": 1
+    }
+  },
+  "decision_table": [
+    {
+      "condition": "clean flat scan, one language, product can ship a vendored engine",
+      "ship": "tesseract (arm b or c)",
+      "why": "on the studio_clean renders it is materially better than our recogniser on BOTH line crops and whole pages -- see the table; ignoring that would be the cherry-pick this file exists to prevent"
+    },
+    {
+      "condition": "offline web/iOS app, no vendor engine allowed in the bundle",
+      "ship": "ours (crnn.onnx)",
+      "why": "one 3.6MB ONNX file that runs in onnxruntime-web/WASM; Tesseract means a second wasm runtime plus eng.traineddata (10MB+), and the build gate fails if it returns"
+    },
+    {
+      "condition": "one engine across clean/degraded/dark captures",
+      "ship": "ours",
+      "why": "we beat all three Tesseract arms on the degraded profiles (handheld_light, jpeg_social) -- Tesseract's binary page segmentation is what breaks there, ours sees a line crop"
+    },
+    {
+      "condition": "structured fields only (dosage, account number, sort code)",
+      "ship": "ours + field policy",
+      "why": "the 37-symbol alphabet cannot emit punctuation, so '500mg' cannot come back as '500 mg.'; the costs are paid in CER on raw prose, not on the fields the product extracts"
+    },
+    {
+      "condition": "unreadable input, user must be told",
+      "ship": "ours",
+      "why": "per-line CTC confidence plus the app's refusal path; a Tesseract pipeline that silently emits confident nonsense on a blurred line has no equivalent gate wired in"
+    },
+    {
+      "condition": "arbitrary languages, handwriting, tables, or 100+ docs/scan throughput",
+      "ship": "tesseract (or a cloud OCR)",
+      "why": "we ship ONE 37-symbol English charset trained from scratch and no punctuation; that is a product scope decision, not a capability we claim"
+    }
+  ],
+  "records": [
+    {
+      "doc": "prescription",
+      "profile": "studio_clean",
+      "skew_deg": 0.0,
+      "n_bands": 15,
+      "n_gt_lines": 15,
+      "gt_lines": [
+        "PRESCRIPTION",
+        "Patient: Jane Doe   DOB: 04/02/1979",
+        "Date: 01/10/2026",
+        "PRESCRIBER: Dr A. Ahmed, MBBS",
+        "Pharmacy: Northgate Pharmacy",
+        "Rx  Amoxicillin 500mg capsules",
+        "Take one capsule three times daily with food",
+        "Complete the full 7 day course",
+        "Rx  Ibuprofen 400mg tablets",
+        "Every 6 to 8 hours as required for pain",
+        "Maximum 1200mg in 24 hours",
+        "WARNING: may cause drowsiness",
+        "Do not drive or operate machinery",
+        "Keep out of reach of children",
+        "Pharmacist: R. Silva  GPhC 20441"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 3,
+          "line_exact_rate_gt": 0.2,
+          "line_exact_rate_hyp": 0.2,
+          "line_exact_norm": 7,
+          "line_exact_norm_rate_gt": 0.4666666666666667,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPATIENT ANE DOE DOB 04021979\nDATE 01102026\nPRESCRIBER DR A AHMED MBBS\nPHARMACY NOFTHOATE HARMACY\nRX AMOXICHIN J0UHO CBOSUIES\nBAK OECAOSDETE IESCSD IT T00\nCOMDIETE IE TUL 0AY COUSE\nRX IBUPROFEN 400MG TABLETS\nEVERY ID NOUS GS REOU FE 1O 161\nMAXIMUM 1200MG IN 24 HOURS\nWARNING MAY CAUSE DROWSINESS\nDO NO ORIVE OF ODERAIE MBCMIBER\nKEE OUT OT REBCH OT CHOREN\nPHARMACIST R SILVA GPHC 20441",
+          "word_accuracy": 0.5342465753424658,
+          "cer": 0.2154696132596685,
+          "fields": [
+            "400mg"
+          ],
+          "punct_chars": 0,
+          "text_chars": 396,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "PATIENT ANE DOE DOB 04021979",
+            "DATE 01102026",
+            "PRESCRIBER DR A AHMED MBBS",
+            "PHARMACY NOFTHOATE HARMACY",
+            "RX AMOXICHIN J0UHO CBOSUIES",
+            "BAK OECAOSDETE IESCSD IT T00",
+            "COMDIETE IE TUL 0AY COUSE",
+            "RX IBUPROFEN 400MG TABLETS",
+            "EVERY ID NOUS GS REOU FE 1O 161",
+            "MAXIMUM 1200MG IN 24 HOURS",
+            "WARNING MAY CAUSE DROWSINESS",
+            "DO NO ORIVE OF ODERAIE MBCMIBER",
+            "KEE OUT OT REBCH OT CHOREN",
+            "PHARMACIST R SILVA GPHC 20441"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 3,
+          "line_exact_rate_gt": 0.2,
+          "line_exact_rate_hyp": 0.2,
+          "line_exact_norm": 7,
+          "line_exact_norm_rate_gt": 0.4666666666666667,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPATIENT ANE DOE DOB 04021979\nDATE 01102026\nPRESCRIBER DR A AHMED MBBS\nPHARMACY NOFTHOATE HARMACY\nRX AMOXICHIN J0UHO CBOSUIES\nBAK OECAOSDETE IESCSD IT T00\nCOMDIETE IE TUL 0AY COUSE\nRX IBUPROFEN 400MG TABLETS\nEVERY ID NOUS GS REOU RE 1O 161\nMAXIMUM 1200MG IN 24 HOURS\nWARNING MAY CAUSE DROWSINESS\nDO NO ORIVE OF ODERAIE MBCMIBER\nKEE OUT OT REBCH OT CHOREN\nPHARMACIST R SILVA GPHC 20441",
+          "word_accuracy": 0.5342465753424658,
+          "cer": 0.212707182320442,
+          "fields": [
+            "400mg"
+          ],
+          "punct_chars": 0,
+          "text_chars": 396,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "PATIENT ANE DOE DOB 04021979",
+            "DATE 01102026",
+            "PRESCRIBER DR A AHMED MBBS",
+            "PHARMACY NOFTHOATE HARMACY",
+            "RX AMOXICHIN J0UHO CBOSUIES",
+            "BAK OECAOSDETE IESCSD IT T00",
+            "COMDIETE IE TUL 0AY COUSE",
+            "RX IBUPROFEN 400MG TABLETS",
+            "EVERY ID NOUS GS REOU RE 1O 161",
+            "MAXIMUM 1200MG IN 24 HOURS",
+            "WARNING MAY CAUSE DROWSINESS",
+            "DO NO ORIVE OF ODERAIE MBCMIBER",
+            "KEE OUT OT REBCH OT CHOREN",
+            "PHARMACIST R SILVA GPHC 20441"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 2,
+          "line_exact_norm_rate_gt": 0.13333333333333333,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPatient\u2019 lane Une LB (4/2/1979\nDate: 01/10/7076\nPRESCRIBER Hr A Anmed MRS\nPharmacy: Nortndare rnarmacy\nAX mTTOXCHIT] JUUING CADSU/eS\nWAKE (TIE CACSUIE (TITRE LITTeS (ANY Will TOU)\nLOMDIELE Ie Tull / day COurSe\nRy lounroren 400ma tanlets\nPVETV O10 OTOUTS AS TRCUITEC 10) All)\nMaximum L200ma in 24 hours\nWARNIN(G may cause drowsiness\nUO NOLOTIVE OF ODE ALE MAChinlely\nAPBD OUT OT TRACT) OF COTE\nPharmaciet: Rk Siva GPAC (4d)",
+          "word_accuracy": 0.3013698630136986,
+          "cer": 0.3370165745856354,
+          "fields": [],
+          "punct_chars": 22,
+          "text_chars": 435,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "Patient\u2019 lane Une LB (4/2/1979",
+            "Date: 01/10/7076",
+            "PRESCRIBER Hr A Anmed MRS",
+            "Pharmacy: Nortndare rnarmacy",
+            "AX mTTOXCHIT] JUUING CADSU/eS",
+            "WAKE (TIE CACSUIE (TITRE LITTeS (ANY Will TOU)",
+            "LOMDIELE Ie Tull / day COurSe",
+            "Ry lounroren 400ma tanlets",
+            "PVETV O10 OTOUTS AS TRCUITEC 10) All)",
+            "Maximum L200ma in 24 hours",
+            "WARNIN(G may cause drowsiness",
+            "UO NOLOTIVE OF ODE ALE MAChinlely",
+            "APBD OUT OT TRACT) OF COTE",
+            "Pharmaciet: Rk Siva GPAC (4d)"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 9,
+          "line_exact_rate_gt": 0.6,
+          "line_exact_rate_hyp": 0.6,
+          "line_exact_norm": 9,
+          "line_exact_norm_rate_gt": 0.6,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPatient: Jane Doe DOB: 04/02/1979\nDate: 01/10/2026\nPRESCRIBER: Dr A. Ahmed, MBBS\nPharmacy: Northgate Pharmacy\nRx Amoxicillin 300mg capsules\nlake one capsule three times dally with foodq\nComplete the full / day course\nRx Ibuprofen 400mg tablets\nEvery 6 to 8 nours as required for pain\nMaximum 1200mgq in 24 hours\nWARNING: may cause drowsiness\nDo not drive or operate machinery\nKeep out of reach of cnilaren\nPharmacist: R. Silva GPhC 20441",
+          "word_accuracy": 0.9041095890410958,
+          "cer": 0.024861878453038673,
+          "fields": [
+            "400mg"
+          ],
+          "punct_chars": 15,
+          "text_chars": 450,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "Patient: Jane Doe DOB: 04/02/1979",
+            "Date: 01/10/2026",
+            "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "Pharmacy: Northgate Pharmacy",
+            "Rx Amoxicillin 300mg capsules",
+            "lake one capsule three times dally with foodq",
+            "Complete the full / day course",
+            "Rx Ibuprofen 400mg tablets",
+            "Every 6 to 8 nours as required for pain",
+            "Maximum 1200mgq in 24 hours",
+            "WARNING: may cause drowsiness",
+            "Do not drive or operate machinery",
+            "Keep out of reach of cnilaren",
+            "Pharmacist: R. Silva GPhC 20441"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 15,
+          "line_exact_rate_gt": 1.0,
+          "line_exact_rate_hyp": 1.0,
+          "line_exact_norm": 15,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPatient: Jane Doe DOB: 04/02/1979\nDate: 01/10/2026\nPRESCRIBER: Dr A. Ahmed, MBBS\nPharmacy: Northgate Pharmacy\nRx Amoxicillin 500mg capsules\nTake one capsule three times daily with food\nComplete the full 7 day course\nRx Ibuprofen 400mg tablets\nEvery 6 to 8 hours as required for pain\nMaximum 1200mg in 24 hours\nWARNING: may cause drowsiness\nDo not drive or operate machinery\nKeep out of reach of children\nPharmacist: R. Silva GPhC 20441",
+          "word_accuracy": 1.0,
+          "cer": 0.0,
+          "fields": [
+            "500mg",
+            "400mg"
+          ],
+          "punct_chars": 14,
+          "text_chars": 448,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "Patient: Jane Doe DOB: 04/02/1979",
+            "Date: 01/10/2026",
+            "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "Pharmacy: Northgate Pharmacy",
+            "Rx Amoxicillin 500mg capsules",
+            "Take one capsule three times daily with food",
+            "Complete the full 7 day course",
+            "Rx Ibuprofen 400mg tablets",
+            "Every 6 to 8 hours as required for pain",
+            "Maximum 1200mg in 24 hours",
+            "WARNING: may cause drowsiness",
+            "Do not drive or operate machinery",
+            "Keep out of reach of children",
+            "Pharmacist: R. Silva GPhC 20441"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "prescription",
+      "profile": "handheld_light",
+      "skew_deg": 0.0,
+      "n_bands": 15,
+      "n_gt_lines": 15,
+      "gt_lines": [
+        "PRESCRIPTION",
+        "Patient: Jane Doe   DOB: 04/02/1979",
+        "Date: 01/10/2026",
+        "PRESCRIBER: Dr A. Ahmed, MBBS",
+        "Pharmacy: Northgate Pharmacy",
+        "Rx  Amoxicillin 500mg capsules",
+        "Take one capsule three times daily with food",
+        "Complete the full 7 day course",
+        "Rx  Ibuprofen 400mg tablets",
+        "Every 6 to 8 hours as required for pain",
+        "Maximum 1200mg in 24 hours",
+        "WARNING: may cause drowsiness",
+        "Do not drive or operate machinery",
+        "Keep out of reach of children",
+        "Pharmacist: R. Silva  GPhC 20441"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 3,
+          "line_exact_rate_gt": 0.2,
+          "line_exact_rate_hyp": 0.2,
+          "line_exact_norm": 4,
+          "line_exact_norm_rate_gt": 0.26666666666666666,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPERENT JANE DOE DOB 04021979\nDATE 01102026\nPRESCRBER DR A AHMED MBS\nPHARMACY NORTHDATE PHAMAY\nRX AMOICILLIN 500MG CAPSULES\nSATE DNE COIDETHE TEREADALATH TOTL\nCOMPLETE THE HLL 7 DAY COURSE\nRX IBUPROFEN 400MG TABLETS\nEVERY 6 1 8 HOURS AS ROURED FO PAN\nMAXMUM 1200MG ON 24 HOURS\nWARNING MAY CAUSE DROWSINETS\nDO NOT DRIVE OR OPERSTE MACHINERY\nKEEP OUT OF REACH OF CHILDREN\nPHARMACIT R SILVA GPHC 2041",
+          "word_accuracy": 0.6712328767123288,
+          "cer": 0.12154696132596685,
+          "fields": [
+            "500mg",
+            "400mg"
+          ],
+          "punct_chars": 0,
+          "text_chars": 409,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "PERENT JANE DOE DOB 04021979",
+            "DATE 01102026",
+            "PRESCRBER DR A AHMED MBS",
+            "PHARMACY NORTHDATE PHAMAY",
+            "RX AMOICILLIN 500MG CAPSULES",
+            "SATE DNE COIDETHE TEREADALATH TOTL",
+            "COMPLETE THE HLL 7 DAY COURSE",
+            "RX IBUPROFEN 400MG TABLETS",
+            "EVERY 6 1 8 HOURS AS ROURED FO PAN",
+            "MAXMUM 1200MG ON 24 HOURS",
+            "WARNING MAY CAUSE DROWSINETS",
+            "DO NOT DRIVE OR OPERSTE MACHINERY",
+            "KEEP OUT OF REACH OF CHILDREN",
+            "PHARMACIT R SILVA GPHC 2041"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 2,
+          "line_exact_norm_rate_gt": 0.13333333333333333,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPERENT JANE DOE DOB 04021979\nDATE 01102026\nPRESCRBER DR A AMED MBBS\nPHARMACY NORTHDATE PHAMAY\nRX AMXCILLIN 500MG CAPSULES\nSTE DNE COWDETHE THEL DALYAST TOTL\nCOMPLETETHE FILL7 DAY COURSE\nRX BUPROFEN 400MG TABLETS\nEVERY T HOURS AS REOURNDFO PAIN\nMAXMUM 1200MG ON 24 HOURS\nWJARNING HAY CHAUDE DROWSINETD\nDO NOR GRIVE OR OPERATE MACHINERY\nKEEP OUT OF REACH OF CHILEREN\nPHARMACST R SILVE GPHC 2041",
+          "word_accuracy": 0.5205479452054794,
+          "cer": 0.14917127071823205,
+          "fields": [
+            "500mg",
+            "400mg"
+          ],
+          "punct_chars": 0,
+          "text_chars": 405,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "PERENT JANE DOE DOB 04021979",
+            "DATE 01102026",
+            "PRESCRBER DR A AMED MBBS",
+            "PHARMACY NORTHDATE PHAMAY",
+            "RX AMXCILLIN 500MG CAPSULES",
+            "STE DNE COWDETHE THEL DALYAST TOTL",
+            "COMPLETETHE FILL7 DAY COURSE",
+            "RX BUPROFEN 400MG TABLETS",
+            "EVERY T HOURS AS REOURNDFO PAIN",
+            "MAXMUM 1200MG ON 24 HOURS",
+            "WJARNING HAY CHAUDE DROWSINETD",
+            "DO NOR GRIVE OR OPERATE MACHINERY",
+            "KEEP OUT OF REACH OF CHILEREN",
+            "PHARMACST R SILVE GPHC 2041"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 0,
+          "line_exact_rate_gt": 0.0,
+          "line_exact_rate_hyp": 0.0,
+          "line_exact_norm": 0,
+          "line_exact_norm_rate_gt": 0.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "Pern EST\n\nwate Ci 1a.\nMi eet Yi ee\nAgnme Wsote Meme\n\n\u2018Dee aioe ee Pee ey at fae\nvaepete Be\u2019 a cane\n\nokt Lb al b&b. a. ba.\nMaeeve (Ades @ AAS\n\nweet meg aoe sateen\nlaren eee fore\n",
+          "word_accuracy": 0.0136986301369863,
+          "cer": 0.8066298342541437,
+          "fields": [],
+          "punct_chars": 9,
+          "text_chars": 172,
+          "hyp_lines": [
+            "Pern EST",
+            "",
+            "wate Ci 1a.",
+            "Mi eet Yi ee",
+            "Agnme Wsote Meme",
+            "",
+            "\u2018Dee aioe ee Pee ey at fae",
+            "vaepete Be\u2019 a cane",
+            "",
+            "okt Lb al b&b. a. ba.",
+            "Maeeve (Ades @ AAS",
+            "",
+            "weet meg aoe sateen",
+            "laren eee fore",
+            ""
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 0,
+          "line_exact_rate_gt": 0.0,
+          "line_exact_rate_hyp": 0.0,
+          "line_exact_norm": 0,
+          "line_exact_norm_rate_gt": 0.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "\nPebert Bre Dee OOS MOD 1S\nOete GL IOe0Go8\nPSESCESER OF A Armed \u201cESS\nmere) Vat gete Pema:\nRy emcee Oy caoewve\nwee ore (emt we Tews De: ae) eT te\nCam pete me! * oe. Came\n8. Rercte 2D-y ween\nEvery @ te 8 Sar 8: wQure per\nMaemur Leg \u00ab 246 Se\nRAEN em COL2e Foe e:\nOe ~t oe & cowete Hare\nAeee Ot of ee? of Carer\nPerwecet & Sive Get 2064)",
+          "word_accuracy": 0.0684931506849315,
+          "cer": 0.6685082872928176,
+          "fields": [],
+          "punct_chars": 20,
+          "text_chars": 331,
+          "hyp_lines": [
+            "",
+            "Pebert Bre Dee OOS MOD 1S",
+            "Oete GL IOe0Go8",
+            "PSESCESER OF A Armed \u201cESS",
+            "mere) Vat gete Pema:",
+            "Ry emcee Oy caoewve",
+            "wee ore (emt we Tews De: ae) eT te",
+            "Cam pete me! * oe. Came",
+            "8. Rercte 2D-y ween",
+            "Every @ te 8 Sar 8: wQure per",
+            "Maemur Leg \u00ab 246 Se",
+            "RAEN em COL2e Foe e:",
+            "Oe ~t oe & cowete Hare",
+            "Aeee Ot of ee? of Carer",
+            "Perwecet & Sive Get 2064)"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 1,
+          "line_exact_norm_rate_gt": 0.06666666666666667,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPemert bre Oe OOS OACD ISTE\nDate SLID\nPRESCRIBER OF A armen MESS\nPenme) Nom gete Pema,\nRy ame ce Oey capsver\nwee ore camtue Tewe Te: ae at te\nCompete he Sui * an, care\nRy Rercte 2g een\nEvery 6 te 8 Sours a: requred te per\nMarre Leg 6 Ne\nARNG Se cece Soetren:\nDe St ore & gees mare\nAeee At of we* Ff Cre\nPrerrecet & Sive Got 2044)",
+          "word_accuracy": 0.1232876712328767,
+          "cer": 0.5773480662983426,
+          "fields": [],
+          "punct_chars": 11,
+          "text_chars": 342,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "Pemert bre Oe OOS OACD ISTE",
+            "Date SLID",
+            "PRESCRIBER OF A armen MESS",
+            "Penme) Nom gete Pema,",
+            "Ry ame ce Oey capsver",
+            "wee ore camtue Tewe Te: ae at te",
+            "Compete he Sui * an, care",
+            "Ry Rercte 2g een",
+            "Every 6 te 8 Sours a: requred te per",
+            "Marre Leg 6 Ne",
+            "ARNG Se cece Soetren:",
+            "De St ore & gees mare",
+            "Aeee At of we* Ff Cre",
+            "Prerrecet & Sive Got 2044)"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "prescription",
+      "profile": "off_axis",
+      "skew_deg": -4.5,
+      "n_bands": 17,
+      "n_gt_lines": 15,
+      "gt_lines": [
+        "PRESCRIPTION",
+        "Patient: Jane Doe   DOB: 04/02/1979",
+        "Date: 01/10/2026",
+        "PRESCRIBER: Dr A. Ahmed, MBBS",
+        "Pharmacy: Northgate Pharmacy",
+        "Rx  Amoxicillin 500mg capsules",
+        "Take one capsule three times daily with food",
+        "Complete the full 7 day course",
+        "Rx  Ibuprofen 400mg tablets",
+        "Every 6 to 8 hours as required for pain",
+        "Maximum 1200mg in 24 hours",
+        "WARNING: may cause drowsiness",
+        "Do not drive or operate machinery",
+        "Keep out of reach of children",
+        "Pharmacist: R. Silva  GPhC 20441"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 17,
+          "line_exact": 2,
+          "line_exact_rate_gt": 0.13333333333333333,
+          "line_exact_rate_hyp": 0.11764705882352941,
+          "line_exact_norm": 5,
+          "line_exact_norm_rate_gt": 0.3333333333333333,
+          "line_inserted": 2,
+          "line_dropped": 0,
+          "text": "JLA30XOOLMMM\nPRESCRIPTION\nPATENT ANE DOE D0804021979\nDATE 01102026\nPRESCRIBER DR A AHMED MBBS\nPHARMACY NORTHDATE PHARMACY\nRX AMOXIXILIN 500M0 CADSULES\nBAKE ONE GAOSUETERE TINESCDALYWTH TOD\nCOMPLETE THE FUL 7 DAY COURSE\nRX IBUPROFEN 400MG TABLETS\nREOB R R O A\nUMEIE TO UD A\nWII I RN FO A \nUIES REP ER\nKEEP OUT OF REACH OF CHIDREN\nPHARMACIST R SILVA GPHC 20441\nRAXX OND NTH MANH NAS Y",
+          "word_accuracy": 0.4520547945205479,
+          "cer": 0.3756906077348066,
+          "fields": [
+            "400mg"
+          ],
+          "punct_chars": 0,
+          "text_chars": 381,
+          "hyp_lines": [
+            "JLA30XOOLMMM",
+            "PRESCRIPTION",
+            "PATENT ANE DOE D0804021979",
+            "DATE 01102026",
+            "PRESCRIBER DR A AHMED MBBS",
+            "PHARMACY NORTHDATE PHARMACY",
+            "RX AMOXIXILIN 500M0 CADSULES",
+            "BAKE ONE GAOSUETERE TINESCDALYWTH TOD",
+            "COMPLETE THE FUL 7 DAY COURSE",
+            "RX IBUPROFEN 400MG TABLETS",
+            "REOB R R O A",
+            "UMEIE TO UD A",
+            "WII I RN FO A ",
+            "UIES REP ER",
+            "KEEP OUT OF REACH OF CHIDREN",
+            "PHARMACIST R SILVA GPHC 20441",
+            "RAXX OND NTH MANH NAS Y"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 17,
+          "line_exact": 2,
+          "line_exact_rate_gt": 0.13333333333333333,
+          "line_exact_rate_hyp": 0.11764705882352941,
+          "line_exact_norm": 6,
+          "line_exact_norm_rate_gt": 0.4,
+          "line_inserted": 2,
+          "line_dropped": 0,
+          "text": "DLALLLL00JLDMM\nPRESCRIPTION\nPATENT ANE DOE D0804021979\nDATE 01102026\nPRESCRIBER DR A AHMED MBBS\nPHARMACY NORTHGATE PHARMACY\nRX AMOXIXILIN 500M0 CADSULES\nBAKE ONE GOSUETERE TINESCDALYWTH TOD\nCOMPLETE THE FUL 7 DAY COURSE\nRX IBUPROFEN 400MG TABLETS\nDREDB R R FODO A\nUIMIRE I TO D A\nWII DI EN O A \nPIEST E RG\nKEEP OUT OF REACH OF CHIDREN\nPHARMACIST R SILVA GPHC 20441\nRM ONDN N AN TAUATAL",
+          "word_accuracy": 0.4657534246575342,
+          "cer": 0.3784530386740331,
+          "fields": [
+            "400mg"
+          ],
+          "punct_chars": 0,
+          "text_chars": 384,
+          "hyp_lines": [
+            "DLALLLL00JLDMM",
+            "PRESCRIPTION",
+            "PATENT ANE DOE D0804021979",
+            "DATE 01102026",
+            "PRESCRIBER DR A AHMED MBBS",
+            "PHARMACY NORTHGATE PHARMACY",
+            "RX AMOXIXILIN 500M0 CADSULES",
+            "BAKE ONE GOSUETERE TINESCDALYWTH TOD",
+            "COMPLETE THE FUL 7 DAY COURSE",
+            "RX IBUPROFEN 400MG TABLETS",
+            "DREDB R R FODO A",
+            "UIMIRE I TO D A",
+            "WII DI EN O A ",
+            "PIEST E RG",
+            "KEEP OUT OF REACH OF CHIDREN",
+            "PHARMACIST R SILVA GPHC 20441",
+            "RM ONDN N AN TAUATAL"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 17,
+          "line_exact": 2,
+          "line_exact_rate_gt": 0.13333333333333333,
+          "line_exact_rate_hyp": 0.11764705882352941,
+          "line_exact_norm": 4,
+          "line_exact_norm_rate_gt": 0.26666666666666666,
+          "line_inserted": 2,
+          "line_dropped": 0,
+          "text": "Pe\nPRESCRIPTION\nPatient\u2019 lane Doe DOB: 04/02/1979\nDate: 01/10/2026\nPRESCRIBER: Dr A. Ahmed. MBBS\nrrarmacy\u2019 Northaate Fnarmacy\nRy Amoxicillin 500ma capsules\nTaxe one capsule three times daily with 100d\nComplete the full / day course\nRy Ibuprofen 400ma tablets\nMev/ATOA SA RUT CA\nHaig ana Rs\nVME\nNAC ATR E\nKeen out of reach of children\nPharmacist: R Silva GPhC 20441\n* SEU Mbine bine 7h inna Vshinmmsiny",
+          "word_accuracy": 0.5068493150684932,
+          "cer": 0.36464088397790057,
+          "fields": [],
+          "punct_chars": 15,
+          "text_chars": 401,
+          "hyp_lines": [
+            "Pe",
+            "PRESCRIPTION",
+            "Patient\u2019 lane Doe DOB: 04/02/1979",
+            "Date: 01/10/2026",
+            "PRESCRIBER: Dr A. Ahmed. MBBS",
+            "rrarmacy\u2019 Northaate Fnarmacy",
+            "Ry Amoxicillin 500ma capsules",
+            "Taxe one capsule three times daily with 100d",
+            "Complete the full / day course",
+            "Ry Ibuprofen 400ma tablets",
+            "Mev/ATOA SA RUT CA",
+            "Haig ana Rs",
+            "VME",
+            "NAC ATR E",
+            "Keen out of reach of children",
+            "Pharmacist: R Silva GPhC 20441",
+            "* SEU Mbine bine 7h inna Vshinmmsiny"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 17,
+          "line_exact": 14,
+          "line_exact_rate_gt": 0.9333333333333333,
+          "line_exact_rate_hyp": 0.8235294117647058,
+          "line_exact_norm": 14,
+          "line_exact_norm_rate_gt": 0.9333333333333333,
+          "line_inserted": 2,
+          "line_dropped": 0,
+          "text": "NSS\nPRESCRIPTION\nPatient: Jane Doe DOB: 04/02/1979\nDate: 01/10/2026\nPRESCRIBER: Dr A. Anmed, MBBS\nPharmacy: Northgate Pharmacy\nRx Amoxicillin 500mg capsules\nTake one capsule three times daily with food\nComplete the full 7 day course\nRx Ibuprofen 400mg tablets\nEvery 6 to 8 hours as required for pain\nMaximum 1200mg in 24 hours\nWARNING: may cause drowsiness\nDo not drive or operate machinery\nKeep out of reach of children\nPharmacist: R. Silva GPhC 20441\nOOOO EE ee |",
+          "word_accuracy": 0.9863013698630136,
+          "cer": 0.03314917127071823,
+          "fields": [
+            "500mg",
+            "400mg"
+          ],
+          "punct_chars": 15,
+          "text_chars": 465,
+          "hyp_lines": [
+            "NSS",
+            "PRESCRIPTION",
+            "Patient: Jane Doe DOB: 04/02/1979",
+            "Date: 01/10/2026",
+            "PRESCRIBER: Dr A. Anmed, MBBS",
+            "Pharmacy: Northgate Pharmacy",
+            "Rx Amoxicillin 500mg capsules",
+            "Take one capsule three times daily with food",
+            "Complete the full 7 day course",
+            "Rx Ibuprofen 400mg tablets",
+            "Every 6 to 8 hours as required for pain",
+            "Maximum 1200mg in 24 hours",
+            "WARNING: may cause drowsiness",
+            "Do not drive or operate machinery",
+            "Keep out of reach of children",
+            "Pharmacist: R. Silva GPhC 20441",
+            "OOOO EE ee |"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 15,
+          "line_exact_rate_gt": 1.0,
+          "line_exact_rate_hyp": 1.0,
+          "line_exact_norm": 15,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPatient: Jane Doe DOB: 04/02/1979\nDate: 01/10/2026\nPRESCRIBER: Dr A. Ahmed, MBBS\nPharmacy: Northgate Pharmacy\nRx Amoxicillin 500mg capsules\nTake one capsule three times daily with food\nComplete the full 7 day course\nRx Ibuprofen 400mg tablets\nEvery 6 to 8 hours as required for pain\nMaximum 1200mg in 24 hours\nWARNING: may cause drowsiness\nDo not drive or operate machinery\nKeep out of reach of children\nPharmacist: R. Silva GPhC 20441",
+          "word_accuracy": 1.0,
+          "cer": 0.0,
+          "fields": [
+            "500mg",
+            "400mg"
+          ],
+          "punct_chars": 14,
+          "text_chars": 448,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "Patient: Jane Doe DOB: 04/02/1979",
+            "Date: 01/10/2026",
+            "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "Pharmacy: Northgate Pharmacy",
+            "Rx Amoxicillin 500mg capsules",
+            "Take one capsule three times daily with food",
+            "Complete the full 7 day course",
+            "Rx Ibuprofen 400mg tablets",
+            "Every 6 to 8 hours as required for pain",
+            "Maximum 1200mg in 24 hours",
+            "WARNING: may cause drowsiness",
+            "Do not drive or operate machinery",
+            "Keep out of reach of children",
+            "Pharmacist: R. Silva GPhC 20441"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "prescription",
+      "profile": "jpeg_social",
+      "skew_deg": 0.0,
+      "n_bands": 15,
+      "n_gt_lines": 15,
+      "gt_lines": [
+        "PRESCRIPTION",
+        "Patient: Jane Doe   DOB: 04/02/1979",
+        "Date: 01/10/2026",
+        "PRESCRIBER: Dr A. Ahmed, MBBS",
+        "Pharmacy: Northgate Pharmacy",
+        "Rx  Amoxicillin 500mg capsules",
+        "Take one capsule three times daily with food",
+        "Complete the full 7 day course",
+        "Rx  Ibuprofen 400mg tablets",
+        "Every 6 to 8 hours as required for pain",
+        "Maximum 1200mg in 24 hours",
+        "WARNING: may cause drowsiness",
+        "Do not drive or operate machinery",
+        "Keep out of reach of children",
+        "Pharmacist: R. Silva  GPhC 20441"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 4,
+          "line_exact_rate_gt": 0.26666666666666666,
+          "line_exact_rate_hyp": 0.26666666666666666,
+          "line_exact_norm": 8,
+          "line_exact_norm_rate_gt": 0.5333333333333333,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPATENT JANE DOE DOB 04021979\nDATE 01102026\nPRESCRIBER DR A AHMED MBBS\nPHARMACY NORTHGATE PHARMACY\nRX AMOXICILIN 500MG CAPSULES\nBALE OME COSUE THE TRESDALYWTH TOD\nCOMPLETE THE FULL 7 DAY COURSE\nRX IBUPROFEN 400MG TABLETS\nEYVERY 6TO 8 HOURS S REQUIRED FORPAIN\nMAXIMUM 1200MG IN 24 HOURS\nWARNING MAY CAUSE DRCWSINESS\nDO NO DRIVE OR OPERATE MACHINERY\nKEEP OUT OF REACH OF CHIDREN\nPHARMACIST R SILVA GPHC 20441",
+          "word_accuracy": 0.7397260273972602,
+          "cer": 0.058011049723756904,
+          "fields": [
+            "500mg",
+            "400mg"
+          ],
+          "punct_chars": 0,
+          "text_chars": 418,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "PATENT JANE DOE DOB 04021979",
+            "DATE 01102026",
+            "PRESCRIBER DR A AHMED MBBS",
+            "PHARMACY NORTHGATE PHARMACY",
+            "RX AMOXICILIN 500MG CAPSULES",
+            "BALE OME COSUE THE TRESDALYWTH TOD",
+            "COMPLETE THE FULL 7 DAY COURSE",
+            "RX IBUPROFEN 400MG TABLETS",
+            "EYVERY 6TO 8 HOURS S REQUIRED FORPAIN",
+            "MAXIMUM 1200MG IN 24 HOURS",
+            "WARNING MAY CAUSE DRCWSINESS",
+            "DO NO DRIVE OR OPERATE MACHINERY",
+            "KEEP OUT OF REACH OF CHIDREN",
+            "PHARMACIST R SILVA GPHC 20441"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 5,
+          "line_exact_rate_gt": 0.3333333333333333,
+          "line_exact_rate_hyp": 0.3333333333333333,
+          "line_exact_norm": 9,
+          "line_exact_norm_rate_gt": 0.6,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPATENT JANE DOE DOB 04021979\nDATE 01102026\nPRESCRIBER DR A AHMED MBBS\nPHARMACY NORTHGATE PHARMACY\nRX AMOXICILIN 500MG CAPSULES\nJALE OME COCSUE TE THRESDALYWITH TOD\nCOMPLETE THE FULL 7 DAY COURSE\nRX IBUPROFEN 400MG TABLETS\nEVERY 6TO 8 HOURS S REQUIRED FORPAIN\nMAXIMUM 1200MG IN 24 HOURS\nWARNING MAY CUSE DRCWSINESS\nDO NO DRIVE OR OPERATE MACHINERY\nKEEP OUT OF REACH OF CHILDREN\nPHARMACIST R SILVA GPHC 20441",
+          "word_accuracy": 0.7534246575342466,
+          "cer": 0.055248618784530384,
+          "fields": [
+            "500mg",
+            "400mg"
+          ],
+          "punct_chars": 0,
+          "text_chars": 419,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "PATENT JANE DOE DOB 04021979",
+            "DATE 01102026",
+            "PRESCRIBER DR A AHMED MBBS",
+            "PHARMACY NORTHGATE PHARMACY",
+            "RX AMOXICILIN 500MG CAPSULES",
+            "JALE OME COCSUE TE THRESDALYWITH TOD",
+            "COMPLETE THE FULL 7 DAY COURSE",
+            "RX IBUPROFEN 400MG TABLETS",
+            "EVERY 6TO 8 HOURS S REQUIRED FORPAIN",
+            "MAXIMUM 1200MG IN 24 HOURS",
+            "WARNING MAY CUSE DRCWSINESS",
+            "DO NO DRIVE OR OPERATE MACHINERY",
+            "KEEP OUT OF REACH OF CHILDREN",
+            "PHARMACIST R SILVA GPHC 20441"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 6,
+          "line_exact_rate_gt": 0.4,
+          "line_exact_rate_hyp": 0.4,
+          "line_exact_norm": 7,
+          "line_exact_norm_rate_gt": 0.4666666666666667,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPatient: lane Doe DOB: 04/02/1979\nDate: 01/10/2026\nPRESCRIBER\u2019 Dr A. Ahmed, MBBS\nPharmacy. Northaate Pharmacy\nRx Amoxicillin 500ma capsules\nTaka one capsule three times daily with food\nComplete the full / day course\nRx Ibuprofen 400ma tablets\nEvery 6 to 8 hours as required for pain\nMaximum 1200ma in 24 hours\nWARNING: may cause drowsiness\nDo not drive or operate machinery\nKeep out of reach of children\nPharmacist: R. Silva GPAC 2044]",
+          "word_accuracy": 0.8767123287671232,
+          "cer": 0.024861878453038673,
+          "fields": [],
+          "punct_chars": 16,
+          "text_chars": 448,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "Patient: lane Doe DOB: 04/02/1979",
+            "Date: 01/10/2026",
+            "PRESCRIBER\u2019 Dr A. Ahmed, MBBS",
+            "Pharmacy. Northaate Pharmacy",
+            "Rx Amoxicillin 500ma capsules",
+            "Taka one capsule three times daily with food",
+            "Complete the full / day course",
+            "Rx Ibuprofen 400ma tablets",
+            "Every 6 to 8 hours as required for pain",
+            "Maximum 1200ma in 24 hours",
+            "WARNING: may cause drowsiness",
+            "Do not drive or operate machinery",
+            "Keep out of reach of children",
+            "Pharmacist: R. Silva GPAC 2044]"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 13,
+          "line_exact_rate_gt": 0.8666666666666667,
+          "line_exact_rate_hyp": 0.8666666666666667,
+          "line_exact_norm": 14,
+          "line_exact_norm_rate_gt": 0.9333333333333333,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPatient: jane Doe DOB: 04/02/1979\nDate: 01/10/2026\nPRESCRIBER: Dr A. Ahmed, MBBS\nPharmacy: Northgate Pharmacy\nRx Amoxicillin 500mg capsules\n\u2018Take one capsule three times daily with food\nComplete the full 7 day course\nRx Ibuprofen 400mg tabiets\nEvery 6 to 8 hours as required for pain\nMaximum 1200mg in 24 hours\nWARNING: may cause drowsiness\nDo not drive or operate machinery\nKeep out of reach of children\nPharmacist: R. Silva GPhC 20441",
+          "word_accuracy": 0.9863013698630136,
+          "cer": 0.0027624309392265192,
+          "fields": [
+            "500mg",
+            "400mg"
+          ],
+          "punct_chars": 15,
+          "text_chars": 449,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "Patient: jane Doe DOB: 04/02/1979",
+            "Date: 01/10/2026",
+            "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "Pharmacy: Northgate Pharmacy",
+            "Rx Amoxicillin 500mg capsules",
+            "\u2018Take one capsule three times daily with food",
+            "Complete the full 7 day course",
+            "Rx Ibuprofen 400mg tabiets",
+            "Every 6 to 8 hours as required for pain",
+            "Maximum 1200mg in 24 hours",
+            "WARNING: may cause drowsiness",
+            "Do not drive or operate machinery",
+            "Keep out of reach of children",
+            "Pharmacist: R. Silva GPhC 20441"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 15,
+          "line_exact_rate_gt": 1.0,
+          "line_exact_rate_hyp": 1.0,
+          "line_exact_norm": 15,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "PRESCRIPTION\nPatient: jane Doe DOB: 04/02/1979\nDate: 01/10/2026\nPRESCRIBER: Dr A. Ahmed, MBBS\nPharmacy: Northgate Pharmacy\nRx Amoxicillin 500mg capsules\nTake one capsule three times daily with food\nComplete the full 7 day course\nRx Ibuprofen 400mg tablets\nEvery 6 to 8 hours as required for pain\nMaximum 1200mg in 24 hours\nWARNING: may cause drowsiness\nDo not drive or operate machinery\nKeep out of reach of children\nPharmacist: R. Silva GPhC 20441",
+          "word_accuracy": 1.0,
+          "cer": 0.0,
+          "fields": [
+            "500mg",
+            "400mg"
+          ],
+          "punct_chars": 14,
+          "text_chars": 448,
+          "hyp_lines": [
+            "PRESCRIPTION",
+            "Patient: jane Doe DOB: 04/02/1979",
+            "Date: 01/10/2026",
+            "PRESCRIBER: Dr A. Ahmed, MBBS",
+            "Pharmacy: Northgate Pharmacy",
+            "Rx Amoxicillin 500mg capsules",
+            "Take one capsule three times daily with food",
+            "Complete the full 7 day course",
+            "Rx Ibuprofen 400mg tablets",
+            "Every 6 to 8 hours as required for pain",
+            "Maximum 1200mg in 24 hours",
+            "WARNING: may cause drowsiness",
+            "Do not drive or operate machinery",
+            "Keep out of reach of children",
+            "Pharmacist: R. Silva GPhC 20441"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "banking",
+      "profile": "studio_clean",
+      "skew_deg": 0.0,
+      "n_bands": 17,
+      "n_gt_lines": 17,
+      "gt_lines": [
+        "HSBC UK BANK PLC",
+        "Statement of Account",
+        "Account Holder: John Smith",
+        "Account Number: 40218877",
+        "Sort Code: 40-11-04",
+        "Period: 01/03 - 31/03/2026",
+        "Opening Balance        GBP 1,204.33",
+        "01/03 SALARY CREDIT   GBP 2,900.00",
+        "01/03 RENT DD 1100     GBP -1,100.00",
+        "08/03 TESCO STORES     GBP -44.19",
+        "14/03 BRITISH GAS DD   GBP -89.99",
+        "19/03 ATM WITHDRAWAL   GBP -200.00",
+        "22/03 CASHBACK         GBP +12.40",
+        "Deposits total         GBP 2,912.40",
+        "Withdrawals total      GBP -1,434.18",
+        "Closing Balance        GBP 2,682.55",
+        "Card ending 4521 available funds 2,100.00"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.058823529411764705,
+          "line_exact_rate_hyp": 0.058823529411764705,
+          "line_exact_norm": 10,
+          "line_exact_norm_rate_gt": 0.5882352941176471,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nSTATEMENT OT ACCOUNT\nACCOUNT HOLDER ON IR\nACCOUNT NUMBER 40218877\nSORT CODE 401104\nPERIOD 0103 31032026\nOOENING BALANCE GBP 120433\n0103 SALARY CREDIT GBP 290000\n0103 RENT DD 1100 GBP 110000\n0803 TESCO STORES GBP 4419\n1403 BRITISH GAS DD GBP 8999\n1903 ATM WITHDRAWAL GBP 20000\n22103 CASHBACK GBP 1240\nDEDOSTS TOTAL GBP 291240\nWITHORAWALS TOTAL GBP 143418\nCLOSING BALANCE GBP 268255\nCARS ENDING 4521 AWAL DE FUNDS 21000",
+          "word_accuracy": 0.8513513513513513,
+          "cer": 0.051351351351351354,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 0,
+          "text_chars": 434,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "STATEMENT OT ACCOUNT",
+            "ACCOUNT HOLDER ON IR",
+            "ACCOUNT NUMBER 40218877",
+            "SORT CODE 401104",
+            "PERIOD 0103 31032026",
+            "OOENING BALANCE GBP 120433",
+            "0103 SALARY CREDIT GBP 290000",
+            "0103 RENT DD 1100 GBP 110000",
+            "0803 TESCO STORES GBP 4419",
+            "1403 BRITISH GAS DD GBP 8999",
+            "1903 ATM WITHDRAWAL GBP 20000",
+            "22103 CASHBACK GBP 1240",
+            "DEDOSTS TOTAL GBP 291240",
+            "WITHORAWALS TOTAL GBP 143418",
+            "CLOSING BALANCE GBP 268255",
+            "CARS ENDING 4521 AWAL DE FUNDS 21000"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.058823529411764705,
+          "line_exact_rate_hyp": 0.058823529411764705,
+          "line_exact_norm": 10,
+          "line_exact_norm_rate_gt": 0.5882352941176471,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nSTATEMENT OT ACCOUNT\nACCOUNT HOLDER ON IR\nACCOUNT NUMBER 40218877\nSORT CODE 401104\nPERIOD 0103 31032026\nOOENING BALANCE GBP 120433\n0103 SALARY CREDIT GBP 290000\n0103 RENT DD 1100 GBP 110000\n0803 TESCO STORES GBP 4419\n1403 BRITISH GAS DD GBP 8999\n1903 ATM WITHDRAWAL GBP 20000\n22103 CASHBACK GBP 1240\nDEDOSTS TOTAL GBP 291240\nWITHORAWALS TOTAL GBP 143418\nCLOSING BALANCE GBP 268255\nCARS ENDING 4521 AWAL DE FUNDS 21000",
+          "word_accuracy": 0.8513513513513513,
+          "cer": 0.051351351351351354,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 0,
+          "text_chars": 434,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "STATEMENT OT ACCOUNT",
+            "ACCOUNT HOLDER ON IR",
+            "ACCOUNT NUMBER 40218877",
+            "SORT CODE 401104",
+            "PERIOD 0103 31032026",
+            "OOENING BALANCE GBP 120433",
+            "0103 SALARY CREDIT GBP 290000",
+            "0103 RENT DD 1100 GBP 110000",
+            "0803 TESCO STORES GBP 4419",
+            "1403 BRITISH GAS DD GBP 8999",
+            "1903 ATM WITHDRAWAL GBP 20000",
+            "22103 CASHBACK GBP 1240",
+            "DEDOSTS TOTAL GBP 291240",
+            "WITHORAWALS TOTAL GBP 143418",
+            "CLOSING BALANCE GBP 268255",
+            "CARS ENDING 4521 AWAL DE FUNDS 21000"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 2,
+          "line_exact_rate_gt": 0.11764705882352941,
+          "line_exact_rate_hyp": 0.11764705882352941,
+          "line_exact_norm": 2,
+          "line_exact_norm_rate_gt": 0.11764705882352941,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nSLALEMeNt OF ACCOUNT\nACCOUNT AQIWE JON SMI\nAccount Number: 402188 //\nSort Code: 40-11-04\nParing\u2019 O1/03 - 31/03/2076\nOnening Balance = RP. | 0d 33\n1/03 SALARY CREDIT GRP 2 900.00)\nN38 RENT DD LOO = GRR! 100 00\nO83 TESCO STORES = GRR \u00abdd 19\nTAI BRITISH GAS DD) GRP -89 99\n19/03 ATM WITRDRAWAL GBP (1) 010)\nPINS CASHBACK = GBR +1) A)\nHenosits total = GRR 291) di)\nWithorawals total GBP-| 43d 18\nClasing Balance = GRP.) 68755\nCard ending 4571 avallanietunds 2 100) UU)",
+          "word_accuracy": 0.5540540540540541,
+          "cer": 0.21621621621621623,
+          "fields": [
+            "40-11-04"
+          ],
+          "punct_chars": 41,
+          "text_chars": 481,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "SLALEMeNt OF ACCOUNT",
+            "ACCOUNT AQIWE JON SMI",
+            "Account Number: 402188 //",
+            "Sort Code: 40-11-04",
+            "Paring\u2019 O1/03 - 31/03/2076",
+            "Onening Balance = RP. | 0d 33",
+            "1/03 SALARY CREDIT GRP 2 900.00)",
+            "N38 RENT DD LOO = GRR! 100 00",
+            "O83 TESCO STORES = GRR \u00abdd 19",
+            "TAI BRITISH GAS DD) GRP -89 99",
+            "19/03 ATM WITRDRAWAL GBP (1) 010)",
+            "PINS CASHBACK = GBR +1) A)",
+            "Henosits total = GRR 291) di)",
+            "Withorawals total GBP-| 43d 18",
+            "Clasing Balance = GRP.) 68755",
+            "Card ending 4571 avallanietunds 2 100) UU)"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 14,
+          "line_exact_rate_gt": 0.8235294117647058,
+          "line_exact_rate_hyp": 0.8235294117647058,
+          "line_exact_norm": 17,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nStatement of Account\nAccount Holder: john Smith\nAccount Number: 40218877\nSort Code: 40-11-04\nPeriod: 01/03 - 31/03/2026\nOpening Balance GBP 1,204.33\n01/03 SALARY CREDIT GBP 2,900.00\n01/03 RENT DD1100 GBP-1,100.00\n08/03 TESCO STORES GBP-44.19\n14/03 BRITISH GAS DD _ GBP -89.99\n19/03 ATM WITHDRAWAL GBP -200.00\n22/03 CASHBACK GBP +12.40\nDeposits total GBP 2,912.40\nWithdrawals total GBP -1,434.18\nClosing Balance GBP 2,682.55\nCard ending 4521 available funds 2,100.00",
+          "word_accuracy": 0.9594594594594594,
+          "cer": 0.0,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 41,
+          "text_chars": 482,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "Statement of Account",
+            "Account Holder: john Smith",
+            "Account Number: 40218877",
+            "Sort Code: 40-11-04",
+            "Period: 01/03 - 31/03/2026",
+            "Opening Balance GBP 1,204.33",
+            "01/03 SALARY CREDIT GBP 2,900.00",
+            "01/03 RENT DD1100 GBP-1,100.00",
+            "08/03 TESCO STORES GBP-44.19",
+            "14/03 BRITISH GAS DD _ GBP -89.99",
+            "19/03 ATM WITHDRAWAL GBP -200.00",
+            "22/03 CASHBACK GBP +12.40",
+            "Deposits total GBP 2,912.40",
+            "Withdrawals total GBP -1,434.18",
+            "Closing Balance GBP 2,682.55",
+            "Card ending 4521 available funds 2,100.00"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 15,
+          "line_exact_rate_gt": 0.8823529411764706,
+          "line_exact_rate_hyp": 0.8823529411764706,
+          "line_exact_norm": 17,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nStatement of Account\nAccount Holder: John Smith\nAccount Number: 40218877\nSort Code: 40-11-04\nPeriod: 01/03 - 31/03/2026\nOpening Balance GBP 1,204.33\n01/03 SALARY CREDIT GBP 2,900.00\n01/03 RENTDD1100_ GBP -1,100.00\n08/03 TESCO STORES GBP -44.19\n14/03 BRITISH GAS DD _ GBP -89.99\n19/03 ATM WITHDRAWAL GBP -200.00\n22/03 CASHBACK GBP +12.40\nDeposits total GBP 2,912.40\nWithdrawals total GBP -1,434.18\nClosing Balance GBP 2,682.55\nCard ending 4521 available funds 2,100.00",
+          "word_accuracy": 0.972972972972973,
+          "cer": 0.0,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 42,
+          "text_chars": 484,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "Statement of Account",
+            "Account Holder: John Smith",
+            "Account Number: 40218877",
+            "Sort Code: 40-11-04",
+            "Period: 01/03 - 31/03/2026",
+            "Opening Balance GBP 1,204.33",
+            "01/03 SALARY CREDIT GBP 2,900.00",
+            "01/03 RENTDD1100_ GBP -1,100.00",
+            "08/03 TESCO STORES GBP -44.19",
+            "14/03 BRITISH GAS DD _ GBP -89.99",
+            "19/03 ATM WITHDRAWAL GBP -200.00",
+            "22/03 CASHBACK GBP +12.40",
+            "Deposits total GBP 2,912.40",
+            "Withdrawals total GBP -1,434.18",
+            "Closing Balance GBP 2,682.55",
+            "Card ending 4521 available funds 2,100.00"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "banking",
+      "profile": "handheld_light",
+      "skew_deg": 0.0,
+      "n_bands": 17,
+      "n_gt_lines": 17,
+      "gt_lines": [
+        "HSBC UK BANK PLC",
+        "Statement of Account",
+        "Account Holder: John Smith",
+        "Account Number: 40218877",
+        "Sort Code: 40-11-04",
+        "Period: 01/03 - 31/03/2026",
+        "Opening Balance        GBP 1,204.33",
+        "01/03 SALARY CREDIT   GBP 2,900.00",
+        "01/03 RENT DD 1100     GBP -1,100.00",
+        "08/03 TESCO STORES     GBP -44.19",
+        "14/03 BRITISH GAS DD   GBP -89.99",
+        "19/03 ATM WITHDRAWAL   GBP -200.00",
+        "22/03 CASHBACK         GBP +12.40",
+        "Deposits total         GBP 2,912.40",
+        "Withdrawals total      GBP -1,434.18",
+        "Closing Balance        GBP 2,682.55",
+        "Card ending 4521 available funds 2,100.00"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 2,
+          "line_exact_rate_gt": 0.11764705882352941,
+          "line_exact_rate_hyp": 0.11764705882352941,
+          "line_exact_norm": 10,
+          "line_exact_norm_rate_gt": 0.5882352941176471,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nSTATEMENT OF ACCOUNT\nACCOUNT HOLDER JOHN SMITH\nACOUNT NUMBER 40218877\nSORT CODE 401104\nPERIOD 0103 31032026\nOPENING BALANCE GBP 120433\n0103 SALARY CREDIT GBP 290000\n0103 RENT DD 1100 GBP 110000\n0003 TESCO STORES GBP 4419\n1403 BRITISH GAS DD GBP 899\n1901 ATM WITHDRAWAL GBP 0000\n2203 CASHBACK GBP 1240\nDEPOSITS TOTAL GBP 291240\nWITHDRWALS TOTAL GBP 143418\nOSING BALANCE GBP 268255\nCRT ENDNG 521 MAABE IOND 21000",
+          "word_accuracy": 0.8243243243243243,
+          "cer": 0.05675675675675676,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 0,
+          "text_chars": 427,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "STATEMENT OF ACCOUNT",
+            "ACCOUNT HOLDER JOHN SMITH",
+            "ACOUNT NUMBER 40218877",
+            "SORT CODE 401104",
+            "PERIOD 0103 31032026",
+            "OPENING BALANCE GBP 120433",
+            "0103 SALARY CREDIT GBP 290000",
+            "0103 RENT DD 1100 GBP 110000",
+            "0003 TESCO STORES GBP 4419",
+            "1403 BRITISH GAS DD GBP 899",
+            "1901 ATM WITHDRAWAL GBP 0000",
+            "2203 CASHBACK GBP 1240",
+            "DEPOSITS TOTAL GBP 291240",
+            "WITHDRWALS TOTAL GBP 143418",
+            "OSING BALANCE GBP 268255",
+            "CRT ENDNG 521 MAABE IOND 21000"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 2,
+          "line_exact_rate_gt": 0.11764705882352941,
+          "line_exact_rate_hyp": 0.11764705882352941,
+          "line_exact_norm": 11,
+          "line_exact_norm_rate_gt": 0.6470588235294118,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nSTATEMENT OF ACCOUNT\nACOUNT HOLDER JOHN SMITH\nACOUNT NUMBER 40218877\nSORT CODE 401104\nPERIOD 010331032026\nOPENING BALANCE GBP 120433\n0103 SALARY CREDIT GBP 290000\n0103 RENT DD 1100 GBP 110000\n0803 TESCO STORES GBP 4419\n1403 BRTISH GAS DD GBP 899\n1901 AM WITHDRAWAL GBP 20000\n2203 CASHBACK GBP 1240\nDEPOSITS TOTAL GBP 291240\nWITHDRAWALS TOTAL GBP 143418\nCOSING BALANCE GBP 268255\nCAT ENDNG S21 MAABE IOND 21000",
+          "word_accuracy": 0.8243243243243243,
+          "cer": 0.05675675675675676,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 0,
+          "text_chars": 426,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "STATEMENT OF ACCOUNT",
+            "ACOUNT HOLDER JOHN SMITH",
+            "ACOUNT NUMBER 40218877",
+            "SORT CODE 401104",
+            "PERIOD 010331032026",
+            "OPENING BALANCE GBP 120433",
+            "0103 SALARY CREDIT GBP 290000",
+            "0103 RENT DD 1100 GBP 110000",
+            "0803 TESCO STORES GBP 4419",
+            "1403 BRTISH GAS DD GBP 899",
+            "1901 AM WITHDRAWAL GBP 20000",
+            "2203 CASHBACK GBP 1240",
+            "DEPOSITS TOTAL GBP 291240",
+            "WITHDRAWALS TOTAL GBP 143418",
+            "COSING BALANCE GBP 268255",
+            "CAT ENDNG S21 MAABE IOND 21000"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 0,
+          "line_exact_rate_gt": 0.0,
+          "line_exact_rate_hyp": 0.0,
+          "line_exact_norm": 0,
+          "line_exact_norm_rate_gt": 0.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSA UE BANE PLC\nVrteret YF acact\nA&A Sar of bee\ncrust Wete 2218\nSort Cee 2311\nfees (10) JLCI AS\n\nCLO) Va CR? GP a\nLSD alae\nBONO, \u00ab6G ae\nHOUR Sa ae\nWO OP\nIt hO 6 Ll ee\neetibhe 606 IL\nWeeveitts GF lik\nUe ieeee | 6 CE\nCyt etry A) needa Van IN",
+          "word_accuracy": 0.05405405405405406,
+          "cer": 0.7864864864864864,
+          "fields": [],
+          "punct_chars": 9,
+          "text_chars": 238,
+          "hyp_lines": [
+            "HSA UE BANE PLC",
+            "Vrteret YF acact",
+            "A&A Sar of bee",
+            "crust Wete 2218",
+            "Sort Cee 2311",
+            "fees (10) JLCI AS",
+            "",
+            "CLO) Va CR? GP a",
+            "LSD alae",
+            "BONO, \u00ab6G ae",
+            "HOUR Sa ae",
+            "WO OP",
+            "It hO 6 Ll ee",
+            "eetibhe 606 IL",
+            "Weeveitts GF lik",
+            "Ue ieeee | 6 CE",
+            "Cyt etry A) needa Van IN"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 0,
+          "line_exact_rate_gt": 0.0,
+          "line_exact_rate_hyp": 0.0,
+          "line_exact_norm": 0,
+          "line_exact_norm_rate_gt": 0.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "SEC UK BANE PLC\nQerwret wf Aco\na act wee et See\n&ccouet Num@er S02 1887?\nSet Code 43-11-06\nSeret O10} JL ORION\nQeesee Geerce GRP 1D RD\nOL) SALAeY CREDT Ger 2 SOO OO\nSLSR SENT OO Le GP Lice\nCeGs TESCO STORES GP 448\n\n1\u00ae03 2\u00a5 wr \u2122ORemm, \u00ab(SF lOO\n2D) CaS~meck er ella\nDepest: te Gar leila\nWeeecet tere GFF 14M 18\nOwary boaxve ar >) ee) 8S\n(Cart exting \u00a3S21 eveteme Sram 1 1",
+          "word_accuracy": 0.08108108108108109,
+          "cer": 0.6405405405405405,
+          "fields": [],
+          "punct_chars": 21,
+          "text_chars": 368,
+          "hyp_lines": [
+            "SEC UK BANE PLC",
+            "Qerwret wf Aco",
+            "a act wee et See",
+            "&ccouet Num@er S02 1887?",
+            "Set Code 43-11-06",
+            "Seret O10} JL ORION",
+            "Qeesee Geerce GRP 1D RD",
+            "OL) SALAeY CREDT Ger 2 SOO OO",
+            "SLSR SENT OO Le GP Lice",
+            "CeGs TESCO STORES GP 448",
+            "",
+            "1\u00ae03 2\u00a5 wr \u2122ORemm, \u00ab(SF lOO",
+            "2D) CaS~meck er ella",
+            "Depest: te Gar leila",
+            "Weeecet tere GFF 14M 18",
+            "Owary boaxve ar >) ee) 8S",
+            "(Cart exting \u00a3S21 eveteme Sram 1 1"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 0,
+          "line_exact_rate_gt": 0.0,
+          "line_exact_rate_hyp": 0.0,
+          "line_exact_norm": 0,
+          "line_exact_norm_rate_gt": 0.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "NSEC UK BANK PLC\nSerene of kcort\nArt ee Et Se\nAcogurt Nomoer S021 887*\nSort Cage 23.218\nPeres CLO} SLOP\nGeeneg ieee 8 GBP 1LD\u00e9 DD\nCLO SALARY CREDIT GSP 2 900 0D\nSUSPRENTOO INS GE. 19o00\nCSCS TESCO STORES GRP 4219\n140) BETS GAS OO GaP 8 88\nTHO) 27M GTORA \u00abGBP DOO OO\ni203 CASNRAK Pelle\nDescrt: Ice Ger tele\nWeeeces tee GBP .14M 1S\nOseey feaxe er 2682 SS\nCare ermng E821 eveeene Sn D1 OS",
+          "word_accuracy": 0.2972972972972973,
+          "cer": 0.5648648648648649,
+          "fields": [],
+          "punct_chars": 10,
+          "text_chars": 385,
+          "hyp_lines": [
+            "NSEC UK BANK PLC",
+            "Serene of kcort",
+            "Art ee Et Se",
+            "Acogurt Nomoer S021 887*",
+            "Sort Cage 23.218",
+            "Peres CLO} SLOP",
+            "Geeneg ieee 8 GBP 1LD\u00e9 DD",
+            "CLO SALARY CREDIT GSP 2 900 0D",
+            "SUSPRENTOO INS GE. 19o00",
+            "CSCS TESCO STORES GRP 4219",
+            "140) BETS GAS OO GaP 8 88",
+            "THO) 27M GTORA \u00abGBP DOO OO",
+            "i203 CASNRAK Pelle",
+            "Descrt: Ice Ger tele",
+            "Weeeces tee GBP .14M 1S",
+            "Oseey feaxe er 2682 SS",
+            "Care ermng E821 eveeene Sn D1 OS"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "banking",
+      "profile": "off_axis",
+      "skew_deg": -3.5,
+      "n_bands": 19,
+      "n_gt_lines": 17,
+      "gt_lines": [
+        "HSBC UK BANK PLC",
+        "Statement of Account",
+        "Account Holder: John Smith",
+        "Account Number: 40218877",
+        "Sort Code: 40-11-04",
+        "Period: 01/03 - 31/03/2026",
+        "Opening Balance        GBP 1,204.33",
+        "01/03 SALARY CREDIT   GBP 2,900.00",
+        "01/03 RENT DD 1100     GBP -1,100.00",
+        "08/03 TESCO STORES     GBP -44.19",
+        "14/03 BRITISH GAS DD   GBP -89.99",
+        "19/03 ATM WITHDRAWAL   GBP -200.00",
+        "22/03 CASHBACK         GBP +12.40",
+        "Deposits total         GBP 2,912.40",
+        "Withdrawals total      GBP -1,434.18",
+        "Closing Balance        GBP 2,682.55",
+        "Card ending 4521 available funds 2,100.00"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 19,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.058823529411764705,
+          "line_exact_rate_hyp": 0.05263157894736842,
+          "line_exact_norm": 5,
+          "line_exact_norm_rate_gt": 0.29411764705882354,
+          "line_inserted": 2,
+          "line_dropped": 0,
+          "text": "NENE \nHSBC UK BANK PLC\nSTABTEMENT OT ACCOUNT\nACCOUNT HOLDER JOHN SMITH\nACCOUNT NUMBER 40218877\nSORT CODE 401104\nPEROD 010331032026\n OPEING BLANCE GBP120433\n 0103 SALARY CREDT GBP 29000\n0103 RENT D110 GBP11000\n0803 TESCO STORES GBP 4419\nNSPRESOE D D 21\nBDRARA  LD L 2\n20010 HDA 312\nP4RIN BA3132\nMHOSLIG BTANLE 0131\nQMLDUNG GAB B111\nQTRTREADED D D B 4\nXRNNIT A2 DP PNAMITEY",
+          "word_accuracy": 0.4594594594594595,
+          "cer": 0.3891891891891892,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 0,
+          "text_chars": 367,
+          "hyp_lines": [
+            "NENE ",
+            "HSBC UK BANK PLC",
+            "STABTEMENT OT ACCOUNT",
+            "ACCOUNT HOLDER JOHN SMITH",
+            "ACCOUNT NUMBER 40218877",
+            "SORT CODE 401104",
+            "PEROD 010331032026",
+            " OPEING BLANCE GBP120433",
+            " 0103 SALARY CREDT GBP 29000",
+            "0103 RENT D110 GBP11000",
+            "0803 TESCO STORES GBP 4419",
+            "NSPRESOE D D 21",
+            "BDRARA  LD L 2",
+            "20010 HDA 312",
+            "P4RIN BA3132",
+            "MHOSLIG BTANLE 0131",
+            "QMLDUNG GAB B111",
+            "QTRTREADED D D B 4",
+            "XRNNIT A2 DP PNAMITEY"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 19,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.058823529411764705,
+          "line_exact_rate_hyp": 0.05263157894736842,
+          "line_exact_norm": 5,
+          "line_exact_norm_rate_gt": 0.29411764705882354,
+          "line_inserted": 2,
+          "line_dropped": 0,
+          "text": "1R UN HADENTR \nHSBC UK BANK PLC\nSTABTEMENT OT ACCOUNT\nACCOUNT HOLDER JOHN SMITH\nACCOUNT NUMBER 40218877\nSORT CODE 401104\n  PEROD 010331032026\nL OPEINGBLANCE GBP120433\nL 0103SALARY CREDT GBP 29000\n 0103 RENT D110 GBP11000\n0803 TESCO STORES GBP 4419\nNSPRESOUE D D 211\nBDNARA  AA L GP 2\n200100 HDA12\n00IN3 BA03132\nMHOHLRIN BTANCE 131\nCLDENG GABE BP2851\nQTRPREDNED D B 24\nAX NIN AXAWBPNT Y",
+          "word_accuracy": 0.44594594594594594,
+          "cer": 0.3918918918918919,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 0,
+          "text_chars": 380,
+          "hyp_lines": [
+            "1R UN HADENTR ",
+            "HSBC UK BANK PLC",
+            "STABTEMENT OT ACCOUNT",
+            "ACCOUNT HOLDER JOHN SMITH",
+            "ACCOUNT NUMBER 40218877",
+            "SORT CODE 401104",
+            "  PEROD 010331032026",
+            "L OPEINGBLANCE GBP120433",
+            "L 0103SALARY CREDT GBP 29000",
+            " 0103 RENT D110 GBP11000",
+            "0803 TESCO STORES GBP 4419",
+            "NSPRESOUE D D 211",
+            "BDNARA  AA L GP 2",
+            "200100 HDA12",
+            "00IN3 BA03132",
+            "MHOHLRIN BTANCE 131",
+            "CLDENG GABE BP2851",
+            "QTRPREDNED D B 24",
+            "AX NIN AXAWBPNT Y"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 19,
+          "line_exact": 4,
+          "line_exact_rate_gt": 0.23529411764705882,
+          "line_exact_rate_hyp": 0.21052631578947367,
+          "line_exact_norm": 4,
+          "line_exact_norm_rate_gt": 0.23529411764705882,
+          "line_inserted": 2,
+          "line_dropped": 0,
+          "text": "i\nHSBC UK BANK PLC\nSLaLement OF ACCOUNL\nAccount Holder: john Smith\nAccount Number: 40218877\nSort Code: 40-11-04\nPeriod: Q1/03 - 31/03/2026\nOpening Balance GRP 1 204.33\n(4/03 SALARY CREDIT GRP 2 900.00\nQUO3 RENT OD L100 GBP! 100,00\n8/03 TESCO STORES GBP 44.19\nMSA SHES) GH A\nWIS WTDAML GR A\nINCH Gel)\nDees) (RPI)\nWtoaweg te GHA\nWeseobiune GRP\nwytrone leah O00)\nSETI etteettacesetemnncere|",
+          "word_accuracy": 0.5135135135135135,
+          "cer": 0.4189189189189189,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 25,
+          "text_chars": 387,
+          "hyp_lines": [
+            "i",
+            "HSBC UK BANK PLC",
+            "SLaLement OF ACCOUNL",
+            "Account Holder: john Smith",
+            "Account Number: 40218877",
+            "Sort Code: 40-11-04",
+            "Period: Q1/03 - 31/03/2026",
+            "Opening Balance GRP 1 204.33",
+            "(4/03 SALARY CREDIT GRP 2 900.00",
+            "QUO3 RENT OD L100 GBP! 100,00",
+            "8/03 TESCO STORES GBP 44.19",
+            "MSA SHES) GH A",
+            "WIS WTDAML GR A",
+            "INCH Gel)",
+            "Dees) (RPI)",
+            "Wtoaweg te GHA",
+            "Weseobiune GRP",
+            "wytrone leah O00)",
+            "SETI etteettacesetemnncere|"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 19,
+          "line_exact": 15,
+          "line_exact_rate_gt": 0.8823529411764706,
+          "line_exact_rate_hyp": 0.7894736842105263,
+          "line_exact_norm": 17,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 2,
+          "line_dropped": 0,
+          "text": "Ae\nHSBC UK BANK PLC\nStatement of Account\nAccount Holder: John Smith\nAccount Number: 40218877\nSort Code: 40-11-04\nPeriod: 01/03 - 31/03/2026\nOpening Balance GBP 1,204.33\n01/03 SALARY CREDIT GBP 2,900.00\n01/03 RENTDD1100 GBP-1,100.00\n08/03 TESCO STORES GBP -44.19\n14/03 BRITISH GAS DD _ GBP -89.99\n19/03 ATM WITHDRAWAL GBP -200.00\n22/03 CASHBACK GBP +12.40\nDeposits total GBP 2,912.40\nWithdrawals total GBP -1,434.18\nClosing Balance GBP 2,682.55\nCard ending 4521 available funds 2,100.00\na",
+          "word_accuracy": 0.9594594594594594,
+          "cer": 0.008108108108108109,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 41,
+          "text_chars": 487,
+          "hyp_lines": [
+            "Ae",
+            "HSBC UK BANK PLC",
+            "Statement of Account",
+            "Account Holder: John Smith",
+            "Account Number: 40218877",
+            "Sort Code: 40-11-04",
+            "Period: 01/03 - 31/03/2026",
+            "Opening Balance GBP 1,204.33",
+            "01/03 SALARY CREDIT GBP 2,900.00",
+            "01/03 RENTDD1100 GBP-1,100.00",
+            "08/03 TESCO STORES GBP -44.19",
+            "14/03 BRITISH GAS DD _ GBP -89.99",
+            "19/03 ATM WITHDRAWAL GBP -200.00",
+            "22/03 CASHBACK GBP +12.40",
+            "Deposits total GBP 2,912.40",
+            "Withdrawals total GBP -1,434.18",
+            "Closing Balance GBP 2,682.55",
+            "Card ending 4521 available funds 2,100.00",
+            "a"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 18,
+          "line_exact": 15,
+          "line_exact_rate_gt": 0.8823529411764706,
+          "line_exact_rate_hyp": 0.8333333333333334,
+          "line_exact_norm": 16,
+          "line_exact_norm_rate_gt": 0.9411764705882353,
+          "line_inserted": 1,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nStatement of Account\nAccount Holder: John Smith\nAccount Number: 40218877\nSort Code: 40-11-04\nPeriod: 01/03 - 31/03/2026\nOpening Balance GBP 1,204.33\n01/03 SALARY CREDIT GBP 2,900.00\n01/03 RENTDD1100 GBP -1,100.00\n08/03 TESCO STORES GBP -44.19\n14/03 BRITISH GAS DD GBP -89.99\n19/03 ATM WITHDRAWAL GBP -200.00\n22/03 CASHBACK\nGBP +12.40\nDeposits total GBP 2,912.40\nWithdrawals total GBP -1,434.18\nClosing Balance GBP 2,682.55\nCard ending 4521 available funds 2,100.00",
+          "word_accuracy": 0.972972972972973,
+          "cer": 0.0,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 40,
+          "text_chars": 481,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "Statement of Account",
+            "Account Holder: John Smith",
+            "Account Number: 40218877",
+            "Sort Code: 40-11-04",
+            "Period: 01/03 - 31/03/2026",
+            "Opening Balance GBP 1,204.33",
+            "01/03 SALARY CREDIT GBP 2,900.00",
+            "01/03 RENTDD1100 GBP -1,100.00",
+            "08/03 TESCO STORES GBP -44.19",
+            "14/03 BRITISH GAS DD GBP -89.99",
+            "19/03 ATM WITHDRAWAL GBP -200.00",
+            "22/03 CASHBACK",
+            "GBP +12.40",
+            "Deposits total GBP 2,912.40",
+            "Withdrawals total GBP -1,434.18",
+            "Closing Balance GBP 2,682.55",
+            "Card ending 4521 available funds 2,100.00"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "banking",
+      "profile": "jpeg_social",
+      "skew_deg": 0.0,
+      "n_bands": 17,
+      "n_gt_lines": 17,
+      "gt_lines": [
+        "HSBC UK BANK PLC",
+        "Statement of Account",
+        "Account Holder: John Smith",
+        "Account Number: 40218877",
+        "Sort Code: 40-11-04",
+        "Period: 01/03 - 31/03/2026",
+        "Opening Balance        GBP 1,204.33",
+        "01/03 SALARY CREDIT   GBP 2,900.00",
+        "01/03 RENT DD 1100     GBP -1,100.00",
+        "08/03 TESCO STORES     GBP -44.19",
+        "14/03 BRITISH GAS DD   GBP -89.99",
+        "19/03 ATM WITHDRAWAL   GBP -200.00",
+        "22/03 CASHBACK         GBP +12.40",
+        "Deposits total         GBP 2,912.40",
+        "Withdrawals total      GBP -1,434.18",
+        "Closing Balance        GBP 2,682.55",
+        "Card ending 4521 available funds 2,100.00"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 2,
+          "line_exact_rate_gt": 0.11764705882352941,
+          "line_exact_rate_hyp": 0.11764705882352941,
+          "line_exact_norm": 13,
+          "line_exact_norm_rate_gt": 0.7647058823529411,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nSTATEMENT OF ACCOUNT\nACCOUNT HOLDER JOHN SMTH\nACCOUNT NUMBER 40218877\nSORT CODE 401104\nPERIOD 0103 31032026\nOPENING BALANCE GBP 120433\n0103 SALARY CREDIT GBP290000\n0103 RENT DD 1100 GBP 110000\n0803 TESCO STORES GBP 4419\n1403 BRITISH GAS DD GBP 8999\n1903 ATM WITHDRAWAL GBP 20000\n2203 CASHBACK GBP 1240\nDEPOSITS TOTAL GBP 291240\nWITHDRAWASTOTAL GBP 143418\nCOSING BALANCE GBP 268255\nCARY ENDNG 4521AYALABE FUND 21000",
+          "word_accuracy": 0.8513513513513513,
+          "cer": 0.02702702702702703,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 0,
+          "text_chars": 431,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "STATEMENT OF ACCOUNT",
+            "ACCOUNT HOLDER JOHN SMTH",
+            "ACCOUNT NUMBER 40218877",
+            "SORT CODE 401104",
+            "PERIOD 0103 31032026",
+            "OPENING BALANCE GBP 120433",
+            "0103 SALARY CREDIT GBP290000",
+            "0103 RENT DD 1100 GBP 110000",
+            "0803 TESCO STORES GBP 4419",
+            "1403 BRITISH GAS DD GBP 8999",
+            "1903 ATM WITHDRAWAL GBP 20000",
+            "2203 CASHBACK GBP 1240",
+            "DEPOSITS TOTAL GBP 291240",
+            "WITHDRAWASTOTAL GBP 143418",
+            "COSING BALANCE GBP 268255",
+            "CARY ENDNG 4521AYALABE FUND 21000"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 2,
+          "line_exact_rate_gt": 0.11764705882352941,
+          "line_exact_rate_hyp": 0.11764705882352941,
+          "line_exact_norm": 12,
+          "line_exact_norm_rate_gt": 0.7058823529411765,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nSTATEMENT OF ACCOUNT\nACEOUNT HOLDER JOHN SMTH\nACCOUNT NUMBER 40218877\nSORT CODE 401104\nPERIOD 010331032026\nOPENING BALANCE GBP 120433\n0103 SALARY CREDIT GBP290000\n0103 RENT DD 1100 GBP 110000\n0803 TESCO STORES GBP 4419\n1403 BRITISH GAS DD GBP 8999\n1903 ATM WTHDRAWAL GBP 20000\n2203 CASHBACK GBP 1240\nDEPOSITS TOTAL GBP 291240\nWITHDRAWAS TOTAL GBP 143418\nCOSING BALANCE GBP 268255\nCARY ENDNG 4521AYALABE FUND 21000",
+          "word_accuracy": 0.8243243243243243,
+          "cer": 0.032432432432432434,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 0,
+          "text_chars": 430,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "STATEMENT OF ACCOUNT",
+            "ACEOUNT HOLDER JOHN SMTH",
+            "ACCOUNT NUMBER 40218877",
+            "SORT CODE 401104",
+            "PERIOD 010331032026",
+            "OPENING BALANCE GBP 120433",
+            "0103 SALARY CREDIT GBP290000",
+            "0103 RENT DD 1100 GBP 110000",
+            "0803 TESCO STORES GBP 4419",
+            "1403 BRITISH GAS DD GBP 8999",
+            "1903 ATM WTHDRAWAL GBP 20000",
+            "2203 CASHBACK GBP 1240",
+            "DEPOSITS TOTAL GBP 291240",
+            "WITHDRAWAS TOTAL GBP 143418",
+            "COSING BALANCE GBP 268255",
+            "CARY ENDNG 4521AYALABE FUND 21000"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 5,
+          "line_exact_rate_gt": 0.29411764705882354,
+          "line_exact_rate_hyp": 0.29411764705882354,
+          "line_exact_norm": 11,
+          "line_exact_norm_rate_gt": 0.6470588235294118,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSAC UK BANK PLC\nStatement of Account\nAccount Holder john Smith\nAccount Number 402188/7\nSort Code: 40-11-04\nPeriod: 01/03 - 31/03/2026\nOpening Balance \u00a9 GBP }.204.33\n01/03 SALARY CREDIT GBP 2,900.00\nO03 RENT OD 1100 GBP +1 100,00\nOB/03 TESCO STORES GBP 44.19\n14/03 BRITISH GAS DD GBP -89.99\n19/03 ATM WITHDRAWAL GBP +200,00\n22/03 CASHBACK GBP +1240\nDeposits total GBP 2912.40\nWithdrawals total GBP +1. 434.18\nClosing Balance = GBP. 2.682. 55\nCord ending 452) available funds 2100.00",
+          "word_accuracy": 0.8783783783783784,
+          "cer": 0.02702702702702703,
+          "fields": [
+            "40-11-04"
+          ],
+          "punct_chars": 38,
+          "text_chars": 482,
+          "hyp_lines": [
+            "HSAC UK BANK PLC",
+            "Statement of Account",
+            "Account Holder john Smith",
+            "Account Number 402188/7",
+            "Sort Code: 40-11-04",
+            "Period: 01/03 - 31/03/2026",
+            "Opening Balance \u00a9 GBP }.204.33",
+            "01/03 SALARY CREDIT GBP 2,900.00",
+            "O03 RENT OD 1100 GBP +1 100,00",
+            "OB/03 TESCO STORES GBP 44.19",
+            "14/03 BRITISH GAS DD GBP -89.99",
+            "19/03 ATM WITHDRAWAL GBP +200,00",
+            "22/03 CASHBACK GBP +1240",
+            "Deposits total GBP 2912.40",
+            "Withdrawals total GBP +1. 434.18",
+            "Closing Balance = GBP. 2.682. 55",
+            "Cord ending 452) available funds 2100.00"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 14,
+          "line_exact_rate_gt": 0.8235294117647058,
+          "line_exact_rate_hyp": 0.8235294117647058,
+          "line_exact_norm": 16,
+          "line_exact_norm_rate_gt": 0.9411764705882353,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nStatement of Account\nAccount Holder: john Smith\nAccount Number: 40218877\nSort Code: 40-11-04\nPeriod: 01/03 - 31/03/2026\nOpening Balance GBP 1,204.33\n01/03 SALARY CREDIT GBP 2,900.00\n01/03 RENTDD1100 GBP-1,100.00\n08/03 TESCOSTORES GBP-44.19\n14/03 BRITISH GAS DD GBP -89.99\n19/03 ATM WITHDRAWAL GBP -200.00\n22/03 CASHBACK GBP +12.40\nDeposits total GBP 2,912.40\nWithdrawals totel GBP -1,434.18\nClosing Balance GBP 2,682.55\nCard ending 4521 available funds 2,100.00",
+          "word_accuracy": 0.918918918918919,
+          "cer": 0.002702702702702703,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 40,
+          "text_chars": 478,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "Statement of Account",
+            "Account Holder: john Smith",
+            "Account Number: 40218877",
+            "Sort Code: 40-11-04",
+            "Period: 01/03 - 31/03/2026",
+            "Opening Balance GBP 1,204.33",
+            "01/03 SALARY CREDIT GBP 2,900.00",
+            "01/03 RENTDD1100 GBP-1,100.00",
+            "08/03 TESCOSTORES GBP-44.19",
+            "14/03 BRITISH GAS DD GBP -89.99",
+            "19/03 ATM WITHDRAWAL GBP -200.00",
+            "22/03 CASHBACK GBP +12.40",
+            "Deposits total GBP 2,912.40",
+            "Withdrawals totel GBP -1,434.18",
+            "Closing Balance GBP 2,682.55",
+            "Card ending 4521 available funds 2,100.00"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 17,
+          "n_engine_lines": 17,
+          "line_exact": 15,
+          "line_exact_rate_gt": 0.8823529411764706,
+          "line_exact_rate_hyp": 0.8823529411764706,
+          "line_exact_norm": 17,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "HSBC UK BANK PLC\nStatement of Account\nAccount Holder: John Smith\nAccount Number: 40218877\nSort Code: 40-11-04\nPeriod: 01/03 - 31/03/2026\nOpening Balance GBP 1,204.33\n01/03 SALARY CREDIT GBP 2,900.00\n01/03 RENTDD1100 GBP -1,100.00\n08/03 TESCO STORES GBP-44.19\n14/03 BRITISH GAS DD GBP -89.99\n19/03 ATM WITHDRAWAL GBP -200.00\n22/03 CASHBACK GBP +12.40\nDeposits total GBP 2,912.40\nWithdrawals total GBP -1,434.18\nClosing Balance GBP 2,682.55\nCard ending 4521 available funds 2,100.00",
+          "word_accuracy": 0.9594594594594594,
+          "cer": 0.0,
+          "fields": [
+            "40218877",
+            "40-11-04"
+          ],
+          "punct_chars": 40,
+          "text_chars": 480,
+          "hyp_lines": [
+            "HSBC UK BANK PLC",
+            "Statement of Account",
+            "Account Holder: John Smith",
+            "Account Number: 40218877",
+            "Sort Code: 40-11-04",
+            "Period: 01/03 - 31/03/2026",
+            "Opening Balance GBP 1,204.33",
+            "01/03 SALARY CREDIT GBP 2,900.00",
+            "01/03 RENTDD1100 GBP -1,100.00",
+            "08/03 TESCO STORES GBP-44.19",
+            "14/03 BRITISH GAS DD GBP -89.99",
+            "19/03 ATM WITHDRAWAL GBP -200.00",
+            "22/03 CASHBACK GBP +12.40",
+            "Deposits total GBP 2,912.40",
+            "Withdrawals total GBP -1,434.18",
+            "Closing Balance GBP 2,682.55",
+            "Card ending 4521 available funds 2,100.00"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "legal",
+      "profile": "studio_clean",
+      "skew_deg": 0.0,
+      "n_bands": 15,
+      "n_gt_lines": 15,
+      "gt_lines": [
+        "LEASE AGREEMENT",
+        "This agreement is made on 15 January 2024",
+        "BETWEEN: The Landlord (1) and The Tenant (2)",
+        "PROPERTY: 123 Baker Street, London NW1 6XE",
+        "TERM: 24 months from 1 February 2024",
+        "Clause 3.2  Rent",
+        "The Tenant shall pay rent of 2,500 per month",
+        "in advance on the first day of each month",
+        "Clause 5.1  Termination",
+        "Either party may terminate with two months",
+        "written notice served on the other party",
+        "Clause 7.4  Deposit",
+        "A deposit of 5,000 is held and protected",
+        "SIGNED on behalf of both parties",
+        "Case Reference: 2024-CV-00456"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 2,
+          "line_exact_norm_rate_gt": 0.13333333333333333,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nMS BOREMENIS MEOEDO 6HUA UA4\nBETWEEN THELANDLORD 1 AND THE TENT2 \nPROCERTY123 BAE STE LONDONN1 6KE\nTERM 24 MONTIS FROM 1 FEBRUANY 2024\nOUSE 5 REIT\nTHE TENANTSHAL DAY ENTO 250 0E MONTH\nN AOKAICE ON DE T SEDAY OTE0 HO4C\nLOUSE 3M\nEOE N TETINDE E EN ONDS\nWITE IOICESENVED ON THE ODE DAR\nGLOUSE A UEDOST\nA DEDCST OF 500 S HELD AND PROTECEC\nSIGNED ON BEHALF OF BOTH DARTIES\nCASE REFERENCE 2024CV00456",
+          "word_accuracy": 0.4111111111111111,
+          "cer": 0.3073170731707317,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 0,
+          "text_chars": 409,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "MS BOREMENIS MEOEDO 6HUA UA4",
+            "BETWEEN THELANDLORD 1 AND THE TENT2 ",
+            "PROCERTY123 BAE STE LONDONN1 6KE",
+            "TERM 24 MONTIS FROM 1 FEBRUANY 2024",
+            "OUSE 5 REIT",
+            "THE TENANTSHAL DAY ENTO 250 0E MONTH",
+            "N AOKAICE ON DE T SEDAY OTE0 HO4C",
+            "LOUSE 3M",
+            "EOE N TETINDE E EN ONDS",
+            "WITE IOICESENVED ON THE ODE DAR",
+            "GLOUSE A UEDOST",
+            "A DEDCST OF 500 S HELD AND PROTECEC",
+            "SIGNED ON BEHALF OF BOTH DARTIES",
+            "CASE REFERENCE 2024CV00456"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 2,
+          "line_exact_norm_rate_gt": 0.13333333333333333,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nMS BOREMENIS MEOEO 6HUA UA4\nBETWEEN THELANDLORD 1 AND THE TENT2 \nPROCERTY123 BAE STE LONDONN1 6KE\nTERM 24 MONTIS FROM 1 FEBRUARY 2024\nOUSE 5 REIT\nTHE TEMANTSHAL DAY ENTO 250 0E MONTH\nN AOKAICE ON DE T SEDAY OTE0 HO4C\nLOUSE 3M\nEOE 0N TETINDE E EN ONDS\nWITE IOICESENVED ON THE ODE DAR\nCLOUSE A UEDOST\nA DEDCST OF 500 S HELD AND PROTECEC\nSIGNED ON BEHALF OF BOTH DARTIES\nCASE REFERENCE 2024CV00456",
+          "word_accuracy": 0.4222222222222222,
+          "cer": 0.3048780487804878,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 0,
+          "text_chars": 409,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "MS BOREMENIS MEOEO 6HUA UA4",
+            "BETWEEN THELANDLORD 1 AND THE TENT2 ",
+            "PROCERTY123 BAE STE LONDONN1 6KE",
+            "TERM 24 MONTIS FROM 1 FEBRUARY 2024",
+            "OUSE 5 REIT",
+            "THE TEMANTSHAL DAY ENTO 250 0E MONTH",
+            "N AOKAICE ON DE T SEDAY OTE0 HO4C",
+            "LOUSE 3M",
+            "EOE 0N TETINDE E EN ONDS",
+            "WITE IOICESENVED ON THE ODE DAR",
+            "CLOUSE A UEDOST",
+            "A DEDCST OF 500 S HELD AND PROTECEC",
+            "SIGNED ON BEHALF OF BOTH DARTIES",
+            "CASE REFERENCE 2024CV00456"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 1,
+          "line_exact_norm_rate_gt": 0.06666666666666667,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nIHS ACHR ITIP VS TTC CN) LS TANUATY Zc\nBETWEEN The Landlord (Land 1ne lenant (7)\nPRUJPERTY' 13 Raver Strat London NW! Ake\nTERM 7d montns from | renruary 2074\nLialSe 582 ReNL\nThe Tenant shall nay rant or 2 5{I) ner month\nWH) MOVATICE ON TIE TIPSU AY QO) BACT) ITIL)\nClause 3) Jeninauon\nHer ATTY TTIAY CUTTIVALE Witt) CWO) (TICITLIS\nWETTEN FIQUICE SeYVER ON TI OIE! DArTy\nLialsSe / & VeDOSIL\nA denasit of 5 QU) is held and protected\nSIGNED on pehalt of both parties\nCase Retarance\u2019 7()7d-CV-0()d56",
+          "word_accuracy": 0.45555555555555555,
+          "cer": 0.35609756097560974,
+          "fields": [],
+          "punct_chars": 28,
+          "text_chars": 511,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "IHS ACHR ITIP VS TTC CN) LS TANUATY Zc",
+            "BETWEEN The Landlord (Land 1ne lenant (7)",
+            "PRUJPERTY' 13 Raver Strat London NW! Ake",
+            "TERM 7d montns from | renruary 2074",
+            "LialSe 582 ReNL",
+            "The Tenant shall nay rant or 2 5{I) ner month",
+            "WH) MOVATICE ON TIE TIPSU AY QO) BACT) ITIL)",
+            "Clause 3) Jeninauon",
+            "Her ATTY TTIAY CUTTIVALE Witt) CWO) (TICITLIS",
+            "WETTEN FIQUICE SeYVER ON TI OIE! DArTy",
+            "LialsSe / & VeDOSIL",
+            "A denasit of 5 QU) is held and protected",
+            "SIGNED on pehalt of both parties",
+            "Case Retarance\u2019 7()7d-CV-0()d56"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 12,
+          "line_exact_rate_gt": 0.8,
+          "line_exact_rate_hyp": 0.8,
+          "line_exact_norm": 12,
+          "line_exact_norm_rate_gt": 0.8,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nThis agreement is made on 15 January 2024\nBETWEEN: The Landlord (1) and The Tenant (2)\nPROPERTY: 123 Baker Street, London NW1 6XE\nTERM: 24 months from 1 February 2024\nClause 3.2 Rent\nThe Tenant shall pay rent of 2,500 per month\nIn advance on the first day of each month\nClause 5.1 lermination\nEitner party may terminate with two months\nwritten notice served on the other party\nClause /.4 Deposit\nA deposit of 5,000 is held and protected\nSIGNED on behalf of both parties\nCase Reference: 2024-CV-00456",
+          "word_accuracy": 0.9666666666666667,
+          "cer": 0.007317073170731708,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 17,
+          "text_chars": 515,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "This agreement is made on 15 January 2024",
+            "BETWEEN: The Landlord (1) and The Tenant (2)",
+            "PROPERTY: 123 Baker Street, London NW1 6XE",
+            "TERM: 24 months from 1 February 2024",
+            "Clause 3.2 Rent",
+            "The Tenant shall pay rent of 2,500 per month",
+            "In advance on the first day of each month",
+            "Clause 5.1 lermination",
+            "Eitner party may terminate with two months",
+            "written notice served on the other party",
+            "Clause /.4 Deposit",
+            "A deposit of 5,000 is held and protected",
+            "SIGNED on behalf of both parties",
+            "Case Reference: 2024-CV-00456"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 15,
+          "line_exact_rate_gt": 1.0,
+          "line_exact_rate_hyp": 1.0,
+          "line_exact_norm": 15,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nThis agreement is made on 15 January 2024\nBETWEEN: The Landlord (1) and The Tenant (2)\nPROPERTY: 123 Baker Street, London NW1 6XE\nTERM: 24 months from 1 February 2024\nClause 3.2 Rent\nThe Tenant shall pay rent of 2,500 per month\nin advance on the first day of each month\nClause 5.1 Termination\nEither party may terminate with two months\nwritten notice served on the other party\nClause 7.4 Deposit\nA deposit of 5,000 is held and protected\nSIGNED on behalf of both parties\nCase Reference: 2024-CV-00456",
+          "word_accuracy": 1.0,
+          "cer": 0.0,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 16,
+          "text_chars": 515,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "This agreement is made on 15 January 2024",
+            "BETWEEN: The Landlord (1) and The Tenant (2)",
+            "PROPERTY: 123 Baker Street, London NW1 6XE",
+            "TERM: 24 months from 1 February 2024",
+            "Clause 3.2 Rent",
+            "The Tenant shall pay rent of 2,500 per month",
+            "in advance on the first day of each month",
+            "Clause 5.1 Termination",
+            "Either party may terminate with two months",
+            "written notice served on the other party",
+            "Clause 7.4 Deposit",
+            "A deposit of 5,000 is held and protected",
+            "SIGNED on behalf of both parties",
+            "Case Reference: 2024-CV-00456"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "legal",
+      "profile": "handheld_light",
+      "skew_deg": 0.0,
+      "n_bands": 15,
+      "n_gt_lines": 15,
+      "gt_lines": [
+        "LEASE AGREEMENT",
+        "This agreement is made on 15 January 2024",
+        "BETWEEN: The Landlord (1) and The Tenant (2)",
+        "PROPERTY: 123 Baker Street, London NW1 6XE",
+        "TERM: 24 months from 1 February 2024",
+        "Clause 3.2  Rent",
+        "The Tenant shall pay rent of 2,500 per month",
+        "in advance on the first day of each month",
+        "Clause 5.1  Termination",
+        "Either party may terminate with two months",
+        "written notice served on the other party",
+        "Clause 7.4  Deposit",
+        "A deposit of 5,000 is held and protected",
+        "SIGNED on behalf of both parties",
+        "Case Reference: 2024-CV-00456"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 6,
+          "line_exact_norm_rate_gt": 0.4,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nTHA APRERENTS MACDEOM 1S ANURY 2024\nBETWEN THE LANDLORD 1 ANDTHE TENANT 2\nPORETY 12 BTE ROAE JANOAN YD 6BLE\nTERM 24 MONTHS FROM 1 FEBRUARY 2024\nCLAUSE 32 RENT\nTHE TENOFT HAT PER ANT 200 PE MOHS\nMNADRANCE ON THETHIT DAY DFAD MONTBH\nCLAUSE 51 TERMINATION\nEDE DANY HA TOEMHEATEYET TO HIOTAL\nWPTIEN NOLC TENED ON THE DE AT\nCLAUSE 74 DEPOSIT\nA DEPETEF 100 S HED ANG PROTACIEE\nSIGNED ON BEHALF OF BOTH PATES\nCASE REFERENCE 2024CV00456",
+          "word_accuracy": 0.5555555555555556,
+          "cer": 0.2658536585365854,
+          "fields": [
+            "2024-CV-00456"
+          ],
+          "punct_chars": 0,
+          "text_chars": 444,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "THA APRERENTS MACDEOM 1S ANURY 2024",
+            "BETWEN THE LANDLORD 1 ANDTHE TENANT 2",
+            "PORETY 12 BTE ROAE JANOAN YD 6BLE",
+            "TERM 24 MONTHS FROM 1 FEBRUARY 2024",
+            "CLAUSE 32 RENT",
+            "THE TENOFT HAT PER ANT 200 PE MOHS",
+            "MNADRANCE ON THETHIT DAY DFAD MONTBH",
+            "CLAUSE 51 TERMINATION",
+            "EDE DANY HA TOEMHEATEYET TO HIOTAL",
+            "WPTIEN NOLC TENED ON THE DE AT",
+            "CLAUSE 74 DEPOSIT",
+            "A DEPETEF 100 S HED ANG PROTACIEE",
+            "SIGNED ON BEHALF OF BOTH PATES",
+            "CASE REFERENCE 2024CV00456"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 5,
+          "line_exact_norm_rate_gt": 0.3333333333333333,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nTHA APXERENT MADEOM 1 ANURY 2024\nBETWEN THE LANDLERD 1 AND TE TENANT 2\nPORIT 12 ATE ROAE LANDOR E BIE\nTERM 24 MONTHS FROM 1 FBRUARY 2024\nCLAUSE 32 RENT\nTHE TENOTHAT BER ANT 2 00 PE MOTS\nNASBRENCE ON THE THT DAY DFAD MONTBH\nCLAUSE 51 TERMINATION\nEDOE DAT HA TRETHAYETB TO BOND1\nSETEN NEL TENDED ON THE DHER AT\nCLAUSE 74 DEPOSIT\n4 PEPESTE I00 A HELE ANG PRTECASE\nSIGNED ON BEHALF OF BOTH PATES\nCASE REFERENCE 2024CV00456",
+          "word_accuracy": 0.5444444444444444,
+          "cer": 0.2951219512195122,
+          "fields": [
+            "2024-CV-00456"
+          ],
+          "punct_chars": 0,
+          "text_chars": 434,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "THA APXERENT MADEOM 1 ANURY 2024",
+            "BETWEN THE LANDLERD 1 AND TE TENANT 2",
+            "PORIT 12 ATE ROAE LANDOR E BIE",
+            "TERM 24 MONTHS FROM 1 FBRUARY 2024",
+            "CLAUSE 32 RENT",
+            "THE TENOTHAT BER ANT 2 00 PE MOTS",
+            "NASBRENCE ON THE THT DAY DFAD MONTBH",
+            "CLAUSE 51 TERMINATION",
+            "EDOE DAT HA TRETHAYETB TO BOND1",
+            "SETEN NEL TENDED ON THE DHER AT",
+            "CLAUSE 74 DEPOSIT",
+            "4 PEPESTE I00 A HELE ANG PRTECASE",
+            "SIGNED ON BEHALF OF BOTH PATES",
+            "CASE REFERENCE 2024CV00456"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 1,
+          "line_exact_norm_rate_gt": 0.06666666666666667,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nTy ppeeret crete ee |) aay UN\nye Oe\nPOAT) 17) bole eet lee VW) AE\n\n=-_ rr _4\nThe ept whe! pay et of CY pee eet\neehexe y Pe it a fet ee\nCee 5) Sm sete\n{te pet Se ferate et! ee ety\nwetter sete reved o\u00b0 INe te pet,\nVee \u00a76\u20ac\u00a964lC6UU~eee?\nAgepoet of LON a Sed ong prota\nSAAR a beta? of bo pete:\n",
+          "word_accuracy": 0.15555555555555556,
+          "cer": 0.6878048780487804,
+          "fields": [],
+          "punct_chars": 22,
+          "text_chars": 303,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "Ty ppeeret crete ee |) aay UN",
+            "ye Oe",
+            "POAT) 17) bole eet lee VW) AE",
+            "",
+            "=-_ rr _4",
+            "The ept whe! pay et of CY pee eet",
+            "eehexe y Pe it a fet ee",
+            "Cee 5) Sm sete",
+            "{te pet Se ferate et! ee ety",
+            "wetter sete reved o\u00b0 INe te pet,",
+            "Vee \u00a76\u20ac\u00a964lC6UU~eee?",
+            "Agepoet of LON a Sed ong prota",
+            "SAAR a beta? of bo pete:",
+            ""
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 1,
+          "line_exact_norm_rate_gt": 0.06666666666666667,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\n\u2018he agree ert \u00ab megs of 1S jemuery DON\nBETWEEN The Levers (1) ene The Terert (2)\nPROPERTY Ll) Beeee Sheet Longer Wel 618\nTERM 34 morta Ser | Sete) DON\nCewee 32 Sere\n(Ne Werent ute pe, cert of DA pe tere\n(\u00a9 ehetce & He Ot ae. em Sen\nCeuee S$.) Sereeeeter\nfoe 2e7) \u201cOe, terete of Tee Mone\nere ~etce see o* Te ome pet)\nCewee ? 4 Oegeet\n(A gegeet of \u00a7 XX 2 See ow owtetws\nSGAET o- Ret e* of fot peTO!\nCane Retererce D0D4 CY OS",
+          "word_accuracy": 0.2222222222222222,
+          "cer": 0.5707317073170731,
+          "fields": [],
+          "punct_chars": 30,
+          "text_chars": 438,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "\u2018he agree ert \u00ab megs of 1S jemuery DON",
+            "BETWEEN The Levers (1) ene The Terert (2)",
+            "PROPERTY Ll) Beeee Sheet Longer Wel 618",
+            "TERM 34 morta Ser | Sete) DON",
+            "Cewee 32 Sere",
+            "(Ne Werent ute pe, cert of DA pe tere",
+            "(\u00a9 ehetce & He Ot ae. em Sen",
+            "Ceuee S$.) Sereeeeter",
+            "foe 2e7) \u201cOe, terete of Tee Mone",
+            "ere ~etce see o* Te ome pet)",
+            "Cewee ? 4 Oegeet",
+            "(A gegeet of \u00a7 XX 2 See ow owtetws",
+            "SGAET o- Ret e* of fot peTO!",
+            "Cane Retererce D0D4 CY OS"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 1,
+          "line_exact_norm_rate_gt": 0.06666666666666667,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\n\u2018Tee egrwemert c mese o 1S acer DON\nBETWEEN The Locations (1) ene The Tenet (2)\nPROPERTY 123 Geter Sheet Lovcer Nl EXE\nTERM Ne mortta Sor 1 fetuary DON\nCause 32 Rent\n\u2018Tre Werert shel pay cert of 2.500 per meres\n(F BROTCE OF Te Sit Bey of ee Mo\nCause $1 Termenator\nEther fet) ey Tem nete ett tee mores\nener wehce reN ed om The ote pet)\nCemese 7 4 Oepeet\nA gegeet of \u00a7 XX 2 Nee ew avtatee\nSAGAED om Demet of Dom pete:\nCane Reteence DOD OVO",
+          "word_accuracy": 0.28888888888888886,
+          "cer": 0.4658536585365854,
+          "fields": [
+            "2500"
+          ],
+          "punct_chars": 13,
+          "text_chars": 453,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "\u2018Tee egrwemert c mese o 1S acer DON",
+            "BETWEEN The Locations (1) ene The Tenet (2)",
+            "PROPERTY 123 Geter Sheet Lovcer Nl EXE",
+            "TERM Ne mortta Sor 1 fetuary DON",
+            "Cause 32 Rent",
+            "\u2018Tre Werert shel pay cert of 2.500 per meres",
+            "(F BROTCE OF Te Sit Bey of ee Mo",
+            "Cause $1 Termenator",
+            "Ether fet) ey Tem nete ett tee mores",
+            "ener wehce reN ed om The ote pet)",
+            "Cemese 7 4 Oepeet",
+            "A gegeet of \u00a7 XX 2 Nee ew avtatee",
+            "SAGAED om Demet of Dom pete:",
+            "Cane Reteence DOD OVO"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "legal",
+      "profile": "off_axis",
+      "skew_deg": -4.0,
+      "n_bands": 16,
+      "n_gt_lines": 15,
+      "gt_lines": [
+        "LEASE AGREEMENT",
+        "This agreement is made on 15 January 2024",
+        "BETWEEN: The Landlord (1) and The Tenant (2)",
+        "PROPERTY: 123 Baker Street, London NW1 6XE",
+        "TERM: 24 months from 1 February 2024",
+        "Clause 3.2  Rent",
+        "The Tenant shall pay rent of 2,500 per month",
+        "in advance on the first day of each month",
+        "Clause 5.1  Termination",
+        "Either party may terminate with two months",
+        "written notice served on the other party",
+        "Clause 7.4  Deposit",
+        "A deposit of 5,000 is held and protected",
+        "SIGNED on behalf of both parties",
+        "Case Reference: 2024-CV-00456"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 16,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.0625,
+          "line_exact_norm": 2,
+          "line_exact_norm_rate_gt": 0.13333333333333333,
+          "line_inserted": 1,
+          "line_dropped": 0,
+          "text": "4ENDONTONT 2\nLEASE AGREEMENT\nTHE ACTEMENTS MADEON 15 ANUAN 2024\nBETWEEN THELANDLORD1 ANDTHE EMANT 2\nPROFERTYI123 AKER SMES LONDN M16KE\nTERM 24 MONTHS FROM 1 FEBRUAN 2024\nCLAUSE 32 RENT\nTHE TENANTSHAL DAY ENTO 25000 MONTH\nNEDYANCE ON THE FSIDAY OFECH MONTH\nCBUSE 3TN\nETHERPARY MAYTEMNATEYTS THO MORTIS\nWITIEN NOICESENVED ON THE OTHER OARTY\nCAUSE 32 REPT\nKDIDTOS RMERNR AT L\nSEBE TEMEPALEA AF AETH S\nCLAERTERENCE 40",
+          "word_accuracy": 0.37777777777777777,
+          "cer": 0.3439024390243902,
+          "fields": [
+            "2500"
+          ],
+          "punct_chars": 0,
+          "text_chars": 413,
+          "hyp_lines": [
+            "4ENDONTONT 2",
+            "LEASE AGREEMENT",
+            "THE ACTEMENTS MADEON 15 ANUAN 2024",
+            "BETWEEN THELANDLORD1 ANDTHE EMANT 2",
+            "PROFERTYI123 AKER SMES LONDN M16KE",
+            "TERM 24 MONTHS FROM 1 FEBRUAN 2024",
+            "CLAUSE 32 RENT",
+            "THE TENANTSHAL DAY ENTO 25000 MONTH",
+            "NEDYANCE ON THE FSIDAY OFECH MONTH",
+            "CBUSE 3TN",
+            "ETHERPARY MAYTEMNATEYTS THO MORTIS",
+            "WITIEN NOICESENVED ON THE OTHER OARTY",
+            "CAUSE 32 REPT",
+            "KDIDTOS RMERNR AT L",
+            "SEBE TEMEPALEA AF AETH S",
+            "CLAERTERENCE 40"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 16,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.0625,
+          "line_exact_norm": 2,
+          "line_exact_norm_rate_gt": 0.13333333333333333,
+          "line_inserted": 1,
+          "line_dropped": 0,
+          "text": "1N OTTMNT2\nLEASE AGREEMENT\nTHE ACTEMENTS MADEON 15 ANUAN 2024\nBETWEEN THE LANDLORD1 ANDTHE EANT 2\nPROFERTYI123BAKER SMET LONDN M16KE\nTERM 24 MONTHS FROM 1 FEBRUAN 2024\nCLAUSE 32 RENT\nTHE TENANTSHAL DAY ENTO 25000 MONTH\nNEDYANCE ON THE RSIDAY OFECH MONTH\nCBUSE 3T\nETHERPARY MAYTEMNATEYTS BHO MORTIS\nWITIEN NOICESRNVED ON THE OTHER OARTY\nCAUSE 32 REPT\nKDIDTSAS MORNR O ATAL\nSIE TMETALEA A AT AS\nCLAERTE R4NDCE 404",
+          "word_accuracy": 0.3888888888888889,
+          "cer": 0.34146341463414637,
+          "fields": [
+            "2500"
+          ],
+          "punct_chars": 0,
+          "text_chars": 411,
+          "hyp_lines": [
+            "1N OTTMNT2",
+            "LEASE AGREEMENT",
+            "THE ACTEMENTS MADEON 15 ANUAN 2024",
+            "BETWEEN THE LANDLORD1 ANDTHE EANT 2",
+            "PROFERTYI123BAKER SMET LONDN M16KE",
+            "TERM 24 MONTHS FROM 1 FEBRUAN 2024",
+            "CLAUSE 32 RENT",
+            "THE TENANTSHAL DAY ENTO 25000 MONTH",
+            "NEDYANCE ON THE RSIDAY OFECH MONTH",
+            "CBUSE 3T",
+            "ETHERPARY MAYTEMNATEYTS BHO MORTIS",
+            "WITIEN NOICESRNVED ON THE OTHER OARTY",
+            "CAUSE 32 REPT",
+            "KDIDTSAS MORNR O ATAL",
+            "SIE TMETALEA A AT AS",
+            "CLAERTE R4NDCE 404"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 16,
+          "line_exact": 3,
+          "line_exact_rate_gt": 0.2,
+          "line_exact_rate_hyp": 0.1875,
+          "line_exact_norm": 3,
+          "line_exact_norm_rate_gt": 0.2,
+          "line_inserted": 1,
+          "line_dropped": 0,
+          "text": "ike\nLEASE AGREEMENT\nThis acreement ig made on 15 lanuary 2024\nBETWEEN: The Landlord (1) and The Tenant (2)\nPROPERTY: 123 Baker Street London NW] 6XE\nTERM: 24 months from | February 2024\nClause 3.7 Rent\nThe Tenant shall nav rent of 2.500 ner month\nIf advance On the Nrst day Of each month\nLiguse 3.1 lermination\neither party may terminate with two months\nWritten notice Served on the other oarty\nWH TER\nAta AT ek anda\nDotan ek ates\nUt tebe DAUM",
+          "word_accuracy": 0.7222222222222222,
+          "cer": 0.24634146341463414,
+          "fields": [
+            "2500"
+          ],
+          "punct_chars": 12,
+          "text_chars": 443,
+          "hyp_lines": [
+            "ike",
+            "LEASE AGREEMENT",
+            "This acreement ig made on 15 lanuary 2024",
+            "BETWEEN: The Landlord (1) and The Tenant (2)",
+            "PROPERTY: 123 Baker Street London NW] 6XE",
+            "TERM: 24 months from | February 2024",
+            "Clause 3.7 Rent",
+            "The Tenant shall nav rent of 2.500 ner month",
+            "If advance On the Nrst day Of each month",
+            "Liguse 3.1 lermination",
+            "either party may terminate with two months",
+            "Written notice Served on the other oarty",
+            "WH TER",
+            "Ata AT ek anda",
+            "Dotan ek ates",
+            "Ut tebe DAUM"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 16,
+          "line_exact": 15,
+          "line_exact_rate_gt": 1.0,
+          "line_exact_rate_hyp": 0.9375,
+          "line_exact_norm": 15,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 1,
+          "line_dropped": 0,
+          "text": "NN\nLEASE AGREEMENT\nThis agreement is made on 15 January 2024\nBETWEEN: The Landlord (1) and The Tenant (2)\nPROPERTY: 123 Baker Street, London NW1 6XE\nTERM: 24 months from 1 February 2024\nClause 3.2 Rent\nThe Tenant shall pay rent of 2,500 per month\nin advance on the first day of each month\nClause 5.1 Termination\nEither party may terminate with two months\nwritten notice served on the other party\nClause 7.4 Deposit\nA deposit of 5,000 is held and protected\nSIGNED on behalf of both parties\nCase Reference: 2024-CV-00456",
+          "word_accuracy": 1.0,
+          "cer": 0.004878048780487805,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 16,
+          "text_chars": 518,
+          "hyp_lines": [
+            "NN",
+            "LEASE AGREEMENT",
+            "This agreement is made on 15 January 2024",
+            "BETWEEN: The Landlord (1) and The Tenant (2)",
+            "PROPERTY: 123 Baker Street, London NW1 6XE",
+            "TERM: 24 months from 1 February 2024",
+            "Clause 3.2 Rent",
+            "The Tenant shall pay rent of 2,500 per month",
+            "in advance on the first day of each month",
+            "Clause 5.1 Termination",
+            "Either party may terminate with two months",
+            "written notice served on the other party",
+            "Clause 7.4 Deposit",
+            "A deposit of 5,000 is held and protected",
+            "SIGNED on behalf of both parties",
+            "Case Reference: 2024-CV-00456"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 15,
+          "line_exact_rate_gt": 1.0,
+          "line_exact_rate_hyp": 1.0,
+          "line_exact_norm": 15,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nThis agreement is made on 15 January 2024\nBETWEEN: The Landlord (1) and The Tenant (2)\nPROPERTY: 123 Baker Street, London NW1 6XE\nTERM: 24 months from 1 February 2024\nClause 3.2 Rent\nThe Tenant shall pay rent of 2,500 per month\nin advance on the first day of each month\nClause 5.1 Termination\nEither party may terminate with two months\nwritten notice served on the other party\nClause 7.4 Deposit\nA deposit of 5,000 is held and protected\nSIGNED on behalf of both parties\nCase Reference: 2024-CV-00456",
+          "word_accuracy": 1.0,
+          "cer": 0.0,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 16,
+          "text_chars": 515,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "This agreement is made on 15 January 2024",
+            "BETWEEN: The Landlord (1) and The Tenant (2)",
+            "PROPERTY: 123 Baker Street, London NW1 6XE",
+            "TERM: 24 months from 1 February 2024",
+            "Clause 3.2 Rent",
+            "The Tenant shall pay rent of 2,500 per month",
+            "in advance on the first day of each month",
+            "Clause 5.1 Termination",
+            "Either party may terminate with two months",
+            "written notice served on the other party",
+            "Clause 7.4 Deposit",
+            "A deposit of 5,000 is held and protected",
+            "SIGNED on behalf of both parties",
+            "Case Reference: 2024-CV-00456"
+          ]
+        }
+      }
+    },
+    {
+      "doc": "legal",
+      "profile": "jpeg_social",
+      "skew_deg": 0.0,
+      "n_bands": 15,
+      "n_gt_lines": 15,
+      "gt_lines": [
+        "LEASE AGREEMENT",
+        "This agreement is made on 15 January 2024",
+        "BETWEEN: The Landlord (1) and The Tenant (2)",
+        "PROPERTY: 123 Baker Street, London NW1 6XE",
+        "TERM: 24 months from 1 February 2024",
+        "Clause 3.2  Rent",
+        "The Tenant shall pay rent of 2,500 per month",
+        "in advance on the first day of each month",
+        "Clause 5.1  Termination",
+        "Either party may terminate with two months",
+        "written notice served on the other party",
+        "Clause 7.4  Deposit",
+        "A deposit of 5,000 is held and protected",
+        "SIGNED on behalf of both parties",
+        "Case Reference: 2024-CV-00456"
+      ],
+      "arms": {
+        "ours_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 1,
+          "line_exact_rate_gt": 0.06666666666666667,
+          "line_exact_rate_hyp": 0.06666666666666667,
+          "line_exact_norm": 5,
+          "line_exact_norm_rate_gt": 0.3333333333333333,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nTHMS AOEMENTS MADEON 15 ANUAN 2024\nBETWEEN THE LANDLORD 1 AND THE TNANT 2\nPROPERTY123 AR SIES LAND M16KE\nTERM 24 MONTHS FROM 1 FEBRUAR 2024\nCLAUSE 32 RENT\nTHE TENAMTSHAL DAY ENT 2500 PE MOTH\nN SCYANCE ON THE HES DAY OFEBCH MONH\nCLAUSE 51 TERMINATION\nETHE DARY MAYTERMINATEYTE THO MONTHS\nWITEN NOBCESERVED ON THE OTHER PARTY\nCLAUSE 74 DEPOSIT\nA DEDSTO 500 S HELD AND PROTAETEC\nSIGNED ON BEHAF OF BOTH PARTIES\nCASE REFERENCE 2024CV00456",
+          "word_accuracy": 0.6111111111111112,
+          "cer": 0.15365853658536585,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 0,
+          "text_chars": 450,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "THMS AOEMENTS MADEON 15 ANUAN 2024",
+            "BETWEEN THE LANDLORD 1 AND THE TNANT 2",
+            "PROPERTY123 AR SIES LAND M16KE",
+            "TERM 24 MONTHS FROM 1 FEBRUAR 2024",
+            "CLAUSE 32 RENT",
+            "THE TENAMTSHAL DAY ENT 2500 PE MOTH",
+            "N SCYANCE ON THE HES DAY OFEBCH MONH",
+            "CLAUSE 51 TERMINATION",
+            "ETHE DARY MAYTERMINATEYTE THO MONTHS",
+            "WITEN NOBCESERVED ON THE OTHER PARTY",
+            "CLAUSE 74 DEPOSIT",
+            "A DEDSTO 500 S HELD AND PROTAETEC",
+            "SIGNED ON BEHAF OF BOTH PARTIES",
+            "CASE REFERENCE 2024CV00456"
+          ]
+        },
+        "ours_c32_clahe": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 2,
+          "line_exact_rate_gt": 0.13333333333333333,
+          "line_exact_rate_hyp": 0.13333333333333333,
+          "line_exact_norm": 6,
+          "line_exact_norm_rate_gt": 0.4,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nTHES AOEMENTE MADEON 15 ANUAN 2024\nBETWEEN THE LANDLORD 1 AND THE TNANT 2\nPROPERTY123 ALAR SIES LAND M16KE\nTERM 24 MONTHS FROM 1 FEBRUAR 2024\nCLAUSE 32 RENT\nTHE ENAMTSHAL BAY ENT 2500 PE MONTH\nN ECYANCE ON THE FET DAY OFEACH MONBH\nCLAUSE 51 TERMINATION\nETHE PARY MAYTERMINATEYTE BHO MONTHS\nWITEN NOBCESERVED ON THE OTHER PARTY\nCLAUSE 74 DEPOSIT\nA DEPCSTO 500 S HELD AND PROTERTEC\nSIGNED ON BEHALF OF BOTH PARTIES\nCASE REFERENCE 2024CV00456",
+          "word_accuracy": 0.6444444444444445,
+          "cer": 0.14390243902439023,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 0,
+          "text_chars": 455,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "THES AOEMENTE MADEON 15 ANUAN 2024",
+            "BETWEEN THE LANDLORD 1 AND THE TNANT 2",
+            "PROPERTY123 ALAR SIES LAND M16KE",
+            "TERM 24 MONTHS FROM 1 FEBRUAR 2024",
+            "CLAUSE 32 RENT",
+            "THE ENAMTSHAL BAY ENT 2500 PE MONTH",
+            "N ECYANCE ON THE FET DAY OFEACH MONBH",
+            "CLAUSE 51 TERMINATION",
+            "ETHE PARY MAYTERMINATEYTE BHO MONTHS",
+            "WITEN NOBCESERVED ON THE OTHER PARTY",
+            "CLAUSE 74 DEPOSIT",
+            "A DEPCSTO 500 S HELD AND PROTERTEC",
+            "SIGNED ON BEHALF OF BOTH PARTIES",
+            "CASE REFERENCE 2024CV00456"
+          ]
+        },
+        "tess_c32_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 8,
+          "line_exact_rate_gt": 0.5333333333333333,
+          "line_exact_rate_hyp": 0.5333333333333333,
+          "line_exact_norm": 10,
+          "line_exact_norm_rate_gt": 0.6666666666666666,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nThis agreement is made on 15 lanuary 2024\nBETWEEN: The Landlord (1) and The Tenant (2)\nPROPERTY 123 Baker Street London NWI OXE\nTERM: 24 months from | February 2024\nClause 3.2 Rent\nThe Tenant shall pay rent of 2500 per month\nin advance on the first day of each month\nClause 5.1 lermination\neither party may terminate with two months\nwritten notice served on the other party\nClause /.4 Deposit\nA deposit of 5.000 is held and protected\nSIGNED on behalf of both parties\nCase Reference: 2024-CV-00456",
+          "word_accuracy": 0.9444444444444444,
+          "cer": 0.014634146341463415,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 15,
+          "text_chars": 512,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "This agreement is made on 15 lanuary 2024",
+            "BETWEEN: The Landlord (1) and The Tenant (2)",
+            "PROPERTY 123 Baker Street London NWI OXE",
+            "TERM: 24 months from | February 2024",
+            "Clause 3.2 Rent",
+            "The Tenant shall pay rent of 2500 per month",
+            "in advance on the first day of each month",
+            "Clause 5.1 lermination",
+            "either party may terminate with two months",
+            "written notice served on the other party",
+            "Clause /.4 Deposit",
+            "A deposit of 5.000 is held and protected",
+            "SIGNED on behalf of both parties",
+            "Case Reference: 2024-CV-00456"
+          ]
+        },
+        "tess_nat_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 14,
+          "line_exact_rate_gt": 0.9333333333333333,
+          "line_exact_rate_hyp": 0.9333333333333333,
+          "line_exact_norm": 14,
+          "line_exact_norm_rate_gt": 0.9333333333333333,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nThis agreement is made on 15 January 2024\nBETWEEN: The Landiord (1) and The Tenant (2)\nPROPERTY: 123 Baker Street, London NW1 6XE\nTERM: 24 months from 1 February 2024\nClause 3.2 Rent\nThe Tenant shall pay rent of 2,500 per month\nin advance on the first day of each month\nClause 5.1 Termination\nEither party may terminate with two months\nwritten notice served on the other party\nClause 7.4 Deposit\nA deposit of 5,000 is held and protected\nSIGNED on behalf of both parties\nCase Reference: 2024-CV-00456",
+          "word_accuracy": 0.9888888888888889,
+          "cer": 0.0024390243902439024,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 16,
+          "text_chars": 515,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "This agreement is made on 15 January 2024",
+            "BETWEEN: The Landiord (1) and The Tenant (2)",
+            "PROPERTY: 123 Baker Street, London NW1 6XE",
+            "TERM: 24 months from 1 February 2024",
+            "Clause 3.2 Rent",
+            "The Tenant shall pay rent of 2,500 per month",
+            "in advance on the first day of each month",
+            "Clause 5.1 Termination",
+            "Either party may terminate with two months",
+            "written notice served on the other party",
+            "Clause 7.4 Deposit",
+            "A deposit of 5,000 is held and protected",
+            "SIGNED on behalf of both parties",
+            "Case Reference: 2024-CV-00456"
+          ]
+        },
+        "tess_page_raw": {
+          "n_gt_lines": 15,
+          "n_engine_lines": 15,
+          "line_exact": 15,
+          "line_exact_rate_gt": 1.0,
+          "line_exact_rate_hyp": 1.0,
+          "line_exact_norm": 15,
+          "line_exact_norm_rate_gt": 1.0,
+          "line_inserted": 0,
+          "line_dropped": 0,
+          "text": "LEASE AGREEMENT\nThis agreement is made on 15 January 2024\nBETWEEN: The Landlord (1) and The Tenant (2)\nPROPERTY: 123 Baker Street, London NW1 6XE\nTERM: 24 months from 1 February 2024\nClause 3.2 Rent\nThe Tenant shall pay rent of 2,500 per month\nin advance on the first day of each month\nClause 5.1 Termination\nEither party may terminate with two months\nwritten notice served on the other party\nClause 7.4 Deposit\nA deposit of 5,000 is held and protected\nSIGNED on behalf of both parties\nCase Reference: 2024-CV-00456",
+          "word_accuracy": 1.0,
+          "cer": 0.0,
+          "fields": [
+            "2500",
+            "2024-CV-00456"
+          ],
+          "punct_chars": 16,
+          "text_chars": 515,
+          "hyp_lines": [
+            "LEASE AGREEMENT",
+            "This agreement is made on 15 January 2024",
+            "BETWEEN: The Landlord (1) and The Tenant (2)",
+            "PROPERTY: 123 Baker Street, London NW1 6XE",
+            "TERM: 24 months from 1 February 2024",
+            "Clause 3.2 Rent",
+            "The Tenant shall pay rent of 2,500 per month",
+            "in advance on the first day of each month",
+            "Clause 5.1 Termination",
+            "Either party may terminate with two months",
+            "written notice served on the other party",
+            "Clause 7.4 Deposit",
+            "A deposit of 5,000 is held and protected",
+            "SIGNED on behalf of both parties",
+            "Case Reference: 2024-CV-00456"
+          ]
+        }
+      }
+    }
+  ],
+  "limits": [
+    "12 synthetic rendered documents (3 doc types x 4 capture profiles, one font, generated by ml/src/capture.py) -- not real photographs; every number here is a synthetic-render number and the template text is the renderer's own ground truth.",
+    "Tesseract 4.1.1 (leptonica 1.82.0), eng only, default oem (LSTM); a Tesseract 5 or a different traineddata/language set is a different engine and would need a re-run.",
+    "Single detector for all e2e arms: the app's projection-profile detector on the deskewed grayscale. Detection quality caps every line-level number; Tesseract arm (c) uses its OWN layout analysis and is therefore not detector-limited in the same way.",
+    "Arm (a) is genuinely unfair to Tesseract and is labelled that way everywhere it appears: the 32px crop is our model's contract, including the 320px width clamp that horizontally squeezes long lines. Arm (b) is the row to quote.",
+    "Tesseract is scored with no character whitelist and its sentence-case/punctuation output is then uppercased and whitespace-collapsed on both sides; punctuation is reported as its own column instead of being scored away.",
+    "Our engine gets two page variants (raw and CLAHE) because the app preprocesses; the shipped app also runs a restorer and a three-candidate election that this harness does not reproduce, so our harness rows are NOT the app's end-to-end number -- see app_end_to_end_reference.",
+    "No confidence thresholding, no lexicon/field-constrained decode and no rejection path is applied to either engine here: this measures raw recognition, not the product's field policy.",
+    "Sample size for the field metric is 24 expected fields over 12 documents; per-profile rates are over 3 documents each and should not be read as more than a direction."
+  ]
+}

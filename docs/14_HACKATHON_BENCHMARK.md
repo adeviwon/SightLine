@@ -13,53 +13,92 @@ the bottom and get the same output.
 | classifier, held-out | accuracy | **95.8%** (±2.6) | `bash run.sh train-clf` → `artifacts/step3_classifier_metrics.json` |
 | classifier, held-out | macro-F1 | **95.7%** (±2.7) | same run — 5 seeds, n=24 test documents |
 | OCR, held-out crops | word accuracy | **28.0%** | `bash run.sh train-ocr` → `artifacts/ocr_training.json` (7,875 held-out crops) |
-| OCR, held-out real scans | word accuracy **29.70%**, CER **11.75%** | 361 SROIE receipts, 17,945 words | `bash run.sh eval-ocr` section A |
-| OCR, 198 hand-photographed receipts | line accuracy **1.96%**, CER **63.46%** | 60 pages, 868 detected lines | `bash run.sh eval-ocr` section B — the honest hard case |
-| the shipped app, end to end | field recovery, classification, word accuracy, CER | **table below** | `bash run.sh bench-pipeline` → `artifacts/pipeline_raw.json` |
-| one documented failure | a real misread | `ACCOUNT NUMBER 40218877` → `ICOUNT NUMBER 4021887` | `docs/03_RESULTS.md` §3 |
+| OCR, held-out real scans (SROIE) | word accuracy **29.30%**, CER **11.95%** | 361 SROIE receipts, 17,945 words | `bash run.sh eval-ocr` section A; `docs/03_RESULTS.md` §3 |
+| OCR, 20 real hand-photographed pages | line-exact **1.8%**, CER **56.5%**, detector recall **67.9%** | 275 lines from 20 pages | `bash run.sh eval-ocr` section B — the honest hard case (`docs/03_RESULTS.md` §3) |
+| OCR, the 193-page hand-photographed set, arm B | line-exact **2.4%**, CER **58.4%**, detector recall **71.6%** | harness reproduction of the shipped checkpoint | `HANDOFF.md` §3 (`ml/experiments/eval_official_ab.py`) |
+| the shipped app, end to end | field recovery, classification, word accuracy, CER | **table below** | `bash run.sh bench-pipeline` → `artifacts/pipeline_raw_deskew.json` (the shipped build) |
+| one documented failure | a real misread | `ACCOUNT NUMBER 40218877` → `ICOUNT NOUMBER 4021887` | `.hermes/plans/2026-10-20_164918-sightline-ocr-accuracy.md` |
 
 ## The shipped app, end to end (the number that decides whether it works)
 
 `bash run.sh bench-pipeline` drives the **real app** in WebKit — iOS Safari's
 engine — over 12 rendered documents (3 types × 4 capture profiles) and records
-what came out. `bash run.sh bench-hackathon` scores those records:
+what came out, one record per document. `bash run.sh bench-hackathon` scores
+those records with the definitions in `ml/src/bench_hackathon.py`. The
+**trajectory** below is the result — same 12 documents, same metric, each step a
+defect found in our own train/serve contract, with the step that regressed kept
+in:
+
+| # | word accuracy | CER | field recovery | classification | what changed / raw records |
+|---|---|---|---|---|---|
+| 1 | 3.6% | 0.708 | 0.0% | 33.3% | as shipped on 10-20 — graph baked at a FIXED 256 px against 320 px training crops, `preprocess()` could only rank among degraded arms, and deskew was applied in the wrong sense · `artifacts/pipeline_raw.json` |
+| 2 | 22.4% | 0.575 | 4.2% | 50.0% | export width brought to the training clamp (320), same checkpoint — the app had been feeding the model the first 256 px of **98.8%** of lines · `artifacts/pipeline_raw_final.json` |
+| 3 | 17.1% | 0.600 | 4.2% | 58.3% | **a step back on purpose:** the dynamic-width graph *and* retrained weights went in together and measured worse on these 12 documents, even though at crop level the same retrain moved exact line match **3.3% → 57.0%** · `artifacts/pipeline_raw_dynamic.json` |
+| 4 | 35.0% | 0.465 | 16.7% | 66.7% | the untransformed image made reachable — `preprocess()` already offered the raw deskewed grayscale, but a later branch had replaced the candidate list with the restorer's three degraded arms, so the arm that measures best could never win · `artifacts/pipeline_raw_rawarm.json` |
+| 5 | **45.9%** | **0.303** | **20.8%** | **83.3%** | **SHIPPED:** deskew applied in the correct sense — the estimator measured the right angle and the correction **doubled** the tilt instead of removing it (`off_axis` 1.1% → 45.1%, CER 0.882 → 0.234) · `artifacts/pipeline_raw_deskew.json` |
+
+Raw records for every row, in that order: `artifacts/pipeline_raw.json`,
+`pipeline_raw_final.json`, `pipeline_raw_dynamic.json`,
+`pipeline_raw_rawarm.json`, `pipeline_raw_deskew.json`.
+
+Per capture profile on the **shipped (deskew) build**:
 
 | profile | n | field recovery | classification | word accuracy | CER |
 |---|---|---|---|---|---|
-| studio_clean | 3 | 33.3% | 100.0% | 61.1% | 16.8% |
-| handheld_light | 3 | 0.0% | 0.0% | 3.5% | 73.9% |
-| off_axis | 3 | 0.0% | 33.3% | 8.7% | 85.4% |
-| jpeg_social | 3 | 16.7% | 66.7% | 16.1% | 54.0% |
-| **all samples** | **12** | **12.5%** | **50.0%** | **22.4%** | **57.5%** |
+| studio_clean | 3 | 33.3% | 100.0% | 52.3% | 22.5% |
+| handheld_light | 3 | 16.7% | 66.7% | 46.5% | 37.6% |
+| off_axis | 3 | 16.7% | 100.0% | 45.1% | 23.4% |
+| jpeg_social | 3 | 16.7% | 66.7% | 39.8% | 37.8% |
+| **all samples** | **12** | **20.8%** | **83.3%** | **45.9%** | **30.3%** |
 
-Raw records: `artifacts/pipeline_raw_final.json`. Row-level evidence in
-`artifacts/hackathon_metrics.json`.
+All 12 scans completed with no crash and no failed scan (`"error": null` on every
+record). `field_recovery` is the app's own extracted-field metric — 20.8% = **5 of
+24** ground-truth fields; the weaker "present anywhere in the read text" count is
+**9 of 24**, and both come from the same 12 records, so quote which one you mean.
+Row-level evidence in `artifacts/hackathon_metrics.json`.
 
-### These numbers used to read 0.0% / 33.3% / 3.6% / 70.8%, and the cause was one constant
+### Each remaining step was a defect in our own contract, not a model change
 
-The app's ONNX graph was exported at a FIXED 256px while `build_dataset.crop_to_array`
-builds every training crop at its NATURAL width clamped to `MAX_W = 320` — and the
-corpus median IS that clamp (only 40 of 3,270 held-out crops are <= 256px). So the
-app fed the model the first 256px of nearly every line. On 200 held-out crops,
-crop-level exact match was **44.7% at natural width against 0.0% cut to 256**, and
-the read changed on **200/200**: `PATIENT JANE DOE DOB 04021979` came back as
-`PERIENT JANE DOE 2O08010`, `DATE 01102026` as `DATE 01020`, `PRESCRIBER DR A AHMED
-MBBS` as `PRESCRIBER DR A AHMNT`.
+**The 256 px graph.** The app's ONNX graph was exported at a FIXED 256 px while
+`build_dataset.crop_to_array` builds every training crop at its NATURAL width
+clamped to `MAX_W = 320` — and the corpus median IS that clamp (only 40 of 3,270
+held-out crops are <= 256 px). So the app fed the model the first 256 px of nearly
+every line. On 200 held-out crops, crop-level exact match was **44.7% at natural
+width against 0.0% cut to 256**, and the read changed on **200/200**: `PATIENT JANE
+DOE DOB 04021979` came back as `PERIENT JANE DOE 2O08010`, `DATE 01102026` as `DATE
+01020`, `PRESCRIBER DR A AHMED MBBS` as `PRESCRIBER DR A AHMNT`. Every symptom
+previously attributed to the model — `STATEMENI OT ACCOUN`, "read tokens 19-54
+against 73-90 ground-truth words", "the CRNN digit-ises our letters" — was the tail
+never reaching it. The end-to-end effect on the same 12 documents: word accuracy
+**3.6% → 22.4%**, mean CER **0.708 → 0.575**, read tokens **468 → 680 (+45%)**, and
+on the clean profile **10.3% → 61.1%** word accuracy with classification **66.7% →
+100%** (which also confirms the classifier was being fed the truncation, not
+failing on its own — MiniLM measures 95.8% macro-F1 on real text).
 
-Every symptom previously attributed to the model — `STATEMENI OT ACCOUN`, "read
-tokens 19-54 against 73-90 ground-truth words", "the CRNN digit-ises our letters" —
-was the tail never reaching it. The end-to-end effect of the fix, same 12
-documents, same metric, is the table above: word accuracy **3.6% -> 22.4%**, mean
-CER **70.8% -> 57.5%**, read tokens **468 -> 680 (+45%)**, and on the clean profile
-**10.3% -> 61.1%** word accuracy with classification **66.7% -> 100%** (which also
-confirms the document classifier was being fed the truncation, not failing on its
-own — MiniLM measures 95.8% macro-F1 on real text).
+**Dynamic width + retrain.** The next change swapped in a dynamic-width graph and
+retrained weights together; on these 12 documents the pair measured *worse*
+(22.4% → 17.1%), even though at crop level the same retrain moved exact line match
+**3.3% → 57.0%** (CER 0.156). The disagreement is kept in the record on purpose: it
+is why the next fix was measured on the preprocessing arms rather than on the model.
 
-The graph is now exported at the training clamp, and `export_crnn`/`verify_crnn`
-default their width to `realdata.MAX_W` so the number cannot drift from the data
-again. `ml/tests/test_graph_width_contract.py` asserts EQUALITY with the clamp; the
-old assertion was `width <= MAX_W`, which any narrower graph satisfies — it passed
-hardest on the worst value, which is how 256 shipped.
+**The elected arm.** `preprocess()` already offered the raw deskewed grayscale as
+one candidate, but a later branch had replaced the candidate list with the
+restorer's three degraded arms, so the arm the repo's own measurements rank best
+could never be chosen. Restoring it (and its `structure_score` election) took the
+total from 17.1% to 35.0%.
+
+**The deskew sign.** `pipeline.estimateSkew` measured the right angle, and
+`preprocess()` then **doubled** the tilt instead of removing it. Correcting the sign
+took `off_axis` from **1.1%** to **45.1%** word accuracy (CER 0.882 → 0.234) and the
+end-to-end total from 35.0% to the shipped **45.9%**. This was one sign, not a model
+change.
+
+The shipped graph now carries a DYNAMIC width axis (`app/models/crnn.onnx` =
+`artifacts/crnn_dynamic.onnx`, 3,785,916 B), so line width is no longer a constant
+that can drift from the training crops the way 256 did. The contract is pinned by
+`ml/tests/test_graph_width_contract.py` (a fixed axis must EQUAL the clamp `MAX_W`,
+or the axis must be symbolic — the old `width <= MAX_W` assertion is what let 256
+ship), `app/tools/crop_contract.js` and `app/tools/dynamic_width_check.js`.
 
 Words are scored with `evaluate.word_accuracy` (fraction of ground-truth words
 present in the read text, after `norm()`), and CER as (substitutions + insertions
@@ -69,6 +108,26 @@ present in the read text, after `norm()`), and CER as (substitutions + insertion
 
 ## What these numbers do NOT prove
 
+- **This is not a model improvement.** The 35.0% → 45.9% step — the one that
+  produced the shipped number — fixed a defect in our own serving path: the deskew
+  estimator measured the right angle and `preprocess()` applied the correction in
+  the **wrong sense**, doubling the tilt instead of removing it. The recogniser's
+  weights did not change. The earlier 3.6% → 22.4% step is the same story (a graph
+  baked at 256 px fed the model the first 256 px of 98.8% of lines). Read the whole
+  trajectory as train/serve-contract repair, not as a claim about how strong the
+  recogniser is.
+- **There is a 37% capture-profile coverage gap.** `ml/src/profile_coverage.py`
+  measures the app's own crop rule over the bench documents: 155 crops, of which
+  **58 (37%)** come from `off_axis` and `jpeg_social`. The corpus the shipped
+  checkpoint trained on was built from `render_corpus.py`'s default `PROFILES[:4]`
+  — studio_clean, handheld_light, handheld_heavy, low_light. So on 37% of what the
+  app is served, the model is asked about a photographic world it has never seen.
+  That is a corpus-coverage result, not a property of the recogniser.
+- **Real hand-held photographs still read at 1.8% line-exact.** The 45.9% above is
+  on rendered documents; on 20 real hand-photographed pages the line detector
+  recovers 67.9% of lines and line-exact accuracy is **1.8%** (CER 56.5%,
+  `docs/03_RESULTS.md` §3). The two are not the same measurement on the same data,
+  and 45.9% must never be quoted as if the recogniser had closed that gap.
 - **The recogniser never trained on these renders**; the classifier's templates
   are in its training corpus, so its end-to-end agreement is *not* a generalisation
   claim. The classifier's generalisation claim is the held-out n=24, 5-seed figure
@@ -100,10 +159,11 @@ opt-in baseline), so the comparison is direct:
 `bash run.sh eval` (default engine), artifact `artifacts/eval_results.json` with
 `"engine": "crnn"`.
 
-Page-level recognition is harder than crop-level — it adds the detector's mistakes
-and the squeeze to the graph's fixed 256px width — and the end-to-end table above is
-what that costs: **the swap to our own recogniser measurably reduced end-to-end
-quality**, from 62.2% field accuracy to 0% end to end and 7.4% at the best stage.
+Page-level recognition is harder than crop-level — it adds the detector's mistakes —
+and the end-to-end table above is what that costs: **the swap to our own recogniser
+measurably reduced end-to-end quality**, from the Tesseract arm's 62.2% field
+accuracy to 20.8% field recovery (5 of 24 fields) and 7.4% at the best *stage* of
+the `evaluate.py` harness.
 
 A second finding from the re-run: the preprocessing-arm ordering in `docs/03`
 (restorer beats classical) does **not** survive the engine change. On the shipped
@@ -118,8 +178,10 @@ Two consequences, both already written into `HANDOFF.md` §4:
    quoted as the product's.
 2. The recognition gap is the project's main open problem. The measured levers, in
    order of expected effect: train on page-level text rather than receipt crops;
-   re-export the graph at width 320 (the training clamp) instead of 256; and only
-   then revisit the preprocessing arms.
+   close the 37% capture-profile coverage gap
+   (`ml/src/profile_coverage.py`); and only then revisit the preprocessing arms.
+   The graph-width lever that used to head this list is **closed** — the shipped
+   graph is dynamic-width now, not baked at 256 px.
 
 ## Re-running this
 

@@ -52,11 +52,18 @@ present):
    honest; never quote the 100% seed — the submission discloses that
    correction on purpose.
 2. **Held-out scan OCR, epoch 39, 17,945 test words — word accuracy 29.30%,
-   CER 11.95%.** This answers "did you actually train something that reads?"
-3. **Real hand-held photos (20 pages) — recall 67.9–71.6%, line-exact
-   1.8–2.4%, CER 56.5–58.4%** — and the app **refuses** a field it is not
-   confident about. Say the gap before a judge does.
-4. **Payload 26.68 MB** — a fact about the download, not a design constraint.
+   CER 11.95%** (`docs/03_RESULTS.md` §3). This answers "did you actually train
+   something that reads?"
+3. **Real hand-held photos (20 pages) — recall 67.9%, line-exact 1.8%,
+   CER 56.5%** (`docs/03_RESULTS.md` §3) — and the app **refuses** a field it is
+   not confident about. Say the gap before a judge does. *(Corrected 2026-10-21:
+   this used to quote the localisation variant's 71.6% / 2.4% / 58.4%, whose
+   whole gain is two lines and statistically insignificant — McNemar p = 1.000.
+   Those are the 20-page set; `docs/14` records a 60-page reading.)*
+4. **Payload — 26.45 MiB of models + tokenizer, ≈37.2 MiB installed on device.**
+   *(Corrected 2026-10-21: the old "26.68 MB" counted the weights only and
+   excluded the 10.73 MiB ONNX-runtime WASM the app cannot infer without.)* A
+   fact about the download, not a design constraint.
 
 > ### No payload budget
 >
@@ -68,7 +75,8 @@ present):
 > Decisions that were previously justified by size are therefore open again, and
 > must now be settled on accuracy: the removal of Tesseract (~41 MB),
 > the refusal of OpenCV.js (~9 MB) for preprocessing, and INT8 quantisation of the
-> MiniLM encoder (86.8 MB → 22.16 MB). Re-open them with a measurement, not a
+> MiniLM encoder (86.8 MB → 22.16 MB; `docs/01_ARCHITECTURE.md`). Re-open them
+> with a measurement, not a
 > feeling — `bash run.sh bench-hackathon` for the end-to-end number and
 > `bash run.sh eval-render` for the recogniser's.
 
@@ -86,8 +94,8 @@ this before a judge asks is worth more than a rounder headline.
 
 > A CRNN with a CTC head — a convolutional stack feeding a bidirectional LSTM,
 > trained by us on 52,554 real word crops from 420 scanned receipts.
-> 942,166 parameters, 4.03 MB as a single ONNX file, running in the browser's
-> WASM. CTC means greedy decoding is one softmax
+> 942,166 parameters, **3.61 MiB** as a single dynamic-width ONNX file
+> (`app/models/crnn.onnx`, 3,785,916 B), running in the browser's WASM. CTC means greedy decoding is one softmax
 > per timestep — no beam search, no lexicon — which is what makes it viable on
 > a phone.
 
@@ -103,7 +111,7 @@ this before a judge asks is worth more than a rounder headline.
 > The classifier: **95.8% mean over five seeds** (macro-F1 95.7%). End-to-end
 > field extraction, where
 > a wrong digit means we omit the field rather than read it aloud: much lower —
-> on real hand-held photos, 1.8–2.4% line-exact — and here is exactly where it
+> on real hand-held photos, 1.8% line-exact — and here is exactly where it
 > breaks. We measure that on real photos, and the
 > three failure modes are named.
 
@@ -168,7 +176,9 @@ the filming phone, and keep the screen recording as the backup track.
 
 ## Part 4 — Grand Final slide deck (9 slides, ≤10 allowed; due 2026-11-12)
 
-**1. Problem** — 2.1 billion people with vision impairment; independence vs.
+**1. Problem** — 2.1 billion people with vision impairment *(global estimate —
+unverified project note, no artifact in this repo; the HK figure in Part 1 is
+ours)*; independence vs.
 privacy is a forced trade-off in every existing app. One sentence, no more.
 
 **2. Solution** — the pipeline diagram. Camera → restore → read → understand → speak.
@@ -211,10 +221,10 @@ Don't assert. Point at the file:
 > macro-F1, mean over five seeds** on held-out text (`ml/experiments/step3_f1.py`)
 > — the stored eval once said 100%, which was one lucky seed, and we published
 > the correction. Held-out scan OCR: **29.30% word accuracy, 11.95% CER** on
-> 17,945 words. On real hand-held photos the ceiling is the line detector:
-> **67.9–71.6% recall, 1.8–2.4% line-exact** — so the app refuses a field it
-> is not confident about rather than reading a wrong dose aloud. Reproduce
-> with `bash run.sh test`."
+> 17,945 words (`docs/03_RESULTS.md` §3). On real hand-held photos the ceiling is
+> the line detector: **67.9% recall, 1.8% line-exact** (`docs/03_RESULTS.md` §3)
+> — so the app refuses a field it is not confident about rather than reading a
+> wrong dose aloud. Reproduce with `bash run.sh test`."
 
 ### "Your real-photo numbers are terrible. Why ship at all?"
 Concede, then reframe:
@@ -263,8 +273,10 @@ Concede, then reframe:
 Round 1 is two artifacts, so the cut list is short. Cut in this order; never
 cut in the reverse order.
 
-1. Policy-anchor breadth in the video — cite Paras 108 / 113 / 398–400 only;
-   drop 376–377 and 441–442 from the on-screen text (keep them for Q&A). −half a day.
+1. Policy-anchor breadth in the video — cite the **2025** Policy Address Paras
+   **75 / 226 / 266** on screen only (`docs/13_ROUND1_SUBMISSION_KIT.md`; the
+   Open Challenge rule names the **2025** edition — we had been citing 2026).
+   Keep the 2026 follow-through paragraphs for Q&A, off-screen. −half a day.
 2. A second demo device — one filming phone plus the screen-recording backup
    is enough for Round 1. −half a day.
 3. Music, colour grade, caption styling. Cut last, never first. −half a day.

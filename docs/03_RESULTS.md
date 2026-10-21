@@ -13,7 +13,9 @@ Machine-readable versions live in `artifacts/eval_results.json` and
 > bash run.sh eval && bash run.sh export && bash run.sh results
 > ```
 
-**Section 2 reports the default split, which scored 100%.** Across 5 seeds the honest figure is **95.0% mean, macro F1 0.947, min 91.7%, CI [86.7%, 100%]** on a 24-document test set where one document is worth 4.17 points. Quote the 5-seed number.
+**Section 2 reports the default split, which scored 100%.** Across 5 seeds the honest figure is **95.8% accuracy (sd 2.63 pp), macro-F1 95.7% (sd 2.72 pp)** on a 24-document test set where one document is worth 4.17 points. Quote the 5-seed number. It is the held-out figure in `artifacts/step3_classifier_metrics.json`, not §2's default-split 100%.
+
+> *Corrected 2026-10-21:* this line used to read "**95.0% mean, macro F1 0.947, min 91.7%, CI [86.7%, 100%]**". Those four figures are not traceable to any artifact under `artifacts/` and disagreed with the 5-seed artifact and with `docs/12`/`docs/14`; the traceable replacement is above.
 
 ---
 
@@ -86,7 +88,8 @@ before the classifier because the classifier is easy and the recogniser is
 hard, and putting the easy one first is how a demo ends up overclaiming.**
 
 Model: **942,166 parameters**, 37-symbol charset, CTC loss, 2-layer
-bidirectional LSTM, 3.84 MB as one self-contained ONNX file.
+bidirectional LSTM, **3.61 MiB (3,785,916 B)** as one self-contained,
+dynamic-width ONNX file.
 
 Trained on real word crops from **260 SROIE receipts** (flatbed scans), split
 by receipt so no document appears on both sides.
@@ -115,11 +118,20 @@ The 75% larger corpus plus real-homography perspective augmentation is worth
 **+3.05pp accuracy and −3.95pp CER**. Reproduce with
 `bash run.sh py ml/src/compare_checkpoints.py`.
 
-### The fixed-width export is verified, not assumed
+### The export width is dynamic — CORRECTED, this block used to say "fixed 256px"
 
-`crnn.onnx` takes a fixed 256px input, so crops are right-padded. That is only
-safe because a trained CTC model emits the blank symbol in padded regions.
-This was checked and it passes:
+> **Corrected 2026-10-21.** This subsection described a **fixed 256 px** export
+> whose crops were right-padded and verified by a padding-invariance gate. That is
+> no longer what ships. `app/models/crnn.onnx` is byte-identical to
+> `artifacts/crnn_dynamic.onnx` (sha256 `e4e6370a…`, 3,785,916 B) and its input is
+> `[batch, 1, 32, width]` — a **symbolic** width axis — so each line is served at
+> its own natural width and nothing is right-padded. (The retained
+> `models/onnx/crnn.onnx` is the fixed-width reference and is baked at **320**, not
+> 256.) The text below is kept as the record of the fixed-width gate and the
+> inversion bug that made it useless.
+
+The fixed-width export was only safe because a trained CTC model emits the blank
+symbol in padded regions. This was checked on that export and it passed:
 
 ```
 pad  32->256: ok (ref 'RM'         vs padded 'RM')
@@ -131,6 +143,11 @@ pad 200->256: ok (ref 'M  C2  0'   vs padded 'M  C2  0')
 Worth knowing: this gate's condition was **inverted** and it had never run on
 any checkpoint — it skipped precisely when the model was good enough for the
 check to matter. A mutation test now confirms the gate can fail.
+
+The shipped contract is now the **dynamic** width axis, pinned by
+`ml/tests/test_graph_width_contract.py` (a *fixed* axis must EQUAL the training
+clamp `realdata.MAX_W = 320`, or the axis must be symbolic) and by
+`app/tools/dynamic_width_check.js` and `app/tools/crop_contract.js`.
 
 ### The domain gap, measured
 
@@ -299,8 +316,16 @@ generator, with the same all-or-nothing rule:
 `bash run.sh eval --engine=crnn` (default), 10 capture profiles x 6 documents,
 sub-human profiles excluded; artifact `artifacts/eval_results.json` carries
 `"engine": "crnn"`. And end to end — detector, recogniser, classifier and field
-extraction in the real app, in WebKit — the shipped engine recovers **0.0%** of
-ground-truth fields (`docs/14_HACKATHON_BENCHMARK.md`).
+extraction in the real app, in WebKit — the shipped engine recovers **20.8%** of
+ground-truth fields as the app's own scorer counts them (**5 of 24**; **9 of 24**
+are present anywhere in the read text) — `docs/14_HACKATHON_BENCHMARK.md`,
+`artifacts/pipeline_raw_deskew.json`.
+
+> *Corrected 2026-10-21:* this paragraph used to read "the shipped engine recovers
+> **0.0%** of ground-truth fields". That was the pre-fix number, measured while the
+> deskew correction was applied in the wrong sense and the best-measuring
+> preprocessing arm could not be elected — both defects since repaired, and the
+> full 3.6% → 45.9% trajectory is in `docs/14`.
 
 So the honest statement is not "we cannot measure it", it is: **the classifier
 clears the brief's bar; the recognition stage does not, and it is 8x worse than
@@ -351,14 +376,21 @@ Corpus seeder: `zlib.crc32/seedutil-v1`
 
 ## 5. On-device payload
 
-| artifact | size |
-|---|---|
-| `minilm_encoder.onnx` (INT8) | 22348.7 KB |
-| `minilm_head.onnx` | 1.0 KB |
-| `restorer.onnx` | 3.9 KB |
-| **`crnn.onnx` (our recogniser)** | **3840 KB** |
-| `tokenizer.json` | 695 KB |
-| **total ML payload** | **26880 KB (26.3 MB)** |
+Every size below is the byte count of the file on disk (`stat -c %s`), with the
+same number in KiB/MiB (÷1024 / ÷1,048,576). Corrected 2026-10-21 — this table
+used to list `minilm_head.onnx` 1.0 KB, `restorer.onnx` 3.9 KB, `crnn.onnx`
+3840 KB and a 26880 KB (26.3 MB) total, none of which matched any file on disk.
+
+| artifact | bytes | size |
+|---|---|---|
+| `minilm_encoder.onnx` (INT8) | 22,885,055 | 21.82 MiB |
+| `minilm_head.onnx` | 199,958 | 195.3 KiB |
+| `restorer.onnx` | 153,362 | 149.8 KiB |
+| **`crnn.onnx` (our recogniser, dynamic width)** | **3,785,916** | **3.61 MiB** |
+| `tokenizer.json` | 711,661 | 695.0 KiB |
+| **models + tokenizer** | **27,735,952** | **26.45 MiB** |
+| `vendor/ort/ort-wasm-simd-threaded.wasm` | 11,246,032 | 10.73 MiB |
+| **on device (models + tokenizer + wasm)** | **38,981,984** | **~37.2 MiB** |
 
 **Tesseract and its 41.1 MB of payload were REMOVED** — `app/vendor/tesseract`
 and `app/vendor/tessdata` are gone, `bundle-check` fails the build if any of four
@@ -371,9 +403,16 @@ opposite; it was stale.
 field/word accuracy figures produced by `bash run.sh eval` describe Tesseract,
 not the recogniser the app ships. Read them as "what a mature OCR engine scores
 on these renders", not as the product's accuracy. The shipped recogniser's own
-numbers come from `bash run.sh eval-ocr` (SROIE word crops + 193 hand-photographed
-pages, detector included) and are the 71.6% line recall / 58.4% CER / 2.4%
-line-exact in section 3. Migrating `evaluate.py` to the CRNN is still open work.
+numbers come from `bash run.sh eval-ocr` (SROIE word crops + hand-photographed
+pages, detector included) and are the **67.9% line recall / 1.8% line-exact /
+56.5% CER** on the 20-page hand-photographed set in section 3 (the 193-page set-B
+reproduction of the shipped checkpoint is 71.6% / 2.4% / 58.4%, `HANDOFF.md` §3).
+Migrating `evaluate.py` to the CRNN is still open work.
+
+> *Corrected 2026-10-21:* this sentence used to cite "71.6% line recall / 58.4% CER
+> / 2.4% line-exact" as the numbers **in section 3**. Section 3 records the 20-page
+> set (67.9% / 1.8% / 56.5%); 71.6% / 2.4% / 58.4% is the 193-page set-B
+> reproduction in `HANDOFF.md` §3. Both are real, on different page sets.
 
 ## 6. Test suite
 

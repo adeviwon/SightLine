@@ -22,7 +22,7 @@
       "evidence": [
         "artifacts/step3_classifier_metrics.json",
         "artifacts/ocr_training.json",
-        "artifacts/pipeline_raw.json",
+        "artifacts/pipeline_raw_deskew.json",
         "docs/03_RESULTS.md#3-results",
         "docs/14_HACKATHON_BENCHMARK.md"
       ],
@@ -76,23 +76,23 @@
     "source": "artifacts/ocr_training.json",
     "page_level": {
       "command": "bash run.sh eval-ocr",
-      "note": "word accuracy + CER on whole held-out pages, detector included; the printed table in docs/03 section 3 is the recorded run (71.6% line recall, 58.4% CER on real photos)"
+      "note": "word accuracy + CER on whole held-out pages, detector included; the printed table in docs/03 section 3 records the 20-page hand-photographed set at 67.9% line recall, 1.8% line-exact, 56.5% CER (the 193-page set-B reproduction is 71.6% / 2.4% / 58.4%, HANDOFF.md section 3) \u2014 hand-held photographs are the honest hard case, NOT 58.4% CER alone"
     }
   },
   "pipeline": {
     "n": 12,
     "errors": 0,
-    "field_recovery": 0.0,
-    "classification": 0.3333333333333333,
-    "word_accuracy": 0.036286629094848276,
-    "cer": 0.7083567329625812,
+    "field_recovery": 0.20833333333333334,
+    "classification": 0.8333333333333334,
+    "word_accuracy": 0.45942654983750875,
+    "cer": 0.30305363644199385,
     "headline": {
       "n": 12,
       "errors": 0,
-      "field_recovery": 0.0,
-      "classification": 0.3333333333333333,
-      "word_accuracy": 0.036286629094848276,
-      "cer": 0.7083567329625812
+      "field_recovery": 0.20833333333333334,
+      "classification": 0.8333333333333334,
+      "word_accuracy": 0.45942654983750875,
+      "cer": 0.30305363644199385
     },
     "headline_profiles": [
       "handheld_light",
@@ -113,34 +113,34 @@
       "handheld_light": {
         "n": 3,
         "errors": 0,
-        "field_recovery": 0.0,
-        "classification": 0.0,
-        "word_accuracy": 0.017278922758374813,
-        "cer": 0.8117483741658381
+        "field_recovery": 0.16666666666666666,
+        "classification": 0.6666666666666666,
+        "word_accuracy": 0.46532697080642277,
+        "cer": 0.37570481140080925
       },
       "jpeg_social": {
         "n": 3,
         "errors": 0,
-        "field_recovery": 0.0,
-        "classification": 0.3333333333333333,
-        "word_accuracy": 0.0091324200913242,
-        "cer": 0.7315820334550963
+        "field_recovery": 0.16666666666666666,
+        "classification": 0.6666666666666666,
+        "word_accuracy": 0.3982612749736038,
+        "cer": 0.37837012325625724
       },
       "off_axis": {
         "n": 3,
         "errors": 0,
-        "field_recovery": 0.0,
-        "classification": 0.3333333333333333,
-        "word_accuracy": 0.01567732115677321,
-        "cer": 0.8538297089705256
+        "field_recovery": 0.16666666666666666,
+        "classification": 1.0,
+        "word_accuracy": 0.45080697135491654,
+        "cer": 0.23357261047599276
       },
       "studio_clean": {
         "n": 3,
         "errors": 0,
-        "field_recovery": 0.0,
-        "classification": 0.6666666666666666,
-        "word_accuracy": 0.10305785237292087,
-        "cer": 0.43626681525886485
+        "field_recovery": 0.3333333333333333,
+        "classification": 1.0,
+        "word_accuracy": 0.5233109822150918,
+        "cer": 0.224567000634916
       }
     },
     "metric_definitions": {
@@ -149,7 +149,7 @@
       "field_recovery": "fraction of the document's ground-truth fields present in the extracted fields (a masked value counts if it is a suffix of the expected one)",
       "classification": "fraction of documents whose category matches the expected category"
     },
-    "source": "artifacts/pipeline_raw.json",
+    "source": "artifacts/pipeline_raw_deskew.json",
     "records": [
       {
         "doc": "prescription",
@@ -160,10 +160,13 @@
           "500mg",
           "400mg"
         ],
-        "fields": [],
-        "ocr_confidence": 0.8718335355287261,
+        "fields": [
+          "400 MG",
+          "WARNING MAY CAUSE DROWSINESS"
+        ],
+        "ocr_confidence": 0.8987532737397855,
         "error": null,
-        "ms": 8932
+        "ms": 7997
       },
       {
         "doc": "prescription",
@@ -174,27 +177,27 @@
           "500mg",
           "400mg"
         ],
-        "fields": [
-          "0534 65201500",
-          "320031\n038"
-        ],
-        "ocr_confidence": 0.720248543124467,
+        "fields": [],
+        "ocr_confidence": 0.7441437466365629,
         "error": null,
-        "ms": 8138
+        "ms": 8372
       },
       {
         "doc": "prescription",
         "profile": "off_axis",
         "expected_category": "medical",
-        "category": "general",
+        "category": "medical",
         "expected_fields": [
           "500mg",
           "400mg"
         ],
-        "fields": [],
-        "ocr_confidence": 0.5343349276205425,
+        "fields": [
+          "400 MG",
+          "1200 MG"
+        ],
+        "ocr_confidence": 0.903011327227978,
         "error": null,
-        "ms": 2651
+        "ms": 3872
       },
       {
         "doc": "prescription",
@@ -205,10 +208,13 @@
           "500mg",
           "400mg"
         ],
-        "fields": [],
-        "ocr_confidence": 0.695954172556722,
+        "fields": [
+          "50 MG",
+          "120 MG"
+        ],
+        "ocr_confidence": 0.8118881225671222,
         "error": null,
-        "ms": 9753
+        "ms": 9248
       },
       {
         "doc": "banking",
@@ -219,24 +225,28 @@
           "40218877",
           "40-11-04"
         ],
-        "fields": [],
-        "ocr_confidence": 0.9118094027266336,
+        "fields": [
+          "401104"
+        ],
+        "ocr_confidence": 0.9709491091902476,
         "error": null,
-        "ms": 4082
+        "ms": 4636
       },
       {
         "doc": "banking",
         "profile": "handheld_light",
         "expected_category": "banking",
-        "category": "general",
+        "category": "banking",
         "expected_fields": [
           "40218877",
           "40-11-04"
         ],
-        "fields": [],
-        "ocr_confidence": 0.7075696042504194,
+        "fields": [
+          "40218877"
+        ],
+        "ocr_confidence": 0.966995223419313,
         "error": null,
-        "ms": 7919
+        "ms": 8705
       },
       {
         "doc": "banking",
@@ -248,69 +258,78 @@
           "40-11-04"
         ],
         "fields": [],
-        "ocr_confidence": 0.6864775990635338,
+        "ocr_confidence": 0.9553798883519938,
         "error": null,
-        "ms": 2838
+        "ms": 4106
       },
       {
         "doc": "banking",
         "profile": "jpeg_social",
         "expected_category": "banking",
-        "category": "general",
+        "category": "banking",
         "expected_fields": [
           "40218877",
           "40-11-04"
         ],
         "fields": [
-          "003303202"
+          "402188",
+          "401104",
+          "4521"
         ],
-        "ocr_confidence": 0.784058514072413,
+        "ocr_confidence": 0.9782233690730052,
         "error": null,
-        "ms": 10939
+        "ms": 8416
       },
       {
         "doc": "legal",
         "profile": "studio_clean",
         "expected_category": "legal",
-        "category": "general",
+        "category": "legal",
         "expected_fields": [
           "2500",
           "2024-CV-00456"
         ],
         "fields": [
-          "2024000456"
+          "THELANDLORD 1 THE TENANT 2\nPROPERTY13 AKE STET IONDON N"
         ],
-        "ocr_confidence": 0.7854206467643265,
+        "ocr_confidence": 0.8827177421963776,
         "error": null,
-        "ms": 3485
+        "ms": 3929
       },
       {
         "doc": "legal",
         "profile": "handheld_light",
         "expected_category": "legal",
-        "category": "general",
+        "category": "legal",
         "expected_fields": [
           "2500",
           "2024-CV-00456"
         ],
-        "fields": [],
-        "ocr_confidence": 0.7111868547263194,
+        "fields": [
+          "32",
+          "51",
+          "74"
+        ],
+        "ocr_confidence": 0.896062235546185,
         "error": null,
-        "ms": 7950
+        "ms": 8041
       },
       {
         "doc": "legal",
         "profile": "off_axis",
         "expected_category": "legal",
-        "category": "medical",
+        "category": "legal",
         "expected_fields": [
           "2500",
           "2024-CV-00456"
         ],
-        "fields": [],
-        "ocr_confidence": 0.6577694498389909,
+        "fields": [
+          "1 FEBRUARY 2024",
+          "32"
+        ],
+        "ocr_confidence": 0.8013796352523694,
         "error": null,
-        "ms": 2275
+        "ms": 3833
       },
       {
         "doc": "legal",
@@ -322,9 +341,9 @@
           "2024-CV-00456"
         ],
         "fields": [],
-        "ocr_confidence": 0.7340600346095876,
+        "ocr_confidence": 0.7955250649838355,
         "error": null,
-        "ms": 8940
+        "ms": 8745
       }
     ]
   },

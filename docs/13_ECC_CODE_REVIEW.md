@@ -9,7 +9,7 @@ product: `app/` (PWA), `app/tools/` (dev tooling), `ml/src/` (training/eval).
 | gate | result |
 |---|---|
 | `bash run.sh test` | **271 passed, 8 skipped** (0 fail). Skips are dataset-dependent — `data/` was not fetched on the review box, matching the documented skip behaviour. |
-| `bash run.sh bundle-check` | **PASSED** — every shipped model loads and runs (26.68 MB payload). |
+| `bash run.sh bundle-check` | **PASSED** — every shipped model loads and runs (27,735,952 B ≈ 26.45 MiB of models + tokenizer; ~37.2 MiB on device once the 10.73 MiB ort wasm is counted). |
 | `origin/gh-pages` vs `main:app/` | **byte-identical** (blob-hash comparison over the full tree) — the live install serves exactly what `main` ships. |
 
 ## Findings

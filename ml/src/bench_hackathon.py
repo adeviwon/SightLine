@@ -12,7 +12,9 @@ WHAT THE BRIEF ASKS TO BE MEASURED, and where each number comes from:
       detector included
       -> bash run.sh eval-ocr                     (printed; see docs/03 section 3)
   the shipped pipeline end to end (the browser app, WebKit = iOS Safari's engine)
-      -> artifacts/pipeline_bench.json            (bash run.sh bench-pipeline)
+      -> artifacts/pipeline_raw.json              (bash run.sh bench-pipeline)
+         artifacts/pipeline_raw_deskew.json       (the SHIPPED build's saved records,
+                                                  which this report scores)
 
 This module does not measure anything itself: it READS those artifacts and
 reports them in one place, with the source of every number attached, and it
@@ -99,7 +101,7 @@ REQUIREMENTS = {
         "brief": "Step 3 — the required metrics, on held-out data, reproducible",
         "evidence": ["artifacts/step3_classifier_metrics.json",
                      "artifacts/ocr_training.json",
-                     "artifacts/pipeline_raw.json",
+                     "artifacts/pipeline_raw_deskew.json",
                      "docs/03_RESULTS.md#3-results", "docs/14_HACKATHON_BENCHMARK.md"],
         "commands": ["bash run.sh bench-hackathon", "bash run.sh eval-ocr",
                      "bash run.sh bench-pipeline"],
@@ -177,8 +179,12 @@ def build_report(include_pipeline=True, artifacts_dir=None):
             "page_level": {
                 "command": "bash run.sh eval-ocr",
                 "note": "word accuracy + CER on whole held-out pages, detector "
-                        "included; the printed table in docs/03 section 3 is the "
-                        "recorded run (71.6% line recall, 58.4% CER on real photos)",
+                        "included; the printed table in docs/03 section 3 records "
+                        "the 20-page hand-photographed set at 67.9% line recall, "
+                        "1.8% line-exact, 56.5% CER (the 193-page set-B "
+                        "reproduction is 71.6% / 2.4% / 58.4%, HANDOFF.md "
+                        "section 3) — hand-held photographs are the honest hard "
+                        "case, NOT 58.4% CER alone",
             },
         }
     else:
@@ -192,7 +198,9 @@ def build_report(include_pipeline=True, artifacts_dir=None):
             report["pipeline"] = aggregate_pipeline(raw["records"])
         else:
             missing.append("shipped-pipeline bench (" + PIPE_RAW
-                           + ") — run: bash run.sh bench-pipeline")
+                           + ") — the shipped build's saved records; write a fresh "
+                           "run with `bash run.sh bench-pipeline` -> "
+                           + PIPE_BENCH_OUT)
 
     report["notes"].append(
         "The classifier figure is the held-out n=%s number over %s seeds. The "
@@ -224,7 +232,11 @@ def _pct(x):
 # the text it read. It computes no metrics on purpose — the definitions below are
 # the only definitions, so the browser and this file cannot drift apart.
 
-PIPE_RAW = "artifacts/pipeline_raw.json"
+# Which records this report SCORES: the SHIPPED build's saved run. A fresh
+# `bench-pipeline` run goes to PIPE_BENCH_OUT, so re-running the browser bench
+# cannot silently overwrite the shipped record this file reports on.
+PIPE_RAW = "artifacts/pipeline_raw_deskew.json"
+PIPE_BENCH_OUT = "artifacts/pipeline_raw.json"
 
 # The ONLY profiles kept out of the headline are the ones the repo already marks
 # as unreadable to a human (evaluate.SUB_HUMAN): a photo nobody can read is not
@@ -329,9 +341,14 @@ def aggregate_pipeline(records):
 
 
 def run_pipeline_bench():
-    """Run the browser bench (WebKit) that writes artifacts/pipeline_raw.json."""
+    """Run the browser bench (WebKit) that writes artifacts/pipeline_raw.json.
+
+    `--suites=bench` is the suite that emits one record per sample (`R.record` is
+    only called there); `--suites=scan` runs the two scan suites, which emit no
+    records, so the JSON would come out empty. This matches `run.sh bench-pipeline`.
+    """
     cmd = ["node", "app/tools/ios_full_check.js", "--engine=webkit",
-           "--suites=scan", "--json=" + PIPE_RAW]
+           "--suites=bench", "--json=" + PIPE_BENCH_OUT]
     print("[bench] " + " ".join(cmd))
     r = subprocess.run(cmd, cwd=str(ROOT))
     return r.returncode == 0
@@ -372,8 +389,11 @@ def main():
               % (_pct(h["field_recovery"]), _pct(h["classification"]),
                  _pct(h["word_accuracy"]), _pct(h["cer"])))
         if d["n"]:
+            # sub_human_profiles, not "degraded_profiles": the latter key does not
+            # exist on aggregate_pipeline's output, so this branch used to raise
+            # KeyError the moment a bench included a SUB_HUMAN profile.
             print("    sub-human profiles (reported, not counted; n=%s: %s):"
-                  % (d["n"], ", ".join(p["degraded_profiles"])))
+                  % (d["n"], ", ".join(p["sub_human_profiles"])))
             print("      field recovery %s   classification %s   word acc %s   CER %s"
                   % (_pct(d["field_recovery"]), _pct(d["classification"]),
                      _pct(d["word_accuracy"]), _pct(d["cer"])))

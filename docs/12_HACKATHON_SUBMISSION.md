@@ -3,9 +3,11 @@
 **Submission.** Structured to the five required steps. Every statistic is
 sourced and every metric is measured on held-out data.
 
-**Read this first if you only read one thing:** §6. We found two ways our own
-tool would exclude the people it is meant to serve. We did not find them by
-being asked; we found them by reading our own model config.
+**Read this first if you only read one thing:** §6 — four train/serve contract
+defects we found in our own code and fixed, each with the number it moved — and
+§4, where we found two ways our own tool would exclude the people it is meant to
+serve. We did not find any of them by being asked; we found them by reading our
+own model config and our own serving path.
 
 **Round 1 deliverables** (150-word proposal + 3–5 minute video, due
 2026-10-25): the proposal, a shot-by-shot video list, judge intel and the
@@ -71,8 +73,10 @@ A **CRNN with CTC loss**, trained from scratch in PyTorch.
   decoding is **non-autoregressive** — one forward pass, not 32. A transformer
   decoder would autoregress and miss the latency budget.
 - **Shape.** CNN (7 blocks, 16→128 channels) → 2-layer BiLSTM (hidden 128) →
-  linear → 38 classes. **942,166 parameters.** Input `[1,1,32,320]`, output
-  `[1,32,38]`.
+  linear → 38 classes. **942,166 parameters.** Training crops are built at
+  their NATURAL width clamped to `realdata.MAX_W = 320`, and the corpus median
+  IS that clamp; the shipped graph is **dynamic width** — input `[1,1,32,width]`,
+  output `[1,T,38]`.
 - **Training data.** ICDAR 2019 SROIE — **52,554 crops from 420 receipts**,
   11 augmentation variants including perspective warps driven by **199 real
   hand-held homographies** (Zenodo 13688441, CC-BY-4.0).
@@ -93,22 +97,30 @@ not claim it is.
 
 ### Deployment
 
-Exported to **ONNX** and run through `onnxruntime-web`. **26.68 MB** total.
+Exported to **ONNX** and run through `onnxruntime-web` **1.20.1**. **26.4 MB**
+of models + tokenizer ship inside the app (27,735,952 B, per `bundle-check`),
+plus the runtime's only non-JSEP wasm — `ort-wasm-simd-threaded.wasm`,
+11,246,032 B = **10.73 MiB** — so the honest on-device total is **≈37.2 MiB**.
+Both numbers are facts a judge can reproduce with `du -sb app` and
+`bash run.sh bundle-check`; quote the sum, not the weights alone.
 
-Why the fixed 256px width: `aten::lstm` cannot export with a dynamic sequence
-length, and an explicit gate loop cannot unroll over a symbolic bound. Both
-failed for real. So crops are scaled proportionally, right-padded to 256, and
-the decoder trims to the true timestep count.
+The shipped graph is **dynamic width**: input `[1,1,32,width]`, and
+`app/js/recognizer.js` reads the graph's own width axis at init, so every crop
+is served at its NATURAL width with **no padding at all** (`app/models/ort.json`).
+Two notes that used to be here were wrong, and correcting them was worth more
+than any model change:
 
-Padding is safe **because a trained CTC model emits BLANK there** — verified, not
-assumed:
-
-```
-pad  32->256: ok (ref 'RM'       vs padded 'RM')
-pad  64->256: ok (ref '1071'     vs padded '1071')
-pad 128->256: ok (ref '01143008' vs padded '01143008')
-pad 200->256: ok (ref 'M  C2  0' vs padded 'M  C2  0')
-```
+- This file claimed the graph had to be a FIXED 256px because `aten::lstm`
+  cannot export with a dynamic sequence length. That was a **mode artefact**:
+  `set_export_mode(True)` traces an explicit per-timestep loop that bakes T,
+  while the FUSED `nn.LSTM` lowers to a real ONNX LSTM op with a dynamic axis.
+  The fixed 256px graph truncated the tail off **98.8%** of lines (only 40 of
+  3,270 held-out crops are ≤256px).
+- It claimed right-padding was safe "because a trained CTC model emits BLANK
+  there". It is **not inert**: the bidirectional LSTM resumes its backward pass
+  from the right edge, i.e. inside the padding, and that cost **11.5 points of
+  crop-level exact match** — padded 19.0% / CER 0.308 against natural 30.5% /
+  0.198. See `docs/18_CRNN_ACCURACY_STRATEGIES.md` §0.1.
 
 **No OCR library.** Tesseract was removed: 41.1 MB deleted, `bundle-check` now
 **fails the build** if any part of it returns. It used to ship *while our
@@ -150,39 +162,73 @@ medicine label, and it is **not** end-to-end accuracy.
 | epoch 20 | 30,021 crops / 260 receipts | 26.25% | 15.90% |
 | **epoch 39** | **52,554 crops / 420 receipts** | **29.30%** | **11.95%** |
 
+Read against the crop level, where the same recogniser looks much better: on the
+trainer's own 7,875 held-out crops it records **28.0%** word accuracy
+(`artifacts/ocr_training.json`), and paired on **300 held-out crops with only
+the weights changing** the retrained checkpoint reaches **57.0% exact line
+match at CER 0.156** (`app/tools/arm_ab.js`). The gap between the crop-level
+numbers (28%, 57%) and the page-level 29.30% is what the end-to-end section
+below decomposes: detection, serving geometry, and the metric each column is
+named after. Nothing here is a generalisation claim about medicine labels —
+see §1.
+
 ### The shipped application, end to end — the honest headline
 
 The two rows above are the recogniser alone. What the product actually does —
 detect lines, read them, classify the document, extract fields — measured by
-driving the real app in WebKit (iOS Safari's engine) over 12 rendered documents:
+driving the real app in WebKit (iOS Safari's engine) over 12 rendered documents,
+3 document types × 4 capture profiles, one record per document:
 
-| metric | value |
-|---|---|
-| field recovery | **12.5%** |
-| classification | **50.0%** |
-| word accuracy | **22.4%** |
-| CER | **57.5%** |
+| metric | value | source |
+|---|---|---|
+| word accuracy | **45.9%** | `artifacts/pipeline_raw_deskew.json` |
+| CER | **0.303** | same |
+| ground-truth fields present in the read text | **9 of 24** | same |
+| field recovery, the app's extracted-field metric (`ml/src/bench_hackathon.py`) | **20.8%** — 5 of 24 | same |
+| classification | **83.3%** | same |
 
-All 12 scans completed without a crash or a failed scan. 3 document types x 4
-capture profiles; raw records in `artifacts/pipeline_raw_final.json`, row-level
-evidence in `artifacts/hackathon_metrics.json`.
+The two field rows are deliberate: "present in the read text" is the weaker,
+more direct claim (the recogniser produced the right string somewhere on the
+page) and it is the one the Grand Final deck quotes; `field_recovery` is the
+stricter one the app's own scorer reports, and it asks whether the value also
+survived extraction. Both come from the same 12 records; quote which one you
+mean.
 
-These read 0.0% / 33.3% / 3.6% / 70.8% until the graph's export width was fixed:
-it was a FIXED 256px against 320px training crops (the corpus median IS the clamp,
-and 98.8% of held-out crops are wider than 256), so the app fed the model the
-first 256px of nearly every line and the read changed on 200 of 200 held-out
-crops. See `docs/14` for the full before/after and the arithmetic.
+All 12 scans completed with no crash and no failed scan (`"error": null` on
+every record). **Read the metric, not just the number:** `word_accuracy` here is
+a **normalised token recall** — the fraction of ground-truth words present in
+the read text after `norm()` strips punctuation and case — **not** exact-word
+match. Both definitions live in `ml/src/bench_hackathon.py` and are unit-tested
+there; the browser side deliberately computes no metrics, so the two cannot
+drift apart.
 
-That gap is the project's main open problem and it is quantified, not hidden:
-the recogniser was trained on receipt crops and scores 28.0% word accuracy on
-held-out crops, so page-level text (detector errors plus the squeeze to the
-graph's fixed 256px width) collapses. Reproduction, per-profile detail and the
-caveats — including which numbers are *not* generalisation claims — are in
-`docs/14_HACKATHON_BENCHMARK.md`:
+**The trajectory is the result.** Same 12 documents, same metric, each step a
+defect we found in our own train/serve contract — with the step that regressed
+kept in:
+
+| word acc | CER | what changed |
+|---|---|---|
+| 3.6% | 0.708 | as shipped on 10-20: ONNX graph baked at a FIXED 256px against 320px training crops, the ranking could only choose among degraded arms, and the deskew correction was applied backwards |
+| 22.4% | 0.575 | export width brought to the training clamp (320), same checkpoint — the app had been feeding the model the first 256px of **98.8%** of lines; the read changed on **200 of 200** held-out crops |
+| 17.1% | 0.600 | **a step back on purpose:** dynamic-width graph *and* retrained weights went in together, and on these 12 documents the pair measured worse — even though at crop level the same retrain moved exact line match **3.3% → 57.0%** (CER 0.156). That disagreement is why the next fix was measured on the arm list, not the model |
+| 35.0% | 0.465 | the untransformed image made reachable: `preprocess()` already offered the raw deskewed grayscale, and a later branch replaced the candidate list with the restorer's three degraded arms, so the arm that measures best could never win |
+| **45.9%** | **0.303** | deskew applied in the correct sense: the estimator measured the right angle and the correction **doubled** the tilt instead of removing it — `off_axis` 1.1% → 45.1%, CER 0.882 → 0.234 |
+
+Raw records for every row, in that order: `artifacts/pipeline_raw.json`,
+`pipeline_raw_final.json`, `pipeline_raw_dynamic.json`,
+`pipeline_raw_rawarm.json`, `pipeline_raw_deskew.json`. Per capture profile on
+the deskew arm: `studio_clean` 52.3% (and 100% classified correctly),
+`handheld_light` 46.5%, `jpeg_social` 39.8%, `off_axis` 45.1%. Reproduction,
+per-profile detail and the caveats — including which numbers are *not*
+generalisation claims — are in `docs/14_HACKATHON_BENCHMARK.md`:
 
 ```
 bash run.sh bench-pipeline && bash run.sh bench-hackathon
 ```
+
+The caveat that remains, stated plainly: this is **not** 95%, and on real
+hand-photographed pages the ceiling is the **detector**, not the recogniser —
+see the next section.
 
 ### One situation where it gets it wrong — and why
 
@@ -217,10 +263,13 @@ Three of the twenty pages are **resolution-bound** (12–17 px per line against 
 detector**; the information was never captured.
 
 **For a dose this is disqualifying, and we say so.** Our design refuses to speak
-a field it is not confident about — it omits rather than guesses. At 1.8% line
-accuracy on real photos, the honest product today is *"I could not read that
-label — please check it with a pharmacist"*, and that is a **failure state, not
-a product**.
+a field it is not confident about — it omits rather than guesses. Measured end
+to end, our own rendered documents now read at **45.9%** word accuracy, but on
+real hand-held photographs we are still at **1.8% line-exact**, where the honest
+product is *"I could not read that label — please check it with a pharmacist"*,
+and that is a **failure state, not a product**. That gap — clean renders against
+real captures — is the size of the remaining work, and it is a data problem
+before it is a modelling one.
 
 ---
 
@@ -353,10 +402,15 @@ Plainly, and without the word AI:
 
 ## 6. What we got wrong
 
-Judges should know what broke. Each of these is now a check that fails the build.
+Judges should know what broke. Each of these now has a check behind it, and most
+of them fail the build.
 
 | what happened | why it matters | now |
 |---|---|---|
+| **The served graph was exported at a FIXED 256px** while training built every crop at its natural width clamped to `MAX_W = 320` — and the corpus median IS that clamp | the app fed the model the first 256px of **98.8%** of lines; crop-level exact match 44.7% at natural width against 0.0% cut to 256, and the read changed on **200 of 200** held-out crops | graph re-exported at the training clamp, then made **dynamic width**; `ml/tests/test_graph_width_contract.py` asserts **equality** with the clamp (the old assertion was `width <= MAX_W`, which every narrower graph satisfies — it passed hardest on the worst value) |
+| **Right-padding was assumed inert** because CTC emits BLANK in the tail — it is not: the bidirectional LSTM resumes its backward pass from the right edge, i.e. inside the pad | **11.5 points of crop-level exact match** (padded 19.0% / CER 0.308 vs natural 30.5% / 0.198) | dynamic-width graph — the app serves every crop at its **natural** width, no padding at all |
+| **The image transform ran at serve and never at train** — and a later branch replaced `preprocess()`'s candidate list with the restorer's three degraded arms | the arm that measures **best** (raw deskewed grayscale) could never win the ranking; 34.5 points of exact line match, end-to-end word accuracy 17.1% → 35.0% | the untransformed candidate is prepended; the ranking rule was left alone, because the **list** was the bug, not the rule |
+| **The deskew correction was applied in the opposite sense** — the estimator measured the right angle, and `preprocess()` rotated the page *away* from straight, doubling the tilt | it fired only on `off_axis`, the pages whose raw detection was already marginal: `off_axis` word accuracy **1.1%**, and two pages lost their lines entirely | one sign changed (`rotate(gray, -angle)`); `off_axis` now **45.1%** (CER 0.882 → 0.234) and the app-wide number **35.0% → 45.9%**; `app/tools/deskew_verify.js` asserts the **round trip** (apply, re-estimate, require ~0) and exits non-zero |
 | Our manifest shipped `"tesseract": false` **while 30 MB of Tesseract loaded at runtime** | the shipped artifact lied; a judge opening the bundle would have seen it | removed (41.1 MB); `bundle-check` **fails** if any of 4 routes back |
 | A safety gate had its **condition inverted**, so it never ran — it skipped precisely when the model was good enough for the check to matter | the only check on the assumption the ONNX export rests on | fixed, passes, and **mutation-tested to confirm it can fail** |
 | `eval_sroie_test()` called `most_common()` on a `defaultdict` | it had **never run to completion**; our headline held-out number was previously unmeasured | fixed |
@@ -368,9 +422,9 @@ Judges should know what broke. Each of these is now a check that fails the build
 
 ## 7. If you remember three things
 
-1. **We trained the OCR.** 942,166 parameters, from scratch, exported to a 4 MB
-   self-contained ONNX graph, decoding in the browser. No OCR dependency exists
-   — and the build fails if one returns.
+1. **We trained the OCR.** 942,166 parameters, from scratch, exported to a
+   **3.6 MB** self-contained, dynamic-width ONNX graph, decoding in the browser.
+   No OCR dependency exists — and the build fails if one returns.
 2. **We know exactly which part is broken.** Line detection caps accuracy at
    **67.9% recall**; line accuracy on real photos is **1.8%**; our best fix
    improved the ceiling and worsened the text, and we **reverted it**. We also
@@ -386,9 +440,9 @@ Judges should know what broke. Each of these is now a check that fails the build
 bash fetch_data.sh          # SROIE + CC-BY-4.0 hand-photographed set
 bash run.sh build-data      # 52,554 crops, split by document identity
 bash run.sh train-ocr 40    # ~2.8 h, 4 CPU cores, no GPU
-bash run.sh export          # ONNX + parity + padding-invariant checks
+bash run.sh export          # ONNX + parity + the graph-width contract check
 bash run.sh bundle-check    # real inference through every shipped model
-bash run.sh test            # 278 tests
+bash run.sh test            # the full pytest suite (ml/tests)
 ```
 
 Datasets are not redistributed; `fetch_data.sh` pulls them and the licences are

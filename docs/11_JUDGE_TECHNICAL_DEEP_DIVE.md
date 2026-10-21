@@ -5,7 +5,8 @@ Everything here is measured on held-out data or verified by a check that fails
 the build. Where a number is unflattering it is stated as unflattering.
 
 Last verified: 278 tests passing · 1 known failure documented ·
-26.68 MB installed payload · 0 bytes leave the phone.
+26.45 MiB of models + tokenizer (27,735,952 B), ≈37.2 MiB installed on device ·
+0 bytes leave the phone.
 
 ---
 
@@ -31,9 +32,21 @@ of it returns.
 | claim | number |
 |---|---|
 | Classifier accuracy / macro-F1 — 5 seeds, held-out n=24 (`ml/experiments/step3_f1.py`) | **95.8% (sd 2.63) / 95.7% (sd 2.72)** — the stored eval once said 100%; that was one lucky seed, re-measured and published |
-| Held-out scan OCR, epoch 39, 17,945 test words | word accuracy **29.30%**, CER **11.95%** |
-| Real hand-held photos (20 pages) | detection recall **67.9–71.6%**, line-exact **1.8–2.4%**, CER **56.5–58.4%** |
-| Browser payload | **26.68 MB**, self-contained, 0 bytes leave the phone |
+| Held-out scan OCR, epoch 39, 17,945 test words (`docs/03_RESULTS.md` §3) | word accuracy **29.30%**, CER **11.95%** |
+| Real hand-held photos, 20 pages (`docs/03_RESULTS.md` §3) | detection recall **67.9%**, line-exact **1.8%**, CER **56.5%** |
+| Browser payload | **26.45 MiB** models + tokenizer (27,735,952 B) · **≈37.2 MiB** installed on device |
+
+> **Corrected 2026-10-21.** Two rows here were stale. The real-photo row used to
+> quote a *range* — recall 67.9–71.6%, line-exact 1.8–2.4%, CER 56.5–58.4% —
+> that mixed the baseline with a localisation variant whose entire gain was two
+> lines and **statistically insignificant** (McNemar p = 1.000, §6); the
+> headline now quotes the baseline, **67.9% / 1.8% / 56.5%**, matching `docs/12`
+> and `docs/13`. Those figures are the 20-page set (`docs/03_RESULTS.md` §3);
+> `docs/14` records a *different*, 60-page real-photo reading (1.96% line-exact /
+> 63.46% CER) — the cross-corpus label is flagged in `docs/23`. The payload
+> row used to say **26.68 MB**, which counted the model weights only and silently
+> excluded the **10.73 MiB** ONNX-runtime WASM the app cannot infer without; the
+> installed total is **≈37.2 MiB** (`bash run.sh bundle-check`, `du -sb app`).
 
 ---
 
@@ -100,9 +113,12 @@ input [B, 1, 32, W]
 logits [B, T, 38]
 ```
 
-**942,166 parameters** (verified against `state_dict`, not quoted from the training log). Tuned down from 335 s/epoch to ~150 s/epoch by halving
-channel widths — a decision made because this trains on a 4-core laptop CPU
-with no GPU, and a model you can iterate on beats a model you cannot.
+**942,166 parameters** (verified against `state_dict`, not quoted from the training log). Tuned down from a first stack that measured 335 s/epoch
+(`ml/src/ocr_model.py`) by halving channel widths — a decision made because this trains on a 4-core laptop CPU
+with no GPU, and a model you can iterate on beats a model you cannot. The
+"~150 s/epoch" this line used to quote is an **unverified project note** — no
+artifact in this repo records it; the 40-epoch corpus run measured ~250 s/epoch
+(`docs/03_RESULTS.md` §3).
 
 ### Training data — real documents only
 
@@ -140,8 +156,9 @@ The larger corpus plus real-homography perspective augmentation is worth
 
 ## 4. Why this runs on a phone: the ONNX path
 
-`aten::lstm` **cannot export to ONNX with a dynamic sequence length**, and an
-explicit gate loop cannot unroll over a symbolic bound. Both failed for real:
+`aten::lstm` **cannot export to ONNX with a dynamic sequence length** *when the
+recurrence is traced as an explicit per-timestep loop*, and that is the error we
+first hit. Both failed for real:
 
 ```
 torch.onnx.export(..., dynamic_axes={"W": ...})
@@ -151,42 +168,68 @@ explicit gate loop
   -> The inequality Eq((((x/4)//2)) - 20, 0) cannot be solved
 ```
 
-So the width is **fixed at 256px**. Each crop is scaled proportionally to
-preserve aspect ratio, right-padded to 256, and the decoder trims to the
-crop's true timestep count.
+**Corrected 2026-10-21 — this whole conclusion was wrong, and it was the single
+largest defect in the project.** From those two failures we concluded the width
+had to be **fixed at 256px**, scaled each crop proportionally, right-padded it to
+256, and trimmed the decode to the crop's true timestep count. The fixed width
+was a *trace-mode artefact*: `set_export_mode(True)` unrolls an explicit
+per-timestep Python LSTM loop, which **bakes T into the graph**; the **fused
+`nn.LSTM` lowers to a real ONNX `LSTM` op whose sequence axis is dynamic
+natively**. Re-exporting with `dynamic_axes` on width gives a graph that accepts
+`[B, 1, 32, W]` for *any* W and computes exactly what eager PyTorch computes.
+The shipped graph `app/models/crnn.onnx` is **dynamic width**
+(`['batch', 1, 32, 'width']`); the app reads that axis at init and serves every
+crop at its **natural** width, with **no padding at all**.
 
-**Padding is safe because a trained CTC model emits the BLANK symbol there —
-and that is verified, not assumed:**
+**"Padding is safe" was also false, and it is worth showing why.**
 
-```
-pad  32->256: ok (ref 'RM'         vs padded 'RM')
-pad  64->256: ok (ref '1071'       vs padded '1071')
-pad 128->256: ok (ref '01143008'   vs padded '01143008')
-pad 200->256: ok (ref 'M  C2  0'   vs padded 'M  C2  0')
-```
+> This section used to assert that padding is safe because a trained CTC model
+> emits the BLANK symbol in the padded tail, and printed a "verified" table
+> (`pad 32->256: ok …`). Both are corrected here rather than deleted.
+>
+> The BLANK argument only bounds the *forward* pass. The recogniser's recurrent
+> stage is a **2-layer bidirectional LSTM**, whose **backward pass starts at the
+> right edge — inside the pad** — and carries the padded zeros' effect across the
+> *valid* frames. Truncating the decode to the content frames (which the app
+> already did) removes trailing characters but cannot undo that perturbation.
+> Measured **max |Δ| over the valid frames: 9.10 at content width 64, 15.28 at
+> 200** (`ml/src/export_dynamic.py`), and at crop level padding cost **11.5
+> points of exact match** (padded 19.0% / CER 0.308 vs natural 30.5% / 0.198).
 
-Parity against PyTorch: **max |Δ| = 1.94e-05**. The graph is **self-contained**
-— no external `.onnx.data` blob, because ONNX Runtime Web has no API to mount
-one, so a model with external weights loads perfectly in Python and fails on a
-judge's phone. It would have failed on stage.
+The graph is still **self-contained** — no external `.onnx.data` blob, because
+ONNX Runtime Web has no API to mount one, so a model with external weights loads
+perfectly in Python and fails on a judge's phone. It would have failed on stage.
+Dynamic-width parity against PyTorch: **max |Δ| = 1.7e-05 across widths
+32/47/63/64/128/200/256**, *including* widths where T is not `floor(w/8)`
+(`app/models/ort.json`); the earlier 1.94e-05 was the old fixed-width export.
 
 ### Payloads, all self-contained
 
-| model | exact bytes | size | purpose |
+Read from disk (`ls -l app/models app/vendor/ort`), in exact bytes and binary
+MiB:
+
+| artifact | exact bytes | size | purpose |
 |---|---|---|---|
-| `crnn.onnx` | 4,029,084 | 4.03 MB | **our recogniser** |
-| `restorer.onnx` | 153,362 | 0.15 MB | image restoration |
-| `minilm_encoder.onnx` | 22,885,055 | 22.89 MB | int8 MiniLM — we **measured** that int8 cost 0.0 accuracy points rather than assuming it |
-| `minilm_head.onnx` | 199,958 | 0.20 MB | document classifier |
-| **total shipped payload** | | **26.68 MB** | models + tokenizer, per `bundle-check` |
+| `crnn.onnx` | 3,785,916 | 3.61 MiB | **our recogniser** — dynamic width, `['batch',1,32,'width']` |
+| `restorer.onnx` | 153,362 | 0.15 MiB | image restoration |
+| `minilm_encoder.onnx` | 22,885,055 | 21.82 MiB | int8 MiniLM — we **measured** that int8 cost 0.0 accuracy points rather than assuming it |
+| `minilm_head.onnx` | 199,958 | 0.19 MiB | document classifier |
+| `tokenizer.json` | 711,661 | 0.68 MiB | MiniLM tokenizer |
+| **models + tokenizer** | **27,735,952** | **26.45 MiB** | the number `bundle-check` prints |
+| `ort-wasm-simd-threaded.wasm` | 11,246,032 | 10.73 MiB | the ONNX-runtime the app cannot infer without |
+| **installed on device** | **38,981,984** | **≈37.2 MiB** | everything the phone fetches, once |
+
+> **Corrected 2026-10-21.** This table used to say *"total shipped payload
+> 26.68 MB"* and listed `crnn.onnx` at *4,029,084 B / 4.03 MB*. Both changed:
+> the recogniser is now the smaller dynamic-width export (3,785,916 B), and the
+> 26.68 MB figure silently excluded the **10.73 MiB** ONNX-runtime WASM — the
+> app cannot run inference without it, so the honest installed total is
+> **≈37.2 MiB**. An earlier draft also mixed decimal MB with binary MiB in one
+> column; the units are now stated (`docs/12` §Deployment, `README.md`).
 
 Removing Tesseract also deleted **41.1 MB** of third-party OCR payload
 (`vendor/tesseract` 30.2 MB, `vendor/tessdata` 10.9 MB) — a larger saving than
 the entire restorer, classifier and recogniser combined.
-
-All figures are decimal MB (10⁶ B) throughout. An earlier draft of this table
-mixed decimal MB with binary MiB in the same column; every size here was
-re-read from disk and given in bytes so the unit cannot be ambiguous.
 
 ---
 
@@ -223,7 +266,7 @@ Three claims we cannot make, in one place:
    bilingual Hong Kong label cannot produce a single correct character, and
    TTS defaults to `en-GB`. This is the project's open-work item 2.
 3. **No end-to-end accuracy we would defend on real photos.** Line-exact
-   accuracy is **1.8–2.4%**; the honest product today is the refusal —
+   accuracy is **1.8%**; the honest product today is the refusal —
    *"I could not read that — please check with a pharmacist"* — not a spoken
    dose.
 
@@ -231,12 +274,17 @@ Three claims we cannot make, in one place:
 
 | metric | held-out flatbed scans | real hand-photographed |
 |---|---|---|
-| CER | 11.95% | 58.4% |
-| line exact accuracy | — | **2.4%** |
-| detection recall | — | **71.6%** ← hard ceiling |
+| CER | 11.95% | 56.5% |
+| line exact accuracy | — | **1.8%** |
+| detection recall | — | **67.9%** ← hard ceiling |
 
-Line accuracy **cannot exceed 71.6%** however good the recogniser is, because
-detection only finds 71.6% of the lines. That ceiling is why we report
+These are the **baseline** detector's 20-page figures (`docs/03_RESULTS.md` §3).
+The `+ document localisation` variant reads 71.6% recall / 2.4% line-exact / 58.4%
+CER, but its whole gain is two lines and, as the table below shows, is
+**statistically indistinguishable from baseline** — so it is not the headline.
+
+Line accuracy **cannot exceed 67.9%** however good the recogniser is, because
+detection only finds 67.9% of the lines. That ceiling is why we report
 detection recall *separately* from recognition quality everywhere: a low line
 score otherwise looks like a recognition failure when it is a detection one.
 
@@ -261,7 +309,7 @@ of the twenty pages are also **resolution-bound** (12–17 px per line against a
 captured) and cannot be fixed by any detector at all.
 
 **We are not claiming 95–100% end-to-end accuracy.** The brief asked for it. At
-2.4% line accuracy on real photographs, claiming it would be a lie that
+1.8% line accuracy on real photographs, claiming it would be a lie that
 collapses the moment a judge photographs their own receipt.
 
 ---
@@ -301,13 +349,47 @@ invisible until a judge opens the bundle.
 
 ---
 
-## 8. Reproduce it
+## 8. Four defects in our own train/serve contract — and the gate behind each
+
+Every accuracy number in this document was earned by fixing the **serving** path,
+not by growing the model. Four times the code that *fed* the recogniser disagreed
+with the code that *trained* it. Each fix now has a test that fails when the
+disagreement returns. Same 12 documents, same metric, start to finish: word
+accuracy **3.6% → 45.9%**.
+
+| defect | what it cost | magnitude | gate that now holds it |
+|---|---|---|---|
+| **The served width cut the tail off the text.** The ONNX graph was baked at a FIXED 256 px while training built every crop at its natural width clamped to `MAX_W = 320` — and the corpus median *is* that clamp. | the app fed the model the first 256 px of **98.8%** of lines | crop-level exact match **0.0% cut to 256 vs 44.7% at natural width**; the read changed on **200 of 200** held-out crops; end-to-end **3.6% → 22.4%** | `ml/tests/test_graph_width_contract.py` — asserts the width axis **equals** the training clamp or is symbolic (the old `<= MAX_W` assertion passed hardest on the worst value) |
+| **Right-padding was assumed inert — it is not.** The recurrence is a **2-layer bidirectional LSTM**, whose backward pass starts at the right edge, inside the pad, and drags the padded zeros across the *valid* frames. | the BLANK-symbol argument only bounds the forward pass | **max \|Δ\| over the valid frames: 9.10 at content width 64, 15.28 at 200** (`ml/src/export_dynamic.py`); **11.5 points of crop-level exact match** (padded 19.0% / CER 0.308 vs natural 30.5% / 0.198) | dynamic-width export — the app serves every crop at its **natural** width, no padding; `ml/tests/test_fix_padding.py` pins the frame map and the truncate rule |
+| **An image transform ran at serve but never at train.** `layout.cropForRecognizer` used a CONTAIN fit (`min(maxW/bw, cropH/bh)`), so a wide line arrived 12–20 px tall inside the 32 px input and the unfilled rows were left as **0 — which is ink** in the app's [-1,1] mapping. Both training references resize every crop to exactly `CROP_H`. | a train/serve input-distribution mismatch on every wide line | **34.5 points of exact line match**; end-to-end word accuracy **17.1% → 35.0%** | `node app/tools/crop_contract.js` (9 checks, ends `CROP CONTRACT OK`) |
+| **The deskew correction was applied backwards.** The estimator measured the right angle, and `preprocess()` rotated the page *away* from straight, **doubling** the tilt — on exactly the pages whose raw detection was already marginal. | the one preprocessing step meant to help the hard captures was making them worse | `off_axis` word accuracy **1.1% → 45.1%** (CER 0.882 → 0.234); app-wide **35.0% → 45.9%** on the same 12 documents | `app/tools/deskew_verify.js` asserts the **round trip** (apply the correction, re-estimate, require ~0) and exits non-zero; `node app/tools/ocr_input_contract.js` keeps the raw candidate reachable |
+
+The pattern, and the point: **the input contract outranked the model every
+time.** The four bugs above are worth more than every change we made to the
+network. Each was found by reading our own serving code against the trainer — not
+by being asked — and the gate is what makes "we found it" checkable instead of a
+claim.
+
+> One step **regressed and is kept in the record**: re-exporting the dynamic graph
+> *and* retraining the weights shipped together, and on these 12 documents the
+> pair measured **22.4% → 17.1%** — even though at crop level the same retrain
+> moved exact line match **3.3% → 57.0%** (CER 0.583 → 0.156), paired on 300
+> held-out crops with only the weights varying. That disagreement is why the next
+> fix was measured on the arm list, not the model. Raw records, in step order:
+> `artifacts/pipeline_raw.json`, `pipeline_raw_final.json`,
+> `pipeline_raw_dynamic.json`, `pipeline_raw_rawarm.json`,
+> `pipeline_raw_deskew.json` (**the shipped state**).
+
+---
+
+## 9. Reproduce it
 
 ```bash
 bash fetch_data.sh        # SROIE + the CC-BY-4.0 hand-photographed set
 bash run.sh build-data    # 52,554 crops, split by receipt identity
 bash run.sh train-ocr 40  # ~2.8 h on 4 CPU cores, no GPU
-bash run.sh export        # self-contained ONNX + parity checks
+bash run.sh export        # self-contained FIXED-width ONNX + parity checks
+bash run.sh py ml/src/export_dynamic.py   # the SHIPPED dynamic-width graph (parity at every width)
 bash run.sh bundle-check  # runs real inference through every shipped model
 bash run.sh test          # 278 tests
 ```
@@ -318,14 +400,16 @@ licences (ICDAR 2019 SROIE; Zenodo record `13688441`, CC-BY-4.0) are cited in
 
 ---
 
-## 9. If you remember three things
+## 10. If you remember three things
 
 1. **We trained the OCR.** 942,166 parameters, from scratch, exported to a
-   4 MB self-contained ONNX graph, decoding in the browser at a fixed 256 px
-   width because the LSTM export demanded it. No OCR dependency exists.
+   3.61 MiB self-contained ONNX graph, decoding in the browser at each crop's
+   **natural width** on a dynamic-width graph. (An earlier note claimed the width
+   was *fixed at 256 px* "because the LSTM export demanded it" — that was a
+   trace-mode artefact, corrected in §4.) No OCR dependency exists.
 2. **Every number is separated by what produced it.** Classifier 95.8%
-   (sd 2.63, 5 seeds), scan CER 11.95%, real-photo line-exact 1.8–2.4%,
-   detection recall 67.9–71.6%. Mixing
+   (sd 2.63, 5 seeds), scan CER 11.95%, real-photo line-exact 1.8%,
+   detection recall 67.9%. Mixing
    them would be the easiest way to look good and the fastest way to be caught.
 3. **We know which part is broken.** It is the line detector, the ceiling is
    measured, the current attempt is statistically indistinguishable from
@@ -349,13 +433,14 @@ licences (ICDAR 2019 SROIE; Zenodo record `13688441`, CC-BY-4.0) are cited in
 ## Appendix: which numbers were verified when
 
 Judges should be able to tell a measured number from a remembered one. Every
-figure in §1–§9 is one of these three kinds, and the kind is stated:
+figure in §1–§10 is one of these three kinds, and the kind is stated:
 
 **Verified from disk or a passing check in this session**
 - Model byte counts — read from `app/models/*.onnx`, listed in §4 in exact bytes
 - CRNN 942,166 params · 38 classes · 37 symbols · epoch 39 — from `state_dict`
 - Restorer 37,793 params — from `SightLineNet()`
-- 26.68 MB payload, no external sidecars — `bundle-check` passes
+- 26.45 MiB models + tokenizer (27,735,952 B), ≈37.2 MiB installed with the
+  ONNX-runtime WASM, no external sidecars — `bundle-check`, `du -sb app`
 - 278 tests, 1 xfailed — `bash run.sh test`
 - Tesseract absent from vendor/, index.html, sw.js, pipeline.js — `bundle-check`
   §4b, mutation-tested to confirm it fails when reintroduced
@@ -363,14 +448,23 @@ figure in §1–§9 is one of these three kinds, and the kind is stated:
   held-out n=24 — `ml/experiments/step3_f1.py`; the stored eval's 100% was
   one lucky seed, published as a correction
 - 29.30% / 11.95% and 26.25% / 15.90% CER — head-to-head on 17,945 held-out
-  words, both checkpoints on the identical test set
-- 71.6% detection recall · 2.4% line accuracy · 58.4% CER — full 20-page
-  hand-photographed set, current checkpoint
+  words, both checkpoints on the identical test set (`docs/03_RESULTS.md` §3,
+  `ml/src/compare_checkpoints.py`)
+- 67.9% detection recall · 1.8% line accuracy · 56.5% CER — full 20-page
+  hand-photographed set (`docs/03_RESULTS.md` §3); the localisation variant's
+  71.6% / 2.4% / 58.4% is within noise (McNemar p = 1.000). The delivered
+  benchmark's *60-page* real-photo reading is `docs/14` (1.96% / 63.46%); the
+  two corpora are reconciled in `docs/23`
 - McNemar p = 1.000 · Wilson intervals — computed from the aligned-line counts
 - 47.3% blank fraction, all 38 classes used — measured on real training crops
-- Padding invariant at 32/64/128/200px — `verify_crnn` output
+- ~~Padding invariant at 32/64/128/200px — `verify_crnn` output~~ **RETRACTED
+  2026-10-21:** padding is **not** inert — the bidirectional LSTM reads back
+  through it (max |Δ| 9.10 at width 64, 15.28 at 200, `ml/src/export_dynamic.py`;
+  see §4). The shipped dynamic-width graph pads nothing.
 - 41.1 MB of Tesseract deleted — measured before unlinking
-- **ONNX parity max |Δ| = 1.94e-05** — from the `export` run's own output line
+- **ONNX parity max |Δ| = 1.7e-05 across widths 32/47/63/64/128/200/256** —
+  `app/models/ort.json` (dynamic-width export; the earlier 1.94e-05 was the
+  fixed-width export)
 
 **Carried from earlier in this project, not re-measured in the last session.**
 Re-run the command in the right-hand column before quoting any of these to a

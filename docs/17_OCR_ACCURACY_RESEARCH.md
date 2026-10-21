@@ -20,12 +20,12 @@
 
 ## 0. The three things to do next, in order
 
-1. **Re-export the ONNX graph at width 320 and finish the `evaluate.py` → CRNN
-   migration.** `[measured here]` The export is fixed at 256 px while training clamps
-   word crops at 320 and `eval_ocr.py` keeps full width, so a full-width line arrives
-   squeezed ~3.5× horizontally (HANDOFF §4, item 0). This is a defect with a known
-   cause and no new data or licence. The migration is the second half: every field/
-   word number in `artifacts/` and docs 03/04 is still Tesseract's.
+1. **Finish the `evaluate.py` → CRNN migration.** `[measured here]` The graph-width
+   half of this item is **done**: `app/models/crnn.onnx` now carries a **dynamic**
+   width axis (3,785,916 B; byte-identical to `artifacts/crnn_dynamic.onnx`), so a
+   full-width line is no longer squeezed to a fixed 256 px. What is left is the
+   migration: every field/word number in `artifacts/eval_results.json` and docs 03/04
+   is still Tesseract's.
 2. **Grow a domain-matched corpus and pretrain → finetune on it.** `[measured here]`
    SROIE scans 11.95% CER vs hand-photographed 56.5% CER on the same checkpoint — a
    4.7× domain gap that is the largest weakness in the project. §2 says the licence-clean
@@ -46,14 +46,14 @@
 |---|---|---|
 | architecture | CRNN: 7 conv/GroupNorm blocks (base 16ch) → 2×128 BiLSTM → 38 logits, CTC | `ml/src/ocr_model.py` |
 | parameters | **942,166** (CNN 272,944 / BiLSTM 659,456 / head 9,766) | `[measured here]` `bash run.sh py -c` param count, this lane |
-| ONNX payload | 3,840 KB, fixed 256 px wide, self-contained | `docs/03_RESULTS.md` §3, §5 |
+| ONNX payload | 3,785,916 B (3.61 MiB), **dynamic** width axis, self-contained | `[measured here]`; `docs/03_RESULTS.md` §3, §5 |
 | training data | 52,554 crops from 420 SROIE receipts, split by receipt (294/63/63) | `docs/03_RESULTS.md` §3 |
 | training cost | ~250 s/epoch, CPU, **4 cores, no GPU anywhere** | `docs/03_RESULTS.md` §3 |
 | held-out word accuracy / CER (SROIE) | **29.30% / 11.95%** (17,945 test words) | `docs/03_RESULTS.md` §3 |
 | corpus-size + homography effect | +3.05 pp accuracy, −3.95 pp CER (epoch 20 → 39) | `docs/03_RESULTS.md` §3 |
 | **domain gap** | SROIE scan 11.95% CER vs hand-photographed **56.5% CER** | `docs/03_RESULTS.md` §3 |
 | field accuracy, shipped engine | **7.4%** (Tesseract arm on the same generator: 62.2%) | `docs/03_RESULTS.md` §3 |
-| end-to-end, real app in WebKit | **12.5%** field recovery, 22.4% word accuracy, 57.5% CER (was 0.0/3.6/70.8 before the export-width fix) | `HANDOFF.md` §5, `docs/14` |
+| end-to-end, real app in WebKit | **20.8%** field recovery, 45.9% word accuracy, 0.303 CER (3.6% / 0.708 at the pre-fix 10-20 build) | `docs/14`, `artifacts/pipeline_raw_deskew.json` |
 | detector ceiling on real photos | 67.9–71.6% line recall, 1.8–2.4% line exact | `docs/03_RESULTS.md` §3 |
 
 Labels are charset-clean by construction: `render_corpus.train_label` upper-cases and
@@ -168,9 +168,10 @@ project-specific constraints:
   enters the 37-symbol alphabet.
 - **Punctuation**: out of the charset by design; strip it from external labels rather
   than widening the output layer for a class the extractor tolerates.
-- **Blank handling**: blank is index 0, and the fixed-width ONNX export is only safe
-  because a trained CTC model emits blanks over right-padding — a gate verifies it
-  (`docs/03_RESULTS.md` §3, four pad cases, all `ok`).
+- **Blank handling**: blank is index 0. The shipped graph has a **dynamic** width
+  axis, so lines are no longer right-padded at all; the historical checks that a
+  trained CTC model emits blanks over padding still hold and are recorded in
+  `docs/03_RESULTS.md` §3 (four pad cases, all `ok`).
 - **Scoring vs training labels must stay separate**: `norm_label` (O→0 for scoring) vs
   `train_label`/`clean_for_training` (what the model is asked to emit). Training on
   normalised labels teaches the model to corrupt company names (`realdata.py`).
@@ -246,10 +247,10 @@ as relative weights, not benchmarks.
 
 | option | params | vs ship | 32×256 input | notes |
 |---|---|---|---|---|
-| **ship**: ch16, h32, 2×128 BiLSTM | **942,166** | — | 32 timesteps | 3.84 MB ONNX; batch-32 ≈ 760 ms |
+| **ship**: ch16, h32, 2×128 BiLSTM | **942,166** | — | 32 timesteps | 3.61 MiB ONNX (dynamic width); batch-32 ≈ 760 ms |
 | 3-layer BiLSTM (128) | 1,337,430 | +42% | 32 | depth where the recurrent stage is cheap |
 | 2×256 BiLSTM | 2,659,926 | +182% | 32 | the capacity jump with the best accuracy/cost reputation in CRNN literature |
-| 3×256 BiLSTM | 4,236,886 | +350% | 32 | ≈ 951→1241 ms; ONNX payload would grow past the 4 MB we ship |
+| 3×256 BiLSTM | 4,236,886 | +350% | 32 | ≈ 951→1241 ms; ONNX payload would grow past the 3.61 MiB we ship |
 | wider CNN (base 32ch) | 1,889,926 | +101% | 32 | doubles CNN features, +50% time |
 | one extra 3×3 conv 256→512 | +1,180,672 | +125% | 32 | must be inserted after the last pooling stage to keep width/8 |
 | input height 32 → 48 | 942,166 (unchanged) | 0% | 32 | geometry still lands on 1 row; costs +38% time (1049 vs 758 ms) |
@@ -264,9 +265,12 @@ Reading the options:
   upsampling artefact, and upsampling at the input layer cannot create strokes that
   were never captured (`docs/03_RESULTS.md` §3). Height helps only if the *capture*
   resolution rises.
-- **Width is the cheap, already-diagnosed win.** The graph is fixed at 256 px while
-  training clamps at 320 and evaluation uses full width; re-exporting at 320 is
-  ranked item 0 in `HANDOFF.md` and needs no new data.
+- **Width was the cheap, already-diagnosed win — and it is closed.** The graph used
+  to be fixed at 256 px while training clamps at 320 and evaluation keeps full
+  width. The dynamic-width export has shipped (`app/models/crnn.onnx`, 3,785,916 B,
+  a symbolic width axis), so width is no longer an open lever; see the end-to-end
+  trajectory in `docs/14` for what the width, arm-election and deskew-sign fixes
+  moved together (3.6% → 45.9% word accuracy).
 - **A transformer encoder is not worth it at this data scale.** Our entire corpus is
   52,554 crops from 420 documents (~250 s/epoch on 4 cores); transformer STR models are
   trained on 10⁶–10⁷ crops, and PARSeq reports "using synthetic training data", i.e. a
@@ -276,11 +280,11 @@ Reading the options:
   — which §4 says is the part of decoding worth ~0.3 pp, obtainable far more cheaply
   from a decoder.
 
-**What I would try first, in one paragraph.** Re-export and evaluate at width 320, then
-run the same checkpoint with a 2-layer→3-layer BiLSTM at hidden 128 and, separately, a
-wider CNN (base 32) — both are +40–100% params and ~+25–50% inference time, which the
-payload and 4-core budget can absorb, and both are pure capacity additions on a model
-whose held-out word accuracy is 29.30%. Keep input height at 32 and skip the transformer
+**What I would try first, in one paragraph.** Run the same checkpoint with a 2-layer→3-layer
+BiLSTM at hidden 128 and, separately, a wider CNN (base 32) — both are +40–100% params and
+~+25–50% inference time, which the payload and 4-core budget can absorb, and both are pure
+capacity additions on a model whose held-out word accuracy is 29.30% — while the
+domain-matched corpus of §3 is assembled. Keep input height at 32 and skip the transformer
 until there is an order of magnitude more labelled crops. Score every variant on the same
 17,945 SROIE test words *and* the rendered corpus, report exact match first and CER
 second, and change one thing per run — the epoch-20-vs-39 comparison is the only clean

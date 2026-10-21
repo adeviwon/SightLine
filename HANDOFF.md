@@ -60,7 +60,7 @@ manifest claimed it did not.
 | file | what | committed? |
 |---|---|---|
 | `models/ocr/crnn.pt` | the trained recogniser (942,166 params, epoch 39) | yes |
-| `app/models/crnn.onnx` | browser recogniser, 4,029,084 B | yes |
+| `app/models/crnn.onnx` | browser recogniser, 3,785,916 B, dynamic width | yes |
 | `app/models/minilm_encoder.onnx` | MiniLM int8, 22.9 MB | yes |
 | `app/models/minilm_head.onnx` | our 49,796-param head | yes |
 | `artifacts/ocr_train.npz` | training cache (169 MB) | **no** — regenerable |
@@ -115,8 +115,9 @@ real-photo corpus — which is ranked task 1 above.
 ## 4. What would actually move the needle, ranked
 
 0. **The deskew estimator was returning garbage angles on every scan — FIXED;
-   the crop rule was feeding the recogniser squashed text — FIXED. What is left
-   is the graph's fixed width and the model's own quality.**
+   the crop rule was feeding the recogniser squashed text — FIXED; the width was
+   baked to one constant — FIXED. What is left is the recogniser's own quality
+   and its corpus coverage.**
    Three separate defects, all found by `bash run.sh ios-full` and its unit
    harnesses, all now green:
    - `pipeline.estimateSkew` scored each angle by a RAW COUNT of dark samples
@@ -141,14 +142,17 @@ real-photo corpus — which is ranked task 1 above.
      contiguous windows at true aspect ratio read them WORSE ("HSBC UK BANK PLC"
      98% squeezed vs "MSEC UNBANE L" 54% chunked) and took the suite from 5
      failures to 7. The negative result is recorded in `tools/crop_contract.js`.
-   What remains, ranked: (1) **the ONNX graph is fixed at 256 px wide** while
-   training clamps word crops at 320 and `eval_ocr.py` keeps full width, so a
-   full-width line is squeezed horizontally by ~3.5x — re-exporting at 320 is the
-   obvious next experiment; (2) the recogniser's own quality (71.6% line recall,
-   58.4% CER, 2.4% line-exact — `bash run.sh eval-ocr`); (3) **`evaluate.py`
-   still calls pytesseract**, so every field/word number in `artifacts/` and
-   docs 03/04 describes Tesseract, not what ships — migrating it to the CRNN is
-   open work and the docs now say so.
+   What remains, ranked: (1) **the recogniser's own quality** (67.9% line recall,
+   1.8% line-exact, 56.5% CER on 20 real hand-photographed pages; 29.30% word
+   accuracy / 11.95% CER on SROIE — `bash run.sh eval-ocr`); (2) **the 37%
+   capture-profile coverage gap** — 58 of the 155 crops the app's own crop rule
+   produces on the bench documents come from `off_axis`/`jpeg_social`, profiles
+   absent from the corpus the shipped checkpoint trained on
+   (`ml/src/profile_coverage.py`); (3) **`evaluate.py` still calls pytesseract**,
+   so every field/word number in `artifacts/` and docs 03/04 describes Tesseract,
+   not what ships — migrating it to the CRNN is open work and the docs now say so.
+   The width lever that used to head this list is **closed**: `app/models/crnn.onnx`
+   now has a symbolic width axis (3,785,916 B), so no line is squeezed to 256 px.
 1. **A medicine-label corpus.** Everything measured was measured on receipts.
    The hackathon submission says this in its own words — transfer to medicine
    labels is an assumption, not a result. Consent photographs + line labels is
@@ -179,13 +183,13 @@ lucky seed. Trust the rerun.
 `docs/01`'s 62.2% end-to-end field accuracy and `docs/10`'s arm table come from
 **Tesseract** (`ml/src/evaluate.py` calls pytesseract). The app does not contain
 Tesseract any more. The shipped 942k-parameter CRNN's own end-to-end figure, driven
-through the real app in WebKit on 12 rendered documents, is **12.5% field recovery,
-50.0% classification, 22.4% word accuracy, 57.5% CER** — `docs/14_HACKATHON_BENCHMARK.md`,
-raw records `artifacts/pipeline_raw_final.json`. Those read 0.0% / 33.3% / 3.6% /
-70.8% until the export width was fixed: the ONNX graph was baked at a FIXED 256px
-while training built crops at the 320px clamp, so the app fed the model the first
-256px of nearly every line (the read changed on 200/200 held-out crops). That one
-constant, not the model, was the gap against the Python path's 26.9%. Re-measured stage by stage on the
+through the real app in WebKit on 12 rendered documents, is **20.8% field recovery,
+83.3% classification, 45.9% word accuracy, 0.303 CER** — `docs/14_HACKATHON_BENCHMARK.md`,
+raw records `artifacts/pipeline_raw_deskew.json`. The same 12 documents read
+0.0% / 33.3% / 3.6% / 0.708 at the pre-fix 10-20 build; the trajectory
+**3.6% → 22.4% → 17.1% → 35.0% → 45.9%** is four train/serve-contract repairs (a
+256 px graph, a retrain that regressed, an arm that could not be elected, and a
+deskew correction applied backwards), not four models. Re-measured stage by stage on the
 shipped engine (`bash run.sh eval`, default `--engine=crnn`) the preprocessing arms
 give 3.7-7.4% field accuracy against the Tesseract arm's 62.2%, and `raw` beats the
 restorer arms. Quote the engine with the number, or
@@ -246,7 +250,8 @@ bash run.sh bench-hackathon     # score it + the training artifacts -> artifacts
   credibility comes from its own corrections — the 100% seed, the reverted
   detector fix, the inverted safety gate. Keep that habit.
 - **Deploying to the live URL:** a GitHub Pages build for this site takes
-  ~8–10 min (26.7 MB payload). Verify the live file with
+  ~8–10 min (the `app/` tree is 42,656,646 B ≈ 40.7 MiB, of which 26.45 MiB is
+  models + tokenizer and 10.73 MiB the ort wasm). Verify the live file with
   `curl -s 'https://adeviwon.github.io/SightLine/<file>?nocache=$(date +%s)'`
   BEFORE smoke-testing — and remember the service worker precaches whatever
   is live at install time, so a browser run during a rebuild serves stale
