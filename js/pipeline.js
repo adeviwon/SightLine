@@ -756,7 +756,30 @@ const SightLine = (() => {
     const gray = toGrayCanvas(source, w, h);
     const q = assessQuality(gray);
     const angle = estimateSkew(gray);
-    const deskewed = angle !== 0 ? rotate(gray, angle) : gray;
+    // NEGATE. `rotate()` takes the angle in the OPPOSITE sense to the one
+    // `estimateSkew()` measures, so applying the estimate directly rotated the page
+    // AWAY from straight and DOUBLED the tilt instead of removing it.
+    //
+    // Measured on the app's own off_axis documents (generator rot = 4.0 deg), with the
+    // four working profiles as controls:
+    //   page                    truth  estSkew  bands(raw)  after deskew  true angle
+    //   prescription/off_axis      15     4.5d           1             0          16
+    //   banking/off_axis           17    3.25d           6             4          19
+    //   legal/off_axis             15      4d           3             0          16
+    // The estimator was never wrong -- it returns the right magnitude and its own
+    // scoring says the OPPOSITE rotation is the straight one
+    // (estimateSkew(rotate(source, +4deg)) reads 0deg). Re-estimating the app's own
+    // deskewed output returned 6.5-9.0 deg, i.e. the tilt was doubled. So the old
+    // expression did not merely fail to help: it destroyed the two pages whose raw
+    // detection was already marginal (legal 3 -> 0 bands, prescription 1 -> 0).
+    //
+    // The gate that would have caught this is the ROUND TRIP -- apply the correction,
+    // re-estimate, require ~0 -- not "does the estimator return a plausible angle".
+    // app/tools/deskew_verify.js now asserts exactly that and exits non-zero on failure.
+    // It is unreachable on the working profiles, which is why it went unnoticed: the
+    // estimator returns exactly 0 there (< 0.5 by its own clamp) so rotate() is never
+    // called. `rotate()` has exactly one caller, this line.
+    const deskewed = angle !== 0 ? rotate(gray, -angle) : gray;
 
     // Median kills salt-pepper but destroys blurred strokes; unsharp rescues
     // blur. Applied in that order when both are present.
