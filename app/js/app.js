@@ -446,6 +446,7 @@
     els.ocrText.textContent = r.ocrText || "(no text recognised)";
     els.btnSpeak.hidden = false;
     els.btnRetake.hidden = false;
+    if (els.speakLang) els.speakLang.hidden = false;
   }
 
   /**
@@ -481,13 +482,48 @@
 
   // ── Speech ────────────────────────────────────────────────────────────
 
+  /** The zh/en medicine-name lexicon (CC-BY-4.0, Taiwan FDA leaflet archive). 1.7 MB, so it is
+   *  fetched on first use and cached by the service worker rather than parsed on every load. */
+  let lexiconPromise = null;
+  function loadLexicon() {
+    if (!lexiconPromise) {
+      lexiconPromise = fetch("data/drug_lexicon.json", { cache: "force-cache" })
+        .then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+    }
+    return lexiconPromise;
+  }
+
   async function speakSummary() {
     if (!lastResult) return;
     if (TTS.speaking()) { TTS.stop(); els.btnSpeak.textContent = "Read Aloud"; return; }
     if (!TTS.available()) { showError("This browser has no speech synthesis available."); return; }
+    const lang = (els.speakLang && els.speakLang.value) || "en-GB";
     els.btnSpeak.textContent = "Stop";
     announce("Reading summary.");
     try {
+      // ── Cantonese: a BUILT utterance, not the English summary in a Cantonese accent ──
+      // The drug name and dose are translated from facts we hold (see js/say_cantonese.js);
+      // anything the lexicon cannot translate is refused, never guessed, and never spoken.
+      if (lang === "zh-HK") {
+        const lexicon = await loadLexicon();
+        const said = SayCantonese.build(lastResult.ocrText || "", lexicon);
+        if (els.cantonese) {
+          els.cantonese.hidden = false;
+          els.cantonese.textContent = said.zh;
+        }
+        if (!said.ok) {
+          showError("Read too poorly to say it in Cantonese — nothing was guessed. English summary below.");
+        }
+        if (!TTS.hasVoice("zh-HK")) {
+          // Refuse to fake it: an English voice reading Cantonese is worse than silence.
+          showError("This device has no Cantonese voice installed, so the app will not pretend. "
+            + "The Cantonese text it would say is shown above.");
+          els.btnSpeak.textContent = "Read Aloud";
+          return;
+        }
+        await TTS.speak(said.zh, { rate: 0.95, lang: "zh-HK" });
+        return;
+      }
       // Warnings are spoken BEFORE the summary: the summary states fields as
       // fact, so a low-confidence read must be caveated in the same breath —
       // this is the honesty gate, in the medium this product actually serves.
@@ -557,7 +593,7 @@
     const ids = [
       "live", "live-assertive", "badge", "error-banner", "viewfinder", "video", "preview",
       "scan-line", "scan-flash", "quality-hint", "file-input", "btn-capture",
-      "btn-pick", "btn-retake", "btn-speak", "progress-wrap", "progress-label",
+      "btn-pick", "btn-retake", "btn-speak", "speak-lang", "cantonese", "progress-wrap", "progress-label",
       "progress-track", "progress-fill", "results", "doc-type", "summary-text",
       "result-meta", "fields-card", "fields-list", "entities-card",
       "entities-list", "warning-box", "ocr-text", "tabs", "tab-cam", "tab-file",

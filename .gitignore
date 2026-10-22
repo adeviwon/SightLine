@@ -3,5 +3,8 @@ __pycache__/
 *.pyc
 # Real-document corpora: large, redistributable under their own licences
 # (SROIE ICDAR2019; Express Expense CC-BY-4.0), and not ours to commit.
-data/
+# the 1.1 GB training corpus at the repo root (datasets, not source). ANCHORED with a leading
+# slash on purpose: unanchored, this also swallowed app/data/, so the shipped medicine lexicon
+# could never be committed -- it would have shipped as a 404 on the live site.
+/data/
 artifacts/*.npz
