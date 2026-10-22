@@ -408,10 +408,13 @@ participant, consented and photographed, saying what happened — strongest per
 hour; (b) an email or letter of interest from the Hong Kong Blind Union or a
 district elderly centre; (c) a named clinician or pharmacist willing to be the
 accountable reader we already claim exists in `docs/12` §4. Any one of these
-changes the pitch from "should help" to "was used". Separately and cheaply: set
-**Cantonese (zh-HK) as the TTS default** for the HK build — the audio language is
-a one-parameter fix and removes the "English-only aid for a Cantonese-speaking
-population" objection from the half of the demo a judge actually hears.
+changes the pitch from "should help" to "was used". Separately: **the Cantonese output build has shipped** (`app/js/say_cantonese.js` + an
+18,839-pair CC-BY-4.0 zh/en medicine-name lexicon) — the drug name and dose are spoken in
+Cantonese, with a **refusal** for any name the lexicon cannot translate, which removes the
+"English-only aid for a Cantonese-speaking population" objection from the half of the demo a judge
+actually hears. What remains is not a one-parameter change: no Cantonese speaker has reviewed the
+sentence frames, and the drug-name step is unvalidated on real labels (`docs/26_IDEA_REFINED.md`
+§7).
 
 ### Interdisciplinarity
 

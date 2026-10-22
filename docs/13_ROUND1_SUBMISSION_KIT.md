@@ -40,7 +40,7 @@ Appendix 4 (the 2.7% figure, Table A4.1a) and main body para 5.5 (the 0.6% figur
 the Hong Kong Blind Union statistics page (hkbu.org.hk/en/knowledge/statistics), which
 reproduces Appendix 4 without disclosing which definition it uses.
 
-## 150-word proposal (final draft — 148 words, verified with `wc -w` 2026-10-22)
+## 150-word proposal (final draft — **144 words**, `wc -w`, re-counted 2026-10-22 after the Cantonese update)
 
 > In Hong Kong, 199,600 people report long-term seeing difficulty, three in
 > four of them aged 65 or over. The medicine label is the one document that
@@ -48,12 +48,12 @@ reproduces Appendix 4 without disclosing which definition it uses.
 > label is printed in English they may never have learned. Two barriers, one
 > gesture: photograph the label, hear it in Cantonese. SightLine runs entirely
 > on the phone — no internet, no cloud, no account — and keeps working in
-> airplane mode after one install. The recogniser is our own CRNN+CTC network,
-> 942,166 parameters in a 26.4 MB bundle, with no borrowed OCR engine, and it
-> refuses to guess a dose it cannot read. Cantonese output is the next build;
-> our measured results today are English. Aligned with the 2025 Policy Address:
-> AI carer support (Para 75), ophthalmic services (Para 227), and
-> gerontechnology for an ageing society (Para 266).
+> airplane mode. The recogniser is our own CRNN+CTC, 942,166 parameters, no
+> borrowed OCR engine, and it refuses to guess a dose it cannot read. A first
+> Cantonese build speaks the drug name and dose from a licensed zh/en medicine
+> lexicon and refuses any name it cannot translate. Aligned with the 2025 Policy
+> Address: AI carer support (Para 75), ophthalmic services (Para 227),
+> gerontechnology (Para 266).
 
 Word count method: strip the `> ` prefixes and run `wc -w` on the prose.
 No further edits without re-counting.
@@ -69,7 +69,7 @@ so a beat that runs long is a filming problem, not a script problem.
 | 1 | 0:00–0:25 | Close-up, low light: Mrs. Chan (78, Wong Tai Sin), alone, holding a prescription | ambient only | "Mrs. Chan is 78. In Hong Kong, 199,600 people report long-term seeing difficulty, three in four of them over 65. Her prescription might as well be blank to her." (28) |
 | 2 | 0:25–0:50 | Push-in on the prescription → stylised cloud-upload animation | "199,600 HK residents with visual impairment — 2.7% of the population" (C&SD 2021) | "Today's apps upload her medicine label to a server. Offline is the only answer that needs no trust." (17) |
 | 3 | 0:50–1:00 | Locked-off phone on desk; finger taps airplane mode | **Airplane mode ON — held full screen** | "Everything after this happens on the phone. Nothing leaves the device." (11) |
-| 4 | 1:00–2:20 | Screen recording + over-the-shoulder on the filming phone | Install from `https://adeviwon.github.io/SightLine/`, scan → spoken result. Include one deliberate hard photo where the app **refuses** | "Install from this URL, straight to airplane mode. That is our own recogniser reading, our own classifier naming the document, our own voice. Now the hard one: a tilted page in poor light. 'I could not read that label clearly — please check it with a pharmacist.' That is the design, not a bug: a wrong dose spoken confidently is worse than no dose. It reads, it says what it found, and it refuses what it cannot verify." (78) |
+| 4 | 1:00–2:20 | Screen recording + over-the-shoulder on the filming phone | Install from `https://adeviwon.github.io/SightLine/`, scan → spoken result in **Cantonese** (drug name + dose; if the phone has no `zh-HK` voice, the text is shown, not faked). Include one deliberate hard photo where the app **refuses** | "Install from this URL, straight to airplane mode. That is our own recogniser reading, our own classifier naming the document, and a first Cantonese build speaking it — the drug name from a licensed zh/en lexicon, and anything it cannot translate it refuses. Two limits we name: no Cantonese speaker has checked those sentences yet, and the drug-name step is unvalidated on real labels. Now the hard one: a tilted page in poor light. 'I could not read that label clearly — please check it with a pharmacist.' That is the design, not a bug: a wrong dose spoken confidently is worse than no dose. It reads, it says what it found, and it refuses what it cannot verify." (98) |
 | 5 | 2:20–3:00 | Cut to laptop: terminal + pipeline diagram | the table below, each row sourced | "The recogniser is ours: CRNN with CTC, 942,166 parameters, trained from scratch, exported to a 3.6 MB dynamic-width ONNX graph. No OCR library — a build gate fails if one returns. We found four train/serve contract defects ourselves: the served width cut the tail off 98.8% of lines; right-padding was not inert; the image transform ran at serve and never at train; and the deskew correction was applied backwards. Same twelve documents, same metric: 3.6% to 57.2% word accuracy." (79) |
 | 6 | 3:00–3:20 | Policy slide | **2025** Policy Address Paras 75 / **227** / 266 | "Hong Kong already funds this: AI carer support at Para 75 of the 2025 Policy Address, ophthalmic services at Para 227, and a gerontechnology working group at Para 266." (29) |
 | 7 | 3:20–3:30 | Team, phone in airplane mode | Logo + URL | "Your eyes, offline. Nothing leaves your phone." (7) |
@@ -160,11 +160,32 @@ enough, the app omits the field and asks for a retake instead of speaking a
 dose it cannot verify. We publish per-condition numbers rather than one
 headline.
 
-**"What about Cantonese?"** — The shipped recogniser's alphabet is
-digits + A–Z + space: **zero Chinese characters today**, and we say so
-publicly. Chinese is the top roadmap item — a data problem (~3–4k common
-characters cover most label text), with the pipeline, UI, and offline
-guarantee unchanged. English ships first for hackathon scope.
+**"What about Cantonese?"** — **A first Cantonese output build ships**, and the two halves
+are separable, which is the point:
+
+- **What was never the problem: the input.** The shipped recogniser's alphabet is digits +
+  A–Z + space — **zero Chinese characters today**, and we say that publicly. A fully
+  Chinese-**only** label needs the alphabet expanded (~3–4k common characters), a data problem
+  we are not claiming to have solved. But our user's box is not Chinese-only: HK labels carry
+  the drug name, strength and directions **in English**, so the language gap sits on the
+  **output** side.
+- **What now ships (the output half).** `app/js/say_cantonese.js` builds a Cantonese sentence
+  from the fields we hold: the **drug name** from a licensed zh/en lexicon
+  (`app/data/drug_lexicon.json`, 18,839 pairs; **CC-BY-4.0**,
+  `twinkle-ai/tw-drug-labels-vision`), the **dose** from the read text, the **directions** from
+  a closed set of dispensing phrases. Verified `cantonese_verify.js --engine=webkit` **14/14**
+  against the live site.
+- **The safety property, which is the whole feature.** It speaks only what it can translate
+  and **refuses the rest**. An unknown name is **never guessed, transliterated or
+  approximated** — the utterance says so and sends the listener to a pharmacist. A wrong dose
+  spoken confidently in Cantonese is exactly as dangerous as one spoken in English.
+- **Three honest limits, said out loud.** (1) **not reviewed by a Cantonese speaker**; (2) the
+  **drug-name step is unvalidated on real labels** — on our own 12-document bench it matched
+  **nothing** honestly, so the lexicon's coverage of what we can read is not yet measured;
+  (3) the engine we verified in has **no Chinese voice**, so the app **shows the Cantonese
+  text** rather than faking a voice — on a phone the voice must be present in Settings. It is a
+  first build, not a patient-facing claim: no language output goes to patients until it is
+  evaluated per-language with a release floor (`docs/26` §4, §7).
 
 **"Team across STEMB?"** — T (on-device ML pipeline + build gates), E
 (image restoration + degradation engineering), S (vision-science and
@@ -261,7 +282,7 @@ Prep begins after Round 1 submits; the kit above is the source of truth.
 | date | item | done when | state |
 |---|---|---|---|
 | Sat 10-17 | Freeze the numbers: re-run `bash run.sh test` and `bash run.sh bundle-check`; touch nothing afterward | both gates pass and every figure in docs/12–13 matches them | **DONE.** Every number in docs/12, docs/13 and `README.md` was reconciled against its artifact on 2026-10-21 and the freeze stands at this HEAD. The freeze is now a *reading* rule, not a task: nothing gets re-measured before the peer review. |
-| Sun 10-18 | Finalise the 150-word proposal; lock it | a fresh `wc -w` on the blockquote is ≤150 and the team has read it once each | **DONE.** 148 words by `wc -w` (2026-10-21). Locked; any later edit re-runs the count. |
+| Sun 10-18 | Finalise the 150-word proposal; lock it | a fresh `wc -w` on the blockquote is ≤150 and the team has read it once each | **DONE.** 148 words by `wc -w` (2026-10-21); re-counted **144** on 2026-10-22 after folding in the shipped Cantonese build (replacing the earlier line that called Cantonese unshipped). The count is re-run on every edit. |
 | Mon 10-19 | Write the VO script from the shot list; time it | full read-through ≤3:20 | **DONE.** The shot list's voice-over column is written to 2.5 words/second: **255 spoken words ≈ 102 s** of the 210 s target, leaving ~100 s for ambient and the app's own speech. |
 | Tue 10-20 | Install the PWA on the filming phone from the live URL; verify airplane mode | the app speaks a scanned document with airplane mode on | **DONE** — re-verify on the filming phone immediately before rolling, because the service worker caches whatever was live at install time. |
 

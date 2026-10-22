@@ -7,11 +7,28 @@ label clearly **and** cannot read the English printed on it. Two barriers, one
 gesture: photograph the box, and SightLine reads the drug name, strength and dose
 and says it back in Cantonese. No account, no internet, no upload.
 
-> **Honest state of the build.** Cantonese output is the *next* build — the speech
-> layer and the translation lexicon are specified and costed in
-> [`docs/26_IDEA_REFINED.md`](docs/26_IDEA_REFINED.md). What ships today reads
-> printed English text and speaks English, and **every measurement in this repo was
-> taken on that build.** We are not claiming a Cantonese result we have not measured.
+> **Cantonese now ships as a first build — and its limits are stated here, not buried.**
+> [`app/js/say_cantonese.js`](app/js/say_cantonese.js) turns the read label into a Cantonese
+> sentence from facts we hold: the **drug name** from a **licensed zh/en medicine lexicon**
+> (18,839 pairs, [`app/data/drug_lexicon.json`](app/data/drug_lexicon.json)), the **dose** from
+> the read text, and the **directions** from a closed set of dispensing phrases. It **refuses to
+> speak a name it cannot translate** — an unknown drug is never guessed, transliterated or
+> approximated. Verified in WebKit **against the live site**: 14/14
+> (`SMOKE_BASE=https://adeviwon.github.io/SightLine/ node app/tools/cantonese_verify.js --engine=webkit`).
+>
+> **The lexicon's licence:** **CC-BY-4.0** — `twinkle-ai/tw-drug-labels-vision` (Taiwan FDA
+> leaflet archive; 72,326 real medicine-label images), harvested to the 18,839 name pairs by
+> [`ml/tools/hf_lexicon.py`](ml/tools/hf_lexicon.py). Attribution is stored **inside the file**
+> (`_licence`) and credited here and in [`docs/26_IDEA_REFINED.md`](docs/26_IDEA_REFINED.md).
+>
+> **Its three honest limits:** (1) the sentences have **not been reviewed by a Cantonese
+> speaker** — the frames are the author's, not a native copywriter's; (2) the **drug-name step
+> is unvalidated on real medicine labels** — on our own 12-document bench it matched **nothing**
+> honestly, so the lexicon's coverage of what we can actually read is not yet measured; (3) this
+> engine has **no Chinese voice**, so the app **shows the Cantonese text** rather than faking a
+> voice — on a phone the voice must be present in Settings. Every accuracy number in this repo
+> was measured on the **English** read, and says so. It is a first build, not a patient-facing
+> claim.
 
 Built for the **Imperial College London Hackathon (Hong Kong & Macau)**.
 
@@ -78,10 +95,11 @@ A/B and the fixture-freshness gate are in
   (`bash run.sh eval --engine=crnn`, `artifacts/eval_results.json`) `low_light`
   and `handheld_heavy` are the two weakest profiles: **2.2%** and **2.0%** word
   accuracy on the raw arm. They are reported, not excluded.
-- **Chinese.** The recogniser's alphabet is `0-9 A-Z` and space — **37 symbols,
+- **Chinese input.** The recogniser's alphabet is `0-9 A-Z` and space — **37 symbols,
   zero CJK characters**. A 繁體中文 medicine label cannot be read at all today.
   This is the most serious gap in the project and it is a data problem, not an
-  architecture one.
+  architecture one. (The app can now *speak* Cantonese — see above — but that is the
+  output path; a Chinese-**only** label still needs the alphabet expanded.)
 - **The target.** The brief asks for ≥95% end-to-end text accuracy. We are at
   **57.2%** on **12 synthetic rendered documents** (current fixtures) and 1.8%
   line-exact on real photographs. That gap is the honest headline, and it is
@@ -106,7 +124,7 @@ A/B and the fixture-freshness gate are in
    │                + field extraction (dosages, amounts,    │
    │                  account numbers, dates, clauses)       │
    ├─────────────────────────────────────────────────────────┤
-   │ 4. SPEAK     offline speech synthesis                   │
+   │ 4. SPEAK     offline speech; English + Cantonese output  │
    └─────────────────────────────────────────────────────────┘
         │
         ▼
@@ -159,6 +177,13 @@ SightLine reports what it can actually do, including where it fails.
   lucky seed) and every failed fix are recorded in
   [`docs/12_HACKATHON_SUBMISSION.md`](docs/12_HACKATHON_SUBMISSION.md) §6 and
   [`docs/18_CRNN_ACCURACY_STRATEGIES.md`](docs/18_CRNN_ACCURACY_STRATEGIES.md).
+- The Cantonese build is held to the same rule, and caught its own bug: the lexicon is
+  keyed on real labels, so it contains dosage forms, and our first matcher **named a
+  medicine from the word `TABLET`** — the same class of error as the invented account
+  number, fixed with a stop-list of dosage forms and a regression test. Separately, the
+  1.7 MB lexicon was **invisible to git** (an unanchored `data/` in `.gitignore` swallowed
+  `app/data/`), so it would have shipped as a **404 on the live site** with every local
+  test passing — caught by **checking the live URLs after deploying**, not by a test.
 
 If a number in this repository cannot be reproduced with the documented
 command, that is a bug — please open an issue.
@@ -171,6 +196,8 @@ command, that is a bug — please open an issue.
 |---|---|
 | **Hackathon submission** (the 5 required steps, start here) | [`docs/12_HACKATHON_SUBMISSION.md`](docs/12_HACKATHON_SUBMISSION.md) |
 | **Show a judge** (start here — one document, the whole project) | [`docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md`](docs/11_JUDGE_TECHNICAL_DEEP_DIVE.md) |
+| **The refined idea** (medicine labels, spoken in Cantonese — and its limits) | [`docs/26_IDEA_REFINED.md`](docs/26_IDEA_REFINED.md) |
+| **Evidence sheet** (every claim and the file it lives in) | [`docs/evidence.html`](docs/evidence.html) |
 | **Round 1 deliverables** (150-word proposal, video shot list, countdown) | [`docs/13_ROUND1_SUBMISSION_KIT.md`](docs/13_ROUND1_SUBMISSION_KIT.md) |
 | **Win the hackathon** (strategy and pitch) | [`docs/00_HACKATHON_PLAYBOOK.md`](docs/00_HACKATHON_PLAYBOOK.md) |
 | Understand how it works | [`docs/01_ARCHITECTURE.md`](docs/01_ARCHITECTURE.md) |
@@ -192,6 +219,7 @@ sightline/
 │   ├── index.html          #   UI
 │   ├── js/                 #   pipeline, ONNX inference, fallbacks
 │   ├── sw.js               #   service worker — the offline guarantee
+│   ├── data/               #   drug_lexicon.json — the CC-BY-4.0 zh/en medicine lexicon
 │   ├── models/             #   exported ONNX graphs (committed)
 │   └── vendor/             #   ORT wasm + pdf.js (vendored, no OCR library)
 ├── ml/

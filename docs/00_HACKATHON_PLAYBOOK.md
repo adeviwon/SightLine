@@ -26,12 +26,15 @@ in the first fifteen seconds or you have lost them.
 > else. For medication, that's a privacy line they shouldn't have to cross to
 > be independent.
 >
-> **Honest state of the build:** Cantonese is the *next* build, not today's. The
-> app speaks English (`app/js/tts.js` defaults `en-GB`) and **every measurement in
-> this repo was taken on that build**. The gap is bounded — a `zh-HK` voice
-> parameter plus a licence-clean drug-name lexicon, no Chinese OCR needed, because
-> HK labels print the drug, strength and directions in English. The full statement
-> is [`26_IDEA_REFINED.md`](26_IDEA_REFINED.md).
+> **Honest state of the build:** the **Cantonese output build ships** — `app/js/say_cantonese.js`
+> plus an 18,839-pair CC-BY-4.0 zh/en medicine-name lexicon, speaking the drug name and dose in
+> Cantonese and **refusing a name it cannot translate** rather than guessing. The gap was always on
+> the output side: no Chinese OCR is needed, because HK labels print the drug, strength and
+> directions in English. **Every accuracy number in this repo is still measured on the ENGLISH
+> read** — that has not changed — and the feature carries three limits that are stated, not buried:
+> no Cantonese speaker has reviewed the sentence frames, the drug-name step is unvalidated on real
+> labels, and an engine with no zh-HK voice shows the text rather than faking one. The full
+> statement is [`26_IDEA_REFINED.md`](26_IDEA_REFINED.md) §7-8.
 >
 > We trained **two neural networks to read the page**. The first is a
 > restoration CNN that undoes the motion blur and sensor noise you get holding

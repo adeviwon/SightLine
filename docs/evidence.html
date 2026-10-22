@@ -63,7 +63,7 @@
 
   <h1>SightLine — <span>evidence sheet</span></h1>
   <p class="meta">Repository: <a href="https://github.com/adeviwon/SightLine">github.com/adeviwon/SightLine</a> ·
-     commit <code>2e12860</code> (branch <code>pwa</code>) · 2026-10-22 · Imperial Hackathon Hong Kong &amp; Macau 2026</p>
+     commit <code>910bd17</code> (branch <code>pwa</code>) · 2026-10-22 · Imperial Hackathon Hong Kong &amp; Macau 2026</p>
   <p class="lead">One page, one purpose: every claim we make, and the file in this repository that contains it.
      Where a number was not already written down, it was computed from the artifact with the repository's own
      scoring code — the command is in §5, and it prints what is printed here.</p>
@@ -73,7 +73,10 @@
      aloud — for people who cannot read the page, including people with visual impairment. It runs entirely on
      the phone: after the first install there is no network call, no upload, and no OCR library — recognition is
      our own 942,166-parameter CRNN+CTC network (37-symbol alphabet, digits/letters/space) shipped as a
-     self-contained ONNX graph, with a build gate that fails the build if a third-party OCR engine reappears.</p>
+     self-contained ONNX graph, with a build gate that fails the build if a third-party OCR engine reappears.
+     It reads in English by default and <strong>speaks a medicine label in Cantonese</strong> as a first build: the drug
+     name from a licensed zh/en lexicon, the dose from the read text, the directions from a closed phrase set —
+     and it <strong>refuses to speak what it cannot translate</strong> (see §6).</p>
   <table>
     <caption>What runs where (each figure with its source).</caption>
     <thead><tr><th>Item</th><th>Value</th><th class="src">Source in this repo</th></tr></thead>
@@ -91,6 +94,12 @@
           <td class="src"><code>docs/01_ARCHITECTURE.md</code></td></tr>
       <tr><td>Build gate against vendored OCR</td><td>Build fails if Tesseract or another OCR library returns to the bundle</td>
           <td class="src"><code>ml/src/bundle_check.py</code> via <code>bash run.sh bundle-check</code>; <code>HANDOFF.md</code> §6</td></tr>
+      <tr><td><b>Cantonese output</b> (first build)</td><td>Builds a Cantonese utterance from the drug name (licensed zh/en lexicon), the dose (from the read text) and the directions (closed phrase set); <b>refuses a name it cannot translate</b> — never guessed, transliterated or approximated. Verified against the <b>live site</b>, WebKit: <b>14/14</b></td>
+          <td class="src"><code>app/js/say_cantonese.js</code>; <code>app/tools/cantonese_verify.js</code>; <code>app/js/tts.js</code> (<code>hasVoice</code>)</td></tr>
+      <tr><td>Drug-name lexicon</td><td><b>18,839</b> English → Cantonese name pairs, 1.69 MB — <code>twinkle-ai/tw-drug-labels-vision</code> (Taiwan FDA leaflet archive; 72,326 real medicine-label images), <b>CC-BY-4.0</b>; attribution stored in the file (<code>_licence</code>)</td>
+          <td class="src"><code>app/data/drug_lexicon.json</code>; <code>ml/tools/hf_lexicon.py</code>; <code>ml/tests/test_drug_lexicon.py</code> (7/7)</td></tr>
+      <tr><td>The Cantonese build's three limits</td><td>1) not reviewed by a Cantonese speaker; 2) the drug-name step is unvalidated on real labels (matched <b>nothing</b> honestly on our own 12-document bench); 3) the verifying engine has <b>no Chinese voice</b>, so the app shows the Cantonese text rather than faking a voice</td>
+          <td class="src"><code>docs/26_IDEA_REFINED.md</code> §7; <code>docs/12_HACKATHON_SUBMISSION.md</code> §2</td></tr>
     </tbody>
   </table>
 
@@ -434,7 +443,15 @@ bash run.sh bench-hackathon    # score what you just produced
 # 3. the unit gates the fixes are pinned by (each prints "N/N checks passed" and exits non-zero on failure)
 node app/tools/crop_contract.js         # crop geometry (9 checks)
 node app/tools/recognizer_parity.js     # browser CTC decoder vs the Python reference
-node app/tools/warning_gate.js          # the honesty invariants, on all 12 samples</code></pre>
+node app/tools/warning_gate.js          # the honesty invariants, on all 12 samples
+
+# 4. the Cantonese output path — the refusal is the assertion
+node app/js/say_cantonese.js            # the utterance logic (10 checks)
+ml/tests/test_drug_lexicon.py           # the lexicon contract (7 checks)
+#    the SAFETY property in the real engine, against the LIVE site not localhost:
+SMOKE_BASE=https://adeviwon.github.io/SightLine/ node app/tools/cantonese_verify.js --engine=webkit   # 14 checks
+#    a known name becomes Cantonese; an UNKNOWN name and a noise read are REFUSED, never guessed.
+#    the same harness also reports: this engine has NO Chinese voice, so the app shows the text.</code></pre>
   <p>And the bridge between this sheet and the artifacts — this exact command reproduces every number in §2 from
      a stage artifact, using the repository's own metric functions (imported, not re-implemented):</p>
   <pre><code>./.venv/bin/python -c "import sys,json;sys.path.insert(0,'ml/src');import bench_hackathon as B;print(B.aggregate_pipeline(json.load(open('artifacts/pipeline_raw_shipped.json')))['headline'])"
@@ -474,6 +491,14 @@ node app/tools/warning_gate.js          # the honesty invariants, on all 12 samp
         (<code>HANDOFF.md</code> §6).</li>
     <li>No data leaves the device, so the safety story has no privacy side-condition:
         <code>docs/PRIVACY.md</code>; <code>app/sw.js</code> serves from cache only.</li>
+    <li><strong>The same rule now governs the spoken output.</strong> <code>app/js/say_cantonese.js</code>
+        speaks only what it can translate and <strong>refuses the rest</strong>: an unknown drug name is never
+        guessed, transliterated or approximated, and an unreadable label says — in Cantonese — "<em>I cannot
+        see it clearly, I will not guess — please confirm with a pharmacist</em>". Asserted in WebKit against
+        the live site (<code>app/tools/cantonese_verify.js</code>, 14/14). A bug this property caught in our own
+        first version — the matcher named a medicine from the word <code>TABLET</code>, a lexicon key built from
+        real labels — is recorded in <code>docs/12</code> §6: the same class of error as the invented account
+        number above, fixed with a stop-list of dosage forms.</li>
   </ul>
 
   <h2>7. The policy anchor — and why it is the 2025 edition</h2>
@@ -526,7 +551,7 @@ node app/tools/warning_gate.js          # the honesty invariants, on all 12 samp
 
   <div class="foot">
     <p>Repository: <a href="https://github.com/adeviwon/SightLine">github.com/adeviwon/SightLine</a> ·
-       commit <code>2e12860</code> (<code>refs/heads/pwa</code>) · 2026-10-22 · SightLine, Imperial Hackathon
+       commit <code>910bd17</code> (<code>refs/heads/pwa</code>) · 2026-10-22 · SightLine, Imperial Hackathon
        Hong Kong &amp; Macau 2026.</p>
     <p>Numbers in §2 were produced by the repository's own scoring functions
        (<code>ml/src/bench_hackathon.py</code>, imported rather than re-implemented) from the

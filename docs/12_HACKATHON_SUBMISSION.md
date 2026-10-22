@@ -39,8 +39,11 @@ brief is [`docs/26_IDEA_REFINED.md`](26_IDEA_REFINED.md).
 **Why this does not need Chinese OCR:** Hong Kong medicine labels carry the drug name,
 strength and directions **in English**, which is the `0-9 A-Z` alphabet our recogniser
 already has. The gap is on the *output* side — speaking Cantonese — which is a bounded
-speech-and-lexicon change, not a 3–4,000-character alphabet expansion. See §4 for what
-is genuinely still missing.
+speech-and-lexicon change, not a 3–4,000-character alphabet expansion. **That change now
+ships as a first build** (§2, "the Cantonese output path"): the drug name from a licensed
+zh/en lexicon, the dose from the read text, the directions from a closed phrase set, and a
+**refusal** for anything it cannot translate. Its three honest limits are in §6 and
+[`docs/26_IDEA_REFINED.md`](26_IDEA_REFINED.md) §7 — not buried.
 
 ### Who is affected, how many, and what goes wrong
 
@@ -65,7 +68,7 @@ that shakes. A wrong dose is not an inconvenience; it is a medical event.
 |---|---|---|
 | Photos of medicine labels | the model reads pixels, not text | **Not yet available.** We trained on ICDAR 2019 SROIE (real receipts) and a CC-BY-4.0 hand-photographed set (Zenodo 13688441). Honest position: **we have no medicine-label corpus at all.** This is our single biggest gap. |
 | Medicine label text for supervision | to train recognition | Public formulary text is not a labelled image corpus. The realistic route is the HK Drug Registry + hospital discharge medication lists for the *text*, paired with photographs we would have to collect with consent. |
-| Language and speech | so it can speak the answer | System TTS; Cantonese (zh-HK) is the gap in §6. |
+| Language and speech | so it can speak the answer | English TTS by default, plus a **first Cantonese output build** (`app/js/say_cantonese.js`): the drug name from a licensed zh/en lexicon, the dose from the read text, the directions from a closed phrase set. Refuses a name it cannot translate. Three limits in §6. |
 
 **We will not pretend we have medicine data.** Everything in §3 was measured on
 receipts and synthetic documents. Transfer to medicine labels is **an untested
@@ -108,6 +111,50 @@ head** we trained. 4 classes: banking / medical / legal / general.
 It consumes tokens, not pixels. It sits **after** our OCR and never sees an
 image. The encoder is **frozen** — this is not end-to-end fine-tuning, and we do
 not claim it is.
+
+### The Cantonese output path (shipped — a first build, with limits)
+
+The refined brief is "photograph the label, **hear it in Cantonese**". Our recogniser reads
+the label in English, so the output half is a **Cantonese utterance built from facts we hold**,
+not a translation of free text:
+
+- **The drug name** is matched against a **licensed zh/en medicine lexicon** —
+  `app/data/drug_lexicon.json`, **18,839 English → Cantonese name pairs (1.69 MB)**, sourced
+  from **`twinkle-ai/tw-drug-labels-vision` (Taiwan FDA leaflet archive; 72,326 real
+  medicine-label images), CC-BY-4.0**, harvested by `ml/tools/hf_lexicon.py`. Attribution is
+  recorded inside the file (`_licence`).
+- **The dose** comes from the read text; **the directions** come from a curated **closed set**
+  of dispensing phrases ("TAKE ONE CAPSULE THREE TIMES DAILY WITH FOOD" → 每日三次，每次一粒，隨餐服用).
+  A label is a structured record, which is the one case where a dictionary beats a model.
+- **The safety property is the design** (`app/js/say_cantonese.js`): it speaks only what it can
+  translate and **refuses the rest**. An unknown drug name is **never guessed, transliterated
+  or approximated**; an unreadable label says — in Cantonese — "*I cannot see it clearly, I
+  will not guess — please confirm with a pharmacist*". A wrong dose spoken confidently in
+  Cantonese is as dangerous as one spoken in English.
+- **Measured, in the real engine, against the live site:** `cantonese_verify.js --engine=webkit`
+  **14/14**; the utterance logic `node app/js/say_cantonese.js` **10/10**; the lexicon contract
+  `ml/tests/test_drug_lexicon.py` **7/7**.
+
+**A bug this property caught, and the same class of error we had already fixed.** The lexicon
+is built from real labels, so it contains entries **keyed on dosage forms** — `TABLET` is a key.
+The first matcher read our own bench document, found the word `TABLET`, and **confidently
+offered a specific medicine as "the drug"** — a plausible-looking match that is simply wrong,
+exactly like the invented account number (§4). Fixed with a stop-list of dosage forms and
+excipients plus a rule that a 1–2 word key containing a form word is not a name; a regression
+test pins it.
+
+**A bug about verification, not logic.** The 1.7 MB lexicon was **invisible to git**:
+`.gitignore` had an unanchored `data/`, which swallowed `app/data/`, so the asset would have
+deployed as a **404 on the live site** with every local test still passing. It was caught by
+**checking the live URLs after deploying**, not by any test. `data/` is now anchored (`/data/`).
+
+**Three honest limits**, stated wherever the feature is stated and not buried: (1) the sentences
+have **not been reviewed by a Cantonese speaker**; (2) the **drug-name step is unvalidated on
+real medicine labels** — on our own 12-document bench it matched **nothing** honestly, so the
+lexicon's coverage of what we can actually read is not yet measured; (3) the **web engine this
+deck was verified in has no Chinese voice**, so the app **shows the Cantonese text** rather than
+faking a voice — on a phone the voice must be present in Settings, and the demo device is checked
+before filming.
 
 ### Deployment
 
@@ -314,8 +361,10 @@ CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ '     (37 symbols)
 
 `has CJK: False`. **There is no Chinese character in the model's output
 space at all.** A 繁體中文 medicine label cannot produce a single correct
-character — not "poorly", *impossibly*. Our text-to-speech also defaults to
-`en-GB`.
+character — not "poorly", *impossibly*. This is the **input** barrier, and it is unchanged by
+the Cantonese work: the app now *speaks* Cantonese (§2), but reading a Chinese-**only** label
+still needs the alphabet expanded. Our text-to-speech also defaults to `en-GB`, though a first
+Cantonese output build now ships and is selectable.
 
 **Why this is the most serious thing in this document:** Hong Kong's dispensed
 medicine information is routinely bilingual, and a large share of over-65
@@ -325,8 +374,8 @@ classifier scoring 95.8% tells us nothing about the patient in front of us.
 
 **What we would do.** (1) Expand the output alphabet to traditional Chinese
 before any field pilot — this is a data problem, ~3–4k common characters cover
-most medicine labels. (2) Add Cantonese (zh-HK) TTS as the default for the HK
-build. (3) Evaluate per-language and **fail the release gate** if any language
+most medicine labels. (2) Cantonese output **now ships as a first build** (§2); make it the default for the HK
+build once the three limits there are closed. (3) Evaluate per-language and **fail the release gate** if any language
 scores below a floor. (4) Until then, **do not deploy to patients** — this is
 not a nice-to-have, it is the difference between serving the population and
 serving a subset of it.
@@ -444,6 +493,8 @@ on the current fixtures the deskew step measures **47.7%**); `app/tools/deskew_v
 | Our first regression gate **grepped for a constant name**; renaming it **passed the test** | a gate that can be defeated is worse than none | asserts resolved values; the rename mutation is caught |
 | The stored classifier eval said **100%** | it was one lucky seed; true 5-seed mean is 95.8% | re-measured and published |
 | Six detector variants "improved" things **inside the noise** (McNemar p = 1.000) | we nearly shipped a regression as a gain | significance now computed before any claim |
+| The Cantonese matcher **named a medicine from the word `TABLET`** — the lexicon is keyed on real labels, so it contains dosage forms, and our own bench document contains that word | a plausible-looking match that is simply wrong — **the same class of error as the invented account number** (§4), in the medium where wrong matters | a stop-list of dosage forms and excipients (`NOT_A_NAME`) plus a rule that a 1–2 word key containing a form word is not a name; `node app/js/say_cantonese.js` pins it (10/10) |
+| The 1.7 MB Cantonese lexicon was **invisible to git** — `.gitignore` had an unanchored `data/` that also swallowed `app/data/` — so it would have shipped as a **404 on the live site** with every local test passing | a shipped-but-missing asset is invisible to unit tests; only the deployed artifact tells the truth | `data/` anchored to `/data/`; caught by **checking the live URLs after deploying**, not by a test |
 
 ---
 
@@ -459,7 +510,10 @@ on the current fixtures the deskew step measures **47.7%**); `app/tools/deskew_v
 3. **We found two ways our own tool would exclude the people it is for** — it
    cannot read Chinese, and it fails for low-vision users. A tool that cannot
    read a Hong Kong medicine label should not be presented as a Hong Kong
-   medicine tool. We would rather be judged on that than on a number.
+   medicine tool. It now *speaks* Cantonese — a first build that refuses a name
+   it cannot translate — but it has not been reviewed by a Cantonese speaker, the
+   drug-name step is unvalidated on real labels, and the proving engine has no
+   Chinese voice. We would rather be judged on that than on a number.
 
 ### Reproduce it
 

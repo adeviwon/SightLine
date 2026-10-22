@@ -11,9 +11,12 @@
   background graphics ON (each slide is one page).
   Every number on a slide carries a [source: …] line pointing at the file it came from.
   Palette is the app's own design tokens (app/index.html), so the deck and the product match.
-  Scope (2026-10-22): a medicine-label tool, not a general document reader. Where a slide
-  states the Cantonese goal it also states the honest current state — the app speaks English
-  today and every measurement in the repo was taken on that English build (docs/26).
+  Scope (2026-10-22): a medicine-label tool, not a general document reader. The app now
+  SHIPS a first Cantonese output build (drug name from a licensed zh/en lexicon, dose from the
+  read text, directions from a closed phrase set; refuses what it cannot translate — 14/14 in
+  WebKit against the live site), with its three honest limits stated where the feature is
+  stated (docs/26 §7, docs/25). Every accuracy number in the repo was measured on the ENGLISH
+  read and says so.
 -->
 <style>
 :root{
@@ -140,7 +143,7 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
   <h1>SightLine</h1>
   <div class="lines">
     <p class="big">A medicine label, read aloud — on your phone, with no network.</p>
-    <p>The goal is that it says the label back in <b>Cantonese</b>. Today it speaks English, and every number in this deck was measured on that build.</p>
+    <p>It says the label back in <b>Cantonese</b> — a first build that <b>speaks only what it can translate and refuses the rest</b>. Every accuracy number in this deck was measured on the English read.</p>
     <p class="muted">Team STEMB · Imperial Hackathon Hong Kong &amp; Macau 2026 — Grand Final</p>
     <p class="ok">Live: adeviwon.github.io/SightLine</p>
   </div>
@@ -178,8 +181,8 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
       <div class="lines">
         <p>Our own recogniser: <b>942,166 parameters</b>, 37 symbols (0-9, A-Z, space). No OCR library, no cloud, no account.</p>
         <p><b>26.7 MB</b> of ONNX on the device. Airplane mode: nothing about their medication leaves the phone.</p>
-        <p class="ok">Ships today: it reads the English on the label and speaks English. Next: the same fields spoken in Cantonese — no Chinese OCR needed, because the label is already English.</p>
-        <p class="muted">Every number here was measured on that English build, on receipts and synthetic documents — not yet on a medicine-label corpus (<code>docs/12</code> §1).</p>
+        <p class="ok"><b>Cantonese ships, a first build:</b> drug name from an <b>18,839-pair licensed zh/en lexicon</b>, dose from the read text, directions from a closed phrase set — and a <b>refusal</b> for a name it cannot translate. WebKit 14/14.</p>
+        <p class="muted">Every accuracy number is the <b>English</b> read. <b>Not yet reviewed by a Cantonese speaker; the drug-name step is unvalidated on real labels</b> (<code>docs/26</code> §7).</p>
       </div>
     </div>
     <div class="phone">
@@ -193,7 +196,7 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
       <div class="refuse">“I could not read the dose clearly. Please check it with a pharmacist — I will not guess.”</div>
     </div>
   </div>
-  <div class="src">[source: artifacts/ocr_training.json (params 942166, charset 37 symbols) · HANDOFF.md §payload (26.7 MB installable) · app/index.html (design tokens and UI) · app/js/tts.js (<code>speak(text, {lang})</code> / <code>pickVoice(lang)</code> — en-GB today) · docs/26_IDEA_REFINED.md §3 (the Cantonese plan) · app/tools/render_samples.py (the sample label is synthetic, not a real patient’s)]</div>
+  <div class="src">[source: artifacts/ocr_training.json (params 942166, charset 37 symbols) · HANDOFF.md §payload (26.7 MB installable) · app/index.html (design tokens and UI) · app/js/tts.js (<code>speak(text, {lang})</code> / <code>pickVoice(lang)</code> / <code>hasVoice(lang)</code> — en-GB default, zh-HK offered) · app/js/say_cantonese.js (18,839-pair lexicon, refusal path) · docs/26_IDEA_REFINED.md §3–§4 (the Cantonese build, the two bugs, the three limits) · app/tools/render_samples.py (the sample label is synthetic, not a real patient’s)]</div>
 </section>
 
 <!-- 5 — LIVE DEMO -->
@@ -222,14 +225,14 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
     <div class="arrow">→</div>
     <div class="box"><div class="n">04</div><div class="t">Field extraction</div><div class="s">drug name and dosage — behind a confidence gate</div></div>
     <div class="arrow">→</div>
-    <div class="box"><div class="n">05</div><div class="t">Speech</div><div class="s">on-device TTS, en-GB today; Cantonese is the next build</div></div>
+    <div class="box"><div class="n">05</div><div class="t">Speech</div><div class="s">on-device TTS; en-GB default, Cantonese a first build (zh-HK)</div></div>
   </div>
   <div class="lines">
     <p class="muted"><b>Hard part 1 — inference in a browser.</b> ONNX Runtime Web, our own graph, 26.7 MB shipped to the phone. No OCR library, no server, no fallback engine.</p>
     <p class="muted"><b>Hard part 2 — the refusal threshold.</b> A field below confidence is omitted, never guessed: 10 of the 24 ground-truth fields on our bench are missing rather than wrong (current fixtures; 15 of 24 on the previous generation).</p>
-    <p class="muted"><b>Why Cantonese is feasible without Chinese OCR.</b> HK medicine labels print the drug name, strength and directions in English — the <code>0-9 A-Z</code> alphabet we already read. The gap is only the voice (<code>zh-HK</code>) and a translation lexicon.</p>
+    <p class="muted"><b>Why Cantonese needed no Chinese OCR.</b> HK medicine labels print the drug name, strength and directions in English — the <code>0-9 A-Z</code> alphabet we already read. The gap was only the voice (<code>zh-HK</code>) and a licensed zh/en lexicon, so the remaining risk is a <b>wrong match, not a missing alphabet</b>: an unknown name is refused, never guessed.</p>
   </div>
-  <div class="src">[source: app/js/pipeline.js · app/js/field_guard.js · app/js/recognizer.js · app/js/tts.js · artifacts/ocr_training.json · artifacts/pipeline_raw_shipped.json · docs/26_IDEA_REFINED.md §3]</div>
+  <div class="src">[source: app/js/pipeline.js · app/js/field_guard.js · app/js/recognizer.js · app/js/tts.js · app/js/say_cantonese.js · artifacts/ocr_training.json · artifacts/pipeline_raw_shipped.json · docs/26_IDEA_REFINED.md §3]</div>
 </section>
 
 <!-- 7 — MEASURED RESULTS -->
@@ -287,7 +290,7 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
   <h1>It reads the label —<br>or it says it cannot.</h1>
   <div class="lines">
     <p class="big">Photograph the box of medicine. Hear the drug, the strength, the dose.</p>
-    <p>Goal: that voice is <b>Cantonese</b> — a <code>zh-HK</code> voice and a licenced translation lexicon, no Chinese OCR needed. Today it speaks English, and every number here was measured on that build.</p>
+    <p>The voice is <b>Cantonese</b> — a <code>zh-HK</code> voice and a licensed zh/en lexicon, no Chinese OCR needed — and it <b>refuses a name it cannot translate</b>. It is not yet reviewed by a Cantonese speaker, and every accuracy number here was measured on the English read.</p>
     <p class="ok">Live: adeviwon.github.io/SightLine</p>
     <p class="muted">Repo: github.com/adeviwon/SightLine</p>
     <p class="muted">Team STEMB — T on-device ML · E restoration · S accessibility research · M medication safety · B deployment</p>
