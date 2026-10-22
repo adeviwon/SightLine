@@ -92,7 +92,7 @@
       els.preview.hidden = true;
       els.viewfinder.dataset.mode = "camera";
       setTab("cam");
-      announce("Camera ready. Hold the document inside the frame, then press Scan Document.");
+      announce("Camera ready. Hold the medicine label inside the frame, then press Scan Label.");
       return true;
     } catch (e) {
       const name = e && e.name;
@@ -329,8 +329,7 @@
       // what pipeline.understand computes; 0 means no keyword matched at all,
       // which is also the case where it refuses to assert fields.)
       if (u.classificationConfidence < 0.6 && (u.documentEvidence || 0) < 2) {
-        warnings.push("The document type is uncertain — it may not be a "
-          + "prescription, bank statement or contract.");
+        warnings.push("The type is uncertain — this may not be a medicine label.");
       }
 
       const ms = Math.round(performance.now() - t0);

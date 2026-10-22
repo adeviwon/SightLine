@@ -1,5 +1,5 @@
 {
-  "name": "SightLine — On-Device Document Reader",
+  "name": "SightLine — Medicine Label Reader",
   "short_name": "SightLine",
   "description": "Point your phone at a prescription, bank statement or contract. SightLine reads the text, pulls out the key details and reads them aloud — entirely on your device, with no internet connection.",
   "id": "/sightline-app",
@@ -42,7 +42,7 @@
   ],
   "shortcuts": [
     {
-      "name": "Scan a document",
+      "name": "Scan a medicine label",
       "short_name": "Scan",
       "description": "Open the camera and scan a document straight away",
       "url": "./index.html?action=scan",

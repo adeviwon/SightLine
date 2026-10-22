@@ -1,11 +1,12 @@
 /**
  * SightLine service worker — offline-first, cache-first, same-origin only.
  *
- * PRECACHE RATIONALE. The 1.7 MB of required assets is what makes the app work
+ * PRECACHE RATIONALE. The ~1.8 MB of required assets (1,834,527 B on disk) is what makes the app work
  * in airplane mode, so the install step must be exhaustive: a partially-cached
  * install is worse than none, because the app looks offline and then fails at
- * the first OCR pass. (The ONNX models + runtime are a further 40.1 MB and are
- * deliberately NOT here — they are optional accelerators, see OPTIONAL below.)
+ * the first OCR pass. (The ONNX models + runtime are a further ~37.2 MiB —
+ * 26.45 MiB of models and tokenizer plus 10.73 MiB of onnxruntime-web wasm — and
+ * are deliberately NOT here — they are optional accelerators, see OPTIONAL below.)
  * Every entry below is added
  * individually (not cache.addAll, which is all-or-nothing) and the failure
  * count is reported back to the page via postMessage so the badge can be
@@ -24,7 +25,7 @@
  * sightline-* cache, so old wasm never lingers.
  */
 
-const VERSION = "v1.4.0";
+const VERSION = "v1.5.0";
 const CACHE = "sightline-" + VERSION;
 
 /** Everything required for a scan to complete with no network. */
@@ -65,8 +66,10 @@ const PRECACHE = [
   "./assets/icon-192.png",
   "./assets/icon-512.png",
   "./assets/favicon.ico",
-  // OCR engine + language data. ~40 MB. This is the offline guarantee.
-  // PDF rendering
+  // PDF rendering. (The OCR engine + language data is the optional ONNX path —
+  // the models and tokenizer are 26.45 MiB, ~37.2 MiB with the ort wasm, and are
+  // listed under OPTIONAL below; this precache is the ~1.8 MB the app needs to
+  // boot offline.)
   "./vendor/pdfjs/pdf.min.js",
   "./vendor/pdfjs/pdf.worker.min.js",
 ];
