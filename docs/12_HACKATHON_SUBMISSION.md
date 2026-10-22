@@ -195,11 +195,20 @@ driving the real app in WebKit (iOS Safari's engine) over 12 rendered documents,
 
 | metric | value | source |
 |---|---|---|
-| word accuracy | **45.9%** | `artifacts/pipeline_raw_deskew.json` |
-| CER | **0.303** | same |
-| ground-truth fields present in the read text | **9 of 24** | same |
-| field recovery, the app's extracted-field metric (`ml/src/bench_hackathon.py`) | **20.8%** — 5 of 24 | same |
-| classification | **83.3%** | same |
+| word accuracy | **57.2%** | `artifacts/pipeline_raw_shipped.json` |
+| CER | **0.217** | same |
+| ground-truth fields present in the read text | **14 of 24** | same |
+| field recovery, the app's extracted-field metric (`ml/src/bench_hackathon.py`) | **33.3%** — 8 of 24 | same |
+| classification | **91.7%** | same |
+
+  **Which fixture generation, because it matters.** These are measured on 12 synthetic
+  rendered documents, WebKit, one record per document, on the **current** bench fixtures.
+  The figures we previously published (45.9% / 0.303 / 9 of 24 / 20.8% / 83.3%) were measured
+  on a **previous fixture generation** whose capture profiles were later re-tuned — the old
+  ones were 17-67x harsher than real photographs. A controlled A/B (`pipeline_raw_oldmodel_currentfix.json`)
+  splits the move: **+1.7 points is the fixture correction and +9.5 is the retrained model**.
+  Never read 45.9% -> 57.2% as 11.3 points of model improvement. Full attribution:
+  `docs/14_HACKATHON_BENCHMARK.md`.
 
 The two field rows are deliberate: "present in the read text" is the weaker,
 more direct claim (the recogniser produced the right string somewhere on the
@@ -226,11 +235,13 @@ kept in:
 | 22.4% | 0.575 | export width brought to the training clamp (320), same checkpoint — the app had been feeding the model the first 256px of **98.8%** of lines; the read changed on **200 of 200** held-out crops |
 | 17.1% | 0.600 | **a step back on purpose:** dynamic-width graph *and* retrained weights went in together, and on these 12 documents the pair measured worse — even though at crop level the same retrain moved exact line match **3.3% → 57.0%** (CER 0.156). That disagreement is why the next fix was measured on the arm list, not the model |
 | 35.0% | 0.465 | the untransformed image made reachable: `preprocess()` already offered the raw deskewed grayscale, and a later branch replaced the candidate list with the restorer's three degraded arms, so the arm that measures best could never win |
-| **45.9%** | **0.303** | deskew applied in the correct sense: the estimator measured the right angle and the correction **doubled** the tilt instead of removing it — `off_axis` 1.1% → 45.1%, CER 0.882 → 0.234 |
+| **45.9%** | **0.303** | *(previous fixture generation)* deskew applied in the correct sense: the estimator measured the right angle and the correction **doubled** the tilt instead of removing it — `off_axis` 1.1% → 45.1%, CER 0.882 → 0.234 |
 
 Raw records for every row, in that order: `artifacts/pipeline_raw.json`,
 `pipeline_raw_final.json`, `pipeline_raw_dynamic.json`,
-`pipeline_raw_rawarm.json`, `pipeline_raw_deskew.json`. Per capture profile on
+`pipeline_raw_rawarm.json`, `pipeline_raw_deskew.json` — **every row above was measured on
+THE PREVIOUS FIXTURE GENERATION**; the current shipped build is `pipeline_raw_shipped.json`.
+Per capture profile on
 the deskew arm: `studio_clean` 52.3% (and 100% classified correctly),
 `handheld_light` 46.5%, `jpeg_social` 39.8%, `off_axis` 45.1%. Reproduction,
 per-profile detail and the caveats — including which numbers are *not*
@@ -278,7 +289,8 @@ detector**; the information was never captured.
 
 **For a dose this is disqualifying, and we say so.** Our design refuses to speak
 a field it is not confident about — it omits rather than guesses. Measured end
-to end, our own rendered documents now read at **45.9%** word accuracy, but on
+to end, our own rendered documents now read at **57.2%** word accuracy (12 renders, WebKit,
+current fixtures), but on
 real hand-held photographs we are still at **1.8% line-exact**, where the honest
 product is *"I could not read that label — please check it with a pharmacist"*,
 and that is a **failure state, not a product**. That gap — clean renders against
@@ -424,7 +436,8 @@ of them fail the build.
 | **The served graph was exported at a FIXED 256px** while training built every crop at its natural width clamped to `MAX_W = 320` — and the corpus median IS that clamp | the app fed the model the first 256px of **98.8%** of lines; crop-level exact match 44.7% at natural width against 0.0% cut to 256, and the read changed on **200 of 200** held-out crops | graph re-exported at the training clamp, then made **dynamic width**; `ml/tests/test_graph_width_contract.py` asserts **equality** with the clamp (the old assertion was `width <= MAX_W`, which every narrower graph satisfies — it passed hardest on the worst value) |
 | **Right-padding was assumed inert** because CTC emits BLANK in the tail — it is not: the bidirectional LSTM resumes its backward pass from the right edge, i.e. inside the pad | **11.5 points of crop-level exact match** (padded 19.0% / CER 0.308 vs natural 30.5% / 0.198) | dynamic-width graph — the app serves every crop at its **natural** width, no padding at all |
 | **The image transform ran at serve and never at train** — and a later branch replaced `preprocess()`'s candidate list with the restorer's three degraded arms | the arm that measures **best** (raw deskewed grayscale) could never win the ranking; 34.5 points of exact line match, end-to-end word accuracy 17.1% → 35.0% | the untransformed candidate is prepended; the ranking rule was left alone, because the **list** was the bug, not the rule |
-| **The deskew correction was applied in the opposite sense** — the estimator measured the right angle, and `preprocess()` rotated the page *away* from straight, doubling the tilt | it fired only on `off_axis`, the pages whose raw detection was already marginal: `off_axis` word accuracy **1.1%**, and two pages lost their lines entirely | one sign changed (`rotate(gray, -angle)`); `off_axis` now **45.1%** (CER 0.882 → 0.234) and the app-wide number **35.0% → 45.9%**; `app/tools/deskew_verify.js` asserts the **round trip** (apply, re-estimate, require ~0) and exits non-zero |
+| **The deskew correction was applied in the opposite sense** — the estimator measured the right angle, and `preprocess()` rotated the page *away* from straight, doubling the tilt | it fired only on `off_axis`, the pages whose raw detection was already marginal: `off_axis` word accuracy **1.1%**, and two pages lost their lines entirely | one sign changed (`rotate(gray, -angle)`); `off_axis` now **45.1%** (CER 0.882 → 0.234) and the app-wide number **35.0% → 45.9%** (both on the previous fixture generation; re-benched
+on the current fixtures the deskew step measures **47.7%**); `app/tools/deskew_verify.js` asserts the **round trip** (apply, re-estimate, require ~0) and exits non-zero |
 | Our manifest shipped `"tesseract": false` **while 30 MB of Tesseract loaded at runtime** | the shipped artifact lied; a judge opening the bundle would have seen it | removed (41.1 MB); `bundle-check` **fails** if any of 4 routes back |
 | A safety gate had its **condition inverted**, so it never ran — it skipped precisely when the model was good enough for the check to matter | the only check on the assumption the ONNX export rests on | fixed, passes, and **mutation-tested to confirm it can fail** |
 | `eval_sroie_test()` called `most_common()` on a `defaultdict` | it had **never run to completion**; our headline held-out number was previously unmeasured | fixed |

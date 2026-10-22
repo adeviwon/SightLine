@@ -22,7 +22,7 @@
       "evidence": [
         "artifacts/step3_classifier_metrics.json",
         "artifacts/ocr_training.json",
-        "artifacts/pipeline_raw_deskew.json",
+        "artifacts/pipeline_raw_shipped.json",
         "docs/03_RESULTS.md#3-results",
         "docs/14_HACKATHON_BENCHMARK.md"
       ],
@@ -82,17 +82,17 @@
   "pipeline": {
     "n": 12,
     "errors": 0,
-    "field_recovery": 0.20833333333333334,
-    "classification": 0.8333333333333334,
-    "word_accuracy": 0.45942654983750875,
-    "cer": 0.30305363644199385,
+    "field_recovery": 0.3333333333333333,
+    "classification": 0.9166666666666666,
+    "word_accuracy": 0.5715791133599353,
+    "cer": 0.21709805749692557,
     "headline": {
       "n": 12,
       "errors": 0,
-      "field_recovery": 0.20833333333333334,
-      "classification": 0.8333333333333334,
-      "word_accuracy": 0.45942654983750875,
-      "cer": 0.30305363644199385
+      "field_recovery": 0.3333333333333333,
+      "classification": 0.9166666666666666,
+      "word_accuracy": 0.5715791133599353,
+      "cer": 0.21709805749692557
     },
     "headline_profiles": [
       "handheld_light",
@@ -113,34 +113,34 @@
       "handheld_light": {
         "n": 3,
         "errors": 0,
-        "field_recovery": 0.16666666666666666,
-        "classification": 0.6666666666666666,
-        "word_accuracy": 0.46532697080642277,
-        "cer": 0.37570481140080925
+        "field_recovery": 0.6666666666666666,
+        "classification": 1.0,
+        "word_accuracy": 0.7517654640942313,
+        "cer": 0.07487492882992142
       },
       "jpeg_social": {
         "n": 3,
         "errors": 0,
-        "field_recovery": 0.16666666666666666,
+        "field_recovery": 0.3333333333333333,
         "classification": 0.6666666666666666,
-        "word_accuracy": 0.3982612749736038,
-        "cer": 0.37837012325625724
+        "word_accuracy": 0.4368999136122424,
+        "cer": 0.36924991289632175
       },
       "off_axis": {
         "n": 3,
         "errors": 0,
-        "field_recovery": 0.16666666666666666,
+        "field_recovery": 0.0,
         "classification": 1.0,
-        "word_accuracy": 0.45080697135491654,
-        "cer": 0.23357261047599276
+        "word_accuracy": 0.4963922826936525,
+        "cer": 0.2552306517540313
       },
       "studio_clean": {
         "n": 3,
         "errors": 0,
         "field_recovery": 0.3333333333333333,
         "classification": 1.0,
-        "word_accuracy": 0.5233109822150918,
-        "cer": 0.224567000634916
+        "word_accuracy": 0.6012587930396149,
+        "cer": 0.1690367365074278
       }
     },
     "metric_definitions": {
@@ -149,7 +149,7 @@
       "field_recovery": "fraction of the document's ground-truth fields present in the extracted fields (a masked value counts if it is a suffix of the expected one)",
       "classification": "fraction of documents whose category matches the expected category"
     },
-    "source": "artifacts/pipeline_raw_deskew.json",
+    "source": "artifacts/pipeline_raw_shipped.json",
     "records": [
       {
         "doc": "prescription",
@@ -164,23 +164,28 @@
           "400 MG",
           "WARNING MAY CAUSE DROWSINESS"
         ],
-        "ocr_confidence": 0.8987532737397855,
+        "ocr_confidence": 0.9304619344639292,
         "error": null,
-        "ms": 7997
+        "ms": 4556
       },
       {
         "doc": "prescription",
         "profile": "handheld_light",
         "expected_category": "medical",
-        "category": "general",
+        "category": "medical",
         "expected_fields": [
           "500mg",
           "400mg"
         ],
-        "fields": [],
-        "ocr_confidence": 0.7441437466365629,
+        "fields": [
+          "500 MG",
+          "400 MG",
+          "1200 MG",
+          "WARNING MAY CAUSE DROWSINESS"
+        ],
+        "ocr_confidence": 0.965038358902265,
         "error": null,
-        "ms": 8372
+        "ms": 6960
       },
       {
         "doc": "prescription",
@@ -192,12 +197,12 @@
           "400mg"
         ],
         "fields": [
-          "400 MG",
-          "1200 MG"
+          "1200 MG",
+          "WARNING MAY CAUSE DROWSINESS"
         ],
-        "ocr_confidence": 0.903011327227978,
+        "ocr_confidence": 0.9031542405592532,
         "error": null,
-        "ms": 3872
+        "ms": 3673
       },
       {
         "doc": "prescription",
@@ -209,12 +214,12 @@
           "400mg"
         ],
         "fields": [
-          "50 MG",
-          "120 MG"
+          "400 MG",
+          "1200 MG"
         ],
-        "ocr_confidence": 0.8118881225671222,
+        "ocr_confidence": 0.768350784863625,
         "error": null,
-        "ms": 9248
+        "ms": 8186
       },
       {
         "doc": "banking",
@@ -226,11 +231,13 @@
           "40-11-04"
         ],
         "fields": [
-          "401104"
+          "4021887",
+          "401104",
+          "4521"
         ],
-        "ocr_confidence": 0.9709491091902476,
+        "ocr_confidence": 0.9690253323928464,
         "error": null,
-        "ms": 4636
+        "ms": 2349
       },
       {
         "doc": "banking",
@@ -242,11 +249,13 @@
           "40-11-04"
         ],
         "fields": [
-          "40218877"
+          "40218877",
+          "401104",
+          "4521"
         ],
-        "ocr_confidence": 0.966995223419313,
+        "ocr_confidence": 0.977326045821021,
         "error": null,
-        "ms": 8705
+        "ms": 5247
       },
       {
         "doc": "banking",
@@ -257,10 +266,12 @@
           "40218877",
           "40-11-04"
         ],
-        "fields": [],
-        "ocr_confidence": 0.9553798883519938,
+        "fields": [
+          "4521"
+        ],
+        "ocr_confidence": 0.966911539679554,
         "error": null,
-        "ms": 4106
+        "ms": 2248
       },
       {
         "doc": "banking",
@@ -272,13 +283,13 @@
           "40-11-04"
         ],
         "fields": [
-          "402188",
+          "4021887",
           "401104",
           "4521"
         ],
-        "ocr_confidence": 0.9782233690730052,
+        "ocr_confidence": 0.9760901316432573,
         "error": null,
-        "ms": 8416
+        "ms": 5392
       },
       {
         "doc": "legal",
@@ -290,11 +301,11 @@
           "2024-CV-00456"
         ],
         "fields": [
-          "THELANDLORD 1 THE TENANT 2\nPROPERTY13 AKE STET IONDON N"
+          "TE LANDLORO THE ENANT 2\nPROPERT 123 BAKE STET IONDON"
         ],
-        "ocr_confidence": 0.8827177421963776,
+        "ocr_confidence": 0.9072195058575433,
         "error": null,
-        "ms": 3929
+        "ms": 2210
       },
       {
         "doc": "legal",
@@ -307,12 +318,12 @@
         ],
         "fields": [
           "32",
-          "51",
-          "74"
+          "74",
+          "THE LANDLORD THE TENANT 2\nPROPERT 123 AKE SRET IONDON"
         ],
-        "ocr_confidence": 0.896062235546185,
+        "ocr_confidence": 0.9454579942380125,
         "error": null,
-        "ms": 8041
+        "ms": 5243
       },
       {
         "doc": "legal",
@@ -323,27 +334,24 @@
           "2500",
           "2024-CV-00456"
         ],
-        "fields": [
-          "1 FEBRUARY 2024",
-          "32"
-        ],
-        "ocr_confidence": 0.8013796352523694,
+        "fields": [],
+        "ocr_confidence": 0.7996335966825211,
         "error": null,
-        "ms": 3833
+        "ms": 2639
       },
       {
         "doc": "legal",
         "profile": "jpeg_social",
         "expected_category": "legal",
-        "category": "general",
+        "category": "banking",
         "expected_fields": [
           "2500",
           "2024-CV-00456"
         ],
         "fields": [],
-        "ocr_confidence": 0.7955250649838355,
+        "ocr_confidence": 0.6904521583790912,
         "error": null,
-        "ms": 8745
+        "ms": 6232
       }
     ]
   },

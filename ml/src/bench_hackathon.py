@@ -13,8 +13,9 @@ WHAT THE BRIEF ASKS TO BE MEASURED, and where each number comes from:
       -> bash run.sh eval-ocr                     (printed; see docs/03 section 3)
   the shipped pipeline end to end (the browser app, WebKit = iOS Safari's engine)
       -> artifacts/pipeline_raw.json              (bash run.sh bench-pipeline)
-         artifacts/pipeline_raw_deskew.json       (the SHIPPED build's saved records,
-                                                  which this report scores)
+         artifacts/pipeline_raw_shipped.json      (the SHIPPED build's saved records, on the
+                                                  CURRENT bench fixtures -- what this report scores)
+         artifacts/pipeline_raw_deskew.json       (the previous fixture generation, kept as a record)
 
 This module does not measure anything itself: it READS those artifacts and
 reports them in one place, with the source of every number attached, and it
@@ -101,7 +102,7 @@ REQUIREMENTS = {
         "brief": "Step 3 — the required metrics, on held-out data, reproducible",
         "evidence": ["artifacts/step3_classifier_metrics.json",
                      "artifacts/ocr_training.json",
-                     "artifacts/pipeline_raw_deskew.json",
+                     "artifacts/pipeline_raw_shipped.json",
                      "docs/03_RESULTS.md#3-results", "docs/14_HACKATHON_BENCHMARK.md"],
         "commands": ["bash run.sh bench-hackathon", "bash run.sh eval-ocr",
                      "bash run.sh bench-pipeline"],
@@ -235,7 +236,12 @@ def _pct(x):
 # Which records this report SCORES: the SHIPPED build's saved run. A fresh
 # `bench-pipeline` run goes to PIPE_BENCH_OUT, so re-running the browser bench
 # cannot silently overwrite the shipped record this file reports on.
-PIPE_RAW = "artifacts/pipeline_raw_deskew.json"
+PIPE_RAW = "artifacts/pipeline_raw_shipped.json"   # the SHIPPED build on the CURRENT
+#   (regenerated) bench fixtures. This pointed at pipeline_raw_deskew.json, which was the
+#   shipped build at the time but was measured on fixtures rendered BEFORE the capture
+#   profiles were re-tuned -- 17-67x harsher than real photographs -- so the repo's own
+#   one-command reproduction printed a number from a distribution the model never trained
+#   on. ml/tests/test_fixture_freshness.py fails if the fixtures drift again.
 PIPE_BENCH_OUT = "artifacts/pipeline_raw.json"
 
 # The ONLY profiles kept out of the headline are the ones the repo already marks
