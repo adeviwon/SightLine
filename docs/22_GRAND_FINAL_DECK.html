@@ -11,6 +11,9 @@
   background graphics ON (each slide is one page).
   Every number on a slide carries a [source: …] line pointing at the file it came from.
   Palette is the app's own design tokens (app/index.html), so the deck and the product match.
+  Scope (2026-10-22): a medicine-label tool, not a general document reader. Where a slide
+  states the Cantonese goal it also states the honest current state — the app speaks English
+  today and every measurement in the repo was taken on that English build (docs/26).
 -->
 <style>
 :root{
@@ -136,7 +139,8 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
 <section class="slide" id="s1">
   <h1>SightLine</h1>
   <div class="lines">
-    <p class="big">It reads your documents aloud — on your phone, with no network.</p>
+    <p class="big">A medicine label, read aloud — on your phone, with no network.</p>
+    <p>The goal is that it says the label back in <b>Cantonese</b>. Today it speaks English, and every number in this deck was measured on that build.</p>
     <p class="muted">Team STEMB · Imperial Hackathon Hong Kong &amp; Macau 2026 — Grand Final</p>
     <p class="ok">Live: adeviwon.github.io/SightLine</p>
   </div>
@@ -145,10 +149,10 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
 <!-- 2 — THE HUMAN -->
 <section class="slide" id="s2">
   <div class="kicker">The moment we built this for</div>
-  <h2>The prescription is on the table, and she cannot read it.</h2>
+  <h2>She is 78. The box of medicine is in her hand, and she cannot read it.</h2>
   <div class="lines">
-    <p>She is 80. The dose is two lines down, in type she has not been able to see for years.</p>
-    <p>She is alone in the flat, so it gets guessed — or it waits for a neighbour who is not coming today.</p>
+    <p>Two things stop her at once: her eyes no longer make out the small print, and what is printed on that box is <b>English she never learned</b>.</p>
+    <p>So the dose gets guessed — or it waits for a neighbour who is not coming today.</p>
     <p class="muted">No statistic on this slide. It is the reason the next one matters.</p>
   </div>
 </section>
@@ -158,10 +162,11 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
   <div class="kicker">The problem at scale</div>
   <div class="num">199,600<span class="sub"> people</span></div>
   <div class="lines">
-    <p>live with visual impairment in Hong Kong — <b>2.7% of the population</b>. 113,900 of them (57.1%) live with multiple disabilities.</p>
-    <p>Every cloud reader on the market asks them to upload that prescription first. For a medication label, offline is not a feature — it is the only answer that holds.</p>
+    <p>report long-term seeing difficulty in Hong Kong — <b>2.7% of the population</b>, <b>three in four of them 65 or over</b>, and 188,569 people over 65 live alone.</p>
+    <p>The second barrier compounds the first: the label names the drug, the strength and the directions <b>in English</b>. An app that only magnifies the print leaves the language problem standing; one that only translates assumes she can see the text.</p>
+    <p class="muted">Every cloud reader on the market asks them to upload that label first. For medication, offline is not a feature — it is the only answer that holds.</p>
   </div>
-  <div class="src">[source: docs/13_ROUND1_SUBMISSION_KIT.md — HKSAR Census and Statistics Department, Special Topics Report No. 63, <i>Persons with disabilities and chronic diseases</i> (December 2021, 2020 survey round), Appendix 4, via the Hong Kong Blind Union]</div>
+  <div class="src">[source: docs/13_ROUND1_SUBMISSION_KIT.md — HKSAR Census and Statistics Department, Special Topics Report No. 63, <i>Persons with disabilities and chronic diseases</i> (December 2021, 2020 survey round), Appendix 4, via the Hong Kong Blind Union; 188,569 over-65s living alone, 2021 Census, same file]</div>
 </section>
 
 <!-- 4 — THE SOLUTION -->
@@ -169,25 +174,26 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
   <div class="kicker">The solution</div>
   <div class="cols">
     <div class="grow">
-      <h2>Point the phone at the document. It reads it aloud, speaks the fields that matter, and refuses what it cannot read.</h2>
+      <h2>Photograph the medicine label. It reads it aloud, names the drug, the strength and the dose — and refuses what it cannot read.</h2>
       <div class="lines">
         <p>Our own recogniser: <b>942,166 parameters</b>, 37 symbols (0-9, A-Z, space). No OCR library, no cloud, no account.</p>
-        <p><b>26.7 MB</b> of ONNX on the device. Airplane mode: nothing leaves the phone.</p>
-        <p class="muted">Chinese is not in the alphabet yet. We say that publicly, and it is roadmap item 1.</p>
+        <p><b>26.7 MB</b> of ONNX on the device. Airplane mode: nothing about their medication leaves the phone.</p>
+        <p class="ok">Ships today: it reads the English on the label and speaks English. Next: the same fields spoken in Cantonese — no Chinese OCR needed, because the label is already English.</p>
+        <p class="muted">Every number here was measured on that English build, on receipts and synthetic documents — not yet on a medicine-label corpus (<code>docs/12</code> §1).</p>
       </div>
     </div>
     <div class="phone">
       <div class="bar"><span class="brand">SightLine</span><span class="badge">OFFLINE · ON-DEVICE</span></div>
       <div class="doc">
-        <span class="cap">prescription · synthetic studio_clean corpus</span>
+        <span class="cap">medicine label · synthetic studio_clean corpus</span>
         <div><b>AMOXICILLIN 500MG CAPSULES</b></div>
         <div class="row"><span>DOSE</span><b>500 mg · three times daily</b></div>
         <div class="row"><span>PHARMACY</span><b>Northgate Pharmacy</b></div>
       </div>
-      <div class="refuse">“I could not read the account number clearly. Please check it — I will not guess.”</div>
+      <div class="refuse">“I could not read the dose clearly. Please check it with a pharmacist — I will not guess.”</div>
     </div>
   </div>
-  <div class="src">[source: artifacts/ocr_training.json (params 942166, charset 37 symbols) · HANDOFF.md §payload (26.7 MB installable) · app/index.html (design tokens and UI) · app/tools/render_samples.py (the sample document is synthetic, not a real patient’s)]</div>
+  <div class="src">[source: artifacts/ocr_training.json (params 942166, charset 37 symbols) · HANDOFF.md §payload (26.7 MB installable) · app/index.html (design tokens and UI) · app/js/tts.js (<code>speak(text, {lang})</code> / <code>pickVoice(lang)</code> — en-GB today) · docs/26_IDEA_REFINED.md §3 (the Cantonese plan) · app/tools/render_samples.py (the sample label is synthetic, not a real patient’s)]</div>
 </section>
 
 <!-- 5 — LIVE DEMO -->
@@ -197,8 +203,8 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
   <ol class="steps">
     <li>Open <b>adeviwon.github.io/SightLine</b> on this phone — installed, then reloaded with the network off.</li>
     <li><b>Airplane mode ON.</b> Wi-Fi off, data off. Nothing is uploaded; there is nowhere for it to go.</li>
-    <li>Scan the prescription. Hear it read the medication and the dose aloud.</li>
-    <li>Scan the second document. Watch it <b>refuse</b> one field and say why, instead of guessing.</li>
+    <li>Scan the box of medicine. Hear it read the drug name and the dose aloud.</li>
+    <li>Scan the label it cannot read. Watch it <b>refuse</b> the dose and say why, instead of guessing.</li>
   </ol>
   <div class="note">Fallback if the phone or the room fails: the same pipeline runs from the repo (<b>bash run.sh serve</b>), and the 12-document bench replays from <b>artifacts/pipeline_raw_deskew.json</b>.</div>
   <div class="src">[source: docs/05_DEMO_RUNBOOK.md]</div>
@@ -214,15 +220,16 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
     <div class="arrow">→</div>
     <div class="box ours"><div class="n">03</div><div class="t">CRNN + CTC</div><div class="s">ours: 942,166 params, 37 symbols, ONNX in the browser</div></div>
     <div class="arrow">→</div>
-    <div class="box"><div class="n">04</div><div class="t">Field extraction</div><div class="s">dosage, account, case reference, date — behind a confidence gate</div></div>
+    <div class="box"><div class="n">04</div><div class="t">Field extraction</div><div class="s">drug name and dosage — behind a confidence gate</div></div>
     <div class="arrow">→</div>
-    <div class="box"><div class="n">05</div><div class="t">Speech</div><div class="s">on-device TTS, en-GB today</div></div>
+    <div class="box"><div class="n">05</div><div class="t">Speech</div><div class="s">on-device TTS, en-GB today; Cantonese is the next build</div></div>
   </div>
   <div class="lines">
     <p class="muted"><b>Hard part 1 — inference in a browser.</b> ONNX Runtime Web, our own graph, 26.7 MB shipped to the phone. No OCR library, no server, no fallback engine.</p>
     <p class="muted"><b>Hard part 2 — the refusal threshold.</b> A field below confidence is omitted, never guessed: 15 of the 24 ground-truth fields on our bench are missing rather than wrong.</p>
+    <p class="muted"><b>Why Cantonese is feasible without Chinese OCR.</b> HK medicine labels print the drug name, strength and directions in English — the <code>0-9 A-Z</code> alphabet we already read. The gap is only the voice (<code>zh-HK</code>) and a translation lexicon.</p>
   </div>
-  <div class="src">[source: app/js/pipeline.js · app/js/field_guard.js · app/js/recognizer.js · artifacts/ocr_training.json · artifacts/pipeline_raw_deskew.json]</div>
+  <div class="src">[source: app/js/pipeline.js · app/js/field_guard.js · app/js/recognizer.js · app/js/tts.js · artifacts/ocr_training.json · artifacts/pipeline_raw_deskew.json · docs/26_IDEA_REFINED.md §3]</div>
 </section>
 
 <!-- 7 — MEASURED RESULTS -->
@@ -244,7 +251,7 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
     <br><b>Fairness correction, stated not hidden:</b> our 37-symbol alphabet (0-9, A-Z, space) cannot emit punctuation at all, and 120 of the 188 scored rows contain it — that alone is the 11.7% &rarr; 41.0% line-exact gap; on the identical-pixel control, punctuation-blind, ours takes <b>48 lines</b> Tesseract misses, and loses 16. <b>Safety:</b> on the clean page Tesseract read the dosage <b>500mg as 300mg</b> — the exact field this product exists to protect.
     <br><b>Traceable record:</b> <code>artifacts/pipeline_raw_deskew.json</code> — 12 records, one per document, each <code>error: null</code> with its read text (the only verification count we quote; the CPU-starved browser bench is kept labelled in <code>artifacts/webkit_bench.log</code>).
   </div>
-  <div class="src">[source: docs/24_ENGINE_HEAD_TO_HEAD.md · artifacts/engine_head_to_head.json — 12 documents, 188 ground-truth lines, Tesseract 4.1.1 · shipped end-to-end 45.9% word acc / CER 0.303, from 3.6% (<code>artifacts/pipeline_raw_deskew.json</code>, <code>pipeline_raw.json</code>) · hard case 20 real hand-photographed pages, 1.8% line-exact (<code>docs/14_HACKATHON_BENCHMARK.md</code>)]</div>
+  <div class="src">[source: docs/24_ENGINE_HEAD_TO_HEAD.md · artifacts/engine_head_to_head.json — 12 documents, 188 ground-truth lines, Tesseract 4.1.1 · shipped end-to-end 45.9% word acc / CER 0.303, from 3.6% (<code>artifacts/pipeline_raw_deskew.json</code>, <code>pipeline_raw.json</code>) · hard case 20 real hand-photographed pages, 1.8% line-exact (<code>docs/14_HACKATHON_BENCHMARK.md</code>) · no-medicine-label-corpus caveat: docs/12 §1, docs/26 §7]</div>
 </section>
 
 <!-- 8 — WHAT WE GOT WRONG -->
@@ -267,7 +274,7 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
   <div class="num sm">46.4%<span class="sub"> of older Hong Kong people</span></div>
   <div class="lines">
     <p>take five or more medicines at once — the highest of Hong Kong, Taiwan, South Korea, the UK and Australia (2016), and rising 2.7% a year. Polypharmacy plus sight loss is our use case.</p>
-    <p class="muted"><b>¶75 · 2025 Policy Address</b> — AI application: “…render carer support through an AI chatbot to give carers more convenient access to information”, and generative AI in clinical workflows. A carer hearing their own document read out, on the phone they already own.</p>
+    <p class="muted"><b>¶75 · 2025 Policy Address</b> — AI application: “…render carer support through an AI chatbot to give carers more convenient access to information”, and generative AI in clinical workflows. A carer hearing their own medicine label read out, on the phone they already own.</p>
     <p class="muted"><b>¶227 · 2025</b> — healthcare reform for an ageing society (¶226 opens the section): “enhancing ophthalmic services … a new high-capacity ambulatory cataract surgery centre”. The only directly vision-facing commitment in either edition.</p>
     <p class="muted"><b>¶266 · 2025</b> — Working Group on Ageing Society Strategies covering “…elderly care, healthcare, housing, culture and leisure, and gerontechnology”; and “…by 2046, people aged 65 and above will account for <b>36%</b> of our total population”.</p>
     <p class="muted"><b>2026 is the funded follow-through, not the anchor:</b> ¶113 allocates <b>$300 million</b> to the “AI for Welfare Lab”; ¶398–400 earmark <b>$100 million</b> for the Gerontechnology Promotion Scheme.</p>
@@ -277,8 +284,10 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
 
 <!-- 10 — CLOSE -->
 <section class="slide" id="s10">
-  <h1>It reads it —<br>or it says it cannot.</h1>
+  <h1>It reads the label —<br>or it says it cannot.</h1>
   <div class="lines">
+    <p class="big">Photograph the box of medicine. Hear the drug, the strength, the dose.</p>
+    <p>Goal: that voice is <b>Cantonese</b> — a <code>zh-HK</code> voice and a licenced translation lexicon, no Chinese OCR needed. Today it speaks English, and every number here was measured on that build.</p>
     <p class="ok">Live: adeviwon.github.io/SightLine</p>
     <p class="muted">Repo: github.com/adeviwon/SightLine</p>
     <p class="muted">Team STEMB — T on-device ML · E restoration · S accessibility research · M medication safety · B deployment</p>

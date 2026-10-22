@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>SightLine — On-Device Document Reader</title>
+<title>SightLine — On-Device Medicine-Label Reader</title>
 
 <!-- PWA / install -->
 <link rel="manifest" href="manifest.json">
@@ -207,7 +207,8 @@ footer a { color: var(--accent); }
 <body>
 <header>
   <h1>Sight<span>Line</span></h1>
-  <p>Reads prescriptions, bank statements and contracts aloud. Fully on-device.</p>
+  <p>Reads the medicine label aloud — the drug, the strength, the dose. Fully on-device.</p>
+  <p>Speaks English today. Cantonese is next — we will not claim it until it is measured.</p>
   <span id="badge" data-state="pending" role="status">STARTING…</span>
 </header>
 
@@ -228,24 +229,25 @@ footer a { color: var(--accent); }
 
   <div id="viewfinder" data-mode="none">
     <video id="video" autoplay playsinline muted aria-label="Live camera preview"></video>
-    <img id="preview" alt="Captured document preview" hidden>
+    <img id="preview" alt="Captured medicine label preview" hidden>
     <div id="scan-flash"></div>
     <div id="scan-line"></div>
     <div id="quality-hint" role="note" hidden></div>
   </div>
 
   <div class="controls">
-    <button id="btn-capture" type="button" aria-describedby="capture-help">Scan Document</button>
+    <button id="btn-capture" type="button" aria-describedby="capture-help">Scan Label</button>
     <button id="btn-pick" type="button" class="secondary">Choose a Photo or PDF</button>
     <button id="btn-retake" type="button" class="secondary" hidden>Scan Another</button>
     <button id="btn-speak" type="button" class="secondary" hidden>Read Aloud</button>
   </div>
   <p id="capture-help" class="sr-only">
-    Scans the current camera frame or the selected photo. Works with no internet connection.
+    Scans the medicine label in the current camera frame or the selected photo. Works with no
+    internet connection. It reads aloud in English today; a Cantonese voice is the next build.
   </p>
 
   <input type="file" id="file-input" accept="image/*,application/pdf"
-         aria-label="Choose a document photo or PDF file">
+         aria-label="Choose a medicine-label photo or PDF file">
 
   <div class="toggles">
     <label for="skip-restore">
@@ -288,7 +290,7 @@ footer a { color: var(--accent); }
 
     <div class="card">
       <h2>Recognised Text</h2>
-      <div id="ocr-text" tabindex="0" role="region" aria-label="Full recognised document text"></div>
+      <div id="ocr-text" tabindex="0" role="region" aria-label="Full recognised text"></div>
     </div>
   </section>
 </main>

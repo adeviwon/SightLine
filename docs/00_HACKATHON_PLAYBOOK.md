@@ -14,20 +14,28 @@ the pitch, the judge playbook, and the deck strategy.
 Rehearse this until it is boring. Judges hear forty pitches; yours must land
 in the first fifteen seconds or you have lost them.
 
-> **SightLine reads your bank statements, prescriptions, and legal letters
-> out loud — with the internet switched off.**
+> **SightLine reads the medicine label out loud — and the goal is to say it
+> back in Cantonese — with the internet switched off.**
 >
 > In Hong Kong alone — where this hackathon is judged — **199,600 people, 2.7%
-> of the population, live with visual impairment** (HKSAR C&SD Special Topics
-> Report No. 63, 2021). Most cannot read their own prescription, bank
-> statement, or legal letter. Every app that helps them uploads the document
-> to a cloud server, because the OCR runs on a GPU somewhere else. For a
-> medical prescription, that's a privacy line they shouldn't have to cross to
+> of the population, report long-term seeing difficulty** (HKSAR C&SD Special
+> Topics Report No. 63, 2021), three in four of them over 65. For an older
+> Hongkonger the label is unreadable twice over: the print is too small to see,
+> and it is printed in English they never learned. Every app that helps them
+> uploads that label to a cloud server, because the OCR runs on a GPU somewhere
+> else. For medication, that's a privacy line they shouldn't have to cross to
 > be independent.
+>
+> **Honest state of the build:** Cantonese is the *next* build, not today's. The
+> app speaks English (`app/js/tts.js` defaults `en-GB`) and **every measurement in
+> this repo was taken on that build**. The gap is bounded — a `zh-HK` voice
+> parameter plus a licence-clean drug-name lexicon, no Chinese OCR needed, because
+> HK labels print the drug, strength and directions in English. The full statement
+> is [`26_IDEA_REFINED.md`](26_IDEA_REFINED.md).
 >
 > We trained **two neural networks to read the page**. The first is a
 > restoration CNN that undoes the motion blur and sensor noise you get holding
-> a phone one-handed over a document. The second is the one that matters: a
+> a phone one-handed over a label. The second is the one that matters: a
 > **CRNN text recogniser we trained ourselves, on 52,554 real word crops from
 > 420 receipts** — with perspective warps driven by 199 real hand-held
 > homographies. We wrote the character-level model from scratch. We did not
@@ -178,7 +186,8 @@ the filming phone, and keep the screen recording as the backup track.
 
 **1. Problem** — 2.1 billion people with vision impairment *(global estimate —
 unverified project note, no artifact in this repo; the HK figure in Part 1 is
-ours)*; independence vs.
+ours)*; for the user we chose, the label is unreadable twice over — too small to
+see, and printed in English they never learned; independence vs.
 privacy is a forced trade-off in every existing app. One sentence, no more.
 
 **2. Solution** — the pipeline diagram. Camera → restore → read → understand → speak.
@@ -207,7 +216,7 @@ intervals. Include the sub-human rows.
 airplane-mode screenshot.
 
 **8. Privacy** — verifiable from source. Zero network. Why this matters for
-medical and legal documents specifically.
+a medicine label specifically.
 
 **9. What's next** — one line. Then stop talking.
 
