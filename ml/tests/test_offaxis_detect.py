@@ -40,6 +40,8 @@ import json
 import sys
 from pathlib import Path
 
+import random
+
 import numpy as np
 from PIL import Image
 
@@ -75,6 +77,32 @@ def rendered(dtype, profile):
     clean = C.render_document(lines, seed=seed)
     deg = C.apply_profile(clean, seed=seed, **C.CAPTURE_PROFILES[profile])
     return lines, clean, deg
+
+
+def _perspective_nn(img, strength=0.045, seed=None):
+    """`capture.perspective()` sampled NEAREST instead of BICUBIC.
+
+    THIS HELPER WAS MISSING, so the test that calls it had never once run -- it raised
+    NameError on a function that existed nowhere in the repo, and a workspace full of
+    passing tests hid it because the failure lives in a test rather than in shipped code.
+
+    Why not just call capture.perspective: this test encodes a pixel's (x,y) COORDINATE
+    into its VALUE (low byte in one plane, high byte in another), warps, then decodes the
+    coordinates back to learn exactly where each drawn line landed. capture.perspective
+    hardcodes BICUBIC and interpolation BLENDS those byte values, so decoded coordinates
+    smear and every box expands. Same corner jitter and same rng draw order as
+    capture.perspective, so the geometry is identical; only the sampling differs.
+    """
+    rng = random.Random(seed)
+    w, h = img.size
+    s = strength
+    src = [(0, 0), (w, 0), (w, h), (0, h)]
+    dst = [(rng.uniform(0, s) * w, rng.uniform(0, s) * h),
+           (w - rng.uniform(0, s) * w, rng.uniform(0, s) * h),
+           (w - rng.uniform(0, s) * w, h - rng.uniform(0, s) * h),
+           (rng.uniform(0, s) * w, h - rng.uniform(0, s) * h)]
+    return img.transform((w, h), Image.PERSPECTIVE, C._perspective_coeffs(dst, src),
+                         Image.NEAREST, fillcolor=(205, 205, 205))
 
 
 def _decode(img16_lo, img16_hi):

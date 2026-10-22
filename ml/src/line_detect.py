@@ -187,7 +187,16 @@ def _shear_proj(ink, slope):
     H, W = ink.shape
     xc = W / 2.0
     xs = np.arange(W)
-    dy = np.round(slope * (xs - xc)).astype(int)
+    # NEGATED on purpose. The ink of a line tilted by `slope` sits at
+    # y = y0 + slope*(x-xc), so removing that tilt means moving each column's ink UP
+    # by slope*(x-xc) right of centre. Shifting it DOWN by the same amount -- the
+    # natural-looking sign, and what this did originally -- DOUBLES the tilt instead
+    # of undoing it. Measured on a synthetic two-line page tilted 0.15: the row
+    # extent of the ink went 71 rows -> 117 rows with the old sign, and 71 -> 26 with
+    # this one, where the two lines then separate into two clean bands. The estimator
+    # was always right (_slope_of gives 0.146 for a true 0.15); only the application
+    # was inverted.
+    dy = -np.round(slope * (xs - xc)).astype(int)
     if not np.any(dy):
         return ink.sum(axis=1)
     shifted = np.zeros_like(ink)

@@ -99,11 +99,31 @@ def test_clean_profiles_not_restored(profile):
 
 
 @pytest.mark.parametrize("profile", [
-    "handheld_light", "handheld_heavy", "low_light", "worst_case"])
+    "handheld_heavy", "low_light", "worst_case"])
 def test_blurred_profiles_fully_restored(profile):
     """A blurred capture must score ~1 — this is where the model earns its keep."""
     w = gating.image_weight(_render(profile))
     assert w > 0.95, f"{profile} is badly degraded but scored weight {w:.3f}"
+
+
+def test_mildly_degraded_profiles_still_separate_from_clean():
+    """The gate's contract on the CORRECTED profiles: a mildly degraded capture must still
+    score clearly above an undamaged one, even though it is no longer ~1.
+
+    `handheld_light` scored ~1 while the capture profiles were 17-67x harsher than a real
+    photograph. Now that they are realistic it is only mildly degraded and scores 0.589 --
+    the gate is right, the profile changed. The separation is the property worth pinning: if
+    a later profile edit flattens it, the gate has stopped discriminating and this fails.
+
+    Measured on the current profiles: the four clean ones score 0.000 and handheld_light 0.589.
+    """
+    clean = max(gating.image_weight(_render(pr)) for pr in
+                ("studio_clean", "off_axis", "glossy_glare", "paper_texture"))
+    mild = gating.image_weight(_render("handheld_light"))
+    assert clean < 0.05, f"a clean profile scored {clean:.3f}"
+    assert mild > clean + 0.4, (
+        f"handheld_light scored {mild:.3f} against a clean {clean:.3f} -- the gate no longer "
+        f"separates a degraded capture from an undamaged one")
 
 
 def test_image_weight_matches_median_of_tiles():
@@ -140,18 +160,22 @@ def test_median_not_mean():
     """
     Blank margins must not dilute a genuinely blurred page.
 
-    The real handheld_light render splits into 20 damaged tiles (weight 1.0) and
+    The fixture moved from handheld_light to jpeg_social when the capture profiles were
+    corrected: handheld_light is now only mildly degraded (median 0.589, mean 0.458), which
+    still satisfies median>mean but no longer exercises the suppression failure at all,
+    because its damaged tiles do not sit at 1.0. Measured, jpeg_social splits into 16 damaged
+    tiles (weight 1.0) and 11 blank ones (weight 0.0), so:
     7 blank ones (weight 0.0), so:
 
         median 1.000   <- the page's real state
-        mean   0.593   <- dragged down by the blank tiles
+        mean   0.592   <- dragged down by the blank tiles
 
     Mean would under-restore a page that needs full restoration; that is the
     failure this choice prevents. Pinned against the real tile distribution
     rather than synthetic padding, because an over-padded fixture (more blanks
     than content tiles) inverts the relationship and tests nothing.
     """
-    gray = _render("handheld_light")
+    gray = _render("jpeg_social")
     h, w = gray.shape[:2]
     tiles = [gating.degradation_weight(gray[y:y + gating.PATCH_H,
                                            x:x + gating.PATCH_W])
