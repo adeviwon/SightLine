@@ -206,7 +206,7 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
     <li>Scan the box of medicine. Hear it read the drug name and the dose aloud.</li>
     <li>Scan the label it cannot read. Watch it <b>refuse</b> the dose and say why, instead of guessing.</li>
   </ol>
-  <div class="note">Fallback if the phone or the room fails: the same pipeline runs from the repo (<b>bash run.sh serve</b>), and the 12-document bench replays from <b>artifacts/pipeline_raw_deskew.json</b>.</div>
+  <div class="note">Fallback if the phone or the room fails: the same pipeline runs from the repo (<b>bash run.sh serve</b>), and the 12-document bench replays from <b>artifacts/pipeline_raw_shipped.json</b>.</div>
   <div class="src">[source: docs/05_DEMO_RUNBOOK.md]</div>
 </section>
 
@@ -226,32 +226,32 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
   </div>
   <div class="lines">
     <p class="muted"><b>Hard part 1 — inference in a browser.</b> ONNX Runtime Web, our own graph, 26.7 MB shipped to the phone. No OCR library, no server, no fallback engine.</p>
-    <p class="muted"><b>Hard part 2 — the refusal threshold.</b> A field below confidence is omitted, never guessed: 15 of the 24 ground-truth fields on our bench are missing rather than wrong.</p>
+    <p class="muted"><b>Hard part 2 — the refusal threshold.</b> A field below confidence is omitted, never guessed: 10 of the 24 ground-truth fields on our bench are missing rather than wrong (current fixtures; 15 of 24 on the previous generation).</p>
     <p class="muted"><b>Why Cantonese is feasible without Chinese OCR.</b> HK medicine labels print the drug name, strength and directions in English — the <code>0-9 A-Z</code> alphabet we already read. The gap is only the voice (<code>zh-HK</code>) and a translation lexicon.</p>
   </div>
-  <div class="src">[source: app/js/pipeline.js · app/js/field_guard.js · app/js/recognizer.js · app/js/tts.js · artifacts/ocr_training.json · artifacts/pipeline_raw_deskew.json · docs/26_IDEA_REFINED.md §3]</div>
+  <div class="src">[source: app/js/pipeline.js · app/js/field_guard.js · app/js/recognizer.js · app/js/tts.js · artifacts/ocr_training.json · artifacts/pipeline_raw_shipped.json · docs/26_IDEA_REFINED.md §3]</div>
 </section>
 
 <!-- 7 — MEASURED RESULTS -->
 <section class="slide" id="s7">
   <div class="kicker">Measured results, honestly</div>
-  <h2>Tesseract wins on clean flat scans — we win 5.5&times; on hand-held captures.</h2>
+  <h2>Tesseract wins this bench — every profile, hand-held included.</h2>
   <table>
     <thead><tr><th>same 12 documents · same crops · same ground truth (188 lines)</th><th>line exact</th><th>word acc</th><th>CER</th><th>fields</th></tr></thead>
     <tbody>
-      <tr><td>Tesseract 4.1.1 — whole page, <code>--psm 3</code> (its fair integration)</td><td class="v">72.9%</td><td class="v">80.1%</td><td class="v">0.134</td><td class="v">79.2%</td></tr>
-      <tr><td>Tesseract 4.1.1 — native-resolution line crops (its fair input)</td><td class="v">64.4%</td><td class="v">75.3%</td><td class="v">0.164</td><td class="v">70.8%</td></tr>
-      <tr><td>Tesseract — the <i>identical</i> 32 px crops we read (unfair control, labelled)</td><td class="v">17.6%</td><td class="v">49.8%</td><td class="v">0.357</td><td class="v">29.2%</td></tr>
-      <tr><td><b>ours — CRNN on 32 px crops (what ships)</b></td><td class="v"><b>11.7%</b></td><td class="v"><b>61.2%</b></td><td class="v"><b>0.197</b></td><td class="v"><b>83.3%</b></td></tr>
+      <tr><td>Tesseract 4.1.1 — whole page, <code>--psm 3</code> (its fair integration)</td><td class="v">95.7%</td><td class="v">98.9%</td><td class="v">0.000</td><td class="v">100.0%</td></tr>
+      <tr><td>Tesseract 4.1.1 — native-resolution line crops (its fair input)</td><td class="v">86.7%</td><td class="v">96.8%</td><td class="v">0.007</td><td class="v">95.8%</td></tr>
+      <tr><td>Tesseract — the <i>identical</i> 32 px crops we read (unfair control, labelled)</td><td class="v">22.9%</td><td class="v">68.0%</td><td class="v">0.183</td><td class="v">45.8%</td></tr>
+      <tr><td><b>ours — CRNN on 32 px crops (what ships)</b></td><td class="v"><b>10.6%</b></td><td class="v"><b>67.2%</b></td><td class="v"><b>0.152</b></td><td class="v"><b>75.0%</b></td></tr>
     </tbody>
   </table>
   <div class="note">
-    <b>Plainly:</b> Tesseract is stronger on clean, flat scans; we are stronger on real hand-held captures, we never invent a punctuation mark or a digit, and we degrade instead of hallucinating.
-    <br><b>Where the split lands:</b> on <b>handheld_light</b> — the one profile that models a real hand-held capture — ours reads <b>68.4% word accuracy / 83.3% of fields</b> against Tesseract’s <b>12.4–23.6% / 0–16.7%</b>, a 5.5&times; gap.
-    <br><b>Fairness correction, stated not hidden:</b> our 37-symbol alphabet (0-9, A-Z, space) cannot emit punctuation at all, and 120 of the 188 scored rows contain it — that alone is the 11.7% &rarr; 41.0% line-exact gap; on the identical-pixel control, punctuation-blind, ours takes <b>48 lines</b> Tesseract misses, and loses 16. <b>Safety:</b> on the clean page Tesseract read the dosage <b>500mg as 300mg</b> — the exact field this product exists to protect.
-    <br><b>Traceable record:</b> <code>artifacts/pipeline_raw_deskew.json</code> — 12 records, one per document, each <code>error: null</code> with its read text (the only verification count we quote; the CPU-starved browser bench is kept labelled in <code>artifacts/webkit_bench.log</code>).
+    <b>A claim withdrawn:</b> the previous version quoted Tesseract at <b>12.4% word accuracy on <code>handheld_light</code></b>, a claimed 5.5&times; win for us. That profile came from an over-harsh simulator; on the regenerated fixtures Tesseract reads <b>98.2%</b> there against our <b>78.4%</b>. The 12.4% was the fixture, not the engine — the other three profiles are pixel-identical and its reads on them unchanged.
+    <br><b>Our row moved too:</b> the retrained model, not the fixtures — on the three <i>unchanged</i> profiles ours gained +2.9 / +6.9 / +4.4 pts.
+    <br><b>Fairness correction, stated not hidden:</b> our 37-symbol alphabet cannot emit punctuation, and 120 of the 188 rows contain it: that alone is the 10.6% &rarr; 48.9% line-exact gap. Punctuation-blind on the identical-pixel control, ours takes <b>49 lines</b> Tesseract misses and loses 17. <b>Safety:</b> on the clean page Tesseract read the dosage <b>500mg as 300mg</b>.
+    <br><b>Ships today:</b> <b>57.2% words · CER 0.217 · 33.3% fields · 91.7% classification</b> (<code>pipeline_raw_shipped.json</code>); of the move from 45.9%, +1.7 pts is the fixture correction and +9.5 the retrain.
   </div>
-  <div class="src">[source: docs/24_ENGINE_HEAD_TO_HEAD.md · artifacts/engine_head_to_head.json — 12 documents, 188 ground-truth lines, Tesseract 4.1.1 · shipped end-to-end 45.9% word acc / CER 0.303, from 3.6% (<code>artifacts/pipeline_raw_deskew.json</code>, <code>pipeline_raw.json</code>) · hard case 20 real hand-photographed pages, 1.8% line-exact (<code>docs/14_HACKATHON_BENCHMARK.md</code>) · no-medicine-label-corpus caveat: docs/12 §1, docs/26 §7]</div>
+  <div class="src">[source: docs/24_ENGINE_HEAD_TO_HEAD.md · artifacts/engine_head_to_head.json — the four rows above RE-MEASURED on the current fixtures (previous generation: <code>engine_head_to_head_oldfixtures.json</code>), 12 documents, 188 lines, Tesseract 4.1.1 · shipped 57.2% / 0.217 / 33.3% / 91.7% vs 45.9% / 0.303 before · hard case 20 hand-photographed pages, 1.8% line-exact (<code>docs/14</code>)]</div>
 </section>
 
 <!-- 8 — WHAT WE GOT WRONG -->

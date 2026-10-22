@@ -37,7 +37,7 @@ ARMS (five, and the two that matter are the Tesseract ones)
                   that is how a product would actually call Tesseract, and it is
                   the apples-to-apples comparison for the app's own end-to-end
                   number (45.9% word acc / CER 0.303 on the same 12 documents,
-                  artifacts/pipeline_raw_deskew.json).
+                  artifacts/pipeline_raw_shipped.json).
   eng_a and eng_b are the two OURS rows, because the app preprocesses (restorer
   + a three-candidate election) and giving Tesseract a better page than ours
   would be the mirror of the cherry-pick this file exists to avoid.
@@ -701,7 +701,7 @@ def main():
             },
         },
         "app_end_to_end_reference": {
-            "source": "artifacts/pipeline_raw_deskew.json (the shipped browser pipeline, restorer + candidate election, own detection)",
+            "source": "artifacts/pipeline_raw_shipped.json (the shipped browser pipeline, restorer + candidate election, own detection)",
             "word_accuracy": 0.4594, "cer": 0.3031, "field_recovery": 0.2083, "n_docs": 12,
             "why_not_a_row_in_the_table": "it includes the app's restorer and its three-candidate election, so it is not a single-engine row; it is the reference our harness numbers sit beside",
         },

@@ -28,17 +28,24 @@ turning the network off and scanning anyway.
 ## The result, first
 
 Measured by driving the **shipped app** in **WebKit** (the engine iOS Safari
-uses) over 12 rendered documents — 3 types × 4 capture profiles, one record per
-document. Reproduce it: `bash run.sh bench-pipeline && bash run.sh bench-hackathon`.
+uses) over **12 synthetic rendered documents** — 3 types × 4 capture profiles,
+**one record per document** — on the **current** capture-profile fixtures.
+Reproduce it: `bash run.sh bench-pipeline && bash run.sh bench-hackathon`.
+The **previous** fixture generation — rendered before the capture profiles were
+re-tuned — produced the **45.9%** this table used to headline; those rows are
+**not directly comparable** to the current ones and every one is labelled below.
+A controlled A/B separates the two effects: **+1.7 points is the benchmark
+getting more realistic, +9.5 is the retrain** ([`docs/14`](docs/14_HACKATHON_BENCHMARK.md)).
 
-| metric | shipped now | first benched | source |
+| metric | shipped now (current fixtures) | previous fixture generation | source |
 |---|---|---|---|
-| **word accuracy** (normalised token recall — see below) | **45.9%** | 3.6% | `artifacts/pipeline_raw_deskew.json` / `pipeline_raw.json` |
-| **CER** | **0.303** | 0.708 | same two files |
-| **ground-truth fields present in the read text** | **9 of 24** | 0 of 24 | same (stricter extracted-field metric: 5 of 24) |
-| **document classification (app, end to end)** | **83.3%** | 33.3% | same |
-| cleanest profile (`studio_clean`) | **52.3%**, 100% classified correctly | 10.3% | same |
+| **word accuracy** (normalised token recall — see below) | **57.2%** | 45.9% (3.6% at the first bench) | `artifacts/pipeline_raw_shipped.json`; previous gen. `pipeline_raw_deskew.json` / `pipeline_raw.json` |
+| **CER** | **0.217** | 0.303 (0.708 at the first bench) | same |
+| **ground-truth fields present in the read text** | **14 of 24** | 9 of 24 (0 of 24 at the first bench) | same (stricter extracted-field metric: **8 of 24**, was 5 of 24) |
+| **document classification (app, end to end)** | **91.7%** | 83.3% (33.3% at the first bench) | same |
+| cleanest profile (`studio_clean`) | **60.1%**, 100% classified correctly | 52.3% (10.3% at the first bench) | same |
 | the recogniser alone, 300 paired held-out crops | **57.0% exact line match, CER 0.156** | 3.3% (pre-retrain, same 300 crops) | `app/tools/arm_ab.js` for the 57.0%; the before-value is the project's paired measurement, not a tracked file |
+| the recogniser alone, shipped **retrain3**, 1,500 paired held-out crops (the render corpus) | **68.1% exact, CER 0.150** | 27.7% / 0.201 (pre-retrain, same crops) | `bash run.sh py ml/src/score_checkpoints.py`, commit `348cb6d` — real rectified photos 25.2% / 0.474 (was 14.8% / 0.523), SROIE scans 74.1% / 0.098 (was 73.4% / 0.101) |
 | document classifier, held-out text, 5 seeds (n=24) | **95.8% accuracy, 95.7% macro-F1** (±2.6) | a stored 100% from one lucky seed | `artifacts/step3_classifier_metrics.json` |
 
 **Read the metric, not just the number.** `word_accuracy` above is a
@@ -47,13 +54,18 @@ read text after punctuation and case are stripped — **not** exact-word match.
 Both metric definitions live in `ml/src/bench_hackathon.py`; the browser side
 computes no metrics on purpose, so the two cannot drift apart.
 
-**The trajectory is the result.** `3.6% → 22.4% → 17.1% → 35.0% → 45.9%` on the
-same 12 documents: four train/serve contract defects we found in our own code
-and fixed (the served width, inert-looking right-padding, an image transform
-applied at serve but never at train, and a deskew correction applied backwards),
-plus one retrain step that **regressed** and is kept in the record. Raw records
-for every step are in `artifacts/`; the full table with sources is
-[`docs/12_HACKATHON_SUBMISSION.md`](docs/12_HACKATHON_SUBMISSION.md) §3.
+**The trajectory is the result — and it is labelled by fixture generation.**
+`3.6% → 22.4% → 17.1% → 35.0% → 45.9%` on the same 12 documents, **all measured
+on the previous fixture generation**: four train/serve contract defects we found
+in our own code and fixed (the served width, inert-looking right-padding, an
+image transform applied at serve but never at train, and a deskew correction
+applied backwards), plus one retrain step that **regressed** and is kept in the
+record. On the **current** fixtures the same build reads 47.7%, the shipped
+retrain reads **57.2%**, and the A/B attributes **+1.7 points to the benchmark
+becoming realistic and +9.5 to the retrain** — the two must never be quoted as one
+model gain. Raw records for every step are in `artifacts/`; the full table, the
+A/B and the fixture-freshness gate are in
+[`docs/14_HACKATHON_BENCHMARK.md`](docs/14_HACKATHON_BENCHMARK.md).
 
 **And what it still fails at**, because a judge should hear it from us first:
 
@@ -71,8 +83,9 @@ for every step are in `artifacts/`; the full table with sources is
   This is the most serious gap in the project and it is a data problem, not an
   architecture one.
 - **The target.** The brief asks for ≥95% end-to-end text accuracy. We are at
-  45.9% on our own renders and 1.8% line-exact on real photographs. That gap is
-  the honest headline, and it is quantified rather than hidden.
+  **57.2%** on **12 synthetic rendered documents** (current fixtures) and 1.8%
+  line-exact on real photographs. That gap is the honest headline, and it is
+  quantified rather than hidden.
 
 ---
 

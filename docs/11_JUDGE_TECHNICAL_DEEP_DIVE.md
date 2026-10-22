@@ -34,6 +34,7 @@ of it returns.
 | Classifier accuracy / macro-F1 — 5 seeds, held-out n=24 (`ml/experiments/step3_f1.py`) | **95.8% (sd 2.63) / 95.7% (sd 2.72)** — the stored eval once said 100%; that was one lucky seed, re-measured and published |
 | Held-out scan OCR, epoch 39 — the PRE-retrain baseline's ledger row; the SHIPPED graph is epoch 29 (16/16 provenance), 17,945 test words (`docs/03_RESULTS.md` §3) | word accuracy **29.30%**, CER **11.95%** |
 | Real hand-held photos, 20 pages (`docs/03_RESULTS.md` §3) | detection recall **67.9%**, line-exact **1.8%**, CER **56.5%** |
+| the shipped app, end to end — 12 synthetic rendered documents, WebKit, one record per document, on the **current** capture-profile fixtures (`docs/14_HACKATHON_BENCHMARK.md`, `artifacts/pipeline_raw_shipped.json`) | word accuracy **57.2%** · CER **0.217** · field recovery **33.3% (8 of 24)** · classification **91.7%** |
 | Browser payload | **26.45 MiB** models + tokenizer (27,735,952 B) · **≈37.2 MiB** installed on device |
 
 > **Corrected 2026-10-21.** Two rows here were stale. The real-photo row used to
@@ -355,20 +356,47 @@ Every accuracy number in this document was earned by fixing the **serving** path
 not by growing the model. Four times the code that *fed* the recogniser disagreed
 with the code that *trained* it. Each fix now has a test that fails when the
 disagreement returns. Same 12 documents, same metric, start to finish: word
-accuracy **3.6% → 45.9%**.
+accuracy **3.6% → 45.9%** — measured, every row of it, on the **previous fixture
+generation**, which is a fifth and different kind of defect (below).
 
 | defect | what it cost | magnitude | gate that now holds it |
 |---|---|---|---|
 | **The served width cut the tail off the text.** The ONNX graph was baked at a FIXED 256 px while training built every crop at its natural width clamped to `MAX_W = 320` — and the corpus median *is* that clamp. | the app fed the model the first 256 px of **98.8%** of lines | crop-level exact match **0.0% cut to 256 vs 44.7% at natural width**; the read changed on **200 of 200** held-out crops; end-to-end **3.6% → 22.4%** | `ml/tests/test_graph_width_contract.py` — asserts the width axis **equals** the training clamp or is symbolic (the old `<= MAX_W` assertion passed hardest on the worst value) |
 | **Right-padding was assumed inert — it is not.** The recurrence is a **2-layer bidirectional LSTM**, whose backward pass starts at the right edge, inside the pad, and drags the padded zeros across the *valid* frames. | the BLANK-symbol argument only bounds the forward pass | **max \|Δ\| over the valid frames: 9.10 at content width 64, 15.28 at 200** (`ml/src/export_dynamic.py`); **11.5 points of crop-level exact match** (padded 19.0% / CER 0.308 vs natural 30.5% / 0.198) | dynamic-width export — the app serves every crop at its **natural** width, no padding; `ml/tests/test_fix_padding.py` pins the frame map and the truncate rule |
 | **An image transform ran at serve but never at train.** `layout.cropForRecognizer` used a CONTAIN fit (`min(maxW/bw, cropH/bh)`), so a wide line arrived 12–20 px tall inside the 32 px input and the unfilled rows were left as **0 — which is ink** in the app's [-1,1] mapping. Both training references resize every crop to exactly `CROP_H`. | a train/serve input-distribution mismatch on every wide line | **34.5 points of exact line match**; end-to-end word accuracy **17.1% → 35.0%** | `node app/tools/crop_contract.js` (9 checks, ends `CROP CONTRACT OK`) |
-| **The deskew correction was applied backwards.** The estimator measured the right angle, and `preprocess()` rotated the page *away* from straight, **doubling** the tilt — on exactly the pages whose raw detection was already marginal. | the one preprocessing step meant to help the hard captures was making them worse | `off_axis` word accuracy **1.1% → 45.1%** (CER 0.882 → 0.234); app-wide **35.0% → 45.9%** on the same 12 documents | `app/tools/deskew_verify.js` asserts the **round trip** (apply the correction, re-estimate, require ~0) and exits non-zero; `node app/tools/ocr_input_contract.js` keeps the raw candidate reachable |
+| **The deskew correction was applied backwards.** The estimator measured the right angle, and `preprocess()` rotated the page *away* from straight, **doubling** the tilt — on exactly the pages whose raw detection was already marginal. | the one preprocessing step meant to help the hard captures was making them worse | `off_axis` word accuracy **1.1% → 45.1%** (CER 0.882 → 0.234); app-wide **35.0% → 45.9%** on the same 12 documents (previous fixture generation; 47.7% re-benched on the current fixtures) | `app/tools/deskew_verify.js` asserts the **round trip** (apply the correction, re-estimate, require ~0) and exits non-zero; `node app/tools/ocr_input_contract.js` keeps the raw candidate reachable |
 
 The pattern, and the point: **the input contract outranked the model every
 time.** The four bugs above are worth more than every change we made to the
 network. Each was found by reading our own serving code against the trainer — not
 by being asked — and the gate is what makes "we found it" checkable instead of a
 claim.
+
+**A fifth defect, of the same class, in the benchmark itself.** The four above are
+train/serve contract defects; this one is a **reference that stopped describing the
+thing it measured**. The bench fixtures were rendered **2026-10-20 07:37**;
+`CAPTURE_PROFILES` was re-tuned **2026-10-20 23:54** to match real photographs (the
+old profiles measured **17–67× harsher**). From then on the bench scored every model
+against images the trainer no longer produced, so a retrain that is **+40.4 points**
+better on held-out crops read on the bench as a **2.7-point regression**. A
+controlled A/B — the old graph from git, re-benched on the regenerated fixtures —
+separates the two effects on the app-level headline:
+
+| model / fixtures | word | CER | fields | classification |
+|---|---|---|---|---|
+| OLD / stale fixtures (what the docs used to report) | 45.9% | 0.303 | 20.8% | 83.3% |
+| OLD / current fixtures (A/B control) | 47.7% | 0.278 | 20.8% | 91.7% |
+| NEW / stale fixtures (the apparent regression) | 43.2% | 0.316 | 16.7% | 75.0% |
+| **NEW / current fixtures — SHIPPED** | **57.2%** | **0.217** | **33.3%** | **91.7%** |
+
+**+1.7 points is the benchmark becoming realistic; +9.5 is the retrain.** Never quote
+45.9% → 57.2% as one model gain. The fix is a `sha256` **profile fingerprint** stamped
+into every rendered artifact at render time, plus
+**`ml/tests/test_fixture_freshness.py`**, which compares the stamp against the live
+parameters and fails naming the re-render command (seen failing, then passing). Full
+record: `docs/14_HACKATHON_BENCHMARK.md`; artifacts
+`pipeline_raw_shipped.json`, `pipeline_raw_oldmodel_currentfix.json`,
+`pipeline_raw_retrain3_oldfixtures.json`.
 
 > One step **regressed and is kept in the record**: re-exporting the dynamic graph
 > *and* retraining the weights shipped together, and on these 12 documents the
@@ -378,7 +406,9 @@ claim.
 > fix was measured on the arm list, not the model. Raw records, in step order:
 > `artifacts/pipeline_raw.json`, `pipeline_raw_final.json`,
 > `pipeline_raw_dynamic.json`, `pipeline_raw_rawarm.json`,
-> `pipeline_raw_deskew.json` (**the shipped state**).
+> `pipeline_raw_deskew.json` (**the state at the time, on the previous fixture
+> generation**). On the **current** fixtures the shipped retrain3 build reads
+> **57.2% / 0.217 / 33.3% / 91.7%** — `artifacts/pipeline_raw_shipped.json`.
 
 ---
 

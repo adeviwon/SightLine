@@ -118,6 +118,25 @@ The 75% larger corpus plus real-homography perspective augmentation is worth
 **+3.05pp accuracy and −3.95pp CER**. Reproduce with
 `bash run.sh py ml/src/compare_checkpoints.py`.
 
+### The SHIPPED retrain3 model, paired on identical crops
+
+retrain3 (30 epochs on the re-tuned-profile corpus) is the model the app ships. It
+was scored against the previous graph on **identical crops**, same metric, only the
+weights varying (`bash run.sh py ml/src/score_checkpoints.py`, commit `348cb6d`):
+
+| held-out set | shipped before (ep29) | **shipped now (retrain3)** | delta |
+|---|---|---|---|
+| render corpus (n=1500) — the distribution the product's own documents come from | 27.7% / CER 0.201 | **68.1% / CER 0.150** | **+40.4 pts** |
+| real rectified photos (n=115) — the honest hard case | 14.8% / CER 0.523 | **25.2% / CER 0.474** | **+10.4 pts** |
+| SROIE scans (n=1500) | 73.4% / CER 0.101 | **74.1% / CER 0.098** | +0.7 pts |
+
+Real photographs nearly doubled, and the re-tune cost nothing on SROIE. Exported to
+a dynamic-width ONNX (**3.61 MB**) with parity verified at **every** width
+(32/47/63/64/128/200/256), swapped into `app/models/crnn.onnx`, `app/sw.js` `VERSION`
+bumped `v1.4.0 → v1.5.0` — the model is precached, so a copy without the bump leaves
+every installed client on the old weights — and `bash run.sh bundle-check` passed.
+These are **crop-level** numbers, not the app's end-to-end ones (§3, last table).
+
 ### The export width is dynamic — CORRECTED, this block used to say "fixed 256px"
 
 > **Corrected 2026-10-21.** This subsection described a **fixed 256 px** export
@@ -325,16 +344,29 @@ generator, with the same all-or-nothing rule:
 `bash run.sh eval --engine=crnn` (default), 10 capture profiles x 6 documents,
 sub-human profiles excluded; artifact `artifacts/eval_results.json` carries
 `"engine": "crnn"`. And end to end — detector, recogniser, classifier and field
-extraction in the real app, in WebKit — the shipped engine recovers **20.8%** of
-ground-truth fields as the app's own scorer counts them (**5 of 24**; **9 of 24**
-are present anywhere in the read text) — `docs/14_HACKATHON_BENCHMARK.md`,
-`artifacts/pipeline_raw_deskew.json`.
+extraction in the real app, in WebKit, on **12 synthetic rendered documents, one
+record per document, current capture-profile fixtures** — the shipped engine
+recovers **33.3%** of ground-truth fields as the app's own scorer counts them
+(**8 of 24**; **14 of 24** are present anywhere in the read text), with **57.2%
+word accuracy, CER 0.217 and 91.7% document classification** on the same records —
+`docs/14_HACKATHON_BENCHMARK.md`, `artifacts/pipeline_raw_shipped.json`. On the
+**previous** fixture generation the same scorer read 45.9% word accuracy / CER
+0.303 / 20.8% field recovery (5 of 24; 9 of 24 present) —
+`artifacts/pipeline_raw_deskew.json` — and the two generations are **not directly
+comparable**.
 
 > *Corrected 2026-10-21:* this paragraph used to read "the shipped engine recovers
 > **0.0%** of ground-truth fields". That was the pre-fix number, measured while the
 > deskew correction was applied in the wrong sense and the best-measuring
 > preprocessing arm could not be elected — both defects since repaired, and the
 > full 3.6% → 45.9% trajectory is in `docs/14`.
+>
+> *Corrected 2026-10-22:* those trajectory rows were measured on a **stale fixture
+> generation** — the bench images predated the capture-profile re-tune — so they are
+> records of that generation and are labelled as such in `docs/14`; the
+> current-fixture figures above are the ones to quote. Of the move from 45.9% to
+> 57.2%, **+1.7 points is the fixture correction and +9.5 is the retrain**, separated
+> by a controlled A/B in `docs/14_HACKATHON_BENCHMARK.md`.
 
 So the honest statement is not "we cannot measure it", it is: **the classifier
 clears the brief's bar; the recognition stage does not, and it is 8x worse than

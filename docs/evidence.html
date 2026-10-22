@@ -63,7 +63,7 @@
 
   <h1>SightLine — <span>evidence sheet</span></h1>
   <p class="meta">Repository: <a href="https://github.com/adeviwon/SightLine">github.com/adeviwon/SightLine</a> ·
-     commit <code>7b7980e</code> (branch <code>pwa</code>) · 2026-10-21 · Imperial Hackathon Hong Kong &amp; Macau 2026</p>
+     commit <code>2e12860</code> (branch <code>pwa</code>) · 2026-10-22 · Imperial Hackathon Hong Kong &amp; Macau 2026</p>
   <p class="lead">One page, one purpose: every claim we make, and the file in this repository that contains it.
      Where a number was not already written down, it was computed from the artifact with the repository's own
      scoring code — the command is in §5, and it prints what is printed here.</p>
@@ -100,11 +100,15 @@
      <strong>12 rendered documents</strong> (3 document types &times; 4 capture profiles: <code>studio_clean</code>,
      <code>handheld_light</code>, <code>off_axis</code>, <code>jpeg_social</code>), and writes one raw record per
      sample. <code>ml/src/bench_hackathon.py</code> then scores those records — the browser computes no metrics, so
-     the two cannot drift apart. No sample is excluded: all 12 profiles are in the headline, 0 errors.</p>
+     the two cannot drift apart. No sample is excluded: all 12 profiles are in the headline, 0 errors.
+     <strong>Scope of the shipped figure: 12 synthetic rendered documents, WebKit, one record per document, on the
+     current capture-profile fixtures.</strong></p>
 
-  <h3>The headline, stage by stage: four defects fixed, four measurements</h3>
+  <h3>The headline, stage by stage: four defects fixed, four measurements — then the fixtures themselves</h3>
   <p>Each row is a frozen artifact from the point in the work where that fix landed. Same 12 documents, same
-     metric, same engine. The last row is what the app does today on this bench.</p>
+     metric, same engine. <strong>The first four rows were measured on the previous fixture generation</strong>
+     (the bench images predated the capture-profile re-tune); the last row is the app today, on the current
+     fixtures. The two generations are labelled, not merged.</p>
   <table>
     <caption>Headline end-to-end numbers. Word accuracy and CER are the definitions in
       <code>ml/src/bench_hackathon.py</code> (word accuracy: fraction of ground-truth words present in the read,
@@ -116,20 +120,32 @@
       <th class="num">Classif.</th><th class="num">Errors</th><th class="src">Artifact</th>
     </tr></thead>
     <tbody>
-      <tr><td>Start of this work (fixed 256px graph, no ranking raw arm, deskew sign inverted)</td>
+      <tr><td>Start of this work (fixed 256px graph, no ranking raw arm, deskew sign inverted) — <em>previous fixtures</em></td>
           <td class="num">3.6%</td><td class="num">0.708</td><td class="num">0 / 24</td><td class="num">3</td>
           <td class="num">33.3%</td><td class="num">0</td><td class="src"><code>artifacts/pipeline_raw.json</code></td></tr>
-      <tr><td>+ dynamic-width graph (padding no longer leaks through the BiLSTM)</td>
+      <tr><td>+ dynamic-width graph (padding no longer leaks through the BiLSTM) — <em>previous fixtures</em></td>
           <td class="num">17.1%</td><td class="num">0.600</td><td class="num">1 / 24</td><td class="num">4</td>
           <td class="num">58.3%</td><td class="num">0</td><td class="src"><code>artifacts/pipeline_raw_dynamic.json</code></td></tr>
-      <tr><td>+ the raw image is back in the OCR candidate list</td>
+      <tr><td>+ the raw image is back in the OCR candidate list — <em>previous fixtures</em></td>
           <td class="num">35.0%</td><td class="num">0.465</td><td class="num">4 / 24</td><td class="num">7</td>
           <td class="num">66.7%</td><td class="num">0</td><td class="src"><code>artifacts/pipeline_raw_rawarm.json</code></td></tr>
-      <tr><td>+ deskew no longer doubles the tilt (what ships today)</td>
-          <td class="num good">45.9%</td><td class="num good">0.303</td><td class="num">5 / 24</td><td class="num">9</td>
+      <tr><td>+ deskew no longer doubles the tilt (what shipped at the time) — <em>previous fixtures</em></td>
+          <td class="num">45.9%</td><td class="num">0.303</td><td class="num">5 / 24</td><td class="num">9</td>
           <td class="num">83.3%</td><td class="num">0</td><td class="src"><code>artifacts/pipeline_raw_deskew.json</code></td></tr>
+      <tr><td>+ the retrained model on the current, non-stale fixtures (<b>what ships today</b>)</td>
+          <td class="num good">57.2%</td><td class="num good">0.217</td><td class="num good">8 / 24</td><td class="num">10</td>
+          <td class="num good">91.7%</td><td class="num">0</td><td class="src"><code>artifacts/pipeline_raw_shipped.json</code></td></tr>
     </tbody>
   </table>
+  <p class="src"><b>Two fixture generations, and the A/B that separates them.</b> The four earlier rows were
+     measured on the <b>previous</b> capture-profile fixtures (rendered 2026-10-20 07:37, before
+     <code>CAPTURE_PROFILES</code> was re-tuned at 23:54); the last row is the same 12 documents re-rendered with
+     the current profiles and scored with the shipped retrain3 model. They are <b>not directly comparable</b>: a
+     controlled A/B — the old graph, re-benched on the current fixtures — reads <b>47.7% / 0.278 / 20.8% / 91.7%</b>
+     (<code>artifacts/pipeline_raw_oldmodel_currentfix.json</code>), so of the 45.9% &rarr; 57.2% move
+     <b>+1.7 points is the benchmark getting more realistic and +9.5 is the retrain</b> — never one model gain
+     (<code>docs/14_HACKATHON_BENCHMARK.md</code>, which carries the 2&times;2 table and the
+     <code>ml/tests/test_fixture_freshness.py</code> gate that now prevents a stale bench).</p>
   <p class="src">Reading the two field columns: “expected fields recovered” counts how many of the 24 ground-truth
      values (12 documents &times; 2) the app actually got right — a value counts when it matches exactly, or when
      it is a masked suffix of the expected one (the app is allowed to mask sensitive values) —
@@ -147,29 +163,33 @@
       <th class="num">Fields</th><th class="num">Classif.</th><th class="src">Artifact</th>
     </tr></thead>
     <tbody>
-      <tr><td rowspan="4"><code>studio_clean</code></td>
+      <tr><td rowspan="5"><code>studio_clean</code></td>
           <td>start</td><td class="num">10.3%</td><td class="num">0.436</td><td class="num">0 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw.json</code></td></tr>
       <tr><td>dynamic</td><td class="num">49.9%</td><td class="num">0.236</td><td class="num">1 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_dynamic.json</code></td></tr>
       <tr><td>raw arm</td><td class="num">52.3%</td><td class="num">0.225</td><td class="num">2 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_rawarm.json</code></td></tr>
-      <tr><td>deskew</td><td class="num">52.3%</td><td class="num">0.225</td><td class="num">2 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+      <tr><td>deskew <em>(prev. fixtures)</em></td><td class="num">52.3%</td><td class="num">0.225</td><td class="num">2 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+      <tr><td><b>shipped · current fixtures</b></td><td class="num good">60.1%</td><td class="num good">0.169</td><td class="num">2 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_shipped.json</code></td></tr>
 
-      <tr><td rowspan="4"><code>handheld_light</code></td>
+      <tr><td rowspan="5"><code>handheld_light</code></td>
           <td>start</td><td class="num">1.7%</td><td class="num">0.812</td><td class="num">0 / 6</td><td class="num">0%</td><td class="src"><code>pipeline_raw.json</code></td></tr>
       <tr><td>dynamic</td><td class="num">1.2%</td><td class="num">0.760</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw_dynamic.json</code></td></tr>
       <tr><td>raw arm</td><td class="num">46.5%</td><td class="num">0.376</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_rawarm.json</code></td></tr>
-      <tr><td>deskew</td><td class="num">46.5%</td><td class="num">0.376</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+      <tr><td>deskew <em>(prev. fixtures)</em></td><td class="num">46.5%</td><td class="num">0.376</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+      <tr><td><b>shipped · current fixtures</b></td><td class="num good">75.2%</td><td class="num good">0.075</td><td class="num">4 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_shipped.json</code></td></tr>
 
-      <tr><td rowspan="4"><code>jpeg_social</code></td>
+      <tr><td rowspan="5"><code>jpeg_social</code></td>
           <td>start</td><td class="num">0.9%</td><td class="num">0.732</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw.json</code></td></tr>
       <tr><td>dynamic</td><td class="num">16.4%</td><td class="num">0.523</td><td class="num">0 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_dynamic.json</code></td></tr>
       <tr><td>raw arm</td><td class="num">39.8%</td><td class="num">0.378</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_rawarm.json</code></td></tr>
-      <tr><td>deskew</td><td class="num">39.8%</td><td class="num">0.378</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+      <tr><td>deskew <em>(prev. fixtures)</em></td><td class="num">39.8%</td><td class="num">0.378</td><td class="num">1 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+      <tr><td><b>shipped · current fixtures</b></td><td class="num good">43.7%</td><td class="num good">0.369</td><td class="num">2 / 6</td><td class="num">66.7%</td><td class="src"><code>pipeline_raw_shipped.json</code></td></tr>
 
-      <tr><td rowspan="4"><code>off_axis</code> (4&deg; tilt + perspective)</td>
+      <tr><td rowspan="5"><code>off_axis</code> (4&deg; tilt + perspective)</td>
           <td>start</td><td class="num">1.6%</td><td class="num">0.854</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw.json</code></td></tr>
       <tr><td>dynamic</td><td class="num">1.1%</td><td class="num">0.882</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw_dynamic.json</code></td></tr>
       <tr><td>raw arm</td><td class="num">1.1%</td><td class="num">0.882</td><td class="num">0 / 6</td><td class="num">33.3%</td><td class="src"><code>pipeline_raw_rawarm.json</code></td></tr>
-      <tr><td>deskew</td><td class="num good">45.1%</td><td class="num good">0.234</td><td class="num">1 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+      <tr><td>deskew <em>(prev. fixtures)</em></td><td class="num">45.1%</td><td class="num">0.234</td><td class="num">1 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_deskew.json</code></td></tr>
+      <tr><td><b>shipped · current fixtures</b></td><td class="num good">49.6%</td><td class="num good">0.255</td><td class="num">0 / 6</td><td class="num">100%</td><td class="src"><code>pipeline_raw_shipped.json</code></td></tr>
     </tbody>
   </table>
   <p class="src">The <code>handheld_light</code> and <code>jpeg_social</code> rows are unchanged between the last
@@ -204,9 +224,12 @@
         above (<code>docs/14_HACKATHON_BENCHMARK.md</code>; <code>docs/03_RESULTS.md</code> §3;
         <code>HANDOFF.md</code> §3).</li>
     <li><strong>These artifacts are frozen copies.</strong> Re-running <code>bash run.sh bench-pipeline</code>
-        overwrites <code>artifacts/pipeline_raw.json</code>; the four stage files were copied aside at the moment
+        overwrites <code>artifacts/pipeline_raw.json</code>; the stage files (including
+        <code>pipeline_raw_shipped.json</code> for the current fixtures) were copied aside at the moment
         each fix landed, so the progression stays readable. Re-running can only differ because the app changed —
-        which is the point of publishing it.</li>
+        which is the point of publishing it. The fixture generation of every row is labelled, and
+        <code>ml/tests/test_fixture_freshness.py</code> now fails if the bench images stop matching the
+        capture profiles.</li>
   </ul>
 
   <h2>3. What we got wrong and fixed</h2>
@@ -280,7 +303,8 @@
         <td><code>off_axis</code> word accuracy <strong>1.1% &rarr; 45.1%</strong> (start &rarr; today); the old
             expression destroyed the two pages whose raw detection was already marginal (legal 3 &rarr; 0 bands,
             prescription 1 &rarr; 0). Bench-wide: word accuracy <strong>35.0% &rarr; 45.9%</strong>, CER
-            <strong>0.465 &rarr; 0.303</strong>.</td>
+            <strong>0.465 &rarr; 0.303</strong> <em>(previous fixture generation — see §2's label; the
+            current-fixture equivalent of the deskew step is the A/B control row, 47.7%)</em>.</td>
         <td class="src"><code>app/js/pipeline.js</code> (the negation and the measured off_axis table, both in the
             comment); <code>app/tools/deskew_verify.js</code> (the round-trip assertion);
             <code>app/tools/offaxis_detect.js</code> (records the 1.1% starting state and the shear-sign finding);
@@ -314,8 +338,11 @@
      <code>ml/src/tesseract_compare.py</code> ran <strong>Tesseract 4.1.1</strong> (leptonica-1.82.0,
      <code>eng</code> only, default LSTM, CLI) and our shipped graph over the <em>same</em> 12 documents,
      the <em>same</em> detected crops and the <em>same</em> ground truth: 188 scored lines
-     (<code>docs/24_ENGINE_HEAD_TO_HEAD.md</code>; <code>artifacts/engine_head_to_head.json</code>). Every
-     figure below is the artifact's, unrounded:</p>
+     (<code>docs/24_ENGINE_HEAD_TO_HEAD.md</code>; <code>artifacts/engine_head_to_head.json</code>). These
+     figures are a <strong>re-measurement on the current, regenerated fixture generation</strong>
+     (2026-10-22; the previous generation's rows are kept at
+     <code>artifacts/engine_head_to_head_oldfixtures.json</code> and they were worse for Tesseract — see the
+     withdrawn claim below). Every figure below is the artifact's, unrounded:</p>
   <table>
     <caption>Same documents, same pixels, same ground truth — only the engine varies. Tesseract's winning rows
       stay in, at the top, where they belong.</caption>
@@ -323,13 +350,13 @@
       <th class="num">word acc.</th><th class="num">CER</th><th class="num">fields</th></tr></thead>
     <tbody>
       <tr><td><strong>Tesseract — whole page, <code>--psm 3</code></strong> (its fair integration)</td>
-          <td class="num">72.9%</td><td class="num">75.5%</td><td class="num">80.1%</td><td class="num">0.134</td><td class="num">79.2%</td></tr>
+          <td class="num">95.7%</td><td class="num">99.5%</td><td class="num">98.9%</td><td class="num">0.000</td><td class="num">100.0%</td></tr>
       <tr><td><strong>Tesseract — native-resolution line crops</strong> (its fair input)</td>
-          <td class="num">64.4%</td><td class="num">68.6%</td><td class="num">75.3%</td><td class="num">0.164</td><td class="num">70.8%</td></tr>
+          <td class="num">86.7%</td><td class="num">93.1%</td><td class="num">96.8%</td><td class="num">0.007</td><td class="num">95.8%</td></tr>
       <tr><td>Tesseract — the <em>identical</em> 32 px crops we read (unfair to Tesseract, reported anyway)</td>
-          <td class="num">17.6%</td><td class="num">23.9%</td><td class="num">49.8%</td><td class="num">0.357</td><td class="num">29.2%</td></tr>
+          <td class="num">22.9%</td><td class="num">31.9%</td><td class="num">68.0%</td><td class="num">0.183</td><td class="num">45.8%</td></tr>
       <tr><td>ours — CRNN on 32 px crops, raw deskewed page (what ships)</td>
-          <td class="num">11.7%</td><td class="num">41.0%</td><td class="num">61.2%</td><td class="num">0.197</td><td class="num">83.3%</td></tr>
+          <td class="num">10.6%</td><td class="num">48.9%</td><td class="num">67.2%</td><td class="num">0.152</td><td class="num">75.0%</td></tr>
     </tbody>
   </table>
   <p class="src">Field recovery is over 24 ground-truth values (2 per document) — on that column a one-field lead
@@ -337,38 +364,40 @@
      (<code>ml/src/evaluate.py</code>, <code>ml/src/bench_hackathon.py</code>). Line crops and whole pages are
      quoted separately because they are different integrations, not because one flatters us.</p>
   <ul>
-    <li><strong>Tesseract wins the aggregate, and we say that first.</strong> 72.9% of lines exactly against our
-        11.7%, CER 0.134 against 0.197, 80.1% word accuracy against 61.2%. On a clean, flat scan it is the better
-        reader, and no measurement of ours will change that
+    <li><strong>Tesseract wins the aggregate, and it wins every profile, and we say that first.</strong> 95.7% of
+        lines exactly against our 10.6%, CER 0.000 against 0.152, 98.9% word accuracy against 67.2%. On clean,
+        flat scans it is the better reader, and no measurement of ours will change that
         (<code>docs/24_ENGINE_HEAD_TO_HEAD.md</code> §3 and §5 state the same thing).</li>
     <li><strong>The fairness correction — stated, not hidden.</strong> Our alphabet is 37 symbols (0-9, A-Z,
         space): it <em>structurally cannot emit punctuation</em>. 120 of the 188 scored rows contain punctuation,
         so they can never be a string-exact match however correct the read is — that alone is the whole distance
-        between 11.7% and 41.0% line exact. On the identical-pixel control, punctuation-blind, ours takes
-        <strong>48 lines Tesseract misses and loses 16</strong>
+        between 10.6% and 48.9% line exact. On the identical-pixel control, punctuation-blind, ours takes
+        <strong>49 lines Tesseract misses and loses 17</strong>
         (<code>artifacts/engine_head_to_head.json</code>,
         <code>paired.identical_pixels_ours_vs_tess_arm_a_punct_blind</code>). The strict column is not withdrawn —
         it is what an engine with no punctuation gets, and it is printed beside the blind one.</li>
-    <li><strong>Where the split actually lands.</strong> On the one profile that models a real hand-held capture
-        (<code>handheld_light</code>: defocus 0.5, ISO 400, light 0.08) ours reads <strong>68.4% word accuracy
-        and 83.3% of fields</strong> against Tesseract's <strong>12.4–23.6% and 0–16.7%</strong> — a 5.5&times;
-        word-accuracy gap, in the direction a phone app lives in. The mechanism is the binarisation stage between
-        the pixels and Tesseract's net: leptonica thresholds a mildly defocused, noisy page, the strokes break up,
-        and its LSTM then decodes plausible English over the broken mask. Our model is fed the grayscale crop
-        directly, with no thresholding step.</li>
-    <li><strong>The safety fact.</strong> On the clean page Tesseract read
-        <code>Rx  Amoxicillin 500mg capsules</code> as <code>RX AMOXICILLIN 300MG CAPSULES</code> — a
-        plausible-word substitution of the dosage, on the exact field this product exists to protect. Its language
-        model makes a wrong read still look like text, so nothing in the output says which word is the invention.
-        Ours emits no character outside its 37-symbol alphabet (0.0% punctuation in its output), drops no line on
-        any profile, and the app refuses a field it cannot verify (§6).</li>
+    <li><strong>The hand-held claim, withdrawn.</strong> Earlier versions of this sheet and of slide 7 quoted
+        Tesseract at <strong>12.4% word accuracy on <code>handheld_light</code></strong> and claimed a
+        5.5&times; win for us on real captures. That profile was rendered 17–67&times; harsher than a real
+        photograph. On the regenerated fixtures the same three documents read <strong>98.2%</strong> (native
+        line crops) and <strong>98.6%</strong> (whole page) at CER 0.000 with every field recovered, against our
+        <strong>78.4%</strong> and 83.3% of fields. The other three profiles are pixel-identical between the two
+        generations and Tesseract's reads on them are unchanged, so the 12.4% was the simulator and not the
+        engine. Stated as a measurement, not softened into a caveat.</li>
+    <li><strong>The safety fact.</strong> On the clean page — pixels unchanged between the two generations —
+        Tesseract read <code>Rx  Amoxicillin 500mg capsules</code> as <code>RX AMOXICILLIN 300MG CAPSULES</code>:
+        a plausible-word substitution of the dosage, on the exact field this product exists to protect. Its
+        language model makes a wrong read still look like text, so nothing in the output says which word is the
+        invention. Ours emits no character outside its 37-symbol alphabet (0.0% punctuation in its output), drops
+        no line on any profile, and the app refuses a field it cannot verify (§6).</li>
   </ul>
-  <p>Plainly: <strong>Tesseract is stronger on clean, flat scans; we are stronger on real hand-held captures, we
-     never invent a punctuation mark or a digit, and we degrade instead of hallucinating.</strong> We do
-     <em>not</em> claim to beat Tesseract overall. The decision this measurement supports is
-     <em>which</em> engine for <em>which</em> product: a vendored engine means a second WASM runtime plus its
-     language data — <code>eng.traineddata</code> 4,113,088 B and <code>osd.traineddata</code> 10,562,727 B on
-     the box it was measured on — and the build gate refuses to let an OCR library into the bundle
+  <p>Plainly: <strong>on these 12 documents Tesseract is the stronger reader on every profile, and we print that
+     first. What we claim instead is narrower and measured: our 37 symbols cannot invent a punctuation mark or a
+     digit, and the app refuses rather than guesses.</strong> We do <em>not</em> claim to beat Tesseract overall,
+     and we no longer claim the hand-held profile. The decision this measurement supports is <em>which</em>
+     engine for <em>which</em> product: a vendored engine means a second WASM runtime plus its language data —
+     <code>eng.traineddata</code> 4,113,088 B and <code>osd.traineddata</code> 10,562,727 B on the box it was
+     measured on — and the build gate refuses to let an OCR library into the bundle
      (<code>docs/24_ENGINE_HEAD_TO_HEAD.md</code> §5; <code>ml/src/bundle_check.py</code>).</p>
   <p class="src">Superseding note: the earlier comparison recorded in this repository — Tesseract field accuracy
      62.2% against our 7.4% at the best <code>evaluate.py</code> stage
@@ -408,12 +437,15 @@ node app/tools/recognizer_parity.js     # browser CTC decoder vs the Python refe
 node app/tools/warning_gate.js          # the honesty invariants, on all 12 samples</code></pre>
   <p>And the bridge between this sheet and the artifacts — this exact command reproduces every number in §2 from
      a stage artifact, using the repository's own metric functions (imported, not re-implemented):</p>
-  <pre><code>./.venv/bin/python -c "import sys,json;sys.path.insert(0,'ml/src');import bench_hackathon as B;print(B.aggregate_pipeline(json.load(open('artifacts/pipeline_raw_deskew.json')))['headline'])"
+  <pre><code>./.venv/bin/python -c "import sys,json;sys.path.insert(0,'ml/src');import bench_hackathon as B;print(B.aggregate_pipeline(json.load(open('artifacts/pipeline_raw_shipped.json')))['headline'])"
 
 # prints:
-# {'n': 12, 'errors': 0, 'field_recovery': 0.20833333333333334, 'classification': 0.8333333333333334,
-#  'word_accuracy': 0.45942654983750875, 'cer': 0.30305363644199385}
-# -> 45.9% word accuracy, CER 0.303, 5 of 24 expected fields, 83.3% classification, 12 documents, 0 errors</code></pre>
+# {'n': 12, 'errors': 0, 'field_recovery': 0.3333333333333333, 'classification': 0.9166666666666666,
+#  'word_accuracy': 0.5715791133599353, 'cer': 0.21709805749692557}
+# -> 57.2% word accuracy, CER 0.217, 8 of 24 expected fields, 91.7% classification, 12 documents, 0 errors
+#    (current fixture generation, shipped retrain3 model)
+# Swap in 'artifacts/pipeline_raw_deskew.json' for the previous fixture generation:
+# -> 45.9% word accuracy, CER 0.303, 5 of 24 expected fields, 83.3% classification</code></pre>
 
   <h2>6. The safety design</h2>
   <p>This app reads things people will act on — a dose, an account number, a date. A phone app must not be the last
@@ -494,11 +526,13 @@ node app/tools/warning_gate.js          # the honesty invariants, on all 12 samp
 
   <div class="foot">
     <p>Repository: <a href="https://github.com/adeviwon/SightLine">github.com/adeviwon/SightLine</a> ·
-       commit <code>7b7980e</code> (<code>refs/heads/pwa</code>) · 2026-10-21 · SightLine, Imperial Hackathon
+       commit <code>2e12860</code> (<code>refs/heads/pwa</code>) · 2026-10-22 · SightLine, Imperial Hackathon
        Hong Kong &amp; Macau 2026.</p>
     <p>Numbers in §2 were produced by the repository's own scoring functions
-       (<code>ml/src/bench_hackathon.py</code>, imported rather than re-implemented) from the four
-       <code>artifacts/pipeline_raw*.json</code> files named beside every row; the command that reproduces them is in
+       (<code>ml/src/bench_hackathon.py</code>, imported rather than re-implemented) from the
+       <code>artifacts/pipeline_raw*.json</code> files named beside every row — the shipped row's
+       <code>pipeline_raw_shipped.json</code> is the current fixture generation, and every earlier row is
+       labelled with its generation; the command that reproduces them is in
        §5. Numbers in §3, §4 and §7 are quoted from the file named beside them. Anything we could not trace to a file in
        this repository is not on this sheet.</p>
   </div>

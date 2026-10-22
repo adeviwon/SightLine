@@ -24,7 +24,7 @@ canonical statement, `docs/26` §7 and the README blockquote carry the honest se
 | 4 | The solution | 35 | "SightLine runs entirely on the phone. Photograph the medicine label: it reads it, names the drug, the strength and the dose, and **refuses to guess** anything it can't read. One honest line on where we are: today it reads that English and **speaks English**; the Cantonese voice is the next build. We say that because every number we quote was measured on the English one." |
 | 5 | **LIVE DEMO** | 90 | Say almost nothing. Airplane mode ON, the medicine box held to the camera. Hand the phone to a judge if you can. Run the hard case too and let it refuse — "I could not read that dose clearly, please check it with a pharmacist." Then: "That refusal is the design. A wrong dose spoken confidently is worse than no dose." |
 | 6 | How it works | 45 | "Camera, line detection, then our own recogniser — a CRNN with CTC, 942,166 parameters, trained from scratch, a 3.6 MB recogniser graph (26.4 MB of models and tokenizer, about 37.2 MiB installed). No OCR library is shipped; a build gate fails the build if one comes back. Then field extraction, then speech — and speech is the honest gap: English today. Cantonese is a voice parameter plus a lexicon, not a new recogniser, because the label is already English." |
-| 7 | Measured results | 50 | **Lead with the honest row: "On a clean flat scan, Tesseract beats us — 72.9% line-exact against our 11.7%, and we say that first."** Then: "On a real hand-held capture we win by 5.5 times on word accuracy. And part of its lead is that our 37-symbol alphabet can't emit punctuation. On the clean page it read 500mg as 300mg. Also true: **these tables are receipts and synthetic documents — we have no medicine-label corpus yet**, so transfer to labels is an assumption we have not settled. We'd rather say 'I can't read this' than be wrong on a dose." |
+| 7 | Measured results | 50 | **Lead with the honest row: "On a clean page Tesseract reads 95.7% of lines exactly, whole-page, against our 10.6% — and on our own hard captures it beats us too, because the simulator we had been measuring ourselves against turned out to be 17 to 67 times harsher than a real photograph. We found that ourselves and corrected it."** Then: "What ships end to end reads **57.2%** of the words, CER 0.217, 33.3% of the ground-truth fields and 91.7% of the documents classified right — on **twelve synthetic rendered documents, in WebKit**. The 45.9% we used to quote came from a stale set of test images: we keep that row and label it, because 1.7 of the 11.3 points is the benchmark getting more realistic and 9.5 is the retrain — I won't sell those as one gain." Then the case, honestly: "So why ours? One 3.6 MB graph with no second runtime, instead of a second engine plus four megabytes of language data; nothing leaves the phone by construction; and a refusal path — because on a clean page Tesseract read the dose 500mg as 300mg. **On accuracy it beats us everywhere we have measured, including hand-held captures.** A wrong dose spoken confidently is the failure we exist to prevent. Also true: these tables are receipts and synthetic documents, we have no medicine-label corpus yet, and that transfer is an assumption we have not settled." |
 | 8 | What we got wrong | 40 | "We found four defects in our own train/serve contract. The width we served truncated 98.8% of lines. Padding wasn't inert in a bidirectional network. The image transform ran at serve and never at train. And our deskew was applied backwards — it was doubling the tilt. Each one now has a gate that fails the build." |
 | 9 | Impact and policy | 40 | "This is already funded policy. The 2025 Policy Address — the edition the Open Challenge names — commits to AI carer support at Para 75, ophthalmic services at Para 227, and a working group on gerontechnology at Para 266. The 2026 edition followed through with $300 million and $100 million. A carer hearing their own medicine label, on the phone they already own." |
 | 10 | Close | 15 | "It reads the label — or it says it cannot. The goal is that voice in Cantonese; today it is English, and either way nothing leaves the phone. Thank you." |
@@ -57,14 +57,22 @@ canonical statement, `docs/26` §7 and the README blockquote carry the honest se
 
 ## Q&A — the nine we will be asked
 
-1. **"Why not just use Tesseract?"** It's stronger on clean scans and we publish that. It's a
-   second runtime plus 4.1 MB of language data (10.6 with osd); ours is one 3.6 MB graph that
-   degrades instead of hallucinating, and on a real hand-held capture we read 68.4% word
-   accuracy against its 12.4–23.6%.
-2. **"Is it accurate enough?"** Not on arbitrary photographs, and we say so: 45.9% word accuracy
-   end to end on our 12-document bench, 1.8% line-exact on 20 real hand-photographed pages. The
-   design answer is the refusal. We publish per-condition numbers instead of one headline — and
-   those numbers come from receipts and synthetic documents, not from a medicine-label corpus.
+1. **"Why not just use Tesseract?"** **On accuracy it beats us everywhere we have measured** —
+   whole-page it reads 95.7% of lines exactly at CER 0.000 and 100% of the fields, and it beats
+   us on hand-held captures too. We publish that first, and the earlier "we win 5.5x on real
+   captures" claim is WITHDRAWN: it was a property of our old, unrealistically harsh simulator,
+   which broke Tesseract's binariser. Our case is not the score — it is a second runtime plus
+   4.1 MB of language data (10.6 with osd) against our one 3.6 MB graph; nothing leaving the
+   phone by construction; and a **refusal path**, which the direct Tesseract integration has
+   none of. On a clean page it read the dose 500mg as 300mg.
+2. **"Is it accurate enough?"** Not on arbitrary photographs, and we say so: **57.2%** word
+   accuracy end to end — on **12 synthetic rendered documents, WebKit, one record per
+   document, current fixtures** — and 1.8% line-exact on 20 real hand-photographed pages. The
+   45.9% we used to quote was measured on a **previous, stale fixture generation**; we keep
+   that row and label it, because +1.7 of the move is the fixture correction and +9.5 is the
+   retrain. The design answer is the refusal. We publish per-condition numbers instead of one
+   headline — and those numbers come from receipts and synthetic documents, not from a
+   medicine-label corpus.
 3. **"What happens if it reads a dose wrong?"** It refuses rather than guesses; it never presents
    a dose as authoritative; a clinician is accountable. The measured failure mode is why the
    document-evidence gate exists (speckle once hallucinated a plausible account number at 0.678
