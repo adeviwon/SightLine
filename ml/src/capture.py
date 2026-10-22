@@ -21,7 +21,9 @@ Every degradation here has a physical analogue:
 they hold their own phone up. The eval harness runs every profile.
 """
 
+import hashlib
 import io
+import json
 import math
 import random
 import sys
@@ -404,3 +406,25 @@ if __name__ == "__main__":
     for d in make_capture_set(1):
         d["degraded"].save(f"/tmp/sample_{d['profile']}.png")
         print(f"  wrote /tmp/sample_{d['profile']}.png  {d['degraded'].size}")
+
+
+def profiles_fingerprint(names=None):
+    """A stable hash of the capture-profile PARAMETERS a rendered artifact was made with.
+
+    Stamped into anything rendered through a profile -- the browser bench fixtures and the
+    render corpus -- because those artifacts go STALE the moment the profiles are re-tuned,
+    and a stale fixture silently measures a distribution the model was never trained on.
+    That is not hypothetical: the bench fixtures were rendered at 07:37 and CAPTURE_PROFILES
+    was re-tuned at 23:54 the same day, so the bench went on scoring models against images
+    made with the OLD profiles -- ~17-67x harsher than real photographs -- while the trainer
+    learned the new ones. The model was measured as a regression on inputs it had no reason
+    to learn, and the number looked like a fact.
+
+    A stale reference is INVISIBLE without a stamp. Compare this against the stamp recorded
+    in the artifact; `ml/tests/test_fixture_freshness.py` does exactly that and fails with
+    the re-render command. Deterministic across processes (sha256 over canonical JSON, never
+    hash()), because a fingerprint that differs between runs is worse than none.
+    """
+    keys = sorted(names if names is not None else CAPTURE_PROFILES)
+    payload = json.dumps({k: CAPTURE_PROFILES[k] for k in keys}, sort_keys=True, default=str)
+    return hashlib.sha256(payload.encode()).hexdigest()[:12]

@@ -206,6 +206,11 @@ def build(n_pages=400, profiles=None, seed=0, out_dir=None, width=900,
     out_dir.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out_dir / "crops.npz", **data)
     (out_dir / "index.json").write_text(json.dumps({
+        # which PROFILE PARAMETERS this corpus was rendered with -- see
+        # capture.profiles_fingerprint. A corpus rebuilt after a profile re-tune is a
+        # DIFFERENT distribution, and comparing a model across the two measures the
+        # corpus change, not the model.
+        "profiles_fingerprint": capture.profiles_fingerprint(),
         "n_crops": len(crops),
         "n_pages": len(page_ids),
         "profiles": profiles,
