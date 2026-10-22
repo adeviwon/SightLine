@@ -208,7 +208,9 @@ footer a { color: var(--accent); }
 <header>
   <h1>Sight<span>Line</span></h1>
   <p>Reads the medicine label aloud — the drug, the strength, the dose. Fully on-device.</p>
-  <p>Speaks English today. Cantonese is next — we will not claim it until it is measured.</p>
+  <p>Speaks English, and a first Cantonese build: the drug name and dose come from a licensed
+     zh/en medicine lexicon, and anything it cannot translate it <strong>refuses rather than
+     guesses</strong>. Not yet reviewed by a Cantonese speaker — see the note in the results.</p>
   <span id="badge" data-state="pending" role="status">STARTING…</span>
 </header>
 
@@ -240,10 +242,16 @@ footer a { color: var(--accent); }
     <button id="btn-pick" type="button" class="secondary">Choose a Photo or PDF</button>
     <button id="btn-retake" type="button" class="secondary" hidden>Scan Another</button>
     <button id="btn-speak" type="button" class="secondary" hidden>Read Aloud</button>
+    <label class="sr-only" for="speak-lang">Language to read aloud in</label>
+    <select id="speak-lang" hidden aria-label="Language to read aloud in">
+      <option value="en-GB">English</option>
+      <option value="zh-HK">廣東話 Cantonese</option>
+    </select>
+    <p id="cantonese" hidden></p>
   </div>
   <p id="capture-help" class="sr-only">
     Scans the medicine label in the current camera frame or the selected photo. Works with no
-    internet connection. It reads aloud in English today; a Cantonese voice is the next build.
+    internet connection. Reads aloud in English, or in Cantonese for the drug name and dose.
   </p>
 
   <input type="file" id="file-input" accept="image/*,application/pdf"
@@ -306,6 +314,7 @@ footer a { color: var(--accent); }
 <script src="js/restorer.js"></script>
 <script src="js/classifier.js"></script>
 <script src="js/tts.js"></script>
+<script src="js/say_cantonese.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

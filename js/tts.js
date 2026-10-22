@@ -82,6 +82,16 @@ const TTS = (() => {
     });
   }
 
+  /** Does a voice for this language EXIST on this device?
+   *  pickVoice() falls back to an English voice, which for Cantonese text means the app would
+   *  silently mispronounce or stay mute. Callers must ask this before promising a language. */
+  function hasVoice(lang) {
+    if (!available()) return false;
+    const voices = window.speechSynthesis.getVoices() || [];
+    const want = String(lang).slice(0, 2).toLowerCase();
+    return voices.some((v) => v.lang && v.lang.toLowerCase().indexOf(want) === 0);
+  }
+
   function pickVoice(lang) {
     if (!available()) return null;
     const voices = window.speechSynthesis.getVoices() || [];
@@ -137,7 +147,7 @@ const TTS = (() => {
     return available() && window.speechSynthesis.speaking;
   }
 
-  return { speak, stop, speaking, available, chunkText };
+  return { speak, stop, speaking, available, hasVoice, chunkText };
 })();
 
 if (typeof module !== "undefined" && module.exports) module.exports = TTS;

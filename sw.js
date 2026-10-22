@@ -25,7 +25,7 @@
  * sightline-* cache, so old wasm never lingers.
  */
 
-const VERSION = "v1.5.0";
+const VERSION = "v1.6.0";
 const CACHE = "sightline-" + VERSION;
 
 /** Everything required for a scan to complete with no network. */
@@ -44,6 +44,8 @@ const PRECACHE = [
   "./js/recognizer.js",
   "./js/classifier.js",
   "./js/tts.js",
+  "./js/say_cantonese.js",
+  "./data/drug_lexicon.json",
   "./js/app.js",
   // The OCR ENGINE's own modules. pipeline.js dynamic-imports these on the
   // first scan; without them in the precache a scan on a device that is already

@@ -50,6 +50,10 @@ for dt_i, (lines, dtype) in enumerate(capture.DOCS):
         print(f"  {out}  {deg.size}")
 
 manifest = {
+    # WHICH PROFILE PARAMETERS these images were rendered with. Without this the
+    # fixtures silently go stale when the profiles are re-tuned, and every benchmark
+    # run afterwards measures a distribution the model never trained on.
+    "profiles_fingerprint": capture.profiles_fingerprint(),
     "fields": {d: evaluate.FIELDS[d] for d in text_by_doc},
     "category": {d: evaluate.DOC_CATEGORY[d] for d in text_by_doc},
     "text": text_by_doc,
