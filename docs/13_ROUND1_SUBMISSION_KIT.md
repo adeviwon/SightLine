@@ -40,20 +40,20 @@ Appendix 4 (the 2.7% figure, Table A4.1a) and main body para 5.5 (the 0.6% figur
 the Hong Kong Blind Union statistics page (hkbu.org.hk/en/knowledge/statistics), which
 reproduces Appendix 4 without disclosing which definition it uses.
 
-## 150-word proposal (final draft — 149 words, verified with `wc -w` 2026-10-21)
+## 150-word proposal (final draft — 148 words, verified with `wc -w` 2026-10-22)
 
 > In Hong Kong, 199,600 people report long-term seeing difficulty, three in
-> four of them aged 65 or over. Most cannot read a prescription, a bank
-> statement or a government letter; the cost is medication errors and lost
-> independence. Every reader app we found uploads those pages to a server. SightLine
-> runs entirely on the phone: point it at a document and hear it read aloud.
-> Nothing leaves the device — no internet, no cloud, no account — and it keeps
-> working in airplane mode after one install. The recogniser is our own
-> CRNN+CTC network, 942,166 parameters in a 26.4 MB on-device bundle, with no
-> borrowed OCR engine — a build gate enforces that — and it refuses to guess a
-> field it cannot read. Aligned with the 2025 Policy Address: AI carer support
-> (Para 75), ophthalmic services (Para 227), and the Ageing Society Strategies
-> group on gerontechnology (Para 266).
+> four of them aged 65 or over. The medicine label is the one document that
+> matters: 46.4% of older Hong Kong people take five or more medicines, and the
+> label is printed in English they may never have learned. Two barriers, one
+> gesture: photograph the label, hear it in Cantonese. SightLine runs entirely
+> on the phone — no internet, no cloud, no account — and keeps working in
+> airplane mode after one install. The recogniser is our own CRNN+CTC network,
+> 942,166 parameters in a 26.4 MB bundle, with no borrowed OCR engine, and it
+> refuses to guess a dose it cannot read. Cantonese output is the next build;
+> our measured results today are English. Aligned with the 2025 Policy Address:
+> AI carer support (Para 75), ophthalmic services (Para 227), and
+> gerontechnology for an ageing society (Para 266).
 
 Word count method: strip the `> ` prefixes and run `wc -w` on the prose.
 No further edits without re-counting.
@@ -67,7 +67,7 @@ so a beat that runs long is a filming problem, not a script problem.
 | # | time | shot (camera/framing) | on screen | voice-over |
 |---|---|---|---|---|
 | 1 | 0:00–0:25 | Close-up, low light: Mrs. Chan (78, Wong Tai Sin), alone, holding a prescription | ambient only | "Mrs. Chan is 78. In Hong Kong, 199,600 people report long-term seeing difficulty, three in four of them over 65. Her prescription might as well be blank to her." (28) |
-| 2 | 0:25–0:50 | Push-in on the prescription → stylised cloud-upload animation | "199,600 HK residents with visual impairment — 2.7% of the population" (C&SD 2021) | "Today's apps upload her prescription and her bank statement to a server. Offline is the only answer that needs no trust." (21) |
+| 2 | 0:25–0:50 | Push-in on the prescription → stylised cloud-upload animation | "199,600 HK residents with visual impairment — 2.7% of the population" (C&SD 2021) | "Today's apps upload her medicine label to a server. Offline is the only answer that needs no trust." (17) |
 | 3 | 0:50–1:00 | Locked-off phone on desk; finger taps airplane mode | **Airplane mode ON — held full screen** | "Everything after this happens on the phone. Nothing leaves the device." (11) |
 | 4 | 1:00–2:20 | Screen recording + over-the-shoulder on the filming phone | Install from `https://adeviwon.github.io/SightLine/`, scan → spoken result. Include one deliberate hard photo where the app **refuses** | "Install from this URL, straight to airplane mode. That is our own recogniser reading, our own classifier naming the document, our own voice. Now the hard one: a tilted page in poor light. 'I could not read that label clearly — please check it with a pharmacist.' That is the design, not a bug: a wrong dose spoken confidently is worse than no dose. It reads, it says what it found, and it refuses what it cannot verify." (78) |
 | 5 | 2:20–3:00 | Cut to laptop: terminal + pipeline diagram | the table below, each row sourced | "The recogniser is ours: CRNN with CTC, 942,166 parameters, trained from scratch, exported to a 3.6 MB dynamic-width ONNX graph. No OCR library — a build gate fails if one returns. We found four train/serve contract defects ourselves: the served width cut the tail off 98.8% of lines; right-padding was not inert; the image transform ran at serve and never at train; and the deskew correction was applied backwards. Same twelve documents, same metric: 3.6% to 45.9% word accuracy." (79) |
@@ -113,8 +113,8 @@ the artifact, not the prose.)
 
 ## Anticipated Q&A (updated, honest)
 
-**"Why not Google Lens / Seeing AI?"** — They upload your bank statement and
-prescription to cloud servers. Ours makes no network call after install —
+**"Why not Google Lens / Seeing AI?"** — They upload your medicine label to a
+cloud server. Ours makes no network call after install —
 provable from the service-worker code in minutes, and by the airplane-mode
 demo.
 

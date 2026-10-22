@@ -20,13 +20,27 @@ judges' brief is `11_JUDGE_TECHNICAL_DEEP_DIVE.md`.
 
 ### The problem we chose
 
-A patient is prescribed several medicines. The dose is printed on a small label,
-in a font they did not choose, on a box they open in poor light. Many of them
-are over 65, take **five or more medicines at once**, and read Chinese.
+An elderly person in Hong Kong stands in their kitchen with a box of medicine. Two
+things stop them reading it: **they can no longer see it clearly, and what is
+printed on it is in English they never learned.** 46.4% of older Hong Kong people
+take five or more medicines at once, so the label is not one instruction — it is
+the only instruction they get, several times over.
 
-**The task we set the AI:** given a photograph of a medicine label, read the
-drug name, strength and dose aloud, and speak it in the patient's own language —
-on the phone, with no network.
+**The task we set the AI:** given one photograph of a medicine label, read the drug
+name, strength and dose, and **say it back in Cantonese** — on the phone, with no
+network.
+
+**Scope, narrowed deliberately (2026-10-22).** This is a medicine-label tool, not a
+general document reader. "Reads any document" is a category that already exists;
+"a medicine label your grandmother can *hear in Cantonese*, with the network off" is
+one specific claim with a named user and two compounding barriers. The full refined
+brief is [`docs/26_IDEA_REFINED.md`](26_IDEA_REFINED.md).
+
+**Why this does not need Chinese OCR:** Hong Kong medicine labels carry the drug name,
+strength and directions **in English**, which is the `0-9 A-Z` alphabet our recogniser
+already has. The gap is on the *output* side — speaking Cantonese — which is a bounded
+speech-and-lexicon change, not a 3–4,000-character alphabet expansion. See §4 for what
+is genuinely still missing.
 
 ### Who is affected, how many, and what goes wrong
 

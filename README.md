@@ -1,10 +1,17 @@
 # SightLine
 
-> **Read documents aloud. Nothing leaves the phone.**
+> **A medicine label, spoken in Cantonese. Nothing leaves the phone.**
 
-An offline-first document reader for blind and visually impaired people.
-Point the camera at a bank statement, a prescription, or a letter — SightLine
-reads it back to you in plain speech. No account, no internet, no upload.
+An offline-first **medicine-label** reader for elderly people who cannot see the
+label clearly **and** cannot read the English printed on it. Two barriers, one
+gesture: photograph the box, and SightLine reads the drug name, strength and dose
+and says it back in Cantonese. No account, no internet, no upload.
+
+> **Honest state of the build.** Cantonese output is the *next* build — the speech
+> layer and the translation lexicon are specified and costed in
+> [`docs/26_IDEA_REFINED.md`](docs/26_IDEA_REFINED.md). What ships today reads
+> printed English text and speaks English, and **every measurement in this repo was
+> taken on that build.** We are not claiming a Cantonese result we have not measured.
 
 Built for the **Imperial College London Hackathon (Hong Kong & Macau)**.
 
