@@ -133,14 +133,24 @@ def main(n=150):
                 read = " ".join(lines)
                 gt = r.get("drug_name_en") or ""
                 latin = len(tokens(read))
+                # `'' in anything` is True, so an empty metadata name would count as a
+                # match: 32 of 150 rows did, against a real count of 8. Guard the empty case.
+                exact = bool(norm(gt)) and norm(gt) in norm(read)
+                toks = tokens(gt)
+                frac = (len([t for t in toks if t in norm(read).split(" ")]) / len(toks)) if toks else 0.0
                 rows.append({
                     "gt_name": gt,
+                    # both verdicts stored separately AND the full read, so a number quoted in
+                    # the docs can be audited without re-running the model
+                    "name_exact": exact,
+                    "name_token_frac": round(frac, 3),
                     "source_type": r.get("source_type"),
                     "strength": r.get("strength"),
                     "bands": len(boxes), "skew": round(float(angle), 1),
                     "latin_words": latin,
                     "latin_any": latin > 0,
                     "name_recoverable": name_recovered(gt, read),
+                    "read": read,
                     "lexicon_hit": lexicon_hit(read, lex),
                     "read_head": read[:150],
                 })
@@ -152,12 +162,20 @@ def main(n=150):
     ok = [r for r in rows if "error" not in r]
     latin = [r for r in ok if r["latin_any"]]
     named = [r for r in latin if r["name_recoverable"]]
+    exacts = [r for r in latin if r.get("name_exact")]
+    # a substring match IS a recovery, so this can never exceed it. It did -- the count was
+    # above the recovery count when an empty name slipped through -- so it is asserted, not
+    # assumed, and a future edit that reintroduces the trap fails here instead of shipping.
+    assert len(exacts) <= len(named), (
+        f"verbatim recoveries ({len(exacts)}) exceed recoveries ({len(named)}): the exact-match "
+        f"test has regressed to counting non-matches")
     lexh = [r for r in latin if r["lexicon_hit"]]
     total = len(ok)
     print("images evaluated:            %d%s" % (total, "" if not (len(rows) - total) else "  (%d unreadable)" % (len(rows) - total)))
     print("produced ANY Latin text:     %d  (%.1f%%)   <- if low, the labels are Chinese, not our error"
           % (len(latin), 100.0 * len(latin) / max(total, 1)))
-    print("  of those, drug name recovered: %d  (%.1f%%)" % (len(named), 100.0 * len(named) / max(len(latin), 1)))
+    print("  of those, drug name recovered: %d  (%.1f%%)  of which VERBATIM: %d"
+          % (len(named), 100.0 * len(named) / max(len(latin), 1), len(exacts)))
     print("  of those, lexicon found a name: %d  (%.1f%%)" % (len(lexh), 100.0 * len(lexh) / max(len(latin), 1)))
     from collections import Counter
     types = Counter(r.get("source_type") or "?" for r in ok)
@@ -173,7 +191,8 @@ def main(n=150):
     OUT.write_text(json.dumps({
         "source": "twinkle-ai/tw-drug-labels-vision (CC-BY-4.0, Taiwan FDA leaflet archive)",
         "graph": TC.ONNX.name, "n": total,
-        "latin_any": len(latin), "name_recovered": len(named), "lexicon_hit": len(lexh),
+        "latin_any": len(latin), "name_recovered": len(named), "name_verbatim": len(exacts),
+        "lexicon_hit": len(lexh),
         "scope_note": ("Dataset metadata names the drug but does not guarantee the ENGLISH name is "
                        "printed on the page, so a miss may be a misread OR absent Latin text. "
                        "Reported separately; not conflated."),
