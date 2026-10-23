@@ -4,11 +4,14 @@
  "n": 150,
  "latin_any": 144,
  "name_recovered": 10,
+ "name_verbatim": 8,
  "lexicon_hit": 8,
  "scope_note": "Dataset metadata names the drug but does not guarantee the ENGLISH name is printed on the page, so a miss may be a misread OR absent Latin text. Reported separately; not conflated.",
  "rows": [
   {
    "gt_name": "RIVANOL SOLUTION 0.2%",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "0.2%",
    "bands": 5,
@@ -16,11 +19,14 @@
    "latin_words": 10,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "GST IUIIO 0999900 606 S6 6C SNVON GS XON SNT  320 INO  A8900",
    "lexicon_hit": null,
    "read_head": "GST IUIIO 0999900 606 S6 6C SNVON GS XON SNT  320 INO  A8900"
   },
   {
    "gt_name": "Hydrogen Peroxide Solution 3%",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "3%",
    "bands": 20,
@@ -28,11 +34,14 @@
    "latin_words": 31,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "UU8 XOEIR2H 12S SBEE1120 EN132323 CE GST L L 0091283  SL GO 2174300 1E 81 GRNANAINISE  GEN ANA S 6ER4NI6 TRENIE N SHESD ST 1 45LE SASREAE ASEN S ER SAG E LS TMENA  NOSSD BTGL 1LIETTSTEHEEELTL RARYN 13SO BTA 150365 1H RINE 2838 2SKK9 GB DEEO0003TWHE SEBUGS E SL",
    "lexicon_hit": null,
    "read_head": "UU8 XOEIR2H 12S SBEE1120 EN132323 CE GST L L 0091283  SL GO 2174300 1E 81 GRNANAINISE  GEN ANA S 6ER4NI6 TRENIE N SHESD ST 1 45LE SASREAE ASEN S ER SA"
   },
   {
    "gt_name": "Liquor Cresolis Saponatus",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "50%",
    "bands": 27,
@@ -40,11 +49,14 @@
    "latin_words": 26,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "KA 4LSRSASE F T P54 TOT 005 R A        E15AE N40 LAAT TA T ER R WKK  1 HPLAN  SALET AA  ALAS TE BE  R LEL TOEAB LOT S L  HAL A  SESHESE  4 4  S  5 HHOANT 1LNEE CO 4 1LAKSAN A BLTMOCICB22 LA SRA L A LRO FAEAKT LLITOAKLE TEL OCE",
    "lexicon_hit": null,
    "read_head": "KA 4LSRSASE F T P54 TOT 005 R A        E15AE N40 LAAT TA T ER R WKK  1 HPLAN  SALET AA  ALAS TE BE  R LEL TOEAB LOT S L  HAL A  SESHESE  4 4  S  5 HHO"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 5,
@@ -52,11 +64,14 @@
    "latin_words": 10,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "BTISCL OBIEERI SE 6XWICKSN PE5 R SA SR PRIIEREK 52GHB 0049 R HIOATE AENS 3S ROUMRARYHNAR S",
    "lexicon_hit": null,
    "read_head": "BTISCL OBIEERI SE 6XWICKSN PE5 R SA SR PRIIEREK 52GHB 0049 R HIOATE AENS 3S ROUMRARYHNAR S"
   },
   {
    "gt_name": "SALONPAS",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 6,
@@ -64,11 +79,14 @@
    "latin_words": 10,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "3555ST MABNNA  1N 0AMSMMT SS  000011 1A SUT S10 IUINAL ECE 732 RMNT",
    "lexicon_hit": null,
    "read_head": "3555ST MABNNA  1N 0AMSMMT SS  000011 1A SUT S10 IUINAL ECE 732 RMNT"
   },
   {
    "gt_name": "Sodium Bicarbonate Tablets “K.Y.”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "500 mg",
    "bands": 2,
@@ -76,11 +94,14 @@
    "latin_words": 3,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1ES  SODLURN BICATBONATETIME T",
    "lexicon_hit": null,
    "read_head": "1ES  SODLURN BICATBONATETIME T"
   },
   {
    "gt_name": "LIHONYU",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每Gm含Menthol 310mg, Methyl Salicylate 200mg, Eucalyptus Oil 15mg, Camphor Spirit 30mg, Clove Oil 12.5mg",
    "bands": 2,
@@ -88,11 +109,14 @@
    "latin_words": 3,
    "latin_any": true,
    "name_recoverable": false,
+   "read": " SFIL BL 9B KSL I   A I NR26",
    "lexicon_hit": null,
    "read_head": " SFIL BL 9B KSL I   A I NR26"
   },
   {
    "gt_name": "Pilu Ointment",
+   "name_exact": false,
+   "name_token_frac": 0.5,
    "source_type": "leaflet",
    "strength": "Each 100gm contains: Undecylenic Acid 5gm, Zinc Undecylenate 20gm",
    "bands": 18,
@@ -100,11 +124,14 @@
    "latin_words": 51,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "KE R RE PILU OINTRMENT TATEL AVEMABEREGA CUEA BBD R 1 RBID BE REDR I AMAKERTRIKRH  HATHNT SE6RAI KAMEKTD  KRASDRNEAR RARIH RH D TRNA 1RKET L BEID BHEATAR AIRAKLBENARKBJLINKBP 1 R1ROIKTBABE GPEMINP LREID BEATMAN RIHRISHLE ARBRKBE G TALINABBT81 1F1 6GBUA L EIGALR REN KE4A8  AIHE LUN 08PBL ULIE BIRH SHAPKD REERAIEBLEBATA EARNERD TOE1AB1 30C IA ME ACEK  636 AL WEMAK SA T BL  8 6PF668G211 6H311 KLDER  AERIDARK  AE NKS 6 PE K RHBI  E9812 30",
    "lexicon_hit": null,
    "read_head": "KE R RE PILU OINTRMENT TATEL AVEMABEREGA CUEA BBD R 1 RBID BE REDR I AMAKERTRIKRH  HATHNT SE6RAI KAMEKTD  KRASDRNEAR RARIH RH D TRNA 1RKET L BEID BHEA"
   },
   {
    "gt_name": "Ycole-N Coated Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 1,
@@ -112,11 +139,14 @@
    "latin_words": 1,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SR C400",
    "lexicon_hit": null,
    "read_head": "SR C400"
   },
   {
    "gt_name": "Stomachic Tablets. “C.M.”",
+   "name_exact": false,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "每錠含 Sodium Bicarbonate 0.33gm, Gentianae Radix Pulverata 0.05gm, Magnesium Oxide 0.085gm, Diastase 0.085gm",
    "bands": 39,
@@ -124,11 +154,14 @@
    "latin_words": 87,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "ES E BOE O EA EXE STOMACHIC TABLETS CM PAT 6ANA340150 SL ATICEA E 95X E65  SLN AT ITIIR 3M GTARO PLAIAL   00M BAUN I OUN DATAL     EM LDTE SDCOM PYP AJ CTIMNENALIE ALD EOIGEGRECEAHNE JIAYG FA BTE LABCLADBEAC86 AEGEABIET SNI EK K AKFEBGANA RIDE HSBED BKA KHART TEBAL 4R IHSMHARSASB 2883A01 AKLERUAOF ARLE 3KLRMST ARCE JWARZHOR ASDA KRKEFB SKB 14104 LETESTEAPS PBAN 1847AE S R RAN 1DADARESR SASR ABFR AN LTRAERMARE RDIDI 1E  L EREPSL5SKSASKBA1TSBA  TTEHANBTRS A HAKE LUHAINTEA LCTEECAEA BAET ETESLNUN 2RPIEEAD18 BN 2RER DTEPAIFIESEA SABWHERBENSLKBWE LJ1483 R   CLAEIE HASHEBRERE EFBHAS 14 SB  AA 14H L  TE L1HARTHIGRTEMA XGHAFIME KERKIF LSISPEE600EDE AC BARRA EAHAEECE IOIECEOFES ETN 1 RID NARERAN AB   TRENKEERENT  130 COA RBNHR  E XL 1610002APMPMAK  GDA GRENS",
    "lexicon_hit": null,
    "read_head": "ES E BOE O EA EXE STOMACHIC TABLETS CM PAT 6ANA340150 SL ATICEA E 95X E65  SLN AT ITIIR 3M GTARO PLAIAL   00M BAUN I OUN DATAL     EM LDTE SDCOM PYP A"
   },
   {
    "gt_name": "Chenchan Tablets C.M.",
+   "name_exact": false,
+   "name_token_frac": 0.5,
    "source_type": "leaflet",
    "strength": null,
    "bands": 22,
@@ -136,11 +169,14 @@
    "latin_words": 40,
    "latin_any": true,
    "name_recoverable": false,
+   "read": " C SE  LE W SRE CHENHAN TABLETS CM PN IHN ENW AW F SET 000154S SE B5  E8ECPA KAOIN161M BISMDH SUBNITAT EL 161MG ABUNIN TAMATELE151M9 LACOSE STARCH COMIDHRED TALC MAONESUM STEARTE CEIKOLCMC 9 MB IE  LEM 2HB RMIREN HALE RE1581 2E 741 883R1NG  H3R LEESAC AERER LCHRE  0   1  E    1TEE AR 1 28 21  1 03 2 A 1  HRERE F X  100 500 1000 QPBRE GDA TGIPIAS",
    "lexicon_hit": null,
    "read_head": " C SE  LE W SRE CHENHAN TABLETS CM PN IHN ENW AW F SET 000154S SE B5  E8ECPA KAOIN161M BISMDH SUBNITAT EL 161MG ABUNIN TAMATELE151M9 LACOSE STARCH COM"
   },
   {
    "gt_name": "Sinsu Cream",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每100g含L-Menthol 11.00g, Thymol 0.97g, Camphor 1.20g, Methyl salicylate 6.90g, Diphenhydramine 1.00g",
    "bands": 6,
@@ -148,11 +184,14 @@
    "latin_words": 11,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "4 S BRL P ER A 18 72 MO TEA SD ISMS OINSL CREANN CRMPREN EN  168 KEWANANTSIR5 308 RMT  RBINT",
    "lexicon_hit": null,
    "read_head": "4 S BRL P ER A 18 72 MO TEA SD ISMS OINSL CREANN CRMPREN EN  168 KEWANANTSIR5 308 RMT  RBINT"
   },
   {
    "gt_name": "SUZINE-K Antiseptic Solution",
+   "name_exact": false,
+   "name_token_frac": 0.333,
    "source_type": "leaflet",
    "strength": "10Gm/100mL",
    "bands": 7,
@@ -160,11 +199,14 @@
    "latin_words": 15,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "RES  435MW SHHB ISRPK 8258 SUZINEK ANMISEOIC SOLUTION SENEL 06 L 406 1 S04  006 0 EP LBE 1 181 6 SR SE E AL LD 6 BR 20 BL 9KCHTE586K0E81HA898 22 R",
    "lexicon_hit": null,
    "read_head": "RES  435MW SHHB ISRPK 8258 SUZINEK ANMISEOIC SOLUTION SENEL 06 L 406 1 S04  006 0 EP LBE 1 181 6 SR SE E AL LD 6 BR 20 BL 9KCHTE586K0E81HA898 22 R"
   },
   {
    "gt_name": "SALIMECHYL Ointment",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "110mg/g, 40mg/g, 1.5mg/g",
    "bands": 6,
@@ -172,11 +214,14 @@
    "latin_words": 14,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "WHEA  AKE 01DS 1E N NK EAS 52X15 SALMECHYLCMEOSIT TA L4BARKPBE EBBAD 184 UESTAL L 1ANTMSRHANA NAA TE X1 20MR8RL2 ER DAMKER1SAEK",
    "lexicon_hit": null,
    "read_head": "WHEA  AKE 01DS 1E N NK EAS 52X15 SALMECHYLCMEOSIT TA L4BARKPBE EBBAD 184 UESTAL L 1ANTMSRHANA NAA TE X1 20MR8RL2 ER DAMKER1SAEK"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "50 mg",
    "bands": 2,
@@ -184,11 +229,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "Liquor Gresolis Saponatus“Y.Y.”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "1000ml",
    "bands": 21,
@@ -196,11 +244,14 @@
    "latin_words": 42,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "S1S 847504 MR 5BRERS ER SHAK LIOUOR GRESOLS SAPOMATUS YY ALESRAR RNCLISLS HOLUL 1S9R ANA IRRRNAD SFREKEREIEAAHS K ALKESESNAN HB HBRKEFLANKT DP BMLEAPLEUNTIAESBAGAXASR  EX M1EACHI100MLCOMTAINS  CWALE  N  TE  JIM BPORATL  GASURDL BHAND HAUNHTHADE TMTALWLIR K58 HK SITEL KHHEMAK  SSELTPNZA  356 1ALJTPAGA  16 FBGERR  290 NX SEP 0296 SRTSIVPIS  510 450MHL 380X0IL GN ETOCS AN AN B N 8 BA RL O AGRINPEN TE 0M290010A3",
    "lexicon_hit": null,
    "read_head": "S1S 847504 MR 5BRERS ER SHAK LIOUOR GRESOLS SAPOMATUS YY ALESRAR RNCLISLS HOLUL 1S9R ANA IRRRNAD SFREKEREIEAAHS K ALKESESNAN HB HBRKEFLANKT DP BMLEAPL"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "10%",
    "bands": 2,
@@ -208,11 +259,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -220,11 +274,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "Chisepin \"N.T\"",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "350mg",
    "bands": 22,
@@ -232,11 +289,14 @@
    "latin_words": 29,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "ERD R BA AE EREN CHSEN ON TRMLNASR R NKRB T TS LTALREANCERSRRE EM RXP M   AGAAN RORO S NO D AI A H B REOD SOI BE45 A 4 DR  A D1EC HWTEREAHAHN BNE  MH TETSE SES RAS AMS TEAE AN HRHSHCR R PEHASER A E I A RERE TR AAB L13 E AEA   182  EMX ST  E6US1ENT BE  RS  ",
    "lexicon_hit": null,
    "read_head": "ERD R BA AE EREN CHSEN ON TRMLNASR R NKRB T TS LTALREANCERSRRE EM RXP M   AGAAN RORO S NO D AI A H B REOD SOI BE45 A 4 DR  A D1EC HWTEREAHAHN BNE  MH "
   },
   {
    "gt_name": "Trizymase Capsules “N.C.P.”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 3,
@@ -244,11 +304,14 @@
    "latin_words": 7,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "ESEKAE LHN AFABR RENC  N AS LLAN GATA S 5LA",
    "lexicon_hit": null,
    "read_head": "ESEKAE LHN AFABR RENC  N AS LLAN GATA S 5LA"
   },
   {
    "gt_name": "UODEX OINTMENT “K.Y.”",
+   "name_exact": false,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "每1000gm含Undecylenic Acid 50gm, Zinc Undecylenate 200gm",
    "bands": 14,
@@ -256,11 +319,14 @@
    "latin_words": 37,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "BLLAXEIENY REEE5 48 SAXE UODEX OINTMENT KY AITE AMKMFAHERIGA CTEAKMRBSD RMA RER  X X BSANIBRRB 1E0A8 ABE IAER E 14L005341KR1 SEHH DAEKTA ARTINSIHKRA UTEAEHY TERATE ANSATMAR 18BNTBEARABKLIAEAP 1 NEBEOKBAKBO  1PMICP TREMN AK RWER ABLIHRARI UMBAESR LAEISB INERIFRMBALIR ABALAS GLTEAPINKD BEENIBAUA1LABANS S  M4 RNSARRM  RIA8  6  SJUBHTARRIOI NA8",
    "lexicon_hit": null,
    "read_head": "BLLAXEIENY REEE5 48 SAXE UODEX OINTMENT KY AITE AMKMFAHERIGA CTEAKMRBSD RMA RER  X X BSANIBRRB 1E0A8 ABE IAER E 14L005341KR1 SEHH DAEKTA ARTINSIHKRA U"
   },
   {
    "gt_name": "CALAMINE Lotion",
+   "name_exact": true,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "100ml",
    "bands": 3,
@@ -268,11 +334,14 @@
    "latin_words": 8,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "KTYBR SAU RFB CALAMINE LOTION PRAETEKLEG  ZSH 0554 SP",
    "lexicon_hit": "CALAMINE LOTION",
    "read_head": "KTYBR SAU RFB CALAMINE LOTION PRAETEKLEG  ZSH 0554 SP"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -280,11 +349,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "狐無® 藥膏",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每100g中含Aluminum Sulfate 5gm, Exsiccated Alum 5gm, Resorcinol 1gm, Beta-naphthol 1gm",
    "bands": 31,
@@ -292,11 +364,14 @@
    "latin_words": 46,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1 ANIK SAEE  BGE5 1 1 LAPE00 1 E 1 TERARAE ATESDN ARE 1E SESE E 1SER 1 SPSER R 1B1E 1 UGBELHIS040 1 PMNAT N RDUEMBEQAW TEBC AI E B BR 1 BRPFIEMCNUNT 1P22 1 1BRIR ADSIP REDRENEA SD SES 1MKTE SER NE SRARNE 1EI ESESESEROI  1 DDHE KRCE5CSER 5ASAAMER A 1 SRBR T R T0EN 1  F 1SRBOE 1ERAS REREDARGRAE 1E  S8 LUFR R  11TE S  1 T 1 TEEASC OESRAHSRSAERA KA1ES1 1 TSRES EERERSR R RIAN2 1 L CABF S1 1ARESRANGT AWAMESHERIESLAT B2 GOT",
    "lexicon_hit": null,
    "read_head": "1 ANIK SAEE  BGE5 1 1 LAPE00 1 E 1 TERARAE ATESDN ARE 1E SESE E 1SER 1 SPSER R 1B1E 1 UGBELHIS040 1 PMNAT N RDUEMBEQAW TEBC AI E B BR 1 BRPFIEMCNUNT 1"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -304,11 +379,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "Stomachicus Tablets “Y.Y.”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 12,
@@ -316,11 +394,14 @@
    "latin_words": 20,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "GALDEE      SSPTALTF  046  M M33 TE MEG  BE HFSH 11AN KA MIAI IE NESE SUN AERE R   1RENSE 1ESRE A B REATE TETAENEAE R AS BR ASM EEENEAE RAR RERSINE 955",
    "lexicon_hit": null,
    "read_head": "GALDEE      SSPTALTF  046  M M33 TE MEG  BE HFSH 11AN KA MIAI IE NESE SUN AERE R   1RENSE 1ESRE A B REATE TETAENEAE R AS BR ASM EEENEAE RAR RERSINE 95"
   },
   {
    "gt_name": "Chuan Tien Anti-Itch Ointment",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每100Gm中含有",
    "bands": 10,
@@ -328,11 +409,14 @@
    "latin_words": 13,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "4T HPK5 R5 A TAT IEANE TANT MAHANGEMAY GSENLE MOTS LGG LTA 1RN 6412 1 E NAR1 L941 1 1 0 16 1    ",
    "lexicon_hit": null,
    "read_head": "4T HPK5 R5 A TAT IEANE TANT MAHANGEMAY GSENLE MOTS LGG LTA 1RN 6412 1 E NAR1 L941 1 1 0 16 1    "
   },
   {
    "gt_name": "GAJACOL POLIVITA LIQ.",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "100Gm",
    "bands": 16,
@@ -340,11 +424,14 @@
    "latin_words": 23,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "S1 K E15   GLAIACOLPOLVITLO 11  F0763 WBEF HNTFAREAAKN TAL 1KEAED  THONTEASED T A OHILKASE ND AKRSIE EP SLRE ALNA EFABPRSRTEA 0UEATRAK L5XCA TERAE TOL A4000004 REXSA EKEANINAD AADRUNCTETLE S   4 15151 SE E    54 4E 11164",
    "lexicon_hit": null,
    "read_head": "S1 K E15   GLAIACOLPOLVITLO 11  F0763 WBEF HNTFAREAAKN TAL 1KEAED  THONTEASED T A OHILKASE ND AKRSIE EP SLRE ALNA EFABPRSRTEA 0UEATRAK L5XCA TERAE TOL"
   },
   {
    "gt_name": "QUINA POLIVITA",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "Each 100g contains",
    "bands": 26,
@@ -352,11 +439,14 @@
    "latin_words": 51,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "T OUINA POUVITA G     CRHT ADBEREGEASRN ORET IEALRTIULST B E0 AS 10TAAN SEKRL SLISHSRFO 4EWE ESNILTASHEORAE AETE RTIAEMSALLEUNBTEARENT OURETOITAKGERATIAIKFE ABHNRK HE EKEUTAE FAFAEAKESERANTHR OERENE ENITHAN TIPITEBR 1A3 WL LRIASNDETESAUA1 EN TES CHEICDRHEONTARIH SELASAS OATE RAHD FRMEARAE ERERITED  01 EACH 100 CONTAINS TAM LUOA ITEAE 2 TAL HE TANLEEALARE L L   TAL LTSESESELS N AI2 TOAMLNFIESD S BARAIAS 1 T 10001825 14161519  K 60015854 1513 8445I SIER ALABEK IR H 10G BEK",
    "lexicon_hit": null,
    "read_head": "T OUINA POUVITA G     CRHT ADBEREGEASRN ORET IEALRTIULST B E0 AS 10TAAN SEKRL SLISHSRFO 4EWE ESNILTASHEORAE AETE RTIAEMSALLEUNBTEARENT OURETOITAKGERAT"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -364,11 +454,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "SONPIRO LIQUID",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "3.0 gm/100 ml",
    "bands": 2,
@@ -376,11 +469,14 @@
    "latin_words": 1,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "TC ON TAAE6NN",
    "lexicon_hit": null,
    "read_head": "TC ON TAAE6NN"
   },
   {
    "gt_name": "FIVE CRANES MENTHOL CONE",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "2g",
    "bands": 13,
@@ -388,11 +484,14 @@
    "latin_words": 22,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "63 S9 1ELM BIVECRANES MENTHOLCONE FETEONST EA6 LAMLMTHD 1707 1E LE SEHBF   R E 1   L BB RE    DEHEARL EAPEACTER BPLK 1AX1E8DE EX 501 KX6 089581881 B1 KMS HKRN A IH 2CXFM2 LAH CAR  TSTA X 0 008478   M3",
    "lexicon_hit": "MENTHOL",
    "read_head": "63 S9 1ELM BIVECRANES MENTHOLCONE FETEONST EA6 LAMLMTHD 1707 1E LE SEHBF   R E 1   L BB RE    DEHEARL EAPEACTER BPLK 1AX1E8DE EX 501 KX6 089581881 B1 "
   },
   {
    "gt_name": "Nysmethyl Ointment",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "100Gm",
    "bands": 10,
@@ -400,11 +499,14 @@
    "latin_words": 13,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "9HG031 5GR NG BB R 4EA4BAERARE FES  AR A  A 1GP R  1LAL REN 1AA SE 1  AEREE T002 L O ELARE SDITB A R OT C0 PA1H8AARMSRM",
    "lexicon_hit": null,
    "read_head": "9HG031 5GR NG BB R 4EA4BAERARE FES  AR A  A 1GP R  1LAL REN 1AA SE 1  AEREE T002 L O ELARE SDITB A R OT C0 PA1H8AARMSRM"
   },
   {
    "gt_name": "CHINALOL Ointment",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每公克含水楊酸甲酯200mg、菸鹼酸苯酯0.2mg、維他命E乙酸20mg、月桂硫酸二苯胺明20mg、樟腦100mg、薄荷腦60mg",
    "bands": 2,
@@ -412,11 +514,14 @@
    "latin_words": 2,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1 R S SER CHALCLSOM 7",
    "lexicon_hit": null,
    "read_head": "1 R S SER CHALCLSOM 7"
   },
   {
    "gt_name": "Methyrosaniline Chloride Solution \"JEN SHENG\" For External Use",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "10gm/1000ml",
    "bands": 18,
@@ -424,11 +529,14 @@
    "latin_words": 23,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "CRE  ASESESRE K NN WAWIHIALT EAN AISIESS TESTEE RRE E ES4RES 5 A SEX PR UCO O G C4 BEE   R  MM CS CBOE SREEREER A BRA A PPCIN RARER  HEHRA IERSA DHM DN I SILI N SULN BANENT E4 0  GO E A  NLERSE T   ",
    "lexicon_hit": null,
    "read_head": "CRE  ASESESRE K NN WAWIHIALT EAN AISIESS TESTEE RRE E ES4RES 5 A SEX PR UCO O G C4 BEE   R  MM CS CBOE SREEREER A BRA A PPCIN RARER  HEHRA IERSA DHM D"
   },
   {
    "gt_name": "巧維鈣錠巧克力鈣片-B12",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 29,
@@ -436,11 +544,14 @@
    "latin_words": 60,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "GO  01 1  MERE131 1   TRMARAREARAREASK ARNACE SRHNBR BA WIHENENTE BEIKRA EA BE RE ARY RERIUE EAEAKEHE AD TBEA WKEICK S RWEADEREEAEASN F FRAK L RF P 7CYMBRDPEEAE BISG SE GSTERANRNDRABERA TISRD BRND PRIE3 ROHIAKIREKRE 1EAU SLM AM K MBRNDANE ERCERSTRNT ERKEAW BELBRN TFMBSIUND BRAHAREAELDE E TERIK L EREN NAHD5SEAAURNER  RMEAEBAHNERA ASEAD AE 6 REDNL T 8RD 188BRK REGKZTYEK SRM L E ERSPIESETEA2HH REACH TABLE COMAINS ELAN LAMGME A ACASNLTEANUN WWL HLAUAUA   WNANLAL 1 CAUSNTGEAA LD L HMAEA L A  EREEREEIESAN THE RM05X  HEMAR BEX BPE 1 10334 1A ECESYR AMNT DUL0",
    "lexicon_hit": null,
    "read_head": "GO  01 1  MERE131 1   TRMARAREARAREASK ARNACE SRHNBR BA WIHENENTE BEIKRA EA BE RE ARY RERIUE EAEAKEHE AD TBEA WKEICK S RWEADEREEAEASN F FRAK L RF P 7C"
   },
   {
    "gt_name": "PAILAN ENEMA",
+   "name_exact": true,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "150 mg/ml",
    "bands": 31,
@@ -448,11 +559,14 @@
    "latin_words": 52,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "EACSRE N PAILAN ENEMA PIT EXAN SPS 000943 5N EIRESIAS BEH IONARS SLINCHOIE SIND RESIUSITR SDI BERDETEHAREA ACIE NE  HARGRANSKEL ENE160  1TEM 1AEP  S  1E   A 1CSARUPE RE CHB   1ASAESPRR SRA RA 1 SESESASBPABR EIEE LE A  1 C KBPHAPST 1 BPBAN 1 6PV2AP0 105 S INSE  1LC   22 1 0 P 1  SRTEVE  ED 10 SBNA SS 1P  1   1E 1385  TH2 HIIE  KFRASNTAI SREREA L SATHAL EMOMHEH RMRAF A K R  GIOEUBLKESOR ACBRSH SIMIAM LETS DAKLSALBE 1TST B 1REINR EAN AR ESLREINSESRAD  TU6004",
    "lexicon_hit": "PAILAN ENEMA",
    "read_head": "EACSRE N PAILAN ENEMA PIT EXAN SPS 000943 5N EIRESIAS BEH IONARS SLINCHOIE SIND RESIUSITR SDI BERDETEHAREA ACIE NE  HARGRANSKEL ENE160  1TEM 1AEP  S  "
   },
   {
    "gt_name": "Nystum ointment",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "Each gm contains: Camphor 70mg, Eucalyptus Oil 10mg, L-Menthol 11mg, Methyl Salicylate 2.2mg",
    "bands": 20,
@@ -460,11 +574,14 @@
    "latin_words": 26,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "RNO 0022 ONINIM 1BGNOT M LIN RO1NH AGRT RM1MN L B91KRAOAN  LONO INTRAERRARIRE 4 TTG  1OLESRS L    1 SL4 1 5 LOBEEEEBS I111B 1 02P A 1  M AA3 1 AUTYEAN LGANS  MAANO M 62003337 1KTA AN LERMIOIOAASR 1 G TRM1 AA HSTARS",
    "lexicon_hit": null,
    "read_head": "RNO 0022 ONINIM 1BGNOT M LIN RO1NH AGRT RM1MN L B91KRAOAN  LONO INTRAERRARIRE 4 TTG  1OLESRS L    1 SL4 1 5 LOBEEEEBS I111B 1 02P A 1  M AA3 1 AUTYEAN"
   },
   {
    "gt_name": "METHENIN",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每20ml含有：Salicylic acid 1g；Iodine 0.06g；Potassium iodide 0.04g；Camphor 0.04g；Phenol 0.06g",
    "bands": 0,
@@ -472,11 +589,14 @@
    "latin_words": 0,
    "latin_any": false,
    "name_recoverable": false,
+   "read": "",
    "lexicon_hit": null,
    "read_head": ""
   },
   {
    "gt_name": "SEIROGAN",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 8,
@@ -484,11 +604,14 @@
    "latin_words": 11,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1N A ROPINT 1179216 1 ABL TYNN LN O0030 LTY IAMT TWUN2 3244 SARNRANTG 003",
    "lexicon_hit": null,
    "read_head": "1N A ROPINT 1179216 1 ABL TYNN LN O0030 LTY IAMT TWUN2 3244 SARNRANTG 003"
   },
   {
    "gt_name": "REPELLUN Cream 120mg/gm",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "120 mg/g",
    "bands": 3,
@@ -496,11 +619,14 @@
    "latin_words": 8,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "12MN SUR RM ME SWT EH 6I6526802 9002 ST RME ADNAD 1R 8A41",
    "lexicon_hit": null,
    "read_head": "12MN SUR RM ME SWT EH 6I6526802 9002 ST RME ADNAD 1R 8A41"
   },
   {
    "gt_name": "GASTROPIN TABLETS",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 3,
@@ -508,11 +634,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "L SABE B CAE L A66 L 8283",
    "lexicon_hit": null,
    "read_head": "L SABE B CAE L A66 L 8283"
   },
   {
    "gt_name": "YATOLIN® Ointment",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "100 Gm",
    "bands": 5,
@@ -520,11 +649,14 @@
    "latin_words": 5,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "TO NYO 1GT  163  T 0031814 IS6262665S",
    "lexicon_hit": null,
    "read_head": "TO NYO 1GT  163  T 0031814 IS6262665S"
   },
   {
    "gt_name": "BESALBENOL",
+   "name_exact": true,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "100 ml",
    "bands": 4,
@@ -532,11 +664,14 @@
    "latin_words": 8,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "BESALBENOL  TIU E A  BEAS MGDOAN SSMRG SLIA ES 042681733 GR 0426818462",
    "lexicon_hit": "BESALBENOL",
    "read_head": "BESALBENOL  TIU E A  BEAS MGDOAN SSMRG SLIA ES 042681733 GR 0426818462"
   },
   {
    "gt_name": "WAN IN MEDICATED OIL",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "8ml",
    "bands": 6,
@@ -544,11 +679,14 @@
    "latin_words": 6,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "10000000000UUA24 1I0I0000000000001T1ET24 02000000000134 INN124 HE3LOLENLN AD  88 100000000024",
    "lexicon_hit": null,
    "read_head": "10000000000UUA24 1I0I0000000000001T1ET24 02000000000134 INN124 HE3LOLENLN AD  88 100000000024"
   },
   {
    "gt_name": "Yi Tong Enema",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "15%",
    "bands": 1,
@@ -556,11 +694,14 @@
    "latin_words": 0,
    "latin_any": false,
    "name_recoverable": false,
+   "read": "I AN EN  R",
    "lexicon_hit": null,
    "read_head": "I AN EN  R"
   },
   {
    "gt_name": "Merbromin Solution \"JEN SHENG\" For External Use",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "2%",
    "bands": 19,
@@ -568,11 +709,14 @@
    "latin_words": 25,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "TO SNT C C N ASERISREK  IMETHONIN SOLBLON ANESS LEANSEEDE E H  BRSR RHSR A RRE TEXHEN NHNSHSR R   SR EBD O  A TETN N SAU R F E ND I6 6666 TSESRERARARR CPRPSPE GES RR G RAHRNE E EA HEHAE IN OLIELG  CROHN E E TS3 42 EARAA 1MST ",
    "lexicon_hit": null,
    "read_head": "TO SNT C C N ASERISREK  IMETHONIN SOLBLON ANESS LEANSEEDE E H  BRSR RHSR A RRE TEXHEN NHNSHSR R   SR EBD O  A TETN N SAU R F E ND I6 6666 TSESRERARARR"
   },
   {
    "gt_name": "KWAN LOONG MEDICATED OIL FRAGRANT GREEN",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每100g中含有薄荷腦31g、冬青油20g",
    "bands": 0,
@@ -580,11 +724,14 @@
    "latin_words": 0,
    "latin_any": false,
    "name_recoverable": false,
+   "read": "",
    "lexicon_hit": null,
    "read_head": ""
   },
   {
    "gt_name": "NEO LYZIN Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 20,
@@ -592,11 +739,14 @@
    "latin_words": 50,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "RR JR SG SE S S00 RUESIDH TINA ARNEK R A R FIBKE70A RSL BITE H EBA RET RM OF HSK  H NIT E C KMLD A BR H I CALEE S  BRLR308 HD K TES 50 Q9  S06 TRINIHEA A AA  L 0 3CK BLR S S COR H85 2 49 T6 BAHH 4 A IAE KLTCL NBNI 8 5LDSE SX K M ASTE FA GD H  RNT BR I HEAKBEAKIHANT TEARUUI FDTRBGE DHISORANDLOAR AKEAR E DNIS MEPIVETH R16GBRE NIEDREKNGDR  T6 X124500 1000 MPASHER MRCCCROAN RAR 553 TEEURR UNRD LD DHU BTE ANTE VEA CA9",
    "lexicon_hit": null,
    "read_head": "RR JR SG SE S S00 RUESIDH TINA ARNEK R A R FIBKE70A RSL BITE H EBA RET RM OF HSK  H NIT E C KMLD A BR H I CALEE S  BRLR308 HD K TES 50 Q9  S06 TRINIHE"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 14,
@@ -604,11 +754,14 @@
    "latin_words": 32,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "DO 33E KA M NBITE RETROLATUMNA  64 MP DE XM EAR TOK A I   5 ML  EAKKAJIAL S 12XCAMPOR RWETHY SALIC LATE BENT 52N 2 RH SDSREMISBEARED  235NIS WANY SALICVAIT B2BRR BA LBGO 138518KMRIPRSENR EOM BSSHA MPNIPER8 SER OSBHT EDKUAN AJURUISIED KR 6M86161269885 EYABB O BRD S 10 20 504PRR ARA R  L L C K4PPZER T N 8",
    "lexicon_hit": null,
    "read_head": "DO 33E KA M NBITE RETROLATUMNA  64 MP DE XM EAR TOK A I   5 ML  EAKKAJIAL S 12XCAMPOR RWETHY SALIC LATE BENT 52N 2 RH SDSREMISBEARED  235NIS WANY SALI"
   },
   {
    "gt_name": "Menthol Cone Pailan",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "1.0gm/gm",
    "bands": 2,
@@ -616,11 +769,14 @@
    "latin_words": 1,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "BL21 TL  O 4 ",
    "lexicon_hit": null,
    "read_head": "BL21 TL  O 4 "
   },
   {
    "gt_name": "PAILAN Menthol Cone",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "carton",
    "strength": "1.0gm",
    "bands": 3,
@@ -628,11 +784,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": " 1RITEX X F  001162 ST G GHI ANEE T 0",
    "lexicon_hit": null,
    "read_head": " 1RITEX X F  001162 ST G GHI ANEE T 0"
   },
   {
    "gt_name": "IODINE TINCTURE USP17",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "450cc",
    "bands": 5,
@@ -640,11 +799,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "P2N11 IS  S 6M 1 B516 C1 MNS AEA Y",
    "lexicon_hit": null,
    "read_head": "P2N11 IS  S 6M 1 B516 C1 MNS AEA Y"
   },
   {
    "gt_name": "THROUGH CLYSTER",
+   "name_exact": false,
+   "name_token_frac": 0.5,
    "source_type": "leaflet",
    "strength": null,
    "bands": 14,
@@ -652,11 +814,14 @@
    "latin_words": 13,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "6BPR THROUSH CLYSTER 4  L   6 16B 0 X 2 K SE 1 92M 3NGTO CCE HA P E SI  KF E TETE PL  ST 3YE IPE R1  SL RSTE G STHAL 288M",
    "lexicon_hit": null,
    "read_head": "6BPR THROUSH CLYSTER 4  L   6 16B 0 X 2 K SE 1 92M 3NGTO CCE HA P E SI  KF E TETE PL  ST 3YE IPE R1  SL RSTE G STHAL 288M"
   },
   {
    "gt_name": "THROUGH CLYSTER",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "carton",
    "strength": "20c.c.",
    "bands": 4,
@@ -664,11 +829,14 @@
    "latin_words": 3,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "FTOUMAR 1SL 9 TS AL EE3",
    "lexicon_hit": null,
    "read_head": "FTOUMAR 1SL 9 TS AL EE3"
   },
   {
    "gt_name": "Multiseptol Solution",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "10gm/100c.c.",
    "bands": 38,
@@ -676,11 +844,14 @@
    "latin_words": 85,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "CLTE  66 EA 45N BR 8 65 MUTISEPTOL 5 OLUTIO N PIN BSWS GIT001224M TTHIRAREI BABERGA G1 SERACRHISIN CODEAEALI ER2BS SAHINREDIE TOMAS KRA 1N18 0 RIF2ABR MMA37 BEMZETHONUM CHORIDE2I SH R DEC E PRIEEEETT SE R 0  J100CCP4 EHOAN HONT T ETE  DOAN ALWANYEOETHERACOHO DRHILED WATER 19R E  1257S  EAUIR X ETESNENELOLOUNCHORDE E  1 HE2EESR VN E CZ481002088  ERARIEF234010513 RSI SFFE 605 60005081   HNARN N 2R10021411 6 015EP40D S D RIE R  BGUIN PA E BE2100000 RT  X 20K108108161A ADESG I58 A 1081006118 BJ  022B48 WBLNIEKX 5GBA0 3A8B105HI 85 FC2 IT LOO1G 1 PN 6 2BE  2R  IEI 08026 1 R81828 4005WFR P12 10005AA  RBEHI ENG FE RBEDE3KE884288 50010001F AM A SR  SEASER H23800850  RM 4005006  NA WEA BIEIZE RMRRI 4 ABE I AE8508RID  3 X0 SHILL NM E ZTEH  BIL 148R KE2TR KURA21620 50E FEIS4 1 Z24140050B",
    "lexicon_hit": null,
    "read_head": "CLTE  66 EA 45N BR 8 65 MUTISEPTOL 5 OLUTIO N PIN BSWS GIT001224M TTHIRAREI BABERGA G1 SERACRHISIN CODEAEALI ER2BS SAHINREDIE TOMAS KRA 1N18 0 RIF2ABR"
   },
   {
    "gt_name": "MIN TONG SHU LI HUANG JIN YOU",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 8,
@@ -688,11 +859,14 @@
    "latin_words": 9,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "K E643 L  11L L A6 4  E1 B E 148881 1N EP S A R AL TMNIN PEN IN EANAEL T BID 5 22841 1 E01",
    "lexicon_hit": null,
    "read_head": "K E643 L  11L L A6 4  E1 B E 148881 1N EP S A R AL TMNIN PEN IN EANAEL T BID 5 22841 1 E01"
   },
   {
    "gt_name": "Hwang Jin You “Min Tong”",
+   "name_exact": true,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "1.0 gm",
    "bands": 21,
@@ -700,11 +874,14 @@
    "latin_words": 53,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "GENBD IK SG 0ARMANM HWANG JIN YOU MIN TONG VB A002AAN025 T GIAAA125EX KETHDRASAEY 5DTNO 0OD 0 AGASED 12 H PAYESID ESE0025 M SHION 102XXXX2CC0025 M GASH D EMIMIAEN D 0125 TM LAON A1HGWDSAS 50 NG YEO ELAU ADTOD B MBLES 10 QM HHDE BIRAR ND AS S CAR MN ALE GAHE SE TAKD ABAR RDR ABH SRPAR 1 1 RNU TR2UEASAR85A85 1 1 NH H BBEN S P1E225 CHAURUAS A R4A SR SKR GGNP E ESE BTH BHANKSENAER IPE BRAN BL CRE A HBRIICS BA2 188159M",
    "lexicon_hit": null,
    "read_head": "GENBD IK SG 0ARMANM HWANG JIN YOU MIN TONG VB A002AAN025 T GIAAA125EX KETHDRASAEY 5DTNO 0OD 0 AGASED 12 H PAYESID ESE0025 M SHION 102XXXX2CC0025 M GAS"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -712,11 +889,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "GOLD FLOWER EMBROCATION",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每1000mg",
    "bands": 7,
@@ -724,11 +904,14 @@
    "latin_words": 7,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SPA0H NG 86 R EER00  PI1 063 1LE E  1 1E1F4040 0E APAPIEE TL  T   LL P   1  ",
    "lexicon_hit": null,
    "read_head": "SPA0H NG 86 R EER00  PI1 063 1LE E  1 1E1F4040 0E APAPIEE TL  T   LL P   1  "
   },
   {
    "gt_name": "THE WAN IN BAUME FLEUR BLANCHE",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每ml含薄荷腦310mg、水楊酸甲酯200mg、尤加利油15mg、樟腦30mg、丁子油12.5mg、精油110mg",
    "bands": 12,
@@ -736,11 +919,14 @@
    "latin_words": 16,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "D 0C1 Z RAR 1 TATM ITEATAAHPPR ASS D HASBCT PR SS0 100 1AM ER E 0 1 E A0 A0 5 RE ARC G S 15077 EY PISC SECM 1MANT O  NTN NOO ",
    "lexicon_hit": "S 150",
    "read_head": "D 0C1 Z RAR 1 TATM ITEATAAHPPR ASS D HASBCT PR SS0 100 1AM ER E 0 1 E A0 A0 5 RE ARC G S 15077 EY PISC SECM 1MANT O  NTN NOO "
   },
   {
    "gt_name": "Stomchic Powder TAITEN",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每Gm內含Aluminum Silicate 150mg, Sodium Bicarbonate 500mg, Magnesium Carbonate 63mg, Diastase 80mg, Powdered Cinnamon 60mg, Powdered Coptis 20mg, Glycyrrhizac Radix 40mg, Powdered Rhubarb 50mg",
    "bands": 1,
@@ -748,11 +934,14 @@
    "latin_words": 2,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SIOMCHCPORDER TATENT I SS",
    "lexicon_hit": null,
    "read_head": "SIOMCHCPORDER TATENT I SS"
   },
   {
    "gt_name": "Shian Hanh Bao Wey Powder",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "carton",
    "strength": "60公克",
    "bands": 3,
@@ -760,11 +949,14 @@
    "latin_words": 6,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "HXNKREN S TESAG REO  SBLER  PA MAMTEANTAAN AREAUNTE E 1",
    "lexicon_hit": null,
    "read_head": "HXNKREN S TESAG REO  SBLER  PA MAMTEANTAAN AREAUNTE E 1"
   },
   {
    "gt_name": "DERSAN Way Chang Yaw",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每 15Gm 中含量",
    "bands": 6,
@@ -772,11 +964,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "GE  BSEE G U2 RWAHLNEES TARARARM TAHALESARESBANENIEM 1  GE  A  ",
    "lexicon_hit": null,
    "read_head": "GE  BSEE G U2 RWAHLNEES TARARARM TAHALESARESBANENIEM 1  GE  A  "
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -784,11 +979,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -796,11 +994,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "4.1ml",
    "bands": 0,
@@ -808,11 +1009,14 @@
    "latin_words": 0,
    "latin_any": false,
    "name_recoverable": false,
+   "read": "",
    "lexicon_hit": null,
    "read_head": ""
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -820,11 +1024,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "300 ml",
    "bands": 28,
@@ -832,11 +1039,14 @@
    "latin_words": 38,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "TA00000LLUB9S    A O OMA GO N ASAUAMAOE ES SEEAUAALASSES G  INAOAS SRES LAONONONUS NS 10OSSES TRMM NOUS SEJ TEXNRA OUSC E TO APRIAICMESE  OUANM TOTAIS 1R1S SKLTHAMIEORI TIE RES 1SETERIC ALA CINIT 1 70 TA  AUMM AOROU 4   AINOLID O UESESE GS NPE D O DO 20 POLA L  4   B 6 LO LF BLTL S E ANIL  1  G TEEPT BOAL ATE  E NAIECE  1 0214 HAKIG T RNGRDDCNDEGRT H",
    "lexicon_hit": null,
    "read_head": "TA00000LLUB9S    A O OMA GO N ASAUAMAOE ES SEEAUAALASSES G  INAOAS SRES LAONONONUS NS 10OSSES TRMM NOUS SEJ TEXNRA OUSC E TO APRIAICMESE  OUANM TOTAIS"
   },
   {
    "gt_name": "Stomachic Powder \"pfoshen\"",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每公克含 Sodium Bicarbonate 321.00mg, Calcium Carbonate 481.50mg, Fructus Foeniculi 16.00mg, Flos Caryophylli 8.00mg, Cortex Cinnamomi 16.00mg, Menthol 2.50mg",
    "bands": 34,
@@ -844,11 +1054,14 @@
    "latin_words": 79,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1 SP 1552427 WOADM NAERER 20 TA COHLS HDH OIDE CORME ASNL OMTE CREME MIDH PREMSINT STAL UNG TM  213M ANT ZAKGPB LOB MWHTALAB 1 38B5NO IE PIERIUMD ABTHALE SHE TKAIKEN 1S 5248 H K H NGER ERT AEL ULEAERDATE  IOELE EAEBANKLENSOD ETE R BHDARARLISE DOARS17ALA EUAERIFRH 1BE AL FSALNAABR KLGE S 1KEESA HYA AE5LERISDSDRI  ANDUTR BGG SICR2E SSHHSNISOKERT ARRKREEB Q 10815 PRMRE IDRIR 135B6 995665IAS KM1W1R TH REDESNSERBRBESEA HRSANRE SERSIREKNANISER E S EUIN2MERIE 40RERRSON RNSTEHERNBE CARGSR ERIESE ENRE 653 DARER RERENDN SUESTE H RL 25552ENG40 GHESENA UN TEANEINEL ERE A ERNS R ES 146 STEA EPT EUEUNSERL TWSIL G A  1 ESIDE D FE N2 CE A  1121000A KA AAIE 1 R  R4  15 1R1926",
    "lexicon_hit": null,
    "read_head": "1 SP 1552427 WOADM NAERER 20 TA COHLS HDH OIDE CORME ASNL OMTE CREME MIDH PREMSINT STAL UNG TM  213M ANT ZAKGPB LOB MWHTALAB 1 38B5NO IE PIERIUMD ABTH"
   },
   {
    "gt_name": "New Happiness Cough Powder",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "0.8公克/包",
    "bands": 2,
@@ -856,11 +1069,14 @@
    "latin_words": 2,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "5T P B 4U5PSIIL DS NG L6T",
    "lexicon_hit": null,
    "read_head": "5T P B 4U5PSIIL DS NG L6T"
   },
   {
    "gt_name": "Chu Paw Ointment",
+   "name_exact": false,
+   "name_token_frac": 0.333,
    "source_type": "leaflet",
    "strength": null,
    "bands": 19,
@@ -868,11 +1084,14 @@
    "latin_words": 22,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1  1058 1  SA FR CHU PAY OITMENT PRCIPTATED SULFA1 TWAL    1 MENTBOL10M TOT 04 TA ULN FE BETAES A6F 4C4 SARSBEA THAENSISPDL S S S R E T TAOLGP  LSASLKB DEA4 4 N TE S RE A R 1FS  E    L 102 2FR 7819621",
    "lexicon_hit": null,
    "read_head": "1  1058 1  SA FR CHU PAY OITMENT PRCIPTATED SULFA1 TWAL    1 MENTBOL10M TOT 04 TA ULN FE BETAES A6F 4C4 SARSBEA THAENSISPDL S S S R E T TAOLGP  LSASLK"
   },
   {
    "gt_name": "LINKAT-SAN POWDER “TAN LI”",
+   "name_exact": false,
+   "name_token_frac": 0.25,
    "source_type": "leaflet",
    "strength": "每9公克",
    "bands": 8,
@@ -880,11 +1099,14 @@
    "latin_words": 15,
    "latin_any": true,
    "name_recoverable": false,
+   "read": " E7 LINKATSAN POWDER TANL 4ELSSUEUSRSARARAS REAR AU A RHREANETIATAES IEKG6DED CARSIR T D L G PATEDO  SE 1D AN 58 M AN A K PAMRSE ND E AD NEAE A AN KG LOMEIE MO IE8 R BIN D HRN A SY",
    "lexicon_hit": null,
    "read_head": " E7 LINKATSAN POWDER TANL 4ELSSUEUSRSARARAS REAR AU A RHREANETIATAES IEKG6DED CARSIR T D L G PATEDO  SE 1D AN 58 M AN A K PAMRSE ND E AD NEAE A AN KG "
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每公克中含 Sodium Bicarbonate 198.86 mg、Gentianae Radix Pulveratum 85.23 mg",
    "bands": 30,
@@ -892,11 +1114,14 @@
    "latin_words": 50,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SEA  TBTEAPRM 1 FAF  A TRAMSER AER RARD R R M RES3OC3 RADEAN RN KDUNCOMRIRT L AMSR  A T T2002 DA RE ETLRORBRIR AURID ETS RFRINUSLUER DASAE EH RB 1 RMIME L BSERE T14A11 1LAUS ATEA MT 105SARFBT EMSD HARMRAL SEXMNEAE R R RD L TTOT01 KESAR R AAL 1 HEASDUASRESRERIERANRA L L CRHNUENG L GOTERNALANKASEDGN RDNLFMREN 1 LTREARARA A ABA A L LESANREARBAL 14ANBK BEH 1ERAHR KRERINFEL 160A FTLESE RE SOHEGRS IRUEL LAOESE UE AKAERUEBNCE L T1L MLSESNT SOASFSES R R A  T RUEIEL S7ER1 0  E  ",
    "lexicon_hit": null,
    "read_head": "SEA  TBTEAPRM 1 FAF  A TRAMSER AER RARD R R M RES3OC3 RADEAN RN KDUNCOMRIRT L AMSR  A T T2002 DA RE ETLRORBRIR AURID ETS RFRINUSLUER DASAE EH RB 1 RMI"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "carton",
    "strength": "100gm",
    "bands": 9,
@@ -904,11 +1129,14 @@
    "latin_words": 8,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "L SMSEAREAEHARD  KT CS I HKIPSRASBR R 1  1 1CL 111 1IT  KANM 817 1 009  1",
    "lexicon_hit": null,
    "read_head": "L SMSEAREAEHARD  KT CS I HKIPSRASBR R 1  1 1CL 111 1IT  KANM 817 1 009  1"
   },
   {
    "gt_name": "KAOL",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每100g中含有：Glycyrrhizae Powder 25gm；Glycyrrhizae Liquid Extract 25gm",
    "bands": 13,
@@ -916,11 +1144,14 @@
    "latin_words": 21,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "CEOYDMN SISERIE RSNNY MO Y 1 1910 G GL NV733R0M ARSE EM 21B2SK 6 SLK WBAB 6683 WD26VS CYE S AHAR E R A  1AWP21826 TAHLAK EAL E T 4 ENCG   E 28 1B071 GET A AE 2YSH5380 2 T 26AD1 H 2X A",
    "lexicon_hit": null,
    "read_head": "CEOYDMN SISERIE RSNNY MO Y 1 1910 G GL NV733R0M ARSE EM 21B2SK 6 SLK WBAB 6683 WD26VS CYE S AHAR E R A  1AWP21826 TAHLAK EAL E T 4 ENCG   E 28 1B071 G"
   },
   {
    "gt_name": "Hexin Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "200mg",
    "bands": 8,
@@ -928,11 +1159,14 @@
    "latin_words": 9,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "S  DNC M IN 1 G117K8 BETE MALAAAMA 53540000000004 LO U NMF   A NBARSBERE AR 100 HLLHAL P 1",
    "lexicon_hit": null,
    "read_head": "S  DNC M IN 1 G117K8 BETE MALAAAMA 53540000000004 LO U NMF   A NBARSBERE AR 100 HLLHAL P 1"
   },
   {
    "gt_name": "Ycole Granules",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每公克中含：N-Acetyl P-Aminophenol 150mg, Quinine Ethyl Carbonate 40mg, Chlorpheniramine Maleate 3mg, Caffeine 2mg, dl-Methylephedrine Hydrochloride 8mg, Riboflavin 1mg, Thiamine Mononitrate 2mg",
    "bands": 0,
@@ -940,11 +1174,14 @@
    "latin_words": 0,
    "latin_any": false,
    "name_recoverable": false,
+   "read": "",
    "lexicon_hit": null,
    "read_head": ""
   },
   {
    "gt_name": "Thioctrin Coated Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 5,
@@ -952,11 +1189,14 @@
    "latin_words": 5,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "9RI BT LHIOCIL GRAT 4 111 CO K  NL N00411",
    "lexicon_hit": null,
    "read_head": "9RI BT LHIOCIL GRAT 4 111 CO K  NL N00411"
   },
   {
    "gt_name": "Aspin-N Syrup",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每mL含：Narcotine Hydrochloride 2mg；Ethylpapaverine Hydrochloride 3.33mg；d1-Methylephedrine Hydrochloride 2.17mg；Guaiacol Glycerol Ether 8.33mg；Chlorpheniramine Maleate 0.417mg",
    "bands": 6,
@@ -964,11 +1204,14 @@
    "latin_words": 8,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "A   6  0 0 0 0 8 0000 OLA UTEL STEOR  SRMMME 12  MSA SLEOS39000000SCHO01E  ASOINNE S K",
    "lexicon_hit": null,
    "read_head": "A   6  0 0 0 0 8 0000 OLA UTEL STEOR  SRMMME 12  MSA SLEOS39000000SCHO01E  ASOINNE S K"
   },
   {
    "gt_name": "“Yung Shin” Neo-Vena-B Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "4mg/3mg/2mg",
    "bands": 7,
@@ -976,11 +1219,14 @@
    "latin_words": 6,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "TL 111 1E1 GLN NCDKNG 1 1G1 M L AB 1131 S  A A ST   ",
    "lexicon_hit": null,
    "read_head": "TL 111 1E1 GLN NCDKNG 1 1G1 M L AB 1131 S  A A ST   "
   },
   {
    "gt_name": "Anna F Coated Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "50mg/5mg",
    "bands": 12,
@@ -988,11 +1234,14 @@
    "latin_words": 18,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SB S RBE E ANNIG F OUT JS 1 116 AAHSKE AERAN A  1 4KL  TETAL ASAE TETE S ATSIASARALSAIANS LA LEAIURASUARA IA ALA AL AMIIEN C H    S ASA AHILEIEME0 HLL HLH",
    "lexicon_hit": null,
    "read_head": "SB S RBE E ANNIG F OUT JS 1 116 AAHSKE AERAN A  1 4KL  TETAL ASAE TETE S ATSIASARALSAIANS LA LEAIURASUARA IA ALA AL AMIIEN C H    S ASA AHILEIEME0 HLL"
   },
   {
    "gt_name": "Neo-Colin Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 12,
@@ -1000,11 +1249,14 @@
    "latin_words": 20,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "OOER G SF  NEOCOLIN L 11L 1 R06 BTAR EAMAGARAKEUM TUE A TOTOL ALAW SUEGEM MSMISE TETK SAM TAMOR COA AAR RS LO   1 5 OGSAEARNSELEDR E44 HLL BK020",
    "lexicon_hit": null,
    "read_head": "OOER G SF  NEOCOLIN L 11L 1 R06 BTAR EAMAGARAKEUM TUE A TOTOL ALAW SUEGEM MSMISE TETK SAM TAMOR COA AAR RS LO   1 5 OGSAEARNSELEDR E44 HLL BK020"
   },
   {
    "gt_name": "Libulin Coated Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "10mg",
    "bands": 17,
@@ -1012,11 +1264,14 @@
    "latin_words": 23,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "PO B ZR 2 S SL L OUIND ORIET G 111E 1 TO  1 A1 IASUSS E S 4AR00000 NOA LA ERAIAE GOT L 11Y S AA SEE NTWR RA ALTAR ARERSRASAUISA TA IA LAMPUPTRARRRS TLAR ALAES RRAMR  UMARY NTOL ASEM TA ERRARIEE 1AKAT WLL AL 00",
    "lexicon_hit": null,
    "read_head": "PO B ZR 2 S SL L OUIND ORIET G 111E 1 TO  1 A1 IASUSS E S 4AR00000 NOA LA ERAIAE GOT L 11Y S AA SEE NTWR RA ALTAR ARERSRASAUISA TA IA LAMPUPTRARRRS TL"
   },
   {
    "gt_name": "UROPRIN® SUGAR COATED TABLETS 100mg",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "100 mg",
    "bands": 6,
@@ -1024,11 +1279,14 @@
    "latin_words": 6,
    "latin_any": true,
    "name_recoverable": false,
+   "read": " BL 1 1 EN RA ANA B AS 4 1R11138LH RMERAD DS A A ASER D 0 K3 50S  DREIRE",
    "lexicon_hit": null,
    "read_head": " BL 1 1 EN RA ANA B AS 4 1R11138LH RMERAD DS A A ASER D 0 K3 50S  DREIRE"
   },
   {
    "gt_name": "IPRON TABLETS “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.333,
    "source_type": "leaflet",
    "strength": "500mg",
    "bands": 30,
@@ -1036,11 +1294,14 @@
    "latin_words": 56,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "ISSE LT OD SE PRO TABLETS JHSON RNHARE MUNSAESSIM TE 8BLT183L1628K5808 NFAK RER AHANESERAERN 6A P0052R44 56 M  ELESBEDESCOE SLLE TAE AT EABSN 1JBAKAR ROEIFIE N ASLN25RAR5R L  1A155368 ENK EILEDE LEHSIAANES 1 002512566 ERENK ED SMARSRR 105862E126 5230RA46RSARKENISR GER R SHEDREARESN HE R 128003 1E CKPEPNICHON TSBALC 4ENGETEE BLNAN ARE TES A EKELEAREAIALSESTERATE A FALESESRND ERANABITRE CSAR 0 EAHRIGERE CAE6 FRN 302LR LCNG 15030063 S 1R SD E LB10R 500 10515 RKO 1515AS 1MA N H SETITRRE  E 5E51 241 1ER4G811S",
    "lexicon_hit": null,
    "read_head": "ISSE LT OD SE PRO TABLETS JHSON RNHARE MUNSAESSIM TE 8BLT183L1628K5808 NFAK RER AHANESERAERN 6A P0052R44 56 M  ELESBEDESCOE SLLE TAE AT EABSN 1JBAKAR "
   },
   {
    "gt_name": "METHININE S. C. TABLETS “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 18,
@@ -1048,11 +1309,14 @@
    "latin_words": 32,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "284012600 L SSE SE 251M X E ETHNES Q TABLET JOHSON  370001369 L15CLE8P36 1S  EIGANR AE SAERANCARERS 2R81S 565266 TRE RL UK SGRE3K E23 R FRBS 4ERENK ELSE 5 D  AA RR ATERG AEBRS LOE1B5 18R3S G1S  10015011000 KAE 1    609001 ELKSM 5SBRE 416552150656G8178 R 0209435 FRX12910379 LIER11022878405",
    "lexicon_hit": null,
    "read_head": "284012600 L SSE SE 251M X E ETHNES Q TABLET JOHSON  370001369 L15CLE8P36 1S  EIGANR AE SAERANCARERS 2R81S 565266 TRE RL UK SGRE3K E23 R FRBS 4ERENK EL"
   },
   {
    "gt_name": "PROPANTHELINE BROMIDE S. C. TAB. 15mg. “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "15mg",
    "bands": 29,
@@ -1060,11 +1324,14 @@
    "latin_words": 50,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1  R S RIKE AKMBE5OM PRWNTWLNE BRLUES C 185M 1  30089 1LEA NONCIEBOIDESNG TA  BLBKTCEHBE ARN AXRMS E EE AEE6G0 SITE ARE ADUAR1 BR3A 6RBRLRS56859 1005  EALEDSER SER NBESE EB KE CAR EN BERA RM 0STUES R SS RE 60 R13FRURT9SRAMREARNBES AR6B KPKDIUL MSSR RRWAE BWEBRAR108KRX 1 RRIT1  E NKGESRESRBRSRET 565AN6SB6 N EKN PHANRIEBER SE E 00AB63 110 2 0 3 68588 EA M SRS E 158R6S LSRLO0ER50020818 I6OMMN EIEM 5BRE 618152415368AN1M DDE 02383456 FX29712579 LR8 02878405",
    "lexicon_hit": null,
    "read_head": "1  R S RIKE AKMBE5OM PRWNTWLNE BRLUES C 185M 1  30089 1LEA NONCIEBOIDESNG TA  BLBKTCEHBE ARN AXRMS E EE AEE6G0 SITE ARE ADUAR1 BR3A 6RBRLRS56859 1005 "
   },
   {
    "gt_name": "PANTOZOL TABLETS",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每錠含Calcium D-pantothenate 30mg等",
    "bands": 13,
@@ -1072,11 +1339,14 @@
    "latin_words": 19,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "TEL  1    ANO TALE WEXENEA LR IUE  S AEANKERDARARAIERE 4N EBRENAREROIRER NILETEAE 1N AMEMN T EAES A LE AT SNENES RE ERT 4ITES15 5001125451 TA AIERIELILRENA NBRARAER I 60N1 SO EAS  NEL 1 1 1 8",
    "lexicon_hit": null,
    "read_head": "TEL  1    ANO TALE WEXENEA LR IUE  S AEANKERDARARAIERE 4N EBRENAREROIRER NILETEAE 1N AMEMN T EAES A LE AT SNENES RE ERT 4ITES15 5001125451 TA AIERIELI"
   },
   {
    "gt_name": "PERSINE S. C. TABLETS 12.5mg",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "12.5mg, 25mg",
    "bands": 3,
@@ -1084,11 +1354,14 @@
    "latin_words": 3,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1U RR  522HHEI6 SS T1K  BR2A6S",
    "lexicon_hit": null,
    "read_head": "1U RR  522HHEI6 SS T1K  BR2A6S"
   },
   {
    "gt_name": "ISONIAZIDE TABLETS",
+   "name_exact": false,
+   "name_token_frac": 0.5,
    "source_type": "leaflet",
    "strength": "100 mg",
    "bands": 10,
@@ -1096,11 +1369,14 @@
    "latin_words": 20,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "95  IEBD SER ZR RL S R 6 6T BAR SC SONL AZIDE TABLETS PRIAR SENALS R0001645 1KXRIS BM 1G S ATLEIEL UE L DRE WMOE MNTD HOAN P GRMA 18 SITI0380URIG S R S M A AS IXDARBRDRAICGOD0 TRES 12MWS",
    "lexicon_hit": null,
    "read_head": "95  IEBD SER ZR RL S R 6 6T BAR SC SONL AZIDE TABLETS PRIAR SENALS R0001645 1KXRIS BM 1G S ATLEIEL UE L DRE WMOE MNTD HOAN P GRMA 18 SITI0380URIG S R "
   },
   {
    "gt_name": "JOHNCURON S.C. TABLETS “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 22,
@@ -1108,11 +1384,14 @@
    "latin_words": 35,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "282082600 1  B 1 LEHEG HS RKRE HCHNCURON SC TAETS JOHSON  R300163 1LE S G01 9268 NOLOP NPE O 1FRLAEGONE DARHOERTSAR MOPLAUM  R GS R EB ITT TEAEARN R NRE 2R31RE6R2E5 6 TLRD RBLEX ASBEA23AR SGRAK  110120520SE 10 F05RSASE B AASR L1B10015010001 1  E 606211 EIT A ESBR2E 2 1E 1 ER GNAR 230 5FRX0291279 LIR 02878405",
    "lexicon_hit": null,
    "read_head": "282082600 1  B 1 LEHEG HS RKRE HCHNCURON SC TAETS JOHSON  R300163 1LE S G01 9268 NOLOP NPE O 1FRLAEGONE DARHOERTSAR MOPLAUM  R GS R EB ITT TEAEARN R N"
   },
   {
    "gt_name": "VITAMIN B2 TABLETS 10mg. “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "10mg",
    "bands": 21,
@@ -1120,11 +1399,14 @@
    "latin_words": 28,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "259120500 1 E10616 SAEMEESREE 102M S ININ O HBLESTDRD HS 1PTIA 300689 LGET2012588 1OANAKAS R  TTE1856618 6X BX 1ESE28KS SERM1BRKBR AN R1RBR 61 6 GSGEOHOEAEBERENDES 1 RKGS6 6 CA GSLB R100R01001 1  600211 ELKA SW SR HRE HR E HSO ELOLRARKGSICKLFOASIT 1E51 52415360GR118 MN NE 10233456 AX 0231279 IE G810283405",
    "lexicon_hit": null,
    "read_head": "259120500 1 E10616 SAEMEESREE 102M S ININ O HBLESTDRD HS 1PTIA 300689 LGET2012588 1OANAKAS R  TTE1856618 6X BX 1ESE28KS SERM1BRKBR AN R1RBR 61 6 GSGEO"
   },
   {
    "gt_name": "GRAMAZINE TAB. 250mg, 500mg",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "250mg, 500mg",
    "bands": 7,
@@ -1132,11 +1414,14 @@
    "latin_words": 6,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1A    GSE   A   GSTNLE GDRM SDNHES  00 GET SA  O I S G0MIM N A S ",
    "lexicon_hit": null,
    "read_head": "1A    GSE   A   GSTNLE GDRM SDNHES  00 GET SA  O I S G0MIM N A S "
   },
   {
    "gt_name": "COTERIN F. C. TABLETS “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "100mg",
    "bands": 8,
@@ -1144,11 +1429,14 @@
    "latin_words": 10,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1E   GE   SORHLAE HG  ETE0 LAEEER RSAE RE R E T  ANEAENES SRE 4EREKASE R RAE S099 SSE ",
    "lexicon_hit": null,
    "read_head": "1E   GE   SORHLAE HG  ETE0 LAEEER RSAE RE R E T  ANEAENES SRE 4EREKASE R RAE S099 SSE "
   },
   {
    "gt_name": "Allertin Tablets \"Standard\"",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "4mg",
    "bands": 32,
@@ -1156,11 +1444,14 @@
    "latin_words": 86,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "2D AM2203 Z42 SA ALLERTINTEBIEN SMMDANA RRAIE  U1B8762EMEK AK TA EDRGRS LDRKSLE 2BT RMND PRESEC BI R RN D IR ARAR AB AXTR B 543 SMINHLEHBH 3 RLAESRM 6 AMHCAMEZL 1RN F2RM RASSDE TYDFN 1973NIESRIP 2EED PERM 18 00A8 283 3PES WHEHDS J KRUKBA1TRA 49MANINI BA7KIN63 BIBRIB LNASN TELE8S CT RW26MD A PRR SN HL0SDA   AREK  29583 E 2TPEKE 818 INM9698 MWNITAR T EN0BHEARER 496SF8H8I13 TE80DCN LBOR  RS PREMSEIS REEARGAN FAU 6R2 RGMARA RWD D LU TSME SR EBAX BBABH0UE 1621 BE8 7NITIREM  BES PN ON 55NK KASUBAIPUAY 98A61N ALESG RIUIN BEEKR 103RSHEBI TDKEMESAD 1042848 1KANBLE E4 B6R 02ZAWAK RLEGST DEA DR AKU518A BT S 1N021825 CAZLF   LMR OSIMEHERELODSLALAL NWIMAMDKLOER 30 RERI 00I17R CADENATADL 2100 4B55T35 SAT",
    "lexicon_hit": null,
    "read_head": "2D AM2203 Z42 SA ALLERTINTEBIEN SMMDANA RRAIE  U1B8762EMEK AK TA EDRGRS LDRKSLE 2BT RMND PRESEC BI R RN D IR ARAR AB AXTR B 543 SMINHLEHBH 3 RLAESRM 6"
   },
   {
    "gt_name": "Orotomine S.C. Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每粒含 Orotic Acid 30mg, Glycyrrhizine 50mg, Chlorpheniramine Maleate 2.5mg",
    "bands": 3,
@@ -1168,11 +1459,14 @@
    "latin_words": 5,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1SE S E S  1 SRC ORODOMINEC OMR R 1 O3S4",
    "lexicon_hit": null,
    "read_head": "1SE S E S  1 SRC ORODOMINEC OMR R 1 O3S4"
   },
   {
    "gt_name": "DEXAMETHASONE Tablets 0.5mg、4mg",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "0.5mg、4mg",
    "bands": 32,
@@ -1180,11 +1474,14 @@
    "latin_words": 81,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "LAEM 4E SA 052 42 HT DEXANETHASONE 1ADES05NG ANG  SHEANGEND RWE GDEUMTHENE  AIL ZJIY RMR 9X L 6 8 E SIOM16 ALD RTHSIBE S H001N15HAL AR BRIAES IRE  LVG N2133 S LNBECEE MAKRZAY 2MAINVBG CEB MALE H ATA RKF 1AASH TS SRMN ATAN2 AS 1N2  1ERRES B WKK  RC WATW RTADNSLONES TRIRNCINLACES 6  RALHIONER PRERNDLONSS 6F 15 R IVDMONTIONG  25301 K CUTBENCE    RANABK B88 XKR K6 1G AOATET  52598481 26 4M0 118 BA SN 18182552283A 6M 2 HACRNIETONWIT RIM FHAE 3MBFRSUE N ANEP KAY 4 ERRES ERD  IDSUINR 5P1BFAN REGASE 6 S103EK  6NHENINERGINIESEER   BP L IANSAID LARSEWUMDBER FADLEKS   ETANRG DEAMENTAE QOU TTP0 ENN9015467T COD NOTDED3 E   PICS GMPASUA ZITE 3RM872715080 LITCP KRBANRYX AX12 01240 AMG S 25 ET 1 ANG7NIIS8S 8",
    "lexicon_hit": null,
    "read_head": "LAEM 4E SA 052 42 HT DEXANETHASONE 1ADES05NG ANG  SHEANGEND RWE GDEUMTHENE  AIL ZJIY RMR 9X L 6 8 E SIOM16 ALD RTHSIBE S H001N15HAL AR BRIAES IRE  LVG"
   },
   {
    "gt_name": "DICETAMIN CAPSULES",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "50mg",
    "bands": 4,
@@ -1192,11 +1489,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "T1P 4844S T  6 THEE G1G R",
    "lexicon_hit": null,
    "read_head": "T1P 4844S T  6 THEE G1G R"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -1204,11 +1504,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "PELONINE CAPSULES \"JOHNSON\"",
+   "name_exact": true,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "5 mg",
    "bands": 33,
@@ -1216,11 +1519,14 @@
    "latin_words": 102,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "S 50 BIL BGST R BH AR E S  16 B RE PELONINE CAPSULES JOHNSON  GREAL SUARA R 1 MOUMEAHAIERSAT GECSIP R R HONDTIENA NBHAR HNDN 5 REKAGGARE268AK RESC884 4140 95 PRHIOMS 5M BATSINDUAEHR OHA ACAEA SHRLAN 1SAHLF1UEMUFA LAS HOUINTE2 S BEKEGIDN 1H1 1381A SRS GRMENIMID ADTN A AA ESAHBALR XX06828 50C B WI101A8  1 5N2USDINA HOUMASA BHARK EASAE BAUN2JA3EORRS KAMCRAN HEGP MBAX2RE A2ASHEHZA BBENIK TALMPZXRHNSB   LR95H38E0AB2AN A85 5ROUTERE 2B  5HRARMBSBIKE EANKNTSRE 1DR S BANK BCLEB B18MAC286 TAXMB LD  SL ANDERB ABAE BRERW TEREESX EREAN BHANWKITE SNASBED ALMRKARAN BLESEPRI CHEIAEA2 8T GR1 RW15M LOM 5035KA95 1R8KAGRSTK TH ZAISKABARSHEBKRETE BKBR HD3AR BAEBIRIET 2 L0C 29288 TURARN SDRANL KE1B30M 6 E051RM W BEWHAE 58MARAI B0 RIULENUSCEAEARMEA CREAN RA KAABAKYISME IAIC E3181AR50 0469R BAR RIENT EBUA  6600R0  2A8A BAE K YHE 9888358 KBADIE VEA2 53EG EKCD R051215 SE3CARERANA ER 5AEXR120650H18",
    "lexicon_hit": null,
    "read_head": "S 50 BIL BGST R BH AR E S  16 B RE PELONINE CAPSULES JOHNSON  GREAL SUARA R 1 MOUMEAHAIERSAT GECSIP R R HONDTIENA NBHAR HNDN 5 REKAGGARE268AK RESC884 "
   },
   {
    "gt_name": "JOHN LAX E.C. TABLETS “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "5 mg",
    "bands": 3,
@@ -1228,11 +1534,14 @@
    "latin_words": 5,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "GSE JIA SE SR B S E 11 AMA SELXSURERE D AN S ACCS",
    "lexicon_hit": null,
    "read_head": "GSE JIA SE SR B S E 11 AMA SELXSURERE D AN S ACCS"
   },
   {
    "gt_name": "SUN SEE TABLETS \"JOHNSON\"",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "Ascorbic Acid 250mg, Calcium Pantothenate 5mg, Thiamine Mononitrate 1mg",
    "bands": 8,
@@ -1240,11 +1549,14 @@
    "latin_words": 14,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "OL5S BEA S6   PNLR AEGMRRM EEANAL NFTE  00620 M0 1RN NLE9E LEE1 PHLKA 5 1M   SE RSLD AL MANEN F SILIE SL",
    "lexicon_hit": null,
    "read_head": "OL5S BEA S6   PNLR AEGMRRM EEANAL NFTE  00620 M0 1RN NLE9E LEE1 PHLKA 5 1M   SE RSLD AL MANEN F SILIE SL"
   },
   {
    "gt_name": "DEXAZONE TABLETS \"JOHNSON\"",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "0.5mg",
    "bands": 45,
@@ -1252,11 +1564,14 @@
    "latin_words": 103,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "S SE S 6 SE POIS SESWP SE 0 002781W 1R B AMEUG HA NS HWSLSLKNS EAS0 NH B GE  LERUMPMEAIS VAA D PAASURIASANSAN AIAF E AHAMNEASE RERANTARA SANG E ITEUNECE HRESIECON TAG OTAS SRTAMANGAR RAR EHIHMA TBOADH AKM BET IFESKR  SMAA ERIM BKERDNANUSE1B HOSMENSETASISI2KE  DETARK EBHLI R UAMEBHNIE SAL 11 515CN0K ACE BAE A AHSE UD AIS AS BET BESHIPAK RBAIS S TE ML AEMER RRIN AINSRUAR JOUNG TAUEAFNKSHIGET AGESIB HEAV EL ZESHONKAN AE HLH SWARESKE 3AKWA TELAUELIN 1BN2TNE5R0U7D4 DDITH AN RHANICNE9ILAE  51ASRG BW11B5034XAR M   RABLRERBN 5288H566M GE1R ERDAC OM SMD 1 MBIERO 1NM NLES LMES  01100556 1 RSASSE SRA  1 RRA 1RERESSCEAR E  1NT S R TE  D  LO BEASIES INGAR BAISRS 1RIFL OKE FAKHMEBAOEIE 1MNOETX MNASN A SASKES 1RHA   1 NRIRES RER  11ECH 1S   1150315RKSESRE 1 ENG EAA ERPOASREAMSAHS 1RR RARE  10 ABAE 1SHE AE   1 C  1ESIAGBTE RKREREA R ES 1 CESNHESERIES E LB R 6100 EA8RFRPIPRSGRS 4NT LD SAL SRNR HRNAD MNTAS",
    "lexicon_hit": null,
    "read_head": "S SE S 6 SE POIS SESWP SE 0 002781W 1R B AMEUG HA NS HWSLSLKNS EAS0 NH B GE  LERUMPMEAIS VAA D PAASURIASANSAN AIAF E AHAMNEASE RERANTARA SANG E ITEUNE"
   },
   {
    "gt_name": "STIGMIN-C TABLETS “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.667,
    "source_type": "leaflet",
    "strength": null,
    "bands": 24,
@@ -1264,11 +1579,14 @@
    "latin_words": 56,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "RE ICR ST 16 TH SWSE GI ES JUR BTE STIGMINC TABLETS JOHNSON PIN IE NSR E00028290 LEM  59983 TIT B AIMNSICEUREAEASAEFADE TAG SU TLEL SALECRAILS LRE RNDATGATLNR EGREC  WHE2 2AMARB M BIEIEH E TAL E R 02081188S IL U  PL 1NGSUR1 39E851A26 21190ZUHOT B5KGSUSHAR20S 394A ATAIROET ON AULIGER 10081AK E5AMERA 1ITBRA IH T BL1860 ARTARE ARS  16MR00022MAL5GN 2TEICEA ACIBED SATE  3LPANGREATINISBAPEPSIN SH 1E  10050 O 00EBRAES ASR D000 CODE HOK 11 S SEID SPANSE RBG LU RA DR 2 A I R2ISBWS A 8817708 EMAANG 02122878405",
    "lexicon_hit": null,
    "read_head": "RE ICR ST 16 TH SWSE GI ES JUR BTE STIGMINC TABLETS JOHNSON PIN IE NSR E00028290 LEM  59983 TIT B AIMNSICEUREAEASAEFADE TAG SU TLEL SALECRAILS LRE RND"
   },
   {
    "gt_name": "KINZANONE TABLETS \"JOHNSON\"",
+   "name_exact": false,
+   "name_token_frac": 0.667,
    "source_type": "leaflet",
    "strength": "100mg",
    "bands": 32,
@@ -1276,11 +1594,14 @@
    "latin_words": 98,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "NA RD 5 5MB 440 2SB1  B5 5MB BE SE KNZANONE TABLETS JOHNSON PILIE HD SW SD00286 SR 1 AHLRMERSHIR KERBRERAR KOTREHL 86EROIN2 JH2R LEH BUMAST  JTECENA EDNE5N20BERSAUSME NITINAN E OMSA B OH AARA CHM 53E EAG HARIRE CIMSUMNDA AEYEY GASESYSH BWASAR LUMIEY SA DJAM HWAKL EAYSRNDME 2 8A 15123518 WERHD HI0KDARD AVGEFRHENATASML 2810 NVSN AHA BN AN5AMSR  TIEWMAS 2121C802520 TTAL EL 52902255 1H BAI U BEAN T READ IN LE EL23WEKHEAHESKRKHWHODUHE 13 KAEHASH TBAEA  LENTEHED 1A5 1 1 ELTHE SERACH ADE TIN78R2ES0 BHDAW RERM BEN BEASA5 EHA KETE BEERM 171A1 RT1CHRND EBEHUESA 2AD1BRBHA BTANIIER E L PAL SES ODAMSDIN ARALASNSE KDSRES LIR DIRM INDISA 1R S 2432AWE0S EARL D ASB BISHK F PREM HHER TE L03500  10060 RHSES S 6 D1010 SA E ICS EN AE RE B NO E DR 2 6 RM241E  B 0BO R77 79WM DABR 02894758 FAX 02712579 LTM636  0222878405",
    "lexicon_hit": null,
    "read_head": "NA RD 5 5MB 440 2SB1  B5 5MB BE SE KNZANONE TABLETS JOHNSON PILIE HD SW SD00286 SR 1 AHLRMERSHIR KERBRERAR KOTREHL 86EROIN2 JH2R LEH BUMAST  JTECENA E"
   },
   {
    "gt_name": "VITAMIN B12 TABLETS 30mcg. \"JOHNSON\"",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "30mcg",
    "bands": 32,
@@ -1288,11 +1609,14 @@
    "latin_words": 63,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1RM 1 AM 1E N1GA  EF 30 SAN BELABE AEHSON 1R35028 R IPLRE ECMCIHGEDIM R1LAM6B 1RA2ARAH ARKOR2580  DENANEBRK EDE RETARN EER B84R83 RTR NRENONH ESUS TS MAHENAHGESENAKERIERE TS L2 SHARME IHDE1AS 8 MNAN EALNDIENAITSRTE NKARYKLHASLRHRIAR PR 0NK HARDA TRSTHEINRS RAKNTILTES OUASHS AR 4 NHEKAO FROADISAN SHA 504PR2EDRANELEA2RASESES 1 GE210  B E SIGENERDRAD ASR 1GRGRDRKSE ARHE RH ARC BDKSESI 1ERADH 46E 1H L BRAE  FREAKAREAN ORINES ARESR Y HOIDORNEKEA S SRNRE SER0NO SR ERNA P 1ES 1ERANDLEBE LKB81915610003ER E I609M1 ELKS SURBABR 2E S65124153504BST1S GRE 020845 FAX0231279 LIEG1 0212878405",
    "lexicon_hit": null,
    "read_head": "1RM 1 AM 1E N1GA  EF 30 SAN BELABE AEHSON 1R35028 R IPLRE ECMCIHGEDIM R1LAM6B 1RA2ARAH ARKOR2580  DENANEBRK EDE RETARN EER B84R83 RTR NRENONH ESUS TS "
   },
   {
    "gt_name": "BENTYLNE GRANULES “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "carton",
    "strength": "Each gm contains: Dicyclomine Hydrochloride 5mg, Dried Aluminum Hydroxide Gel 400mg, Magnesium Oxide 200mg",
    "bands": 12,
@@ -1300,11 +1624,14 @@
    "latin_words": 14,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "6S BA TEAHA NUENDHASRLSASMISI IS EAA  001 1 1 88  1O 12143  L PS1 KSU1ARM M1 LEAS1631  0M9PMH 155 295 EE RI 221 RN11 KAUSE B P",
    "lexicon_hit": null,
    "read_head": "6S BA TEAHA NUENDHASRLSASMISI IS EAA  001 1 1 88  1O 12143  L PS1 KSU1ARM M1 LEAS1631  0M9PMH 155 295 EE RI 221 RN11 KAUSE B P"
   },
   {
    "gt_name": "Ergolar Caffeine Tablets “N.C.P.”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 3,
@@ -1312,11 +1639,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "LPOE BS JILTHAFER R N0 5 N AS LLAN GATA S 5A",
    "lexicon_hit": null,
    "read_head": "LPOE BS JILTHAFER R N0 5 N AS LLAN GATA S 5A"
   },
   {
    "gt_name": "Diazepam Tablets \"Standard\"",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "5 mg",
    "bands": 27,
@@ -1324,11 +1654,14 @@
    "latin_words": 75,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "A 3RL 28P S CC SSLS DIAZEBANT IONIN SUMMR TA E M ORNIGREMR PA 2K5 C DES8 WHWARI  2KE G RM SUL RLREG ANDASAS S R NUWCK NOMS REAEIA N T GABAGUS TF1 ALAR63W62 SEETHRDRD RER HDR R ID AMR AT GSRE LARARIRNAWUA R EURAK6 RM E IDITBANBERLAR TCBMPEIR AMEN 5 GRMI A RG RDIESN T62MMRDKE2 PARCESIHA O A KETROR BARHA8A FATHURKDIRM GRERNTAG AAEA BIEGAESRUETAR TEORE RENWRWIE 5 5NW KDW010386 ARSGSIRG 2NDODKDER ARIMNBHMBDX KDR AGIR NEHINERXERAUF FHRMA RMIN ADEGARA2D IHIT HMR SRTRDN D R UM OIUN  A S CTEL EFERMMANKLON 2 18M KL X MS GIEAUNETKILON 1 1SESTMR FLINHE DIUS WAIND EHARBARMIELEBADK AI TEAXEALMOUMENOTA AOAN ANMOKE JKEASMEMBANSR BICEKGRIDBB BIUTKE 4993RAN A AR ARARA TE S SHNGUE",
    "lexicon_hit": null,
    "read_head": "A 3RL 28P S CC SSLS DIAZEBANT IONIN SUMMR TA E M ORNIGREMR PA 2K5 C DES8 WHWARI  2KE G RM SUL RLREG ANDASAS S R NUWCK NOMS REAEIA N T GABAGUS TF1 ALAR"
   },
   {
    "gt_name": "Tranzanone Tab. 100mg “Standard”",
+   "name_exact": false,
+   "name_token_frac": 0.25,
    "source_type": "leaflet",
    "strength": "100mg",
    "bands": 19,
@@ -1336,11 +1669,14 @@
    "latin_words": 48,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SS SUR B85 TRANZANONE X ON SAMANK IHSULICDIMNT NRW TOVTAE 17 BAWRIENENAYDHSH EAERM ADA  PRERERI RICMOUASM EFUTYUTHE RIDBKAELE BBARMBIGE AX MNFK SE MA A EL KA1RARINSTEM  510G0AXRIEOMSN REHBEKX0L ROWRIIAIANE 8S 1 E RABGEA3RA8 0 CHESPUER 6MAITANAEN A ITE RIDER A 00 GT E8R B8N ENDSARN ATERLE DA RI RUIE BARNMRDUGUJPERES REW REURA BREGMBAHM B1 Z LARUNEMAMEIAM TRERAD BHR S5TR EBRPENPHAIAG ABLULSAS ELE 0006E8K FRIES HMSBCE RM70033 S CADE NO TE 1870 4NNNOANA 8",
    "lexicon_hit": null,
    "read_head": "SS SUR B85 TRANZANONE X ON SAMANK IHSULICDIMNT NRW TOVTAE 17 BAWRIENENAYDHSH EAERM ADA  PRERERI RICMOUASM EFUTYUTHE RIDBKAELE BBARMBIGE AX MNFK SE MA "
   },
   {
    "gt_name": "Ancillin Capsules",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "250mg",
    "bands": 3,
@@ -1348,11 +1684,14 @@
    "latin_words": 5,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "PLPKB E PRIAFSRENZSE 003419 SF TAT DBEMCLENVRNYKAEBRGB",
    "lexicon_hit": null,
    "read_head": "PLPKB E PRIAFSRENZSE 003419 SF TAT DBEMCLENVRNYKAEBRGB"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "30 mg",
    "bands": 2,
@@ -1360,11 +1699,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "Sparte Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 5,
@@ -1372,11 +1714,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "O AOL  SDARTE 1N1BIL CO  K  HLHLKSA",
    "lexicon_hit": null,
    "read_head": "O AOL  SDARTE 1N1BIL CO  K  HLHLKSA"
   },
   {
    "gt_name": "ERGONAGEN TABLETS JOHNSON",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "每錠含Ergotamine Tartrate 0.3mg, Phenobarbital 20mg, Dry Extract Belladonna 0.1mg",
    "bands": 6,
@@ -1384,11 +1729,14 @@
    "latin_words": 11,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "  R IER A ASES S R R  ERERSNERE ER AEA SH144 FES ERE AESAS AER ARYE  S00 SE KE   ",
    "lexicon_hit": null,
    "read_head": "  R IER A ASES S R R  ERERSNERE ER AEA SH144 FES ERE AESAS AER ARYE  S00 SE KE   "
   },
   {
    "gt_name": "CALCIUM LACTATE TABLETS 500mg “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "500mg",
    "bands": 29,
@@ -1396,11 +1744,14 @@
    "latin_words": 36,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "20120503 TEL       DO TETE SER  BT NEN E CIPLRSS A EETESHEGR REANR RE A  S ERE R EAM SERERTENSNSESNU R E AS 4 PK AN B DI T H 4 SRHNRARNHNIE SAEADAEARRU AS C  ERE AS S NNE KRS  AES SEESENS AU N E 6S 4E R AE 4EEHANKE 1 5EE KS SRAER AL 4HEM ERK EH AE 4 A E R E  S TOEE48E 1 DNGE RN B CAEARE BERER S A E RS R A AES TEASA  LENLE AHS S A 4EE1 UAEE 4E E R  CEAAAA ISCDDE SE ESE ",
    "lexicon_hit": null,
    "read_head": "20120503 TEL       DO TETE SER  BT NEN E CIPLRSS A EETESHEGR REANR RE A  S ERE R EAM SERERTENSNSESNU R E AS 4 PK AN B DI T H 4 SRHNRARNHNIE SAEADAEARR"
   },
   {
    "gt_name": "HEXAZIN TABLETS “JOHNSON”",
+   "name_exact": true,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "200mg",
    "bands": 40,
@@ -1408,11 +1759,14 @@
    "latin_words": 98,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "OL ER 637 SRRENANL AXSE OID ER 4P S6E HEXAZIN TABLETS JOHNSON POINISN NVSP SE0003945M LR L 83R1 NSLM GALIMO STAUEATA2 7FANVDO BA5R81265H82 GEIA ALOOSIERBNONE BARNEXA W HTALEEO O 1 0143488X EOSTO EANCOINLE 0M1 TE PFDA9A1222001T DOMDE KAKAAT N  AL 38E0M2MA8HALE TE M 5BAGRERER CBA2540 PRESRK D E PF L A K ALS 26ARESEASCER INCINC ACORKINOSITONAES 5 5W BTB512 NCOING ACDRIEWTHEDR XWM2 EAD N TMGHNEAKESE ZFA SOIPMOSIT E8505819 GFIEFAPIG21 IO OLANA SH E NB IL A2 KEAM1  GSRIA BAISERDER SMENCMC 0O9E7 ITEM IENEDERHAKE1 2880A M R E REDDEI5RMEM  THHA BAKAR BKHER TEIGAN 0RES BW  BITH1620F 7A8851652H G11L18 VEC8560 BT FCR IRA 3SM8 AEE W ASEMAR B RAL E3A S IE KEUISEHBR DBSE DRS WBSHBEMAE HBMA DLRM  WEAA RKBANI NTSN GEJ2 N BEUZRESRMD 1BARDLENS K29017Z INE HHH  3 SRIHB RS S 1B E 100E50E100E ERH KO CAMM OD 6 108 SERL DNRDNIBAHE AREITA ANTRY MONGBCLNWANBLIORSOLUD THTSBT1RMGS",
    "lexicon_hit": null,
    "read_head": "OL ER 637 SRRENANL AXSE OID ER 4P S6E HEXAZIN TABLETS JOHNSON POINISN NVSP SE0003945M LR L 83R1 NSLM GALIMO STAUEATA2 7FANVDO BA5R81265H82 GEIA ALOOSI"
   },
   {
    "gt_name": "DIABETIN TABLETS 250mg JOHNSON",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "250mg",
    "bands": 4,
@@ -1420,11 +1774,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "CE R  EE RNE I NH E   OPENT  TEALE EEE A N2",
    "lexicon_hit": null,
    "read_head": "CE R  EE RNE I NH E   OPENT  TEALE EEE A N2"
   },
   {
    "gt_name": "JOHNVIMIN-G S. C. TABLETS “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.333,
    "source_type": "leaflet",
    "strength": null,
    "bands": 27,
@@ -1432,11 +1789,14 @@
    "latin_words": 40,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1005150 1  661 SSE SHE G G B  E HINKG S TABLETS OHSOM 1 1531300405 LLBT1S8 SI  E 63186680580431ASESE2 S FRE AR ADAREB2 RAKSKRK RIN E 132RA1RE SNRE HEBRNF KER RARA 5 0AX KESERBR 4 E  1 5E285S UNR HRA RG GERAKA8 1 A  UE B0ER ESE AELEALRHR R 08RERIR SERIGAK PAKRERS A 1 H RE 1E R 5RGR6R 11 6100E T 60205010903 ELKS AR N E 41516521515M718 DR 23036 AX0231379 LINS  022676405",
    "lexicon_hit": null,
    "read_head": "1005150 1  661 SSE SHE G G B  E HINKG S TABLETS OHSOM 1 1531300405 LLBT1S8 SI  E 63186680580431ASESE2 S FRE AR ADAREB2 RAKSKRK RIN E 132RA1RE SNRE HEB"
   },
   {
    "gt_name": "METHIMAZOLE TABLETS 5mg “JOHNSON”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "5mg",
    "bands": 14,
@@ -1444,11 +1804,14 @@
    "latin_words": 25,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "E    4EKE  RHS  BERNE ETRE N  E RI IS 4EREUEAUA1 UARRS WIRMSE ERER UBARTS SRLID ESNS EBESE S TATNSERAIENEAEAN AR E R IRE TEEENAIERA 1 S RE SRE NSE T  ETE AHAR R D AMR 2 STRAS SNSNOS RE 8 00 3 082 4  SGMPPN1 S E EAR C",
    "lexicon_hit": null,
    "read_head": "E    4EKE  RHS  BERNE ETRE N  E RI IS 4EREUEAUA1 UARRS WIRMSE ERER UBARTS SRLID ESNS EBESE S TATNSERAIENEAEAN AR E R IRE TEEENAIERA 1 S RE SRE NSE T  "
   },
   {
    "gt_name": "Leder-C Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "500 mg",
    "bands": 3,
@@ -1456,11 +1819,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "0CKCRILISS  A 0124F 1SHN EE AG AA 20V4",
    "lexicon_hit": null,
    "read_head": "0CKCRILISS  A 0124F 1SHN EE AG AA 20V4"
   },
   {
    "gt_name": "ISOPRIN TABLETS JOHNSON",
+   "name_exact": false,
+   "name_token_frac": 0.667,
    "source_type": "leaflet",
    "strength": "10mg",
    "bands": 35,
@@ -1468,11 +1834,14 @@
    "latin_words": 92,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "OL E S 5E RM  SBR SE   3R BR SE 1SOPRIN TABLETS JOHNSON P HI SE AL SP S0 004575N 1E TICHSLUMMAOR KEBKCERSNTIR B ARK ARAERCE AEADIMEND BE AGSIA M325 EOOH RBLZMIS HO  CHCHNCHCHOF 8CL 1 P 6NG5 UIHIIHR  1LGNGUE EIEALATESFA WTIE 1 MODRCASA BED EUSAGRTS S 5RMDNSIR 81921GN S CEASEM AO ESNASA SEKAN AEFEA BTS MEMRTETRAN ER REGA SHAKECONEA 125HRMAKEA SBDARER7 1ARZEHASD BRS BANMERH BASLAWGA TEN UISKEA E5KR3 CETEB BAZK RWISDANRISI  1 SLAOST NEGETOLS PUFRDN SE S BEKXCPIEITS NA SHR E SER DSHEILSERODIUD PE AEI B RWN 9L1750 30 NAT5T E D SL BCERA AKEREPANMELNSL TRERI AREKEIM GRND BAEHEDETKR 5ADEREHAWNATE BTE 1L6T6 5AR703KR SWE5CRM KSRERASR RODECHAKEAA T HEREB4A7EA K T8848B  1 6SH 1 AKG 3 ARERITEARARTIS 1 BEANC 1NTNIPE U RENKLMA NENCTETSIESE 1 1 01 S S8TE 1DAE AL ESIN T AERA SNOKE 1 SETA AK BFES TMIUASTRHSES 1 NKACAR IAN I IO RASIT 1  RAFERSLSA RHE",
    "lexicon_hit": null,
    "read_head": "OL E S 5E RM  SBR SE   3R BR SE 1SOPRIN TABLETS JOHNSON P HI SE AL SP S0 004575N 1E TICHSLUMMAOR KEBKCERSNTIR B ARK ARAERCE AEADIMEND BE AGSIA M325 EO"
   },
   {
    "gt_name": "R. H. H. TABLETS JOHNSON",
+   "name_exact": true,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "每錠含Reserpine 0.1mg, Hydralazine HCl 10mg, Hydrochlorothiazide 10mg",
    "bands": 5,
@@ -1480,11 +1849,14 @@
    "latin_words": 7,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "IOL MS BE PS SSE JT ID JZ  R H H TABLETS JOHNSON 4 KL01 555 A 5118N ",
    "lexicon_hit": null,
    "read_head": "IOL MS BE PS SSE JT ID JZ  R H H TABLETS JOHNSON 4 KL01 555 A 5118N "
   },
   {
    "gt_name": "VALETAN TABLETS JOHNSON",
+   "name_exact": true,
+   "name_token_frac": 1.0,
    "source_type": "leaflet",
    "strength": "10mg",
    "bands": 36,
@@ -1492,11 +1864,14 @@
    "latin_words": 103,
    "latin_any": true,
    "name_recoverable": true,
+   "read": "SL 435 A IGE RM S JD P6P SXE VALETAN TABLETS JOHNSON LR DAL ERR BO T5 BAL JAUMHITEDASCNCHE OLOSA SLR ON DONDE EAOUR LAESIN TERAIE FONDRE 37 SHDUN STAKC GINOLAIESECHARIN SDIWN DAECL ORSEZEVYRANEIS BE AFEY RSEY ECE SWTRY DRDE2EYRHA R BAX BEX IRRBDGEY ENG RSH ZKENEDEW FE2EGPESE DPROTE BR EVINS FVEBERE DNE22E5RBS TRESL BRKA 518AROR BREA BEBEITEA 1GSBHIR  B1BB 784089 6 25 IREHAYBDA 51G H A TAL F B 1RBS ETERSDRNE  2ARRMR SBFEGS S RIL EE9 3 AXR SF5BO BOT D M  4ERN  EGFE0ES  5 HANEREPES AWE0E 6HEUEE RIN RENGANIANE  BSFR NXIDREA5RDFRERSAL PRENCTIALINER A IONCANIESIKG TESH   AL AN ALEB 5A26 A BURKSRIE SLLEUSRDGS E LEBSID 1636GRDMADARE FRODEASTHE BAX CETGHA NHINDSIER F S 289EDGA BHRETE GBTEOE K BER RESD SXHBANARRA2BSEER 3EEDNAZREU AREI ERGE G288 WITABR EBIE AIE R6GSM NGRZ SR5ARNEL ER  AK 65AR1 8 L 00825010 HNTHAEA ATE  GDRT18 SR SE IC SA AR RI AN N S N 2 6",
    "lexicon_hit": "VALETAN TABLETS JOHNSON",
    "read_head": "SL 435 A IGE RM S JD P6P SXE VALETAN TABLETS JOHNSON LR DAL ERR BO T5 BAL JAUMHITEDASCNCHE OLOSA SLR ON DONDE EAOUR LAESIN TERAIE FONDRE 37 SHDUN STAK"
   },
   {
    "gt_name": "VALETAN TABLETS",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "carton",
    "strength": "10mg",
    "bands": 3,
@@ -1504,11 +1879,14 @@
    "latin_words": 2,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "8   61 T 07171M1E S AN EASA4",
    "lexicon_hit": null,
    "read_head": "8   61 T 07171M1E S AN EASA4"
   },
   {
    "gt_name": "Tripyline Tablets 10mg “H.L.”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "10 mg",
    "bands": 3,
@@ -1516,11 +1894,14 @@
    "latin_words": 6,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "FEE L W95MM X H 255M0M 1E 5 L RAKR 1 0 I ID VINO TABTE NG",
    "lexicon_hit": null,
    "read_head": "FEE L W95MM X H 255M0M 1E 5 L RAKR 1 0 I ID VINO TABTE NG"
   },
   {
    "gt_name": "B-Complex Inj. “Y.Y.”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "1ml",
    "bands": 29,
@@ -1528,11 +1909,14 @@
    "latin_words": 93,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SR 603003 MER KARANEESRB 0 BCOMDLEX UMYY RLHULOANSL ODJUODUE CESHE IAS ESHDAD ADHNTETEH 1OHB 80 LOELO AV IAM MUARTERPLRAY INE  RERTLILIE CMADRIDAENGEFBRAH BHANEINC KLISANE7BEK A ASEURETLE EUENIDEARE RASRD FR EDAND AMDR EMRA ESKBH RD E EN ARMEIT FL ITDNTHE D TNDSAS UF LREARODA  ATEAOTHEAEA N RE 8 AB 11AJEB3 FEWALA RK LUMDBIERHIA BHANGE 1OMNEUADH ERCASA ODADEF UBAR EORT 1 4AHR ARA EBTADRAOPID TAL 0 SANDEG RUANLE BRANT BRA INME MD A RCUNIDLDA BAURNR RNE  AIMEDKIE DHONA AEAND S BDRA IT ICHOAMND THEDNAS 1 OTHALS HETEBAE TIONDLT EIEADAHD RER1REIEHE RERT 0 H2ZEK KUETD ITE DA  BRD 2 HRBERE  WLEMRWEINE  QTE5 E ABABS US THUSRINAGE URNA WARYESIND 1BHDERER NHOE 8 1PBIPL IBUSUIE AEKT SUM SRIEUAR BAKMCEY HHLEIRMEINEH1 HNNA 25CE FUFP S GH METOLCS SN AN B N 8 BRA RD J BAPREINIFE  TE1 2500KB",
    "lexicon_hit": null,
    "read_head": "SR 603003 MER KARANEESRB 0 BCOMDLEX UMYY RLHULOANSL ODJUODUE CESHE IAS ESHDAD ADHNTETEH 1OHB 80 LOELO AV IAM MUARTERPLRAY INE  RERTLILIE CMADRIDAENGEF"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "2%",
    "bands": 2,
@@ -1540,11 +1924,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "Houk Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "carton",
    "strength": "2mg",
    "bands": 2,
@@ -1552,11 +1939,14 @@
    "latin_words": 3,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "U112 TAE SLEIE T ",
    "lexicon_hit": null,
    "read_head": "U112 TAE SLEIE T "
   },
   {
    "gt_name": "Fucon Capsules",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "10mg",
    "bands": 6,
@@ -1564,11 +1954,14 @@
    "latin_words": 5,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "LL OR FUCOL CAE H 111 LO1551 HLL01",
    "lexicon_hit": null,
    "read_head": "LL OR FUCOL CAE H 111 LO1551 HLL01"
   },
   {
    "gt_name": "FUNAZINE-S. S. C. TABLETS \"JOHNSON\"",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "1 mg",
    "bands": 26,
@@ -1576,11 +1969,14 @@
    "latin_words": 44,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "1 B1 X R SE HEE RN0N  1845 THSTR 1M30051 X BROREH ABARME120 AC WNY2 ERITAERINLAS165215H2 1MBARAO RENERHEHOMSNSTA NO  5M2M000M HFHORUEAYHDQ 1435U R 2HGHACHA  AKCHCHOR 1AVB 10 CHAPN0S2 H015104 EAERENENOESIN R600903 1NIN 78S3IOE A0 S AR 5NHKN 1A3 ERR 56 SRIEPNAODODN S UE 4EEOPOENA ASARERD 1 SEATAGE 1G  ELEREARE SD EITS PE RPIUCEDAR RL C 35R03 GRGR B LR R L LE S 3 R1365680AWIKAS ESEKUEHEURFR TNSRS ANB L18 AL0GR50R100  00K 01920393 SEEIKESEER E",
    "lexicon_hit": null,
    "read_head": "1 B1 X R SE HEE RN0N  1845 THSTR 1M30051 X BROREH ABARME120 AC WNY2 ERITAERINLAS165215H2 1MBARAO RENERHEHOMSNSTA NO  5M2M000M HFHORUEAYHDQ 1435U R 2HG"
   },
   {
    "gt_name": "JOHNVIMIN S. C. TABLETS 25mg",
+   "name_exact": false,
+   "name_token_frac": 0.333,
    "source_type": "leaflet",
    "strength": "25mg",
    "bands": 20,
@@ -1588,11 +1984,14 @@
    "latin_words": 30,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "20080638500 1  E 51 SSATIE 252MB RIE JOHWINS C TABLETS 25   005749 1LE  R018668 GHAREPOLCISIA ND  UAIAI 5D S ELA AEAN ESPHRE RBIBILKRSGR N RN00 P NRNR EBGSG GR1SEA  1818 5 RH S EE R 5AGRRS GNS S CRS0D0008584 1  6002901101 EIRS RM E5BRE 65 524153S8BAL1A TR 020045 FX02910579 LGB80212878405",
    "lexicon_hit": null,
    "read_head": "20080638500 1  E 51 SSATIE 252MB RIE JOHWINS C TABLETS 25   005749 1LE  R018668 GHAREPOLCISIA ND  UAIAI 5D S ELA AEAN ESPHRE RBIBILKRSGR N RN00 P NRNR"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "50 mg",
    "bands": 2,
@@ -1600,11 +1999,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -1612,11 +2014,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "Lactated Ringer's Injection \"S.T.\"",
+   "name_exact": false,
+   "name_token_frac": 0.333,
    "source_type": "leaflet",
    "strength": "每ml中含有：氯化鈣0.2mg、氯化鉀0.3mg、氯化鈉6mg、乳酸鈉3.1mg",
    "bands": 4,
@@ -1624,11 +2029,14 @@
    "latin_words": 11,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SA SSLB BK KEA HRI 8198 LACTATED RIMGERS TMECION ST SR AE EX BG 10  BR20 E LE 540003 ARFMEARN 02930",
    "lexicon_hit": null,
    "read_head": "SA SSLB BK KEA HRI 8198 LACTATED RIMGERS TMECION ST SR AE EX BG 10  BR20 E LE 540003 ARFMEARN 02930"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": null,
    "bands": 2,
@@ -1636,11 +2044,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "Thioctic Acid Injection. 0.5% “Y.Y.”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "0.5%",
    "bands": 8,
@@ -1648,11 +2059,14 @@
    "latin_words": 8,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "IOM0111 KAUK AISAST AMGNT  1  S D 52 1 FSE   D REREARDAAISMA2 NON011 DE  S 5 2E ERE E  AA",
    "lexicon_hit": null,
    "read_head": "IOM0111 KAUK AISAST AMGNT  1  S D 52 1 FSE   D REREARDAAISMA2 NON011 DE  S 5 2E ERE E  AA"
   },
   {
    "gt_name": "Sodium Chloride Injection \"Astar\"",
+   "name_exact": false,
+   "name_token_frac": 0.25,
    "source_type": "leaflet",
    "strength": "0.9%",
    "bands": 34,
@@ -1660,11 +2074,14 @@
    "latin_words": 92,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "PRALIESN R SE 0005881E  GE1 SR BN ZK08 SOD UM CHLORDE INLECION ASTAR TEM0 266B100MLCPE SHE OT A E ENE JON KAETPRDOEN O BBE ETAHEGAT BENAGKEERMKZOCBT RIRA T BCABSUEARE FEAGH0FEAERE2 215K 70TSHTAILKZGBFAAB 3254 REBAA ESPHH E EPALOD BERESR RTEBRIRA TARMAR 5RDA3EKR SDE0KG 88 K68 ZESEAUN KIN LGER75P S AY EER  DIERBEO BAJKGA RI NAMEEBR  ASUBRRD 69RSEVIAIDKR BDER 26PRA B KUSAGRAR ADEB CUNR BKZR E IAGRUHEEBSRLETESR  QAESKSBANKLZKRE BHJHEDE5538A RE BAGICER 0S6PA COMAD ESRK GRENRTEBRG EERRO 50 6H ERAE EB AR EBPABPIN CHONDE EGERPOIPOINE GERBIGEBE BN3 JELAIAT TOHANSE E GOIBPAEAERSMS CNSA PHAC AGABON THIHEROTHEAR EBL S 6 836 8A ESB5R88516R BI5OKRHOEN RBAR RN ABERBBN2S IN23AR  1BE RM 5M 10M 2OM100M IR T PPS1 500M1000M 4 2SM SDN IDH GOM SDM IDM SIHN SA E SL  A 245 R A 6 BTE EK  NKJKUIK 6736",
    "lexicon_hit": "ASTAR",
    "read_head": "PRALIESN R SE 0005881E  GE1 SR BN ZK08 SOD UM CHLORDE INLECION ASTAR TEM0 266B100MLCPE SHE OT A E ENE JON KAETPRDOEN O BBE ETAHEGAT BENAGKEERMKZOCBT R"
   },
   {
    "gt_name": "Aisunmin S.C. Tablets",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "50mg/5mg",
    "bands": 28,
@@ -1672,11 +2089,14 @@
    "latin_words": 49,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "CAHRES HUAEER 1  R 6G APARE ASUMT SO TAJETS GSE 9060 C0 H PNT RN N NOREARSESINE   16862VBE ANT 2 1 6  RHEA LERENAKE RREASA I 1 2 8 E 342ERV B 2202S  ERHN I BWAK BNSTE2 SR EREA A ED AHBLT ASHEDE RILNRE RBR L2GSIIE5 AR SHE RERN NRFE SANT 1 4PKS 6  BS E BAR HR SEN BANE BSR KUARBK RI2RE KREIRHE SEERERSA RHTA 12EDBRRH S E E5M RBSKB EPDES 1BINT5IAB16 LE R 500GE 10001ES KINE AIANASAS AE EL 03565356825",
    "lexicon_hit": null,
    "read_head": "CAHRES HUAEER 1  R 6G APARE ASUMT SO TAJETS GSE 9060 C0 H PNT RN N NOREARSESINE   16862VBE ANT 2 1 6  RHEA LERENAKE RREASA I 1 2 8 E 342ERV B 2202S  E"
   },
   {
    "gt_name": "Vitamin B Complex S.C.Tablets Honten",
+   "name_exact": false,
+   "name_token_frac": 0.25,
    "source_type": "leaflet",
    "strength": null,
    "bands": 9,
@@ -1684,11 +2104,14 @@
    "latin_words": 18,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "B 2N 758E16 WITAM B COMLEY SCTABLES HONTEN PRIARSRENZSE 000605 E K T MOMET NL  BARURLE28SRM M03NTHA U1 18M8SRE WVO 1  0008668 ACKESERINA IS GP585 BKER OTDEAGRKMERX DAXSRITM",
    "lexicon_hit": null,
    "read_head": "B 2N 758E16 WITAM B COMLEY SCTABLES HONTEN PRIARSRENZSE 000605 E K T MOMET NL  BARURLE28SRM M03NTHA U1 18M8SRE WVO 1  0008668 ACKESERINA IS GP585 BKER"
   },
   {
    "gt_name": "DESTRINALIS Capsules",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "250 mg",
    "bands": 2,
@@ -1696,11 +2119,14 @@
    "latin_words": 0,
    "latin_any": false,
    "name_recoverable": false,
+   "read": "T  L 1E 1 1 ",
    "lexicon_hit": null,
    "read_head": "T  L 1E 1 1 "
   },
   {
    "gt_name": "Kymosin Enteric S.C.Tablets \"Honten\"",
+   "name_exact": false,
+   "name_token_frac": 0.5,
    "source_type": "leaflet",
    "strength": "5mg",
    "bands": 5,
@@ -1708,11 +2134,14 @@
    "latin_words": 10,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "BH LP HEMCKSE KWMOSIN ENTERIC SC TABLETS HONITEN PRIATSPEEN  SR 0006275F PHOA  SM UAGLW1N2 SALARR",
    "lexicon_hit": null,
    "read_head": "BH LP HEMCKSE KWMOSIN ENTERIC SC TABLETS HONITEN PRIATSPEEN  SR 0006275F PHOA  SM UAGLW1N2 SALARR"
   },
   {
    "gt_name": "Chlorpromazine Hydrochloride Injection 2.5%",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "2.5%",
    "bands": 2,
@@ -1720,11 +2149,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "25%",
    "bands": 2,
@@ -1732,11 +2164,14 @@
    "latin_words": 4,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "SLE SAM 6 BANDELAL EBI 95",
    "lexicon_hit": null,
    "read_head": "SLE SAM 6 BANDELAL EBI 95"
   },
   {
    "gt_name": "20%Dextrose Inj “Astar”",
+   "name_exact": false,
+   "name_token_frac": 0.333,
    "source_type": "leaflet",
    "strength": "20%",
    "bands": 16,
@@ -1744,11 +2179,14 @@
    "latin_words": 31,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "PPAIAEGSNS SE 000686SR 2097051MASEAR RSRE 20DEXTROSE INI ASTAR EX150 E2OCCCDS TZWATER FOR INIECTION S CES HBIED ALESINGS HBANG  K ER 0 HIZ HIT R 10 50C CERERAL REABIEH TSOCGT N ERIN EIDESSP B  LAUSE 20CC X50A SZE EHR150EA BRA 6L RCRNT 67 0",
    "lexicon_hit": "ASTAR",
    "read_head": "PPAIAEGSNS SE 000686SR 2097051MASEAR RSRE 20DEXTROSE INI ASTAR EX150 E2OCCCDS TZWATER FOR INIECTION S CES HBIED ALESINGS HBANG  K ER 0 HIZ HIT R 10 50"
   },
   {
    "gt_name": "50% DEXTROSE INJECTION “Astar”",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "50%",
    "bands": 15,
@@ -1756,11 +2194,14 @@
    "latin_words": 31,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "PIEN  SE0006875R S09 RE KE 6MR 50 DEXTROSEINGECTION ASAR EX001 520OMLPE  KWVATER FOR INLECTION G KAIEBICE FA E1MES ZRBNG KER0 HM25  HBE  8R F1020M GRCKEFUIS REBITER KESBIER  NGSERIPGEEVIEGSSH O KAUSE  20MBX50A  50MIKXGA AE AE SNSEAG 045 HRAO6 TIN AR IUNN R 673820",
    "lexicon_hit": null,
    "read_head": "PIEN  SE0006875R S09 RE KE 6MR 50 DEXTROSEINGECTION ASAR EX001 520OMLPE  KWVATER FOR INLECTION G KAIEBICE FA E1MES ZRBNG KER0 HM25  HBE  8R F1020M GRC"
   },
   {
    "gt_name": "Mellazine S.C.Tablets 25mg",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "leaflet",
    "strength": "25 mg",
    "bands": 3,
@@ -1768,11 +2209,14 @@
    "latin_words": 8,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "O5SBTLETBL W95 MM X H240 MM 1 AM AX LESPURE 252 1MELAZINE SCTNN 25M ",
    "lexicon_hit": null,
    "read_head": "O5SBTLETBL W95 MM X H240 MM 1 AM AX LESPURE 252 1MELAZINE SCTNN 25M "
   },
   {
    "gt_name": "KOTIN Injection \"N.K.\"",
+   "name_exact": false,
+   "name_token_frac": 0.5,
    "source_type": "leaflet",
    "strength": "2mL",
    "bands": 27,
@@ -1780,11 +2224,14 @@
    "latin_words": 66,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "TAT E2 AL LCMN 43X S 6130 KOTIN IMIECION NK SLBER UASAECRNKA2MEBR RAKZR KCOAH BAR S CETPNANTHOBOA FTBEANE A 1N0 CADE SALN  0 HIE OL L TA JA S1714NG UEHIEAR HIEITLET RN 0 T F  BERGVACRHRMNEAT R HRDORS ALT EITHONDIAR2125RACUAMA PE CODALINEZASFR THENZINDST  GOUD GIAN ESRABT N RAYA RED WMAEDRLMAERICE SB022043 COCEPEMNIDELEAL  ERERS KBATAKSTDRE ALEN OM R AA RAN AE  LUTE ENINHIORNRDE ARAR 5 YEA2KR BRABIREUSUAT KAERER BANAIE OIEEBALEAREIE IB K EAEBZA ART 5208 BT Q REEIALBUT 1KR APA REE 253RS SR EHNN BHIGE HH S 08B 2N0 HNE5A JNA N200A PAIALERIN  SE 0007018MP 9T  UA R S T 1A S INIK A ARM RILASPLUB1019E",
    "lexicon_hit": null,
    "read_head": "TAT E2 AL LCMN 43X S 6130 KOTIN IMIECION NK SLBER UASAECRNKA2MEBR RAKZR KCOAH BAR S CETPNANTHOBOA FTBEANE A 1N0 CADE SALN  0 HIE OL L TA JA S1714NG UE"
   },
   {
    "gt_name": "Kotin INJECTION \"N.K.\"",
+   "name_exact": false,
+   "name_token_frac": 0.0,
    "source_type": "carton",
    "strength": "2 mL",
    "bands": 3,
@@ -1792,11 +2239,14 @@
    "latin_words": 3,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "11 IEXNE SNODNE  11 K OEIN",
    "lexicon_hit": null,
    "read_head": "11 IEXNE SNODNE  11 K OEIN"
   },
   {
    "gt_name": "Musclax Tablets 100mg",
+   "name_exact": false,
+   "name_token_frac": 0.667,
    "source_type": "leaflet",
    "strength": "100mg",
    "bands": 6,
@@ -1804,6 +2254,7 @@
    "latin_words": 13,
    "latin_any": true,
    "name_recoverable": false,
+   "read": "ST HG BNL505 BTLHS 55 L OO ESR MUSCLAX TABLETS 100ME EARD  A  C  1 1AAS RCALAN SRCTEG IRN E604268173 SR 042681862",
    "lexicon_hit": null,
    "read_head": "ST HG BNL505 BTLHS 55 L OO ESR MUSCLAX TABLETS 100ME EARD  A  C  1 1AAS RCALAN SRCTEG IRN E604268173 SR 042681862"
   }
