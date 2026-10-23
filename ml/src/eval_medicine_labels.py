@@ -82,7 +82,20 @@ def lexicon_hit(read_text, lex):
     return best
 
 
-def main(n=150):
+def main(n=150, force=False):
+    # Refuse to destroy a bigger result with a smaller run. A 3-record smoke test overwrote the
+    # 150-record artifact once, because the output path is fixed and nothing compared sizes --
+    # the script that validates a run also erased it. ponytail: size check only, no versioning;
+    # pass force=True (or --force) when a smaller run is genuinely the intent.
+    if OUT.exists() and not force:
+        try:
+            prev = json.loads(OUT.read_text(encoding="utf-8")).get("n", 0)
+        except Exception:
+            prev = 0
+        if n < prev:
+            raise SystemExit(
+                "refusing to overwrite %s (n=%d) with a run of n=%d -- pass --force to shrink it"
+                % (OUT.name, prev, n))
     import fsspec
     import pyarrow.parquet as pq
     from PIL import Image
@@ -203,4 +216,5 @@ def main(n=150):
 
 
 if __name__ == "__main__":
-    sys.exit(main(int(sys.argv[1]) if len(sys.argv) > 1 else 150))
+    argv = [a for a in sys.argv[1:] if not a.startswith("--")]
+    sys.exit(main(int(argv[0]) if argv else 150, force="--force" in sys.argv))
