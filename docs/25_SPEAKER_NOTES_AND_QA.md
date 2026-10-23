@@ -12,8 +12,10 @@ from an 18,839-pair licensed zh/en lexicon, the dose from the read text, and the
 from a closed phrase set — and it **refuses to speak what it cannot translate**. Every accuracy
 number in this repo was measured on the **English** read, and every slide that quotes one says
 so. The Cantonese build's **three honest limits are said on stage, not buried**: no Cantonese
-speaker has reviewed the sentences; the drug-name step is unvalidated on real labels; and this
-engine has no Chinese voice, so the app shows the Cantonese text rather than faking one.
+speaker has reviewed the sentences; the drug-name step is now **measured on 150 real medicine
+labels** (10 recovered, **8 verbatim**, 8 lexicon hits — a **floor**, on a Taiwanese corpus, not
+Hong Kong labels); and this engine has no Chinese voice, so the app shows the Cantonese text
+rather than faking one.
 `docs/26_IDEA_REFINED.md` §7 is the canonical statement; the README blockquote carries the same
 sentence.
 
@@ -26,10 +28,10 @@ sentence.
 | 1 | Title | 15 | "We're Team STEMB. This is SightLine: it reads a **medicine label** aloud, on your phone, with no network at all — and it says it back in **Cantonese**. A first Cantonese build ships today: it speaks only what it can translate, and it refuses the rest. Three honest limits on that, which we'll say out loud before you ask." |
 | 2 | The human | 35 | "She is 78. The pharmacy hands her a box of medicine, and two things stop her at once: her eyes can no longer make out the small print, and the label is printed in **English she never learned**. So the dose gets guessed — or it waits for a neighbour who isn't coming today. That's the whole problem, and it's a person, not a statistic." |
 | 3 | Problem at scale | 40 | "It isn't one person. 199,600 people in Hong Kong report long-term seeing difficulty — three in four are over 65, and 188,569 people over 65 live alone. 89.7% of them already carry a smartphone, so this needs no new device. Now add the second barrier: the drug, the strength and the directions are printed **in English**. An app that only magnifies the print leaves half the problem standing, and one that only translates assumes she can see it." |
-| 4 | The solution | 35 | "SightLine runs entirely on the phone. Photograph the medicine label: it reads it, names the drug, the strength and the dose, and **refuses to guess** anything it can't read. **In Cantonese it speaks only what it can translate** — the drug name from an eighteen-thousand-pair licensed zh/en lexicon, the dose from the read text, the directions from a closed set of dispensing phrases — and an unknown name is never guessed. Two limits I'll name now: **no Cantonese speaker has reviewed those sentences yet**, and the drug-name step is **unvalidated on real labels**. Every accuracy number we quote was measured on the English read." |
+| 4 | The solution | 35 | "SightLine runs entirely on the phone. Photograph the medicine label: it reads it, names the drug, the strength and the dose, and **refuses to guess** anything it can't read. **In Cantonese it speaks only what it can translate** — the drug name from an eighteen-thousand-pair licensed zh/en lexicon, the dose from the read text, the directions from a closed set of dispensing phrases — and an unknown name is never guessed. Two limits I'll name now. **No Cantonese speaker has reviewed those sentences yet.** And the drug-name step: we ran it on **150 real medicine labels** and the name came back on **ten**, **eight of them verbatim** — a floor, because these are Taiwanese leaflets and most print no English name at all, not Hong Kong labels. But when the label prints the English name, it lands it **exactly**, and the Chinese around it is noise it correctly ignores. Every accuracy number we quote was measured on the English read." |
 | 5 | **LIVE DEMO** | 90 | Say almost nothing. Airplane mode ON, the medicine box held to the camera. Hand the phone to a judge if you can. Run the hard case too and let it refuse — "I could not read that dose clearly, please check it with a pharmacist." Then: "That refusal is the design. A wrong dose spoken confidently is worse than no dose." |
 | 6 | How it works | 45 | "Camera, line detection, then our own recogniser — a CRNN with CTC, 942,166 parameters, trained from scratch, a 3.6 MB recogniser graph (26.4 MB of models and tokenizer, about 37.2 MiB installed). No OCR library is shipped; a build gate fails the build if one comes back. Then field extraction, then speech. Speech is honest about itself: English by default, and a **first Cantonese build** — a `zh-HK` voice plus that licensed zh/en lexicon, which is why it needed **no Chinese OCR**: the label is already English. On this laptop WebKit has no Chinese voice, so the app **shows** the Cantonese text rather than faking a voice — on the demo phone I'll have checked Settings first." |
-| 7 | Measured results | 50 | **Lead with the honest row: "On a clean page Tesseract reads 95.7% of lines exactly, whole-page, against our 10.6% — and on our own hard captures it beats us too, because the simulator we had been measuring ourselves against turned out to be 17 to 67 times harsher than a real photograph. We found that ourselves and corrected it."** Then: "What ships end to end reads **57.2%** of the words, CER 0.217, 33.3% of the ground-truth fields and 91.7% of the documents classified right — on **twelve synthetic rendered documents, in WebKit**. The 45.9% we used to quote came from a stale set of test images: we keep that row and label it, because 1.7 of the 11.3 points is the benchmark getting more realistic and 9.5 is the retrain — I won't sell those as one gain." Then the case, honestly: "So why ours? One 3.6 MB graph with no second runtime, instead of a second engine plus four megabytes of language data; nothing leaves the phone by construction; and a refusal path — because on a clean page Tesseract read the dose 500mg as 300mg. **On accuracy it beats us everywhere we have measured, including hand-held captures.** A wrong dose spoken confidently is the failure we exist to prevent. Also true: these tables are receipts and synthetic documents, we have no medicine-label corpus yet, and that transfer is an assumption we have not settled." |
+| 7 | Measured results | 50 | **Lead with the honest row: "On a clean page Tesseract reads 95.7% of lines exactly, whole-page, against our 10.6% — and on our own hard captures it beats us too, because the simulator we had been measuring ourselves against turned out to be 17 to 67 times harsher than a real photograph. We found that ourselves and corrected it."** Then: "What ships end to end reads **57.2%** of the words, CER 0.217, 33.3% of the ground-truth fields and 91.7% of the documents classified right — on **twelve synthetic rendered documents, in WebKit**. The 45.9% we used to quote came from a stale set of test images: we keep that row and label it, because 1.7 of the 11.3 points is the benchmark getting more realistic and 9.5 is the retrain — I won't sell those as one gain." Then the case, honestly: "So why ours? One 3.6 MB graph with no second runtime, instead of a second engine plus four megabytes of language data; nothing leaves the phone by construction; and a refusal path — because on a clean page Tesseract read the dose 500mg as 300mg. **On accuracy it beats us everywhere we have measured, including hand-held captures.** A wrong dose spoken confidently is the failure we exist to prevent. Also true: these tables are receipts and synthetic documents, we hold no Hong Kong medicine-label corpus, and that transfer is an assumption we have not settled — the drug-name step is the one part now measured on real labels (150 Taiwanese labels, 10 recovered, 8 verbatim, a floor)." |
 | 8 | What we got wrong | 40 | "We found four defects in our own train/serve contract. The width we served truncated 98.8% of lines. Padding wasn't inert in a bidirectional network. The image transform ran at serve and never at train. And our deskew was applied backwards — it was doubling the tilt. Each one now has a gate that fails the build. **The Cantonese build then caught the same class of error we already fixed once:** the lexicon is built from real labels, so it has entries keyed on dosage forms — our first matcher read the word `TABLET` off our own bench document and confidently offered a specific medicine as the drug. A plausible-looking match that is simply wrong. Fixed with a stop-list of dosage forms; a regression test pins it." |
 | 9 | Impact and policy | 40 | "This is already funded policy. The 2025 Policy Address — the edition the Open Challenge names — commits to AI carer support at Para 75, ophthalmic services at Para 227, and a working group on gerontechnology at Para 266. The 2026 edition followed through with $300 million and $100 million. A carer hearing their own medicine label, on the phone they already own." |
 | 10 | Close | 15 | "It reads the label — or it says it cannot. In Cantonese it speaks only what it can translate. It has not been checked by a Cantonese speaker yet, and either way nothing leaves the phone. Thank you." |
@@ -104,20 +106,24 @@ sentence.
    Verified in WebKit **against the live site**: 14/14. **Three honest limits, and a judge
    should hear them from us:** (1) **not reviewed by a Cantonese speaker** — the sentence frames
    are the author's, not a native copywriter's, and in a product for this audience that is a
-   real gap; (2) **the drug-name step is unvalidated on real labels** — on our own 12-document
-   bench it matched **nothing** honestly, so the lexicon's coverage of what we can actually read
-   is not yet measured; (3) **this engine has no Chinese voice installed**, so the app shows the
-   Cantonese **text** rather than faking a voice with the English one — on the demo phone the
-   voice must be present in Settings, and I checked the device before filming. The reason it is
-   a "first build" and not a patient-facing claim is the rule we set ourselves: no language
-   output goes to patients until it is evaluated per-language with a release floor
+   real gap; (2) **the drug-name step is now measured on real labels, and the number is low** —
+   on **150 real medicine labels** (CC-BY-4.0 Taiwan leaflet corpus) it recovered the name on
+   **10**, **8 verbatim**, the lexicon hitting **8**: a **floor**, because most of those leaflets
+   print no English name at all, and it is a **Taiwanese corpus, not Hong Kong labels** — but the
+   English name lands **exactly** while the Chinese around it becomes noise, which is why no
+   Chinese OCR was ever needed (`ml/src/eval_medicine_labels.py`;
+   `artifacts/medicine_labels_eval.json`); (3) **this engine has no Chinese voice installed**, so
+   the app shows the Cantonese **text** rather than faking a voice with the English one — on the
+   demo phone the voice must be present in Settings, and I checked the device before filming. The
+   reason it is a "first build" and not a patient-facing claim is the rule we set ourselves: no
+   language output goes to patients until it is evaluated per-language with a release floor
    (`docs/26` §4, §7).
 7. **"So what's left before the Cantonese is patient-grade?"** Three things, named: a
-   **Cantonese speaker reviews the sentence frames**; we **measure lexicon coverage against real
-   medicine labels we can actually read** — the CC-BY-4.0 Taiwan leaflet set (72,326 real
-   medicine-label images) is how we settle that instead of promising it; and we set a
-   **per-language release floor** the way we did for English. Until all three, it is a
-   demonstrated build, not a claim.
+   **Cantonese speaker reviews the sentence frames**; we **extend the measurement from 150 real
+   Taiwanese labels to the product's own domain — a Hong Kong label corpus** (the lexicon-coverage
+   question itself is now settled: 10 recovered, 8 verbatim, on the CC-BY-4.0 Taiwan set,
+   `ml/src/eval_medicine_labels.py`); and we set a **per-language release floor** the way we did
+   for English. Until all three, it is a demonstrated build, not a claim.
 8. **"Is this not just Seeing AI / Google Lens?"** Those upload the page to a server. Ours makes
    no network call after install — provable from the service worker in minutes, and by the
    airplane-mode demo.

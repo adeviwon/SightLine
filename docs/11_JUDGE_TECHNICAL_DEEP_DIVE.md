@@ -260,12 +260,22 @@ most misleading thing this project could do.
 
 Three claims we cannot make, in one place:
 
-1. **No medicine-label capability.** Everything measured is receipts +
-   synthetic documents; no medicine corpus exists. Transfer to medicine labels
-   is an untested assumption, not a result.
-2. **No Chinese.** The output alphabet is 37 symbols with **zero CJK** — a
-   bilingual Hong Kong label cannot produce a single correct character, and
-   TTS defaults to `en-GB`. This is the project's open-work item 2.
+1. **No medicine-label capability — now measured, and the number is low.**
+   Everything we *trained* on is receipts and synthetic documents. We have since
+   *evaluated* the shipped graph on one real medicine-label corpus — **150 real
+   labels**, the CC-BY-4.0 Taiwan leaflet set — where the drug name came back on
+   **10, 8 of them verbatim**, the lexicon finding a translatable name on 8. That is
+   a **floor, not a capability**: most of those leaflets print no English name at
+   all, and it is not a Hong Kong corpus. We hold **no HK labels and no
+   medicine-label training data**, so transfer to the labels this product targets is
+   still unproven at product quality (`ml/src/eval_medicine_labels.py`;
+   `artifacts/medicine_labels_eval.json`).
+2. **No Chinese INPUT.** The alphabet is 37 symbols with **zero CJK** — a label whose
+   only text is Chinese cannot produce a single correct character. The **output** now
+   speaks Cantonese (a first build, `app/js/say_cantonese.js`), which is only possible
+   because HK labels print the drug name in English: the app builds the Cantonese
+   sentence from the name and dose it read, and **refuses a name the lexicon cannot
+   translate** rather than guessing. TTS is no longer `en-GB`-only.
 3. **No end-to-end accuracy we would defend on real photos.** Line-exact
    accuracy is **1.8%**; the honest product today is the refusal —
    *"I could not read that — please check with a pharmacist"* — not a spoken

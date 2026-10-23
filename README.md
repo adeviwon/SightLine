@@ -22,9 +22,13 @@ and says it back in Cantonese. No account, no internet, no upload.
 > (`_licence`) and credited here and in [`docs/26_IDEA_REFINED.md`](docs/26_IDEA_REFINED.md).
 >
 > **Its three honest limits:** (1) the sentences have **not been reviewed by a Cantonese
-> speaker** — the frames are the author's, not a native copywriter's; (2) the **drug-name step
-> is unvalidated on real medicine labels** — on our own 12-document bench it matched **nothing**
-> honestly, so the lexicon's coverage of what we can actually read is not yet measured; (3) this
+> speaker** — the frames are the author's, not a native copywriter's; (2) the **drug-name step is
+> now measured on real labels, and the number is low** — run over **150 real medicine labels**
+> (CC-BY-4.0 Taiwan leaflet corpus) the shipped graph recovered the name on **10 (6.9%)**, **8 of
+> them verbatim**, the lexicon hitting **8 (5.6%)**; that is a **floor, not this model's ability**
+> — most of those leaflets print no English name at all, and it is **not a Hong Kong corpus** — but
+> the English name comes through **exactly** while the Chinese around it becomes noise, which is
+> why the idea needed no Chinese OCR; (3) this
 > engine has **no Chinese voice**, so the app **shows the Cantonese text** rather than faking a
 > voice — on a phone the voice must be present in Settings. Every accuracy number in this repo
 > was measured on the **English** read, and says so. It is a first build, not a patient-facing

@@ -413,8 +413,9 @@ changes the pitch from "should help" to "was used". Separately: **the Cantonese 
 Cantonese, with a **refusal** for any name the lexicon cannot translate, which removes the
 "English-only aid for a Cantonese-speaking population" objection from the half of the demo a judge
 actually hears. What remains is not a one-parameter change: no Cantonese speaker has reviewed the
-sentence frames, and the drug-name step is unvalidated on real labels (`docs/26_IDEA_REFINED.md`
-§7).
+sentence frames, and the drug-name step is **now measured on real medicine labels** — 150 of them,
+name recovered on **10**, **8 verbatim**, a floor on a Taiwanese corpus, not Hong Kong labels
+(`docs/26_IDEA_REFINED.md` §7; `ml/src/eval_medicine_labels.py`).
 
 ### Interdisciplinarity
 
@@ -577,7 +578,10 @@ it: field recovery **12.5%** end to end and **0.0%** on `handheld_light` and
 `off_axis` (`docs/14`); the line detector caps everything at **67.9–71.6%** recall
 (`docs/03` §3, `docs/11` §6); line-exact accuracy on real hand-photographed pages
 is **1.8–2.4%**; and three of twenty real pages are resolution-bound and
-unfixable. There is no medicine-label corpus at all (`docs/12` §1, `docs/11` §6).
+unfixable. There is **no Hong Kong medicine-label corpus, and none for training** — the only real
+medicine-label corpus we hold is the CC-BY-4.0 Taiwan leaflet set, and on it the drug-name step now
+has a measured floor: **10 of 150 recovered, 8 verbatim** (`docs/12` §1, `ml/src/eval_medicine_labels.py`,
+`docs/11` §6).
 So the pillar the wording names second — potential impact, the reason the product
 exists — is carried by a prevalence statistic and a clean-scan demo we control.
 A judge who photographs their own prescription is not being adversarial; they are

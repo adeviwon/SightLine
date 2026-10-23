@@ -15,8 +15,9 @@
   SHIPS a first Cantonese output build (drug name from a licensed zh/en lexicon, dose from the
   read text, directions from a closed phrase set; refuses what it cannot translate — 14/14 in
   WebKit against the live site), with its three honest limits stated where the feature is
-  stated (docs/26 §7, docs/25). Every accuracy number in the repo was measured on the ENGLISH
-  read and says so.
+  stated (docs/26 §7, docs/25) — the drug-name step now MEASURED on 150 real medicine labels
+  (10 recovered, 8 verbatim, 8 lexicon hits; a floor, on a Taiwanese corpus, not HK). Every
+  accuracy number in the repo was measured on the ENGLISH read and says so.
 -->
 <style>
 :root{
@@ -182,7 +183,7 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
         <p>Our own recogniser: <b>942,166 parameters</b>, 37 symbols (0-9, A-Z, space). No OCR library, no cloud, no account.</p>
         <p><b>26.7 MB</b> of ONNX on the device. Airplane mode: nothing about their medication leaves the phone.</p>
         <p class="ok"><b>Cantonese ships, a first build:</b> drug name from an <b>18,839-pair licensed zh/en lexicon</b>, dose from the read text, directions from a closed phrase set — and a <b>refusal</b> for a name it cannot translate. WebKit 14/14.</p>
-        <p class="muted">Every accuracy number is the <b>English</b> read. <b>Not yet reviewed by a Cantonese speaker; the drug-name step is unvalidated on real labels</b> (<code>docs/26</code> §7).</p>
+        <p class="muted">Every accuracy number is the <b>English</b> read. On <b>150 real medicine labels</b> the name landed <b>verbatim 8×</b> — a floor (Taiwan, not HK).</p>
       </div>
     </div>
     <div class="phone">
@@ -196,7 +197,7 @@ ol.defects li span.m{color:var(--warn); font-variant-numeric:tabular-nums}
       <div class="refuse">“I could not read the dose clearly. Please check it with a pharmacist — I will not guess.”</div>
     </div>
   </div>
-  <div class="src">[source: artifacts/ocr_training.json (params 942166, charset 37 symbols) · HANDOFF.md §payload (26.7 MB installable) · app/index.html (design tokens and UI) · app/js/tts.js (<code>speak(text, {lang})</code> / <code>pickVoice(lang)</code> / <code>hasVoice(lang)</code> — en-GB default, zh-HK offered) · app/js/say_cantonese.js (18,839-pair lexicon, refusal path) · docs/26_IDEA_REFINED.md §3–§4 (the Cantonese build, the two bugs, the three limits) · app/tools/render_samples.py (the sample label is synthetic, not a real patient’s)]</div>
+  <div class="src">[source: artifacts/ocr_training.json (params 942166, charset 37 symbols) · HANDOFF.md §payload (26.7 MB installable) · app/index.html (design tokens and UI) · app/js/tts.js (<code>speak(text, {lang})</code> / <code>pickVoice(lang)</code> / <code>hasVoice(lang)</code> — en-GB default, zh-HK offered) · app/js/say_cantonese.js (18,839-pair lexicon, refusal path) · docs/26_IDEA_REFINED.md §3–§4, §7–§8 (the Cantonese build, the two bugs, the measured limits — <code>ml/src/eval_medicine_labels.py</code>, <code>artifacts/medicine_labels_eval.json</code>, 150 real labels) · app/tools/render_samples.py (the sample label is synthetic, not a real patient’s)]</div>
 </section>
 
 <!-- 5 — LIVE DEMO -->

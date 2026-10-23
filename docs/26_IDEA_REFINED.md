@@ -130,13 +130,26 @@ The 2026 edition is the funded follow-through: ¶113 ($300M, AI for Welfare Lab)
 1. **It has not been reviewed by a Cantonese speaker.** The sentence frames are the author's,
    not a native copywriter's. In a product for this audience that is a real gap, and a first
    fix, not a footnote.
-2. **The drug-name step is unvalidated on real medicine labels.** Measured on our own
-   12-document bench it matched **nothing** honestly — that corpus is synthetic receipts and
-   statements, and our own reads garble names anyway. The lexicon is licensed and real; **its
-   coverage of what we can actually read is not yet measured.** Transfer to medicine labels
-   remains an untested assumption, and the way to settle it is available: run the CC-BY-4.0
-   Taiwan leaflet set (72,326 real medicine-label images) through the pipeline for a *measured*
-   number instead of a promise.
+2. **The drug-name step is now measured on real medicine labels — and the number is low, so read
+   it with its scope.** We ran the shipped graph (`app/models/crnn.onnx`) over **150 real medicine
+   labels** from `twinkle-ai/tw-drug-labels-vision` (CC-BY-4.0, Taiwan FDA leaflet archive):
+   **10 of 150 (6.9%) recovered the drug name**, **8 verbatim**, and the lexicon found a name on
+   **8 (5.6%)** — the step the Cantonese output depends on. **This is a floor, not this model's
+   ability.** These are Taiwanese leaflets: most print no English name at all, while the dataset
+   names the drug in metadata whether or not the page shows it, so a miss may be a misread *or*
+   absent Latin text. The number describes the only real medicine-label corpus we hold, **not
+   Hong Kong labels.** The finding that matters is inside it: **the recogniser does not need to
+   read Chinese.** When a label prints an English name it lands it **verbatim** — `CALAMINE
+   Lotion → … CALAMINE LOTION …`, `PAILAN ENEMA → … PAILAN ENEMA …`, `BESALBENOL → … BESALBENOL
+   …` — surrounded by text it correctly does not understand. That is the refined idea's mechanism,
+   measured rather than assumed, and why it needed no Chinese OCR. Reproduce it with `python
+   ml/src/eval_medicine_labels.py`; the artifact `artifacts/medicine_labels_eval.json` stores each
+   label's full read text and both verdicts, so every figure is auditable without re-running the
+   model. *(A note on the measurement itself: the verbatim count first read 32 against 10
+   recoveries, which is impossible because a verbatim match IS a recovery —
+   `norm(name) in norm(read)` is `True` when the name is empty, and 24 of the 150 labels carry a
+   blank metadata name. The headline was never affected, which is what made it dangerous. It is
+   fixed, and `verbatim <= recovered` is now asserted when the artifact is written.)*
 3. **No Chinese voice ships with the web engine.** WebKit under Playwright has **no Chinese
    voice installed**, so the app **shows the Cantonese text rather than faking a voice** with
    the English one. On a phone the voice must be present in Settings — an Apple-side
@@ -157,6 +170,7 @@ break in one question and one they can trust.
 | the utterance logic, pure | `node app/js/say_cantonese.js` | **10/10** |
 | the safety property in the real engine, **against the live site** | `SMOKE_BASE=https://adeviwon.github.io/SightLine/ node app/tools/cantonese_verify.js --engine=webkit` | **14/14** |
 | the lexicon contract | `ml/tests/test_drug_lexicon.py` | **7/7** |
+| the drug-name step, **measured on 150 real medicine labels** (a floor, not general accuracy) | `python ml/src/eval_medicine_labels.py` | **10/150 name recovered · 8 verbatim · 8 lexicon hits** — 150 Taiwanese leaflets; artifact `artifacts/medicine_labels_eval.json` |
 | the shipped app, unchanged | `node app/tools/ios_full_check.js --engine=webkit` | **91/91** |
 
 Every one of these asserts the *refusal*, not just the happy path — the reason a wrong dose is

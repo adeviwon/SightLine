@@ -32,9 +32,10 @@ in the first fifteen seconds or you have lost them.
 > the output side: no Chinese OCR is needed, because HK labels print the drug, strength and
 > directions in English. **Every accuracy number in this repo is still measured on the ENGLISH
 > read** — that has not changed — and the feature carries three limits that are stated, not buried:
-> no Cantonese speaker has reviewed the sentence frames, the drug-name step is unvalidated on real
-> labels, and an engine with no zh-HK voice shows the text rather than faking one. The full
-> statement is [`26_IDEA_REFINED.md`](26_IDEA_REFINED.md) §7-8.
+> no Cantonese speaker has reviewed the sentence frames, the drug-name step is now **measured on
+> 150 real medicine labels** — 10 recovered, **8 verbatim**, 8 lexicon hits, a floor on a Taiwanese
+> corpus, not Hong Kong labels — and an engine with no zh-HK voice shows the text rather than faking
+> one. The full statement is [`26_IDEA_REFINED.md`](26_IDEA_REFINED.md) §7-8.
 >
 > We trained **two neural networks to read the page**. The first is a
 > restoration CNN that undoes the motion blur and sensor noise you get holding
