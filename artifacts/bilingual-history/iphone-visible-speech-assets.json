@@ -1,0 +1,9 @@
+{
+  "index.html": true,
+  "assets/reader.css": true,
+  "js/app.js": true,
+  "js/tts.js": true,
+  "js/speech_plan.js": true,
+  "js/i18n.js": true,
+  "sw.js": true
+}

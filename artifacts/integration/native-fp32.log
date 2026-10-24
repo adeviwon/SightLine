@@ -1,0 +1,17 @@
+(node:44661) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file://<repo>/app/js/ppocr_core.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to ~/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+fp32 prescription__studio_clean 1466ms CER 0.0274
+fp32 prescription__handheld_light 1338ms CER 0.1027
+fp32 prescription__off_axis 745ms CER 0.9749
+fp32 prescription__jpeg_social 993ms CER 0.9384
+fp32 banking__studio_clean 1482ms CER 0.0234
+fp32 banking__handheld_light 1203ms CER 0.1231
+fp32 banking__off_axis 872ms CER 0.8726
+fp32 banking__jpeg_social 1065ms CER 0.9851
+fp32 legal__studio_clean 1433ms CER 0.0138
+fp32 legal__handheld_light 1259ms CER 0.1067
+fp32 legal__off_axis 731ms CER 0.9565
+fp32 legal__jpeg_social 1126ms CER 0.9249
+SUMMARY [{"precision":"fp32","prepareMs":591.5114169999999,"meanCER":0.504133463709986}]

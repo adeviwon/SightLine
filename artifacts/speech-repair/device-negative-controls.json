@@ -1,0 +1,78 @@
+[
+  {
+    "name": "chromium",
+    "checks": [
+      {
+        "name": "chromium verified current cache",
+        "ok": true
+      },
+      {
+        "name": "chromium no-SIMD negative control reports incompatibility",
+        "ok": true
+      },
+      {
+        "name": "chromium no speech API is reported without pretending audio worked",
+        "ok": true
+      },
+      {
+        "name": "chromium top exit stays in viewport",
+        "ok": true
+      },
+      {
+        "name": "chromium Escape restores reader",
+        "ok": true
+      },
+      {
+        "name": "chromium checks follow reading appearance",
+        "ok": true
+      },
+      {
+        "name": "chromium narrow checks do not overflow at doubled text",
+        "ok": true
+      },
+      {
+        "name": "chromium no runtime errors",
+        "ok": true
+      }
+    ],
+    "errors": []
+  },
+  {
+    "name": "webkit",
+    "checks": [
+      {
+        "name": "webkit verified current cache",
+        "ok": true
+      },
+      {
+        "name": "webkit no-SIMD negative control reports incompatibility",
+        "ok": true
+      },
+      {
+        "name": "webkit no speech API is reported without pretending audio worked",
+        "ok": true
+      },
+      {
+        "name": "webkit top exit stays in viewport",
+        "ok": true
+      },
+      {
+        "name": "webkit Escape restores reader",
+        "ok": true
+      },
+      {
+        "name": "webkit checks follow reading appearance",
+        "ok": true
+      },
+      {
+        "name": "webkit narrow checks do not overflow at doubled text",
+        "ok": true
+      },
+      {
+        "name": "webkit no runtime errors",
+        "ok": true
+      }
+    ],
+    "errors": []
+  }
+]

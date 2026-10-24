@@ -1,0 +1,68 @@
+TAP version 13
+# (node:44688) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file://<repo>/app/js/ppocr_core.js is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to ~/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: model bytes match the recorded conversion and dictionary
+ok 1 - model bytes match the recorded conversion and dictionary
+  ---
+  duration_ms: 15.017583
+  type: 'test'
+  ...
+# Subtest: CTC uses dictionary offset and preserves decimal punctuation
+ok 2 - CTC uses dictionary offset and preserves decimal punctuation
+  ---
+  duration_ms: 0.296
+  type: 'test'
+  ...
+# Subtest: an incomplete medicine read cannot turn a daily maximum into a spoken dosage
+ok 3 - an incomplete medicine read cannot turn a daily maximum into a spoken dosage
+  ---
+  duration_ms: 0.067542
+  type: 'test'
+  ...
+# Subtest: partially initialized models release sessions when recognizer loading fails
+ok 4 - partially initialized models release sessions when recognizer loading fails
+  ---
+  duration_ms: 0.414333
+  type: 'test'
+  ...
+# Subtest: invalid image dimensions are rejected before inference
+ok 5 - invalid image dimensions are rejected before inference
+  ---
+  duration_ms: 0.592125
+  type: 'test'
+  ...
+# Subtest: busy calls cannot overlap; successful result preserves engine identity
+ok 6 - busy calls cannot overlap; successful result preserves engine identity
+  ---
+  duration_ms: 0.986125
+  type: 'test'
+  ...
+# Subtest: a timeout terminates unfinished WASM and allows a clean retry
+ok 7 - a timeout terminates unfinished WASM and allows a clean retry
+  ---
+  duration_ms: 5.955709
+  type: 'test'
+  ...
+# Subtest: reset cancels an active scan and unavailable workers fail with an action
+ok 8 - reset cancels an active scan and unavailable workers fail with an action
+  ---
+  duration_ms: 0.374
+  type: 'test'
+  ...
+# Subtest: speech fields cannot turn lookalike characters into an invented dose
+ok 9 - speech fields cannot turn lookalike characters into an invented dose
+  ---
+  duration_ms: 3.447417
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 104.241542

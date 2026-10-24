@@ -1,0 +1,486 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project ios/SightLine.xcodeproj -scheme SightLine -configuration Debug -destination "platform=iOS Simulator,id=0BED3E95-24CC-4924-826D-562BF2A4943D" -derivedDataPath /tmp/sightline-bilingual-xcode build
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'SightLine' in project 'SightLine' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 <repo>/ios/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 9852340d016ba5edbc948ddb3b672bfa
+Build description path: /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/XCBuildData/9852340d016ba5edbc948ddb3b672bfa.xcbuilddata
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/ModuleCache.noindex
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/ModuleCache.noindex
+
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/CompilationCache.noindex
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/CompilationCache.noindex
+
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/Build/Products
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/Build/Products
+
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk /tmp/sightline-bilingual-xcode/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache
+    cd <repo>/ios/SightLine.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -o /tmp/sightline-bilingual-xcode/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache
+
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator
+
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/ExplicitPrecompiledModules
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/PrecompiledHeaders
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/PrecompiledHeaders
+
+CreateBuildDirectory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine-4a135435cb5d97a05460818d32a3bdcf-VFS-iphonesimulator/all-product-headers.yaml
+    cd <repo>/ios/SightLine.xcodeproj
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine-4a135435cb5d97a05460818d32a3bdcf-VFS-iphonesimulator/all-product-headers.yaml
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.hmap
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyStaticMetadataFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyMetadataFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-non-framework-target-headers.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibPath-normal-arm64.txt (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibInstallName-normal-arm64.txt (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftConstValuesFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.LinkFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.LinkFileList
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json
+
+MkDir /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /bin/mkdir -p /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app
+
+WriteAuxiliaryFile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/Entitlements-Simulated.plist (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/Entitlements-Simulated.plist
+
+ProcessProductPackaging "" /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    
+    Entitlements:
+    
+    {
+    "application-identifier" = "G96K6P43KC.com.sightline.reader";
+}
+    
+    builtin-productPackagingUtility -entitlements -format xml -o /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent
+
+ProcessProductPackagingDER /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent.der (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /usr/bin/derq query -f xml -i /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent -o /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent.der --raw
+
+Ld /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/__preview.dylib normal (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0-simulator -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -F/tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -install_name @rpath/SightLine.debug.dylib -Xlinker -dead_strip -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_dependency_info.dat -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __ents_der -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent.der -Xlinker -no_adhoc_codesign -o /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/__preview.dylib
+
+CpResource /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/app <repo>/app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks <repo>/app /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app
+
+GenerateAssetSymbols <repo>/ios/Assets.xcassets (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool <repo>/ios/Assets.xcassets --compile /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_dependencies --output-partial-info-plist /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist --app-icon AppIcon --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --target-device ipad --minimum-deployment-target 17.0 --platform iphonesimulator --bundle-identifier com.sightline.reader --generate-swift-asset-symbol-extensions NO --generate-swift-asset-symbols /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/* com.apple.actool.compilation-results */
+/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.h
+/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift
+
+
+MkDir /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /bin/mkdir -p /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned
+
+MkDir /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/unthinned (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /bin/mkdir -p /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/unthinned
+
+CompileAssetCatalogVariant thinned /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app <repo>/ios/Assets.xcassets (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool <repo>/ios/Assets.xcassets --compile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_dependencies_thinned --output-partial-info-plist /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist_thinned --app-icon AppIcon --compress-pngs --enable-on-demand-resources YES --filter-for-thinning-device-configuration iPhone18,3 --filter-for-device-os-version 27.0 --development-region en --target-device iphone --target-device ipad --minimum-deployment-target 17.0 --platform iphonesimulator
+/* com.apple.actool.compilation-results */
+/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist_thinned
+/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned/AppIcon60x60@2x.png
+/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned/AppIcon76x76@2x~ipad.png
+/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned/Assets.car
+
+
+SwiftDriver SightLine normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SightLine -Onone @/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /tmp/sightline-bilingual-xcode/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/sightline-bilingual-xcode/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -F /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/sightline-bilingual-xcode/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/sightline-bilingual-xcode/ModuleCache.noindex -sdk-module-cache-path /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/sightline-bilingual-xcode/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap -Xcc -I/tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources-normal/arm64 -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/arm64 -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h -working-directory <repo>/ios -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_stdarg-2TA19FXYNU1Z4IMX9EFB7WDQ0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_AvailabilityInternal-5U48RDZQUUR2J2MA2A287IPPO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/ptrauth-2AI0CQQBK79ZBQ1TGL6XZMID3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-1ZJ46RW4Z2MP60KTIV64M4WJ9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_stdbool-B7RK5G2PW89C6SR3P2EDGDYBP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_float-EM7U2QF932RWOZXAM2E9SAYNN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/SwiftShims-6A8GCGJM7DS8V6YSN40ZPAN7X.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/DeveloperToolsSupport-41KP038QLXDDC4DQ38R53DLF0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/ptrcheck-56B23X3V7XZZR13I9G9IU26E1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_stddef-82AUO5DI8QY8UF9SXGQ67NSIO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_DarwinFoundation1-6SIZP3I8SK8GAZF7DXNQLDXLQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_DarwinFoundation2-384OT6UIY7ZWWMBOND3V489LK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_limits-3XG9N5U90U3UEPRN5YNJ9CV8Y.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_stdint-2TCC1ITJ1NM6FI2L3AVQHU57T.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/string_h-855I13YG0CFGPL86SFVXDWUCW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/sys_types-64Q1L4R01357JXL5E9HUVKFYR.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_tgmath-WTC672VOTJWE5699F1OTJZEQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_intrinsics-7BNTJVYN2GSIBUP65LP87728T.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_DarwinFoundation3-DI1JPVTPWWUKWLKM6RDILLUU9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_stdatomic-9HBUFJ2VFKD4ZVXPIH4DKMYBJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_Builtin_inttypes-I5YTHMQ421RQ5XAOR7DUMOPL.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/Darwin-8031LQTZLZQFZDY87QWTO6R03.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/simd-AFTONB1BMPV6IUSKVA70PEA10.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/MachO-EFD2TVTVZDO0X9NHIFPL2W2XF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/ObjectiveC-2A9C2JGQJW0KYHP4LMDVCKU50.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/Spatial-69WWCS7T67OBZSF8ML92NHNNN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/os_object-D17BPEE677YP0S1M5HL9U4RVV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/os_workgroup-85EVT2AZJJZ6MLHWRB7XR5CI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/Dispatch-8LTX1ZG1ZQ6CT4ME01YPRFET7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/dnssd-9KOM9ZFEGPFWBWYXO10B09L66.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/XPC-E1A00LP7EELMUHL338D98JS5W.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreFoundation-2NDNDHSHGT1V0OFNF25Y6JTEB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/os-5P1T4DSWSP3VUJESE2F09LEDK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreGraphics-DDO0DPLU99VWMT159Y1P7C716.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/Security-8V7MVT4W8MJVRO4904CA40ZGJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreAudioTypes-2OBWR2J92W93GEHK4CKQU8EXM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CFNetwork-56YIOEX1MZCM8MG4QWJ5MB57D.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreAudio-68D6ABPKG950WESBMJQTS2WER.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/Foundation-A2GEDRIJ0ZFE37OIB6UXX5UH8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreText-2EGMRNSWZYWN0LOSROXTMJGIN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/ImageIO-BMEQ6TEY32APQNMW3K0HMEY2F.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/Symbols-3NCRTPTZU1E6GEAQ44NWODNZ7.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/DataDetection-DK280PEDURB968X139XEF39RY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreTransferable-4NQOVZNAAQCZFF1S5CWPC7RI5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/Accessibility-A0522F3H2UZI85T5GYRAGV9U8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/FileProvider-COV2B0VIXKW71OI4Y2XJ070ZN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreData-EKHLW5ABTEAX2KJM4NZP3POS0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/IOSurface-9T5AJUIB9HJ1BY9A8KC6LLIGQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/UserNotifications-EICB9WZEW5THANXUOEHY6ZYJ5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/UIUtilities-CBGNCNW1V126IHKSPFWLXPB3K.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/OSLog-7LGFZSCBCJRSI2RP4CVDN2LZH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/OpenGLES-DS3ZY1EBVPH1NVIX6KLWK4A1I.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/_LocationEssentials-BFUUYB3B92BTR9XDQ54I81B7M.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/Network-645LZOIQ9YOIYLGWP1SR9D21C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/Metal-7A4WW1MXFM7ATJ7209TJU13VY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-ANIWZAPZHDLKQKL8I4CASFLRH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreLocation-7X60NS3YNPCVY0TFO6GUOKVF4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreMotion-6A3TP0KV1SIJ24ZN1WUTPXG2N.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreVideo-186EM0HRJP7PEMHO489ZL5VP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreImage-5Y7RPQ5WU41P2E3MN0UTU9Q0X.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/QuartzCore-A9I059TRNV5X8TVOGN4G2D3AB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/CoreMedia-9Y0PK3PP6HUAF77V7S6K7T21L.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/SwiftUICore-8JEYX2Q7312IL5J2KXJQG2K0B.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/UIKit-46LCVJGDK8E4F5SKAQV5FJXSP.pcm
+
+LinkAssetCatalog <repo>/ios/Assets.xcassets (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-linkAssetCatalog --thinned /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned --thinned-dependencies /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist_thinned --unthinned /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/unthinned --unthinned-dependencies /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist_unthinned --output /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app --plist-output /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist
+note: Emplaced /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/Assets.car (in target 'SightLine' from project 'SightLine')
+note: Emplaced /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/AppIcon76x76@2x~ipad.png (in target 'SightLine' from project 'SightLine')
+note: Emplaced /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/AppIcon60x60@2x.png (in target 'SightLine' from project 'SightLine')
+
+ProcessInfoPlistFile /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist <repo>/ios/Generated/Info.plist (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-infoPlistUtility <repo>/ios/Generated/Info.plist -producttype com.apple.product-type.application -genpkginfo /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist -o /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/WebKit-8UW170KAC1FHTQ2U9MJS57Q3H.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules/SwiftUI-APYJ7IA86XS65HAA3H2QI9CKF.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ SightLine (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    
+
+SwiftCompile normal arm64 Compiling\ OfflineAssets.swift <repo>/ios/Sources/OfflineAssets.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 <repo>/ios/Sources/OfflineAssets.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile OfflineAssets.swift
+
+SwiftCompile normal arm64 Compiling\ GeneratedAssetSymbols.swift /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile GeneratedAssetSymbols.swift
+
+SwiftCompile normal arm64 Compiling\ SightLineApp.swift <repo>/ios/Sources/SightLineApp.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 <repo>/ios/Sources/SightLineApp.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile SightLineApp.swift
+
+SwiftCompile normal arm64 Compiling\ WebAssetServer.swift <repo>/ios/Sources/WebAssetServer.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 <repo>/ios/Sources/WebAssetServer.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile WebAssetServer.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for SightLine (in target 'SightLine' from project 'SightLine')
+
+SwiftDriver\ Compilation\ Requirements SightLine normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SightLine -Onone @/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /tmp/sightline-bilingual-xcode/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/sightline-bilingual-xcode/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -F /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/sightline-bilingual-xcode/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/sightline-bilingual-xcode/ModuleCache.noindex -sdk-module-cache-path /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/sightline-bilingual-xcode/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap -Xcc -I/tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources-normal/arm64 -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/arm64 -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h -working-directory <repo>/ios -experimental-emit-module-separately -disable-cmo
+
+SwiftMergeGeneratedHeaders /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/SightLine-Swift.h /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-swiftHeaderTool -arch arm64 /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h -o /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/SightLine-Swift.h
+
+Copy /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.swiftdoc /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftdoc (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftdoc /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Copy /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.abi.json /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.abi.json (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.abi.json /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftsourceinfo (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftsourceinfo /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+SwiftDriverJobDiscovery normal arm64 Compiling GeneratedAssetSymbols.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WebAssetServer.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal arm64 Compiling OfflineAssets.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal arm64 Compiling SightLineApp.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriver\ Compilation SightLine normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SightLine -Onone @/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /tmp/sightline-bilingual-xcode/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/sightline-bilingual-xcode/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -F /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/sightline-bilingual-xcode/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/sightline-bilingual-xcode/ModuleCache.noindex -sdk-module-cache-path /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/sightline-bilingual-xcode/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap -Xcc -I/tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources-normal/arm64 -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/arm64 -Xcc -I/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h -working-directory <repo>/ios -experimental-emit-module-separately -disable-cmo
+
+Ld /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib normal (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0-simulator -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -F/tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -filelist /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.LinkFileList -install_name @rpath/SightLine.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -Xlinker -no_adhoc_codesign -o /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib
+
+ConstructStubExecutorLinkFileList /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-ExecutorLinkFileList-normal-arm64.txt (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    construct-stub-executor-link-file-list /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'SightLine' from project 'SightLine')
+
+Ld /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine normal (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0-simulator -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -F/tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-ExecutorLinkFileList-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __ents_der -Xlinker /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.app-Simulated.xcent.der /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib -Xlinker -no_adhoc_codesign -o /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine
+
+CopySwiftLibs /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib --scan-folder /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/Frameworks --scan-folder /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/PlugIns --scan-folder /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SystemExtensions --scan-folder /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/Extensions --platform iphonesimulator --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+ExtractAppIntentsMetadata (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name SightLine --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk --xcode-version 27A9275 --platform-family iOS --deployment-target 17.0 --bundle-identifier com.sightline.reader --output /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app --target-triple arm64-apple-ios17.0-simulator --binary-file /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine --dependency-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_dependency_info.dat --stringsdata-file /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList --metadata-file-list /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyMetadataFileList --static-metadata-file-list /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-24 12:01:19.305 appintentsmetadataprocessor[11227:149566] Starting appintentsmetadataprocessor export
+2026-10-24 12:01:19.315 appintentsmetadataprocessor[11227:149566] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+AppIntentsSSUTraining (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist --temp-dir-path /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/ssu --bundle-id com.sightline.reader --product-path /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app --extracted-metadata-path /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/Metadata.appintents --metadata-file-list /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyMetadataFileList --source-file /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist --archive-ssu-assets
+2026-10-24 12:01:19.386 appintentsnltrainingprocessor[11228:149570] Parsing options for appintentsnltrainingprocessor
+2026-10-24 12:01:19.386 appintentsnltrainingprocessor[11228:149570] Starting AppIntents SSU YAML Generation
+2026-10-24 12:01:19.388 appintentsnltrainingprocessor[11228:149570] No AppShortcuts found - Skipping.
+
+CodeSign /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib
+
+CodeSign /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/__preview.dylib (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app/__preview.dylib
+
+CodeSign /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app
+
+RegisterExecutionPolicyException /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-RegisterExecutionPolicyException /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app
+
+Validate /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-validationUtility /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app -shallow-bundle -infoplist-subpath Info.plist
+
+Touch /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /usr/bin/touch -c /tmp/sightline-bilingual-xcode/Build/Products/Debug-iphonesimulator/SightLine.app
+
+PruneExplicitPrecompiledModules /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/sightline-bilingual-xcode/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/sightline-bilingual-xcode/SDKExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+

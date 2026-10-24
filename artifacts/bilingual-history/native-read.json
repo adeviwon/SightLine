@@ -1,0 +1,1 @@
+{"phase":"read","passed":true,"origin":"http://127.0.0.1:19193","offline":true,"engine":{"restorer":"none","classifier":"onnx","ocr":"ppocrv5"}}

@@ -1,0 +1,8 @@
+
+per-vector-type (python vs javascript):
+  extract      36 passed
+  lines         6 passed
+  spot       2114 passed
+  value        19 passed
+
+field spot contract: 2175 vectors, 2175 passed, 0 FAILED

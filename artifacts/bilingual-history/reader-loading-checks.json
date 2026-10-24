@@ -1,0 +1,72 @@
+[
+  {
+    "engine": "chromium",
+    "label": "module failure is detected before opening the photo picker",
+    "pass": true
+  },
+  {
+    "engine": "chromium",
+    "label": "JavaScript warmup does not load weights or compile WASM",
+    "pass": true
+  },
+  {
+    "engine": "chromium",
+    "label": "loading failure never blames photo quality or displays developer jargon",
+    "pass": true
+  },
+  {
+    "engine": "chromium",
+    "label": "failed module has a reload action and no stale OCR result",
+    "pass": true
+  },
+  {
+    "engine": "chromium",
+    "label": "recovery controls are localized",
+    "pass": true
+  },
+  {
+    "engine": "chromium",
+    "label": "reload recovers the module graph and preserves language",
+    "pass": true
+  },
+  {
+    "engine": "chromium",
+    "label": "a real receipt runs PP-OCRv5 after recovery",
+    "pass": true
+  },
+  {
+    "engine": "webkit",
+    "label": "module failure is detected before opening the photo picker",
+    "pass": true
+  },
+  {
+    "engine": "webkit",
+    "label": "JavaScript warmup does not load weights or compile WASM",
+    "pass": true
+  },
+  {
+    "engine": "webkit",
+    "label": "loading failure never blames photo quality or displays developer jargon",
+    "pass": true
+  },
+  {
+    "engine": "webkit",
+    "label": "failed module has a reload action and no stale OCR result",
+    "pass": true
+  },
+  {
+    "engine": "webkit",
+    "label": "recovery controls are localized",
+    "pass": true
+  },
+  {
+    "engine": "webkit",
+    "label": "reload recovers the module graph and preserves language",
+    "pass": true
+  },
+  {
+    "engine": "webkit",
+    "label": "a real receipt runs PP-OCRv5 after recovery",
+    "pass": true
+  }
+]

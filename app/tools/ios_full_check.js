@@ -36,6 +36,7 @@ const chromeBin = require("./chrome_path.js");
 
 // ── static server over app/ ──────────────────────────────────────────────────
 const MIME = {
+  ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml",
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
   ".mjs": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
   ".wasm": "application/wasm", ".png": "image/png", ".ico": "image/x-icon",
@@ -142,7 +143,7 @@ async function scanFile(page, file) {
       // The app writes the literal placeholder into #ocr-text when nothing was
       // recognised, so a length check ALONE passes on an empty read.
       ocrText: ocrEl ? (ocrEl.textContent || "").trim() : "",
-      ocrRead: !!ocrEl && !/^\(no text recognised\)$/.test((ocrEl.textContent || "").trim()),
+      ocrRead: !!(lr && (lr.ocrText || "").trim()),
       lastResult: lr ? {
         category: lr.category, categoryLabel: lr.categoryLabel,
         // understand() DOES return ocrText (it is rawText in pipeline.js); the
@@ -300,11 +301,15 @@ suite("release — dispose() then scan again (iOS memory path)", async (ctx, R) 
   const page = ctx.page;
   await page.goto(ctx.base + "/index.html", { waitUntil: "load" });
   await page.waitForTimeout(1500);
+  // This contract inspects recognizer.js sessions: exercise Original reader
+  // explicitly now that the default PP reader lives in its own worker.
+  await page.selectOption("#ocr-model", "crnn", { force: true });
 
   for (const round of [1, 2, 3]) {
     const r = await scanFile(page, SAMP_DOC("banking", "studio_clean"));
     R.check("round " + round + ": scan produced a result", !!r.lastResult && !r.error,
       r.error || JSON.stringify(r.lastResult && r.lastResult.fields));
+    R.check("round " + round + ": original CRNN selected", r.lastResult?.engine?.ocr === "crnn", JSON.stringify(r.lastResult?.engine));
     const before = await recogniserReady(page);
     R.check("round " + round + ": recogniser is ready mid-flight", before.ready === true, JSON.stringify(before));
     await page.evaluate(async () => { await window.SightLine.dispose(); });
@@ -335,6 +340,7 @@ suite("no-simd device — the iOS < 16.4 path explains itself", async (ctx, R) =
   });
   await page.goto(ctx.base + "/index.html", { waitUntil: "load" });
   await page.waitForTimeout(1200);
+  await page.selectOption("#ocr-model", "crnn", { force: true });
 
   const probe = await page.evaluate(async () => {
     const m = await import("./js/recognizer.js");
@@ -474,7 +480,11 @@ suite("pagehide — the iOS memory release actually fires", async (ctx, R) => {
   const page = ctx.page;
   await page.goto(ctx.base + "/index.html", { waitUntil: "load" });
   await page.waitForTimeout(1500);
-  await scanFile(page, SAMP_DOC("legal", "studio_clean"));
+  // This contract inspects recognizer.js sessions: exercise Original reader
+  // explicitly now that the default PP reader lives in its own worker.
+  await page.selectOption("#ocr-model", "crnn", { force: true });
+  const first = await scanFile(page, SAMP_DOC("legal", "studio_clean"));
+  R.check("pagehide contract exercises the original CRNN", first.lastResult?.engine?.ocr === "crnn", JSON.stringify(first.lastResult?.engine));
   const before = await recogniserReady(page);
   R.check("recogniser ready before pagehide", before.ready === true, JSON.stringify(before));
 
@@ -509,7 +519,11 @@ suite("geometry — what the recogniser is actually fed", async (ctx, R) => {
     c.width = img.naturalWidth; c.height = img.naturalHeight;
     c.getContext("2d", { willReadFrequently: true }).drawImage(img, 0, 0);
     const pp = window.SightLine.preprocess(c, 3200, {});
-    const cv = pp.canvas;
+    // Inspect the candidate the ORIGINAL reader actually selects, rather than
+    // the legacy pp.canvas convenience image (CLAHE, often not selected).
+    const result = await window.SightLine.runOCR(pp.candidates, undefined, { engine: "crnn" });
+    const cv = pp.candidates[result.psmRank];
+    const recognizer = await import("./js/recognizer.js");
     const d = cv.getContext("2d", { willReadFrequently: true }).getImageData(0, 0, cv.width, cv.height).data;
     const gray = new Uint8Array(cv.width * cv.height);
     for (let i = 0, p = 0; i < gray.length; i++, p += 4) {
@@ -518,7 +532,7 @@ suite("geometry — what the recogniser is actually fed", async (ctx, R) => {
     const boxes = layout.detectLines(gray, cv.width, cv.height);
     // EXPORT_W = 256 in recognizer.js, and ocr_engine passes it as maxW.
     const crops = boxes.map((b) => {
-      const cr = layout.cropForRecognizer(gray, cv.width, b, 32, 256);
+      const cr = layout.cropForRecognizer(gray, cv.width, b, recognizer.CROP_H, recognizer.EXPORT_W);
       const rows = cr.data.length / cr.width;              // always 32
       let filled = 0;
       for (let y = 0; y < rows; y++) {
@@ -526,9 +540,10 @@ suite("geometry — what the recogniser is actually fed", async (ctx, R) => {
       }
       return { bw: b.x1 - b.x0, bh: b.y1 - b.y0, nw: cr.width, filledRows: filled };
     });
-    return { page: cv.width + "x" + cv.height, lines: boxes.length, crops };
+    return { page: cv.width + "x" + cv.height, lines: boxes.length, crops, engine: result.engine, candidate: result.psmRank };
   });
 
+  R.check("geometry is measured on the actual CRNN-selected candidate", geom.engine === "crnn", JSON.stringify(geom));
   R.check("the detector finds text lines on the page", geom.lines > 0,
     geom.lines + " lines on " + geom.page);
   const withCrop = (geom.crops || []).filter((c) => c.bw > 0);
@@ -550,8 +565,8 @@ suite("cold install — install online, airplane mode before the FIRST scan", as
   // The documented offline rehearsal (docs/04 §4) is: load, SCAN ONCE, then
   // airplane mode. This suite is the case that comes *before* that: a fresh
   // install that has never scanned, taken offline. The engine modules are
-  // precached, so the app boots and the failure must be honest and actionable
-  // rather than a hang or a generic "scan failed".
+  // precached along with both readers' weights/runtime. A first scan must now
+  // SUCCEED offline; the old expectation of a missing-model failure is obsolete.
   const context = ctx.rawContext;
   const page = await context.newPage();
   await page.goto(ctx.base + "/index.html", { waitUntil: "load" });
@@ -574,9 +589,10 @@ suite("cold install — install online, airplane mode before the FIRST scan", as
 
   const r = await scanFile(page, SAMP_DOC("banking", "studio_clean"));
   const msg = r.error || "";
-  R.check("a never-scanned install fails offline with a message that names the cause",
-    !r.timedOut && !!msg && /fetch|load|module|model|network|offline/i.test(msg),
-    r.timedOut ? "timed out instead of reporting" : msg);
+  R.check("a never-scanned install completes its FIRST scan offline",
+    !r.timedOut && !msg && !!r.lastResult && r.resultsShown, msg || JSON.stringify(r.lastResult));
+  R.check("cold offline first scan genuinely uses the default PP-OCRv5 reader",
+    r.lastResult?.engine?.ocr === "ppocrv5", JSON.stringify(r.lastResult?.engine));
   await context.setOffline(false);
   await page.close();
 });

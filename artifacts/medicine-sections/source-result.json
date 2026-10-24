@@ -1,0 +1,141 @@
+{
+  "ocrText": "AMOXICILLIN\n500 mg capsules\nTake one capsule three times daily\nKeep out of reach of children\nSYNTHETIC TEST LABEL",
+  "normalized": "AMOXICILLIN\n500 mg capsules\nTake one capsule three times daily\nKeep out of reach of children\nSYNTHETIC TEST LABEL",
+  "category": "medical",
+  "categoryLabel": "Medical Prescription",
+  "classificationConfidence": 0.3786638379096985,
+  "classificationSource": "minilm",
+  "documentEvidence": 3,
+  "fields": [
+    {
+      "label": "Dosage",
+      "value": "500 mg",
+      "confidence": 0.88
+    },
+    {
+      "label": "Frequency",
+      "value": "three times daily",
+      "confidence": 0.88
+    },
+    {
+      "label": "Warning",
+      "value": "Keep out of reach of children",
+      "confidence": 0.88
+    }
+  ],
+  "entities": [
+    {
+      "label": "DRUG",
+      "text": "Amoxicillin",
+      "confidence": 0.9
+    },
+    {
+      "label": "DOSAGE",
+      "text": "500 mg",
+      "confidence": 0.9
+    }
+  ],
+  "summary": "This is a medical prescription. Dosages: 500 mg. Frequency: three times daily. Warning: Keep out of reach of children",
+  "documentDiagnostics": {
+    "source": "aria-weighted-keywords",
+    "type": "prescription",
+    "scores": {
+      "receipt": 0,
+      "prescription": 9
+    },
+    "ranked": [
+      "prescription",
+      "receipt"
+    ],
+    "confidence": 1,
+    "evidence": [
+      "Take one",
+      "500 mg",
+      "three times daily"
+    ],
+    "reason": "weighted score 9 for prescription vs 0 for receipt",
+    "ocrConfidence": 0.9864506723807274,
+    "confidenceSource": "live-inference",
+    "rejected": []
+  },
+  "ocrWords": [
+    {
+      "text": "AMOXICILLIN",
+      "confidence": 0.9943014004013755,
+      "bbox": {
+        "x0": 65,
+        "y0": 63,
+        "x1": 427,
+        "y1": 127
+      }
+    },
+    {
+      "text": "500 mg capsules",
+      "confidence": 0.9968995054562887,
+      "bbox": {
+        "x0": 67,
+        "y0": 160,
+        "x1": 456,
+        "y1": 227
+      }
+    },
+    {
+      "text": "Take one capsule three times daily",
+      "confidence": 0.9925443232059479,
+      "bbox": {
+        "x0": 66,
+        "y0": 267,
+        "x1": 710,
+        "y1": 327
+      }
+    },
+    {
+      "text": "Keep out of reach of children",
+      "confidence": 0.9722039802321072,
+      "bbox": {
+        "x0": 68,
+        "y0": 370,
+        "x1": 597,
+        "y1": 424
+      }
+    },
+    {
+      "text": "SYNTHETIC TEST LABEL",
+      "confidence": 0.9763041526079178,
+      "bbox": {
+        "x0": 66,
+        "y0": 507,
+        "x1": 351,
+        "y1": 541
+      }
+    }
+  ],
+  "ocrLatencyMs": 534,
+  "ocrConfidence": 0.9864506723807274,
+  "speechText": "AMOXICILLIN\n500 mg capsules\nTake one capsule three times daily\nKeep out of reach of children\nSYNTHETIC TEST LABEL",
+  "warnings": [],
+  "quality": 1,
+  "imageDims": "1100×620",
+  "skew": 0,
+  "engine": {
+    "restorer": "none",
+    "classifier": "onnx",
+    "ocr": "ppocrv5"
+  },
+  "sourceName": "synthetic-single-label.png",
+  "pageNote": null,
+  "ms": 1313,
+  "modelProbs": {
+    "banking": 0.1993331015110016,
+    "medical": 0.3786638379096985,
+    "legal": 0.18423055112361908,
+    "general": 0.23777249455451965
+  },
+  "timestamp": "2026-10-24T05:44:34.045Z",
+  "speechEligibility": {
+    "eligible": true,
+    "source": "complete-document",
+    "text": "AMOXICILLIN\n500 mg capsules\nTake one capsule three times daily\nKeep out of reach of children\nSYNTHETIC TEST LABEL",
+    "reason": ""
+  }
+}

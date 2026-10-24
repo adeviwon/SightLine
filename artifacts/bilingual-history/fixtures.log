@@ -1,0 +1,17 @@
+  /tmp/sightline_samples/prescription__studio_clean.png  (900, 580)
+  /tmp/sightline_samples/prescription__handheld_light.png  (900, 580)
+  /tmp/sightline_samples/prescription__off_axis.png  (900, 580)
+  /tmp/sightline_samples/prescription__jpeg_social.png  (900, 580)
+  /tmp/sightline_samples/banking__studio_clean.png  (900, 640)
+  /tmp/sightline_samples/banking__handheld_light.png  (900, 640)
+  /tmp/sightline_samples/banking__off_axis.png  (900, 640)
+  /tmp/sightline_samples/banking__jpeg_social.png  (900, 640)
+  /tmp/sightline_samples/legal__studio_clean.png  (900, 580)
+  /tmp/sightline_samples/legal__handheld_light.png  (900, 580)
+  /tmp/sightline_samples/legal__off_axis.png  (900, 580)
+  /tmp/sightline_samples/legal__jpeg_social.png  (900, 580)
+
+wrote manifest: /tmp/sightline_samples/manifest.json
+  from evaluate.FIELDS / evaluate.DOC_CATEGORY, with the rendered text
+PDF fixture font: /System/Library/Fonts/Supplemental/Arial.ttf
+ok: /tmp/blank.png /tmp/noise.png /tmp/letter.pdf (letter 612x792pt, 46px text)

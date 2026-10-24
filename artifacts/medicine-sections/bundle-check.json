@@ -1,0 +1,8 @@
+{
+  "js/medicine_sections.js": true,
+  "js/app.js": true,
+  "js/field_localization.js": true,
+  "js/i18n.js": true,
+  "index.html": true,
+  "sw.js": true
+}

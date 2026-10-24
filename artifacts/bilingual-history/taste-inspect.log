@@ -1,0 +1,23 @@
+TASTESKILL · INSPECT   http://127.0.0.1:8151
+
+MEASURED (first viewport listed)
+  hero headline   "Sight Line"  2 words · 1 line(s) · 24px (7.5vw) · -apple-system 450 · tracking -0.05em · leading 1.55
+  @390px          2 line(s) · 38px
+  @1440px          2 line(s) · 48px
+  typefaces       -apple-system 100%
+  sizes in use    15 / 16 / 17 / 19 / 20 / 24 / 32 px   body 20px / 1.5
+  colour          page #f7f8f5 · sections #e5f1f5 · button #ffffff
+  page            5.2 screens · 77 words · 2 images · hero media none
+  headings        2 · longest 2 line(s) · median 6 words
+
+FINDINGS  none. Measurements are clean — now judge the pictures.
+LOOK AT THE RENDER — open these with your image viewer / Read tool before saying anything about quality:
+  mobile 320px    artifacts/bilingual-history/taste-home/mobile-fold.jpg
+                  artifacts/bilingual-history/taste-home/mobile-page-01.jpg
+  mobile 390px    artifacts/bilingual-history/taste-home/mobile-fold.jpg
+                  artifacts/bilingual-history/taste-home/mobile-page-01.jpg
+  desktop 1440px  artifacts/bilingual-history/taste-home/desktop-fold.jpg
+                  artifacts/bilingual-history/taste-home/desktop-page-01.jpg
+
+report: artifacts/bilingual-history/taste-home/report.json
+RESULT: 0 FAIL, 0 WARN — measurements pass. Passing the meter is the floor, not the grade: score the screenshots with references/critique.md.

@@ -1,0 +1,18 @@
+
+[webkit] geometry — what the recogniser is actually fed
+  ok    geometry is measured on the actual CRNN-selected candidate
+  ok    the detector finds text lines on the page
+  ok    every crop fills the model's full 32px training height
+  ok    median crop keeps at least half the training height
+
+[webkit] 4/4 checks passed
+[webkit] PASS
+
+[chromium] geometry — what the recogniser is actually fed
+  ok    geometry is measured on the actual CRNN-selected candidate
+  ok    the detector finds text lines on the page
+  ok    every crop fills the model's full 32px training height
+  ok    median crop keeps at least half the training height
+
+[chromium] 4/4 checks passed
+[chromium] PASS

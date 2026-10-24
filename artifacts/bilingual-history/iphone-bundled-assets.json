@@ -1,0 +1,11 @@
+{
+  "index.html": true,
+  "js/pipeline.js": true,
+  "js/ocr_engine.js": true,
+  "js/app.js": true,
+  "js/i18n.js": true,
+  "js/history.js": true,
+  "js/cantonese_summary.js": true,
+  "js/field_localization.js": true,
+  "sw.js": true
+}

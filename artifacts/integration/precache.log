@@ -1,0 +1,9 @@
+precache entries: 42, missing: 0
+required precache bytes: 40537586 (38.66 MiB; ./ aliases index.html)
+shipped files: 41
+  not precached:
+    models/minilm_encoder.onnx
+    models/minilm_head.onnx
+    models/restorer.onnx
+    models/tokenizer.json
+    sw.js

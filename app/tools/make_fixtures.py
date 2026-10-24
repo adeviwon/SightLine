@@ -34,12 +34,20 @@ im.save("/tmp/noise.png")
 # is 612x792 points (a normal page), not 2400x3100.
 page = Image.new("RGB", (2400, 3100), (255, 255, 255))
 dd = ImageDraw.Draw(page)
-try:
-    from PIL import ImageFont
-    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 46)
-    bold = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 54)
-except Exception:                                    # font not installed
-    font = bold = None
+from PIL import ImageFont
+from pathlib import Path
+font_pairs = [
+    ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
+    ("/System/Library/Fonts/Supplemental/Arial.ttf", "/System/Library/Fonts/Supplemental/Arial Bold.ttf"),
+    ("/usr/share/fonts/truetype/liberation2/LiberationSans-Regular.ttf", "/usr/share/fonts/truetype/liberation2/LiberationSans-Bold.ttf"),
+]
+pair = next((pair for pair in font_pairs if all(Path(f).exists() for f in pair)), None)
+if not pair:
+    raise RuntimeError("Install DejaVu Sans, Arial or Liberation Sans to render the documented 46px PDF fixture; a tiny bitmap fallback is not a valid test.")
+font = ImageFont.truetype(pair[0], 46)
+bold = ImageFont.truetype(pair[1], 54)
+print("PDF fixture font:", pair[0])
+
 lines = [
     (True,  "NORTHGATE LEGAL LLP"),
     (False, "Case No. 2024-CV-00456"),

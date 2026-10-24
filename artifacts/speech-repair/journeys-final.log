@@ -1,0 +1,32 @@
+PASS real receipt / local platform speech start and end events / Stop / replay; acoustic output unverified
+PASS prescription retains complete safe medical text
+PASS prescription reaches the local speech engine
+PASS prescription utterance retains medicine and strength
+PASS offline reload recognises real receipt
+PASS offline local speech receives real end event
+PASS Check Device is directly visible in Help
+PASS Device voice test receives a real end event
+PASS voice test asks for human sound confirmation
+PASS device checks recognise complete offline cache and voices
+PASS checks never claim audio was heard from API presence
+PASS device layout has no overflow at 320
+PASS Back remains visible after scrolling at 320
+PASS device layout has no overflow at 390
+PASS Back remains visible after scrolling at 390
+PASS device layout has no overflow at 768
+PASS Back remains visible after scrolling at 768
+PASS device layout has no overflow at 1440
+PASS Back remains visible after scrolling at 1440
+PASS device remains readable at doubled text size
+PASS Device Check passes automated WCAG A/AA
+PASS return preserves the previous scan
+PASS Return inside checks also restores reader
+PASS receipt speech control is visible at 320
+PASS receipt layout has no overflow at 320
+PASS receipt speech control is visible at 390
+PASS receipt layout has no overflow at 390
+PASS receipt speech control is visible at 768
+PASS receipt layout has no overflow at 768
+PASS receipt speech control is visible at 1440
+PASS receipt layout has no overflow at 1440
+{"category":"receipt","fields":2,"visible":true,"voices":180}

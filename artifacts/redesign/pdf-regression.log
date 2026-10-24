@@ -1,0 +1,16 @@
+
+[webkit] pdf — a letter that arrives as a PDF
+  ok    pdf scan completed without error
+  ok    pdf produced OCR text
+  ok    pdf scan is labelled as a file, not a camera frame
+
+[webkit] 3/3 checks passed
+[webkit] PASS
+
+[chromium] pdf — a letter that arrives as a PDF
+  ok    pdf scan completed without error
+  ok    pdf produced OCR text
+  ok    pdf scan is labelled as a file, not a camera frame
+
+[chromium] 3/3 checks passed
+[chromium] PASS

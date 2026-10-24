@@ -1,5 +1,23 @@
 # SightLine
 
+> **Current local bilingual/history build:** visible English / 繁體中文（廣東話）
+> switching, local Cantonese voices where installed, and opt-in on-device Scan
+> History. No rescan is needed to switch languages or reopen saved results.
+> Medical names remain original text; only supported verified instructions are
+> translated. Read [implementation, tests and limitations](docs/31_BILINGUAL_HISTORY.md).
+> This build is not deployed; the original Cantonese prototype notes below are historical.
+> The iOS and PWA icons now use a SightLine ear/listening mark; see the [icon note](docs/32_EAR_APP_ICON.md).
+
+> **Consumer UI redesign:** ready, camera, processing and results now have
+> dedicated screens. See [screenshots and validation](docs/28_CONSUMER_UI_REDESIGN.md).
+> Local implementation; no deployment. OCR/model files were preserved.
+
+> **Local PP-OCR integration (October 2026):** this checkout now defaults to
+> pretrained PP-OCRv5 with the original CRNN selectable. The UI and Xcode shell
+> are implemented; medical speech, offline size and device verification have
+> unresolved release limits. Read [the integration report](docs/27_PP_OCR_UI_INTEGRATION.md)
+> before using historical accuracy claims below. This version is not deployed.
+
 > **A medicine label, spoken in Cantonese. Nothing leaves the phone.**
 
 An offline-first **medicine-label** reader for elderly people who cannot see the

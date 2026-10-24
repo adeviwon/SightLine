@@ -1,0 +1,26 @@
+field engine contract — synthetic pages, known lines
+
+  ok    valid value speaks (Sort Code: 40-11-04)
+  ok      ...and the read carried its own validation
+  ok    impossible value refuses (5-digit sort code)
+  ok      ...and the reason is the validator's, not a generic one
+  ok    label with no value on the line and none on the next refuses
+  ok      ...and the refusal names the missing value
+  ok      ...and the read itself says why it found nothing
+  ok      ...and nothing was spoken
+  ok    a line with no label yields nothing
+  ok    an empty page yields nothing and does not crash
+  ok    the guard itself accepts '15 January 2024'
+  ok    the engine SPEAKS '15 January 2024' (date class of bug)
+  ok      ...while an impossible date still refuses
+  ok    free text is OFF by default (the engine's own default)
+  ok    a free-text field is REFUSED under the default
+  ok      ...and it is refused though it validated fine
+  ok      ...and the SAME page SPEAKS it when free text is opted in
+  ok    a value on the line BELOW the label is read across the break
+  ok      ...and a line ABOVE the label is NEVER taken as its value
+  ok    a box-less line falls back to the next line in reading order
+  ok    a regex/spot contradiction refuses BOTH values (R3)
+  ok      ...and agreement is not refused
+
+field engine contract: 22 checks, 22 passed, 0 FAILED

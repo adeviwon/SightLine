@@ -45,7 +45,7 @@ const engine = (process.argv.find((a) => a.startsWith("--engine=")) || "--engine
   check("an on-screen element exists for the Cantonese text", await page.evaluate(() => !!document.getElementById("cantonese")));
   check("the Cantonese control starts hidden until there is a result", await page.evaluate(() => {
     const s = document.getElementById("speak-lang");
-    return !!s && s.hidden === true;
+    return !!s && !s.checkVisibility();
   }));
 
   // 3. the safety property, in the browser
@@ -70,6 +70,9 @@ const engine = (process.argv.find((a) => a.startsWith("--engine=")) || "--engine
   console.log("  note  voices in this engine: " + voices.length + ", Chinese: " + (zh.length ? zh.join(",") : "NONE -- the app will show the Cantonese text instead of faking a voice"));
 
   // 5. the honest copy is still honest
+  // Privacy/refusal information now lives in the explicit Help disclosure.
+  await page.locator("#btn-help").click();
+  await page.locator("#help-dialog details summary").click();
   const body = await page.evaluate(() => document.body.innerText);
   check("the UI no longer promises Cantonese is only 'next' (it is built)", !/Cantonese is next/.test(body));
   check("the UI states the refusal property", /refuses rather than/i.test(body) || /refuse/i.test(body));

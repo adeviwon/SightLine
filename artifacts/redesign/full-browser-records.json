@@ -1,0 +1,412 @@
+[
+  {
+    "doc": "prescription",
+    "profile": "studio_clean",
+    "expected_category": "medical",
+    "expected_fields": [
+      "500mg",
+      "400mg"
+    ],
+    "expected_text": "PRESCRIPTION Patient: Jane Doe   DOB: 04/02/1979 Date: 01/10/2026 PRESCRIBER: Dr A. Ahmed, MBBS Pharmacy: Northgate Pharmacy Rx  Amoxicillin 500mg capsules Take one capsule three times daily with food Complete the full 7 day course Rx  Ibuprofen 400mg tablets Every 6 to 8 hours as required for pain Maximum 1200mg in 24 hours WARNING: may cause drowsiness Do not drive or operate machinery Keep out of reach of children Pharmacist: R. Silva  GPhC 20441",
+    "category": "medical",
+    "fields": [],
+    "ocr_text": "PATENT JANE DE DOE04021979\nPRESCRIBER DR A AHMED MBBS\nPHARMACIST R SILVA GPHC 20441",
+    "ocr_confidence": 0.9505939057097091,
+    "error": null,
+    "ms": 1223
+  },
+  {
+    "doc": "prescription",
+    "profile": "handheld_light",
+    "expected_category": "medical",
+    "expected_fields": [
+      "500mg",
+      "400mg"
+    ],
+    "expected_text": "PRESCRIPTION Patient: Jane Doe   DOB: 04/02/1979 Date: 01/10/2026 PRESCRIBER: Dr A. Ahmed, MBBS Pharmacy: Northgate Pharmacy Rx  Amoxicillin 500mg capsules Take one capsule three times daily with food Complete the full 7 day course Rx  Ibuprofen 400mg tablets Every 6 to 8 hours as required for pain Maximum 1200mg in 24 hours WARNING: may cause drowsiness Do not drive or operate machinery Keep out of reach of children Pharmacist: R. Silva  GPhC 20441",
+    "category": "medical",
+    "fields": [
+      "500 MG",
+      "WARNING MAY CAUSEDROWSINESS"
+    ],
+    "ocr_text": "PRESCRIPTION\nPATENT JANE DOE DOE 04021979\nDATER 01102026\nPRESCRIBER DR A AHMED MBSS\nPHATMBCY NORIHDATE PHAIMCY\nRX AMOXICLLN 500MG CABSULES\nDAKEORE GCUE HIE IESDIY WH NAD\nCOMPERE IHE UL  DAYCOURSE\nRX IBUDROLEN 400MO ABLES\nERY 5 DD HOURSAS TEQLUIED OR BDIN\nUAXIMUM 1200MD IN 24 HOURS\nWARNING MAY CAUSEDROWSINESS\nLDRO DIVE OROPERATE MECHITERY\nKEEBOUTOF FEICH OFCHIDTEN\nPHARMACEST R SILVA GPHC 20441",
+    "ocr_confidence": 0.9121422535612144,
+    "error": null,
+    "ms": 2307
+  },
+  {
+    "doc": "prescription",
+    "profile": "off_axis",
+    "expected_category": "medical",
+    "expected_fields": [
+      "500mg",
+      "400mg"
+    ],
+    "expected_text": "PRESCRIPTION Patient: Jane Doe   DOB: 04/02/1979 Date: 01/10/2026 PRESCRIBER: Dr A. Ahmed, MBBS Pharmacy: Northgate Pharmacy Rx  Amoxicillin 500mg capsules Take one capsule three times daily with food Complete the full 7 day course Rx  Ibuprofen 400mg tablets Every 6 to 8 hours as required for pain Maximum 1200mg in 24 hours WARNING: may cause drowsiness Do not drive or operate machinery Keep out of reach of children Pharmacist: R. Silva  GPhC 20441",
+    "category": "general",
+    "fields": [],
+    "ocr_text": "1O215441\nL NLNL07\nUGYPR EL BMNCD\n1 0AP\nSUNGD A LIGS 0022\n11EI3A0\n1 1NGANGY\nT1AK KAB ACAR\nL1PPU\n1 1CAREPAP PE\n11Y UARTE\nSE1KE BSE\n112\nG11\n1 1AC AS\nL41AD\n1L",
+    "ocr_confidence": 0.5499809508396103,
+    "error": null,
+    "ms": 2322
+  },
+  {
+    "doc": "prescription",
+    "profile": "jpeg_social",
+    "expected_category": "medical",
+    "expected_fields": [
+      "500mg",
+      "400mg"
+    ],
+    "expected_text": "PRESCRIPTION Patient: Jane Doe   DOB: 04/02/1979 Date: 01/10/2026 PRESCRIBER: Dr A. Ahmed, MBBS Pharmacy: Northgate Pharmacy Rx  Amoxicillin 500mg capsules Take one capsule three times daily with food Complete the full 7 day course Rx  Ibuprofen 400mg tablets Every 6 to 8 hours as required for pain Maximum 1200mg in 24 hours WARNING: may cause drowsiness Do not drive or operate machinery Keep out of reach of children Pharmacist: R. Silva  GPhC 20441",
+    "category": "medical",
+    "fields": [],
+    "ocr_text": "PWUN RNCLUMGRTICRA\nATAENT ARE DYE BCD 402707\nCOUMEN 0 1T102022M0\nPIHCRUNA DR A ARMEND MBETE\nTRERMECY KAGERPNITE RARTMARY\nR ARMOUNCRIDHN O02MO CMGOUIM\nTBL IN DPTUE ROETENDID RASH TUND\nCOURENTN HE FUAL 7 DINYOMURMAN\n10 RCLURENDTER 4ADOMG UBLAT\nET B D HOUENINS RM UCMD EREM\nBTAMMUM 1700UMNG AN 4 HOURMD\nW ALIHNO RM OUND DOUSTREMN\nDOENIDTDOTUB GR CGEDITP MECHARARY\nKAOMPOLUL F RMECH 1 CPUNON\nBTARMETNAT  SALAD GPBC 20",
+    "ocr_confidence": 0.7357186844755855,
+    "error": null,
+    "ms": 1105
+  },
+  {
+    "doc": "banking",
+    "profile": "studio_clean",
+    "expected_category": "banking",
+    "expected_fields": [
+      "40218877",
+      "40-11-04"
+    ],
+    "expected_text": "HSBC UK BANK PLC Statement of Account Account Holder: John Smith Account Number: 40218877 Sort Code: 40-11-04 Period: 01/03 - 31/03/2026 Opening Balance        GBP 1,204.33 01/03 SALARY CREDIT   GBP 2,900.00 01/03 RENT DD 1100     GBP -1,100.00 08/03 TESCO STORES     GBP -44.19 14/03 BRITISH GAS DD   GBP -89.99 19/03 ATM WITHDRAWAL   GBP -200.00 22/03 CASHBACK         GBP +12.40 Deposits total         GBP 2,912.40 Withdrawals total      GBP -1,434.18 Closing Balance        GBP 2,682.55 Card ending 4521 available funds 2,100.00",
+    "category": "banking",
+    "fields": [
+      "4621"
+    ],
+    "ocr_text": "PERIOD 010331032026\nOPENING BALANCE GBP 120433\n0103 SALARYCREDIT GBP 290000\n0103 RENTDD 110 GBP 110000\n0803 TESCO STORES GBP 4419\n1403 BRITISH GASDD GBP 8999\n1903 ATM WITHDRAWAL GBP 20000\n2203 CASHBACK GBP 1240\nDEDOSITS TOTAL GBP 291240\nWITHDRAWALSTOTAL GBP 143418\nCLOSINO BALANCE GBP 268255\nCARDENDING4621AMALABE TUND 21000",
+    "ocr_confidence": 0.9630454728642798,
+    "error": null,
+    "ms": 945
+  },
+  {
+    "doc": "banking",
+    "profile": "handheld_light",
+    "expected_category": "banking",
+    "expected_fields": [
+      "40218877",
+      "40-11-04"
+    ],
+    "expected_text": "HSBC UK BANK PLC Statement of Account Account Holder: John Smith Account Number: 40218877 Sort Code: 40-11-04 Period: 01/03 - 31/03/2026 Opening Balance        GBP 1,204.33 01/03 SALARY CREDIT   GBP 2,900.00 01/03 RENT DD 1100     GBP -1,100.00 08/03 TESCO STORES     GBP -44.19 14/03 BRITISH GAS DD   GBP -89.99 19/03 ATM WITHDRAWAL   GBP -200.00 22/03 CASHBACK         GBP +12.40 Deposits total         GBP 2,912.40 Withdrawals total      GBP -1,434.18 Closing Balance        GBP 2,682.55 Card ending 4521 available funds 2,100.00",
+    "category": "banking",
+    "fields": [
+      "401104",
+      "4521"
+    ],
+    "ocr_text": "HSBC UK BANK PLC\nACCOUNTINUMBER 40218877\nSORTCODE 401104\nPERNOD 0103 31032026\nORENING BLANCE GBP 120433\n0103 SALARY CREDIT GBP 290000\n0103 RENTDD 110 GBP 110000\n0803 TESCO STORES GBP 4419\n1403 BRITISH GAS DD GBP 8999\n1903 ATM WITHDRAWAL GBP 20000\n2203 CASHBACK GBP 1240\nDEPOSITS TOTAL GBP 291240\nWITHDRAWALS OTAL GBP 143418\nCLOSING BALANCE GBP268255\nCADENDING4521ANALABETUMT 20000",
+    "ocr_confidence": 0.9624302724408152,
+    "error": null,
+    "ms": 2342
+  },
+  {
+    "doc": "banking",
+    "profile": "off_axis",
+    "expected_category": "banking",
+    "expected_fields": [
+      "40218877",
+      "40-11-04"
+    ],
+    "expected_text": "HSBC UK BANK PLC Statement of Account Account Holder: John Smith Account Number: 40218877 Sort Code: 40-11-04 Period: 01/03 - 31/03/2026 Opening Balance        GBP 1,204.33 01/03 SALARY CREDIT   GBP 2,900.00 01/03 RENT DD 1100     GBP -1,100.00 08/03 TESCO STORES     GBP -44.19 14/03 BRITISH GAS DD   GBP -89.99 19/03 ATM WITHDRAWAL   GBP -200.00 22/03 CASHBACK         GBP +12.40 Deposits total         GBP 2,912.40 Withdrawals total      GBP -1,434.18 Closing Balance        GBP 2,682.55 Card ending 4521 available funds 2,100.00",
+    "category": "medical",
+    "fields": [],
+    "ocr_text": "LUNNCN\nJPMA IN ANXICK UAS RC\n29HILHSIESRELAKSR\nW4XEDAI DRA ASUNKDRTM\nITDA TI IER ARASDNEBTLD\nQF AAIGSANODE 1194\nFANY RNA 1MEALUS 3IC\nORIPAG ARGE\n1LW3 AUARPCSE\nT 63ITTO\nD1G3TE9CO390\nT03SIALG\nT AG\n0133CAE\n1EGOIUSTE\n11KRMKDNONTN\nT 1N03\n11RARARS\nF0",
+    "ocr_confidence": 0.5459642878974784,
+    "error": null,
+    "ms": 2446
+  },
+  {
+    "doc": "banking",
+    "profile": "jpeg_social",
+    "expected_category": "banking",
+    "expected_fields": [
+      "40218877",
+      "40-11-04"
+    ],
+    "expected_text": "HSBC UK BANK PLC Statement of Account Account Holder: John Smith Account Number: 40218877 Sort Code: 40-11-04 Period: 01/03 - 31/03/2026 Opening Balance        GBP 1,204.33 01/03 SALARY CREDIT   GBP 2,900.00 01/03 RENT DD 1100     GBP -1,100.00 08/03 TESCO STORES     GBP -44.19 14/03 BRITISH GAS DD   GBP -89.99 19/03 ATM WITHDRAWAL   GBP -200.00 22/03 CASHBACK         GBP +12.40 Deposits total         GBP 2,912.40 Withdrawals total      GBP -1,434.18 Closing Balance        GBP 2,682.55 Card ending 4521 available funds 2,100.00",
+    "category": "general",
+    "fields": [
+      "0101 1103202",
+      "100000\n010"
+    ],
+    "ocr_text": "BDTSIANG UN MANJTANT PLC\nLAUITHMRMAEPROL LDF AUIRCEMUPR\nAOCDUND HOLDIENG JAHAN AMUSH\nARCURT NOUMTBERT 407 TA177\nPAMNTGCORTOMR MAD IB J4\nPAERIND 0101 1103202M0\nCONERANG AETERIOE GBP 12043\n0100 SALANYCIDNT GBP 100000\n010 RNIDO 10 GBP 10000\n0EGO RINCO STOETS GUP 44TV\n1401 PERTIB GAK D GP DD10\n1M03 ATM WITIDQURIAL GBP 20000\n22013CAHMGNCR GUP 1240\nCEPNINS TOTAL GUP 2012 40\nWIEHDTRANTS TOTAL GAP 140418\nCUMINO ATARCE GIP Z602 4\nCADENDNG 4 JL MSITE ENIT11000",
+    "ocr_confidence": 0.8417682405683421,
+    "error": null,
+    "ms": 1229
+  },
+  {
+    "doc": "legal",
+    "profile": "studio_clean",
+    "expected_category": "legal",
+    "expected_fields": [
+      "2500",
+      "2024-CV-00456"
+    ],
+    "expected_text": "LEASE AGREEMENT This agreement is made on 15 January 2024 BETWEEN: The Landlord (1) and The Tenant (2) PROPERTY: 123 Baker Street, London NW1 6XE TERM: 24 months from 1 February 2024 Clause 3.2  Rent The Tenant shall pay rent of 2,500 per month in advance on the first day of each month Clause 5.1  Termination Either party may terminate with two months written notice served on the other party Clause 7.4  Deposit A deposit of 5,000 is held and protected SIGNED on behalf of both parties Case Reference: 2024-CV-00456",
+    "category": "legal",
+    "fields": [],
+    "ocr_text": "BETWEEN THE LANDLORD ANDTHE TENANT 2\nPHOPENT 123 BLKE SIETLOMON W16AE\nTERM 24MONTS ROM1 FEBRUARY2024\nCASE REFERERCE 2024CV00456",
+    "ocr_confidence": 0.9041981817300269,
+    "error": null,
+    "ms": 783
+  },
+  {
+    "doc": "legal",
+    "profile": "handheld_light",
+    "expected_category": "legal",
+    "expected_fields": [
+      "2500",
+      "2024-CV-00456"
+    ],
+    "expected_text": "LEASE AGREEMENT This agreement is made on 15 January 2024 BETWEEN: The Landlord (1) and The Tenant (2) PROPERTY: 123 Baker Street, London NW1 6XE TERM: 24 months from 1 February 2024 Clause 3.2  Rent The Tenant shall pay rent of 2,500 per month in advance on the first day of each month Clause 5.1  Termination Either party may terminate with two months written notice served on the other party Clause 7.4  Deposit A deposit of 5,000 is held and protected SIGNED on behalf of both parties Case Reference: 2024-CV-00456",
+    "category": "legal",
+    "fields": [
+      "1 FEBRUARY 2024"
+    ],
+    "ocr_text": "LEASE AGREEMENT\nTHEAREMENTS MADEOM 15 JNUARV2024\nPETWEEN THE LNDLORD ANDTHE TENT2\nPROPENTY 123 ALE SHET URMDOM NWI6AE\nTERM 24 MONTHS FROM 1 FEBRUARY 2024\nCSLANLSE 32 PEHIT\nTHE ENISHLAYENTG 2500 RERMNH\nIHADHARNCEONTHE TESIDAYOFENCE MONTH\nCAUSE BT TETRMINAIHOR\nELIRET RA AYERAE WL NO HONIES\nWRTIAH BOICE SERED ON THE ORHER BITNY\nCSLULLISE F4 LEPOESIT\nADEGEST 5000 SHAEHDARND RDTECLED\nSGNEDON BEHALT O BOTH ARTIES\nCASE REFERENCE 2024CV00456",
+    "ocr_confidence": 0.8801177097867703,
+    "error": null,
+    "ms": 2260
+  },
+  {
+    "doc": "legal",
+    "profile": "off_axis",
+    "expected_category": "legal",
+    "expected_fields": [
+      "2500",
+      "2024-CV-00456"
+    ],
+    "expected_text": "LEASE AGREEMENT This agreement is made on 15 January 2024 BETWEEN: The Landlord (1) and The Tenant (2) PROPERTY: 123 Baker Street, London NW1 6XE TERM: 24 months from 1 February 2024 Clause 3.2  Rent The Tenant shall pay rent of 2,500 per month in advance on the first day of each month Clause 5.1  Termination Either party may terminate with two months written notice served on the other party Clause 7.4  Deposit A deposit of 5,000 is held and protected SIGNED on behalf of both parties Case Reference: 2024-CV-00456",
+    "category": "general",
+    "fields": [],
+    "ocr_text": "NO11414\nASA SA1\n1 16493\n1STIE\n1136GET\n111 348SR\n1TAU43 11CASE\n11642\nG\nD AG 1190417\nG A69S4\nK\n7AA3 1029\n16RIO\n1 130G1\n1LKAPS T",
+    "ocr_confidence": 0.5301909274999818,
+    "error": null,
+    "ms": 2245
+  },
+  {
+    "doc": "legal",
+    "profile": "jpeg_social",
+    "expected_category": "legal",
+    "expected_fields": [
+      "2500",
+      "2024-CV-00456"
+    ],
+    "expected_text": "LEASE AGREEMENT This agreement is made on 15 January 2024 BETWEEN: The Landlord (1) and The Tenant (2) PROPERTY: 123 Baker Street, London NW1 6XE TERM: 24 months from 1 February 2024 Clause 3.2  Rent The Tenant shall pay rent of 2,500 per month in advance on the first day of each month Clause 5.1  Termination Either party may terminate with two months written notice served on the other party Clause 7.4  Deposit A deposit of 5,000 is held and protected SIGNED on behalf of both parties Case Reference: 2024-CV-00456",
+    "category": "general",
+    "fields": [],
+    "ocr_text": "LEASKE AGDIRNCRUMITMAE\nTHALA MMSEHI HENOEON1 ARPURY 202\nGETE E LANDOED TAND TH TERANID\nRAOOIT 12 8 MP LANDC1ES\nTITM 24 MORHSER 1FEBRUARY2014\nACUNUEEM 12 HMHPAT\nTHA FEMGABHAL RNYRERFD 100 AF RM\nWKARED A THE AT ARA FEAH RORNE\nGUUMF 1 TEMMRNUTEN\nTEAHIE E BE TENATFE KERNDL\nBRTIUM ODLO REDAN RHO OHUT RNT\nCLUUERM 74D OUMTEMMNT\nAGENT 5000 HMADARDBRTCIEDT\nRGNIDEN TEHLF D RH BARTE\nCAIE REFERNER 20 4CVO04LD",
+    "ocr_confidence": 0.7477018172502372,
+    "error": null,
+    "ms": 1104
+  },
+  {
+    "doc": "prescription",
+    "profile": "studio_clean",
+    "expected_category": "medical",
+    "expected_fields": [
+      "500mg",
+      "400mg"
+    ],
+    "expected_text": "PRESCRIPTION Patient: Jane Doe   DOB: 04/02/1979 Date: 01/10/2026 PRESCRIBER: Dr A. Ahmed, MBBS Pharmacy: Northgate Pharmacy Rx  Amoxicillin 500mg capsules Take one capsule three times daily with food Complete the full 7 day course Rx  Ibuprofen 400mg tablets Every 6 to 8 hours as required for pain Maximum 1200mg in 24 hours WARNING: may cause drowsiness Do not drive or operate machinery Keep out of reach of children Pharmacist: R. Silva  GPhC 20441",
+    "category": "medical",
+    "fields": [],
+    "ocr_text": "PATENT JANE DE DOE04021979\nPRESCRIBER DR A AHMED MBBS\nPHARMACIST R SILVA GPHC 20441",
+    "ocr_confidence": 0.9505939057097091,
+    "error": null,
+    "ms": 1406
+  },
+  {
+    "doc": "prescription",
+    "profile": "handheld_light",
+    "expected_category": "medical",
+    "expected_fields": [
+      "500mg",
+      "400mg"
+    ],
+    "expected_text": "PRESCRIPTION Patient: Jane Doe   DOB: 04/02/1979 Date: 01/10/2026 PRESCRIBER: Dr A. Ahmed, MBBS Pharmacy: Northgate Pharmacy Rx  Amoxicillin 500mg capsules Take one capsule three times daily with food Complete the full 7 day course Rx  Ibuprofen 400mg tablets Every 6 to 8 hours as required for pain Maximum 1200mg in 24 hours WARNING: may cause drowsiness Do not drive or operate machinery Keep out of reach of children Pharmacist: R. Silva  GPhC 20441",
+    "category": "medical",
+    "fields": [
+      "500 MG",
+      "WARNING MAY CAUSEDROWSINESS"
+    ],
+    "ocr_text": "PRESCRIPTION\nPATENT JANE DOE DOE 04021979\nDATER 01102026\nPRESCRIBER DR A AHMED MBSS\nPHATMBCY NORIHDATE PHAIMCY\nRX AMOXICLLN 500MG CABSULES\nDAKEORE GCUE HIE IESDIY WH NAD\nCOMPERE IHE UL  DAYCOURSE\nRX IBUDROLEN 400MO ABLES\nERY 5 DD HOURSAS TEQLUIED OR BDIN\nUAXIMUM 1200MD IN 24 HOURS\nWARNING MAY CAUSEDROWSINESS\nLDRO DIVE OROPERATE MECHITERY\nKEEBOUTOF FEICH OFCHIDTEN\nPHARMACEST R SILVA GPHC 20441",
+    "ocr_confidence": 0.9121422535612144,
+    "error": null,
+    "ms": 2335
+  },
+  {
+    "doc": "prescription",
+    "profile": "off_axis",
+    "expected_category": "medical",
+    "expected_fields": [
+      "500mg",
+      "400mg"
+    ],
+    "expected_text": "PRESCRIPTION Patient: Jane Doe   DOB: 04/02/1979 Date: 01/10/2026 PRESCRIBER: Dr A. Ahmed, MBBS Pharmacy: Northgate Pharmacy Rx  Amoxicillin 500mg capsules Take one capsule three times daily with food Complete the full 7 day course Rx  Ibuprofen 400mg tablets Every 6 to 8 hours as required for pain Maximum 1200mg in 24 hours WARNING: may cause drowsiness Do not drive or operate machinery Keep out of reach of children Pharmacist: R. Silva  GPhC 20441",
+    "category": "general",
+    "fields": [],
+    "ocr_text": "1O215441\nL NLNL07\nUGYPR EL BMNCD\n1 0AP\nSUNGD A LIGS 0022\n11EI3A0\n1 1NGANGY\nT1AK KAB ACAR\nL1PPU\n1 1CAREPAP PE\n11Y UARTE\nSE1KE BSE\n112\nG11\n1 1AC AS\nL41AD\n1L",
+    "ocr_confidence": 0.5499809508396103,
+    "error": null,
+    "ms": 2386
+  },
+  {
+    "doc": "prescription",
+    "profile": "jpeg_social",
+    "expected_category": "medical",
+    "expected_fields": [
+      "500mg",
+      "400mg"
+    ],
+    "expected_text": "PRESCRIPTION Patient: Jane Doe   DOB: 04/02/1979 Date: 01/10/2026 PRESCRIBER: Dr A. Ahmed, MBBS Pharmacy: Northgate Pharmacy Rx  Amoxicillin 500mg capsules Take one capsule three times daily with food Complete the full 7 day course Rx  Ibuprofen 400mg tablets Every 6 to 8 hours as required for pain Maximum 1200mg in 24 hours WARNING: may cause drowsiness Do not drive or operate machinery Keep out of reach of children Pharmacist: R. Silva  GPhC 20441",
+    "category": "medical",
+    "fields": [],
+    "ocr_text": "PWUN RNCLUMGRTICRA\nATAENT ARE DYE BCD 402707\nCOUMEN 0 1T102022M0\nPIHCRUNA DR A ARMEND MBETE\nTRERMECY KAGERPNITE RARTMARY\nR ARMOUNCRIDHN O02MO CMGOUIM\nTBL IN DPTUE ROETENDID RASH TUND\nCOURENTN HE FUAL 7 DINYOMURMAN\n10 RCLURENDTER 4ADOMG UBLAT\nET B D HOUENINS RM UCMD EREM\nBTAMMUM 1700UMNG AN 4 HOURMD\nW ALIHNO RM OUND DOUSTREMN\nDOENIDTDOTUB GR CGEDITP MECHARARY\nKAOMPOLUL F RMECH 1 CPUNON\nBTARMETNAT  SALAD GPBC 20",
+    "ocr_confidence": 0.7357186844755855,
+    "error": null,
+    "ms": 1109
+  },
+  {
+    "doc": "banking",
+    "profile": "studio_clean",
+    "expected_category": "banking",
+    "expected_fields": [
+      "40218877",
+      "40-11-04"
+    ],
+    "expected_text": "HSBC UK BANK PLC Statement of Account Account Holder: John Smith Account Number: 40218877 Sort Code: 40-11-04 Period: 01/03 - 31/03/2026 Opening Balance        GBP 1,204.33 01/03 SALARY CREDIT   GBP 2,900.00 01/03 RENT DD 1100     GBP -1,100.00 08/03 TESCO STORES     GBP -44.19 14/03 BRITISH GAS DD   GBP -89.99 19/03 ATM WITHDRAWAL   GBP -200.00 22/03 CASHBACK         GBP +12.40 Deposits total         GBP 2,912.40 Withdrawals total      GBP -1,434.18 Closing Balance        GBP 2,682.55 Card ending 4521 available funds 2,100.00",
+    "category": "banking",
+    "fields": [
+      "4621"
+    ],
+    "ocr_text": "PERIOD 010331032026\nOPENING BALANCE GBP 120433\n0103 SALARYCREDIT GBP 290000\n0103 RENTDD 110 GBP 110000\n0803 TESCO STORES GBP 4419\n1403 BRITISH GASDD GBP 8999\n1903 ATM WITHDRAWAL GBP 20000\n2203 CASHBACK GBP 1240\nDEDOSITS TOTAL GBP 291240\nWITHDRAWALSTOTAL GBP 143418\nCLOSINO BALANCE GBP 268255\nCARDENDING4621AMALABE TUND 21000",
+    "ocr_confidence": 0.9630454728642798,
+    "error": null,
+    "ms": 978
+  },
+  {
+    "doc": "banking",
+    "profile": "handheld_light",
+    "expected_category": "banking",
+    "expected_fields": [
+      "40218877",
+      "40-11-04"
+    ],
+    "expected_text": "HSBC UK BANK PLC Statement of Account Account Holder: John Smith Account Number: 40218877 Sort Code: 40-11-04 Period: 01/03 - 31/03/2026 Opening Balance        GBP 1,204.33 01/03 SALARY CREDIT   GBP 2,900.00 01/03 RENT DD 1100     GBP -1,100.00 08/03 TESCO STORES     GBP -44.19 14/03 BRITISH GAS DD   GBP -89.99 19/03 ATM WITHDRAWAL   GBP -200.00 22/03 CASHBACK         GBP +12.40 Deposits total         GBP 2,912.40 Withdrawals total      GBP -1,434.18 Closing Balance        GBP 2,682.55 Card ending 4521 available funds 2,100.00",
+    "category": "banking",
+    "fields": [
+      "401104",
+      "4521"
+    ],
+    "ocr_text": "HSBC UK BANK PLC\nACCOUNTINUMBER 40218877\nSORTCODE 401104\nPERNOD 0103 31032026\nORENING BLANCE GBP 120433\n0103 SALARY CREDIT GBP 290000\n0103 RENTDD 110 GBP 110000\n0803 TESCO STORES GBP 4419\n1403 BRITISH GAS DD GBP 8999\n1903 ATM WITHDRAWAL GBP 20000\n2203 CASHBACK GBP 1240\nDEPOSITS TOTAL GBP 291240\nWITHDRAWALS OTAL GBP 143418\nCLOSING BALANCE GBP268255\nCADENDING4521ANALABETUMT 20000",
+    "ocr_confidence": 0.9624302724408152,
+    "error": null,
+    "ms": 2342
+  },
+  {
+    "doc": "banking",
+    "profile": "off_axis",
+    "expected_category": "banking",
+    "expected_fields": [
+      "40218877",
+      "40-11-04"
+    ],
+    "expected_text": "HSBC UK BANK PLC Statement of Account Account Holder: John Smith Account Number: 40218877 Sort Code: 40-11-04 Period: 01/03 - 31/03/2026 Opening Balance        GBP 1,204.33 01/03 SALARY CREDIT   GBP 2,900.00 01/03 RENT DD 1100     GBP -1,100.00 08/03 TESCO STORES     GBP -44.19 14/03 BRITISH GAS DD   GBP -89.99 19/03 ATM WITHDRAWAL   GBP -200.00 22/03 CASHBACK         GBP +12.40 Deposits total         GBP 2,912.40 Withdrawals total      GBP -1,434.18 Closing Balance        GBP 2,682.55 Card ending 4521 available funds 2,100.00",
+    "category": "medical",
+    "fields": [],
+    "ocr_text": "LUNNCN\nJPMA IN ANXICK UAS RC\n29HILHSIESRELAKSR\nW4XEDAI DRA ASUNKDRTM\nITDA TI IER ARASDNEBTLD\nQF AAIGSANODE 1194\nFANY RNA 1MEALUS 3IC\nORIPAG ARGE\n1LW3 AUARPCSE\nT 63ITTO\nD1G3TE9CO390\nT03SIALG\nT AG\n0133CAE\n1EGOIUSTE\n11KRMKDNONTN\nT 1N03\n11RARARS\nF0",
+    "ocr_confidence": 0.5459642878974784,
+    "error": null,
+    "ms": 2500
+  },
+  {
+    "doc": "banking",
+    "profile": "jpeg_social",
+    "expected_category": "banking",
+    "expected_fields": [
+      "40218877",
+      "40-11-04"
+    ],
+    "expected_text": "HSBC UK BANK PLC Statement of Account Account Holder: John Smith Account Number: 40218877 Sort Code: 40-11-04 Period: 01/03 - 31/03/2026 Opening Balance        GBP 1,204.33 01/03 SALARY CREDIT   GBP 2,900.00 01/03 RENT DD 1100     GBP -1,100.00 08/03 TESCO STORES     GBP -44.19 14/03 BRITISH GAS DD   GBP -89.99 19/03 ATM WITHDRAWAL   GBP -200.00 22/03 CASHBACK         GBP +12.40 Deposits total         GBP 2,912.40 Withdrawals total      GBP -1,434.18 Closing Balance        GBP 2,682.55 Card ending 4521 available funds 2,100.00",
+    "category": "general",
+    "fields": [
+      "0101 1103202",
+      "100000\n010"
+    ],
+    "ocr_text": "BDTSIANG UN MANJTANT PLC\nLAUITHMRMAEPROL LDF AUIRCEMUPR\nAOCDUND HOLDIENG JAHAN AMUSH\nARCURT NOUMTBERT 407 TA177\nPAMNTGCORTOMR MAD IB J4\nPAERIND 0101 1103202M0\nCONERANG AETERIOE GBP 12043\n0100 SALANYCIDNT GBP 100000\n010 RNIDO 10 GBP 10000\n0EGO RINCO STOETS GUP 44TV\n1401 PERTIB GAK D GP DD10\n1M03 ATM WITIDQURIAL GBP 20000\n22013CAHMGNCR GUP 1240\nCEPNINS TOTAL GUP 2012 40\nWIEHDTRANTS TOTAL GAP 140418\nCUMINO ATARCE GIP Z602 4\nCADENDNG 4 JL MSITE ENIT11000",
+    "ocr_confidence": 0.8417682405683421,
+    "error": null,
+    "ms": 1229
+  },
+  {
+    "doc": "legal",
+    "profile": "studio_clean",
+    "expected_category": "legal",
+    "expected_fields": [
+      "2500",
+      "2024-CV-00456"
+    ],
+    "expected_text": "LEASE AGREEMENT This agreement is made on 15 January 2024 BETWEEN: The Landlord (1) and The Tenant (2) PROPERTY: 123 Baker Street, London NW1 6XE TERM: 24 months from 1 February 2024 Clause 3.2  Rent The Tenant shall pay rent of 2,500 per month in advance on the first day of each month Clause 5.1  Termination Either party may terminate with two months written notice served on the other party Clause 7.4  Deposit A deposit of 5,000 is held and protected SIGNED on behalf of both parties Case Reference: 2024-CV-00456",
+    "category": "legal",
+    "fields": [],
+    "ocr_text": "BETWEEN THE LANDLORD ANDTHE TENANT 2\nPHOPENT 123 BLKE SIETLOMON W16AE\nTERM 24MONTS ROM1 FEBRUARY2024\nCASE REFERERCE 2024CV00456",
+    "ocr_confidence": 0.9041981817300269,
+    "error": null,
+    "ms": 848
+  },
+  {
+    "doc": "legal",
+    "profile": "handheld_light",
+    "expected_category": "legal",
+    "expected_fields": [
+      "2500",
+      "2024-CV-00456"
+    ],
+    "expected_text": "LEASE AGREEMENT This agreement is made on 15 January 2024 BETWEEN: The Landlord (1) and The Tenant (2) PROPERTY: 123 Baker Street, London NW1 6XE TERM: 24 months from 1 February 2024 Clause 3.2  Rent The Tenant shall pay rent of 2,500 per month in advance on the first day of each month Clause 5.1  Termination Either party may terminate with two months written notice served on the other party Clause 7.4  Deposit A deposit of 5,000 is held and protected SIGNED on behalf of both parties Case Reference: 2024-CV-00456",
+    "category": "legal",
+    "fields": [
+      "1 FEBRUARY 2024"
+    ],
+    "ocr_text": "LEASE AGREEMENT\nTHEAREMENTS MADEOM 15 JNUARV2024\nPETWEEN THE LNDLORD ANDTHE TENT2\nPROPENTY 123 ALE SHET URMDOM NWI6AE\nTERM 24 MONTHS FROM 1 FEBRUARY 2024\nCSLANLSE 32 PEHIT\nTHE ENISHLAYENTG 2500 RERMNH\nIHADHARNCEONTHE TESIDAYOFENCE MONTH\nCAUSE BT TETRMINAIHOR\nELIRET RA AYERAE WL NO HONIES\nWRTIAH BOICE SERED ON THE ORHER BITNY\nCSLULLISE F4 LEPOESIT\nADEGEST 5000 SHAEHDARND RDTECLED\nSGNEDON BEHALT O BOTH ARTIES\nCASE REFERENCE 2024CV00456",
+    "ocr_confidence": 0.8801177097867703,
+    "error": null,
+    "ms": 2273
+  },
+  {
+    "doc": "legal",
+    "profile": "off_axis",
+    "expected_category": "legal",
+    "expected_fields": [
+      "2500",
+      "2024-CV-00456"
+    ],
+    "expected_text": "LEASE AGREEMENT This agreement is made on 15 January 2024 BETWEEN: The Landlord (1) and The Tenant (2) PROPERTY: 123 Baker Street, London NW1 6XE TERM: 24 months from 1 February 2024 Clause 3.2  Rent The Tenant shall pay rent of 2,500 per month in advance on the first day of each month Clause 5.1  Termination Either party may terminate with two months written notice served on the other party Clause 7.4  Deposit A deposit of 5,000 is held and protected SIGNED on behalf of both parties Case Reference: 2024-CV-00456",
+    "category": "general",
+    "fields": [],
+    "ocr_text": "NO11414\nASA SA1\n1 16493\n1STIE\n1136GET\n111 348SR\n1TAU43 11CASE\n11642\nG\nD AG 1190417\nG A69S4\nK\n7AA3 1029\n16RIO\n1 130G1\n1LKAPS T",
+    "ocr_confidence": 0.5301909274999818,
+    "error": null,
+    "ms": 2328
+  },
+  {
+    "doc": "legal",
+    "profile": "jpeg_social",
+    "expected_category": "legal",
+    "expected_fields": [
+      "2500",
+      "2024-CV-00456"
+    ],
+    "expected_text": "LEASE AGREEMENT This agreement is made on 15 January 2024 BETWEEN: The Landlord (1) and The Tenant (2) PROPERTY: 123 Baker Street, London NW1 6XE TERM: 24 months from 1 February 2024 Clause 3.2  Rent The Tenant shall pay rent of 2,500 per month in advance on the first day of each month Clause 5.1  Termination Either party may terminate with two months written notice served on the other party Clause 7.4  Deposit A deposit of 5,000 is held and protected SIGNED on behalf of both parties Case Reference: 2024-CV-00456",
+    "category": "general",
+    "fields": [],
+    "ocr_text": "LEASKE AGDIRNCRUMITMAE\nTHALA MMSEHI HENOEON1 ARPURY 202\nGETE E LANDOED TAND TH TERANID\nRAOOIT 12 8 MP LANDC1ES\nTITM 24 MORHSER 1FEBRUARY2014\nACUNUEEM 12 HMHPAT\nTHA FEMGABHAL RNYRERFD 100 AF RM\nWKARED A THE AT ARA FEAH RORNE\nGUUMF 1 TEMMRNUTEN\nTEAHIE E BE TENATFE KERNDL\nBRTIUM ODLO REDAN RHO OHUT RNT\nCLUUERM 74D OUMTEMMNT\nAGENT 5000 HMADARDBRTCIEDT\nRGNIDEN TEHLF D RH BARTE\nCAIE REFERNER 20 4CVO04LD",
+    "ocr_confidence": 0.7477018172502372,
+    "error": null,
+    "ms": 1119
+  }
+]

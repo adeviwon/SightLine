@@ -1,0 +1,22 @@
+
+[webkit] tts — chunking and the no-voice path
+  ok    long text splits into multiple chunks
+  ok    every chunk is within the 180-char iOS limit
+  ok    chunking loses no words
+  ok    empty text yields no chunks
+  ok    TTS reports availability honestly
+  ok    speak() settles cleanly with no voices
+
+[webkit] 6/6 checks passed
+[webkit] PASS
+
+[chromium] tts — chunking and the no-voice path
+  ok    long text splits into multiple chunks
+  ok    every chunk is within the 180-char iOS limit
+  ok    chunking loses no words
+  ok    empty text yields no chunks
+  ok    TTS reports availability honestly
+  ok    speak() settles cleanly with no voices
+
+[chromium] 6/6 checks passed
+[chromium] PASS
