@@ -1,0 +1,29 @@
+(node:32613) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file://<repo>/app/js/ppocr_core.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to ~/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+uint8 prescription__studio_clean 1360ms CER 0.5091
+uint8 prescription__handheld_light 1104ms CER 0.7671
+uint8 prescription__off_axis 683ms CER 1.0000
+uint8 prescription__jpeg_social 955ms CER 0.9840
+uint8 banking__studio_clean 1394ms CER 0.2654
+uint8 banking__handheld_light 1197ms CER 0.8238
+uint8 banking__off_axis 863ms CER 0.9703
+uint8 banking__jpeg_social 1119ms CER 0.9958
+uint8 legal__studio_clean 1359ms CER 0.4368
+uint8 legal__handheld_light 1237ms CER 0.7451
+uint8 legal__off_axis 754ms CER 0.9960
+uint8 legal__jpeg_social 1177ms CER 1.0000
+fp32 prescription__studio_clean 1161ms CER 0.0274
+fp32 prescription__handheld_light 1050ms CER 0.1027
+fp32 prescription__off_axis 644ms CER 0.9749
+fp32 prescription__jpeg_social 862ms CER 0.9384
+fp32 banking__studio_clean 1374ms CER 0.0234
+fp32 banking__handheld_light 1119ms CER 0.1231
+fp32 banking__off_axis 801ms CER 0.8726
+fp32 banking__jpeg_social 992ms CER 0.9851
+fp32 legal__studio_clean 1294ms CER 0.0138
+fp32 legal__handheld_light 1178ms CER 0.1067
+fp32 legal__off_axis 705ms CER 0.9565
+fp32 legal__jpeg_social 1039ms CER 0.9249
+SUMMARY [{"precision":"uint8","prepareMs":366.82420800000006,"meanCER":0.7911117736470636},{"precision":"fp32","prepareMs":133.6708749999998,"meanCER":0.504133463709986}]

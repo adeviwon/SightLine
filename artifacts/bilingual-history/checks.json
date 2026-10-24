@@ -1,0 +1,320 @@
+{
+  "checks": [
+    {
+      "name": "history starts empty with consent off",
+      "ok": true
+    },
+    {
+      "name": "real receipt uses PP-OCRv5",
+      "ok": true
+    },
+    {
+      "name": "scan alone does not save sensitive contents",
+      "ok": true
+    },
+    {
+      "name": "en-GB actual local platform speech ends",
+      "ok": true,
+      "detail": {
+        "state": {
+          "status": "ended",
+          "error": null,
+          "voice": "Daniel",
+          "lang": "en-GB",
+          "chunks": 1,
+          "chunk": 1
+        },
+        "utterances": [
+          {
+            "text": "Receipt. Shop: BOOKTAK(TAMANDAYA)SDN BHD. Payment method: cash. Some details were unclear and have not been read. Check important amounts against the original receipt.",
+            "lang": "en-GB",
+            "voice": "Daniel",
+            "voiceLang": "en-GB",
+            "local": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "en-GB correct voice locale",
+      "ok": true
+    },
+    {
+      "name": "language switches without OCR or source changes",
+      "ok": true
+    },
+    {
+      "name": "receipt values localize while original English source and confidence remain unchanged",
+      "ok": true
+    },
+    {
+      "name": "main labels use Traditional Chinese",
+      "ok": true
+    },
+    {
+      "name": "zh-HK actual local platform speech ends",
+      "ok": true,
+      "detail": {
+        "state": {
+          "status": "ended",
+          "error": null,
+          "voice": "Sinji",
+          "lang": "yue-HK",
+          "chunks": 1,
+          "chunk": 1
+        },
+        "utterances": [
+          {
+            "text": "呢張係收據。 店舖係BOOKTAK(TAMANDAYA)SDN BHD。 付款方式係現金。 未能確認嘅資料唔會讀出，請核對收據原文。",
+            "lang": "zh-HK",
+            "voice": "Sinji",
+            "voiceLang": "yue-HK",
+            "local": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "zh-HK correct voice locale",
+      "ok": true
+    },
+    {
+      "name": "Cantonese receipt is generated Chinese, not English with an accent",
+      "ok": true
+    },
+    {
+      "name": "uncertain receipt total stays out of both languages",
+      "ok": true
+    },
+    {
+      "name": "switching back restores the literal English OCR field without rescanning",
+      "ok": true
+    },
+    {
+      "name": "explicit consent precedes saving",
+      "ok": true
+    },
+    {
+      "name": "successful transaction stores one record without an image",
+      "ok": true
+    },
+    {
+      "name": "language and consent persist across reload",
+      "ok": true
+    },
+    {
+      "name": "history opens saved source with no OCR",
+      "ok": true
+    },
+    {
+      "name": "repeated switching never invokes OCR",
+      "ok": true
+    },
+    {
+      "name": "saved result reopens offline",
+      "ok": true
+    },
+    {
+      "name": "en-GB actual local platform speech ends",
+      "ok": true,
+      "detail": {
+        "state": {
+          "status": "ended",
+          "error": null,
+          "voice": "Daniel",
+          "lang": "en-GB",
+          "chunks": 1,
+          "chunk": 1
+        },
+        "utterances": [
+          {
+            "text": "Receipt. Shop: BOOKTAK(TAMANDAYA)SDN BHD. Payment method: cash. Some details were unclear and have not been read. Check important amounts against the original receipt.",
+            "lang": "en-GB",
+            "voice": "Daniel",
+            "voiceLang": "en-GB",
+            "local": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "en-GB correct voice locale",
+      "ok": true
+    },
+    {
+      "name": "zh-HK actual local platform speech ends",
+      "ok": true,
+      "detail": {
+        "state": {
+          "status": "ended",
+          "error": null,
+          "voice": "Sinji",
+          "lang": "yue-HK",
+          "chunks": 1,
+          "chunk": 1
+        },
+        "utterances": [
+          {
+            "text": "呢張係收據。 店舖係BOOKTAK(TAMANDAYA)SDN BHD。 付款方式係現金。 未能確認嘅資料唔會讀出，請核對收據原文。",
+            "lang": "zh-HK",
+            "voice": "Sinji",
+            "voiceLang": "yue-HK",
+            "local": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "zh-HK correct voice locale",
+      "ok": true
+    },
+    {
+      "name": "prescription retains full safe source",
+      "ok": true
+    },
+    {
+      "name": "en-GB actual local platform speech ends",
+      "ok": true,
+      "detail": {
+        "state": {
+          "status": "ended",
+          "error": null,
+          "voice": "Daniel",
+          "lang": "en-GB",
+          "chunks": 1,
+          "chunk": 1
+        },
+        "utterances": [
+          {
+            "text": "AMOXICILLIN 500 mg capsules Take one capsule three times daily Keep out of reach of children SYNTHETIC TEST LABEL",
+            "lang": "en-GB",
+            "voice": "Daniel",
+            "voiceLang": "en-GB",
+            "local": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "en-GB correct voice locale",
+      "ok": true
+    },
+    {
+      "name": "English medicine preserves verified source",
+      "ok": true,
+      "detail": {
+        "state": {
+          "status": "ended",
+          "error": null,
+          "voice": "Daniel",
+          "lang": "en-GB",
+          "chunks": 1,
+          "chunk": 1
+        },
+        "utterances": [
+          {
+            "text": "AMOXICILLIN 500 mg capsules Take one capsule three times daily Keep out of reach of children SYNTHETIC TEST LABEL",
+            "lang": "en-GB",
+            "voice": "Daniel",
+            "voiceLang": "en-GB",
+            "local": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "prescription fields localize only supported dosage language",
+      "ok": true
+    },
+    {
+      "name": "zh-HK actual local platform speech ends",
+      "ok": true,
+      "detail": {
+        "state": {
+          "status": "ended",
+          "error": null,
+          "voice": "Sinji",
+          "lang": "yue-HK",
+          "chunks": 1,
+          "chunk": 1
+        },
+        "utterances": [
+          {
+            "text": "呢張係藥物標籤。 原文藥名係Amoxicillin。 藥名保留原文，唔會估中文譯名。 原文強度或用量係五百毫克。 每日三次，每次一粒膠囊。 請放喺兒童接觸唔到嘅地方。 只讀出已核對同支援嘅資料。 其餘指示同警告可能未有翻譯，請核對原文，並同藥劑師確認。",
+            "lang": "zh-HK",
+            "voice": "Sinji",
+            "voiceLang": "yue-HK",
+            "local": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "zh-HK correct voice locale",
+      "ok": true
+    },
+    {
+      "name": "Cantonese medicine keeps original name and safe strength",
+      "ok": true
+    },
+    {
+      "name": "saved prescription reopens with medical gates",
+      "ok": true
+    },
+    {
+      "name": "quota failure is honest and current result survives",
+      "ok": true
+    },
+    {
+      "name": "single delete commits",
+      "ok": true
+    },
+    {
+      "name": "bulk deletion requires confirmation",
+      "ok": true
+    },
+    {
+      "name": "delete all commits and disables automatic saving",
+      "ok": true
+    },
+    {
+      "name": "history no overflow 320 en-GB",
+      "ok": true
+    },
+    {
+      "name": "history no overflow 320 zh-HK",
+      "ok": true
+    },
+    {
+      "name": "history no overflow 390 en-GB",
+      "ok": true
+    },
+    {
+      "name": "history no overflow 390 zh-HK",
+      "ok": true
+    },
+    {
+      "name": "history no overflow 768 en-GB",
+      "ok": true
+    },
+    {
+      "name": "history no overflow 768 zh-HK",
+      "ok": true
+    },
+    {
+      "name": "history no overflow 1440 en-GB",
+      "ok": true
+    },
+    {
+      "name": "history no overflow 1440 zh-HK",
+      "ok": true
+    },
+    {
+      "name": "no unexplained page errors",
+      "ok": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "physicalAudioHeard": false
+}

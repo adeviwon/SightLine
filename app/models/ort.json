@@ -8,9 +8,16 @@
     "restorer.onnx": "37,793-param residual CNN, input [1,1,64,256]",
     "crnn.onnx": "942,166-param CRNN+CTC, input [1,1,32,width] DYNAMIC WIDTH, output [1,T,38] -- served at each crop's own width",
     "minilm_encoder.onnx": "all-MiniLM-L6-v2, INT8 dynamic quantisation",
-    "minilm_head.onnx": "4-class head, [batch,384] -> [batch,4]"
+    "minilm_head.onnx": "4-class head, [batch,384] -> [batch,4]",
+    "ppocrv5-mobile-det.onnx": "Pretrained PaddleOCR detector, fp32, Apache-2.0",
+    "ppocrv5-mobile-rec.onnx": "Pretrained PaddleOCR recognizer, fp32, Apache-2.0; selected after fixed-fixture precision comparison"
   },
-  "note": "Exported by `bash run.sh export` (fixed width) or `bash run.sh py ml/src/export_dynamic.py` (dynamic width; the SHIPPED path). Parity verified against PyTorch: crnn max|d| 1.7e-05 across widths 32/47/63/64/128/200/256 including T values that are NOT floor(w/8), restorer 4.77e-07, encoder int8 O(1), head 8.94e-08 on identical fp32 input. crnn.onnx is DYNAMIC WIDTH ['batch',1,32,'width'] and the app serves every crop at its NATURAL width -- no padding at all. Two earlier notes here were wrong and are corrected: it said the width was 'FIXED at 256 because aten::lstm cannot export with a dynamic sequence length' (a MODE artefact -- set_export_mode(True) traces an explicit per-timestep loop that bakes T, while the FUSED nn.LSTM lowers to a real ONNX LSTM op with a dynamic axis) and then that it was fixed at 320. Both were below the width the training crops actually are: crop_to_array clamps natural width to realdata.MAX_W=320 and the corpus median IS that clamp, so a fixed graph truncated the tail off ~99% of lines (measured: 44.7% exact at natural width vs 0.0% cut to 256) and padded the rest (padding is NOT inert: the bidirectional LSTM reads back through it, costing 11.5 points of crop-level exact match). app/js/recognizer.js is width-ADAPTIVE: it reads the graph's own width axis at init and pads ONLY if that axis is a number. Keep TRAINING_CLAMP (= realdata.MAX_W) as the crop cap; it is not the tensor width.",
+  "note": "Exported by `bash run.sh export` (fixed width) or `bash run.sh py ml/src/export_dynamic.py` (dynamic width; the SHIPPED path). Parity verified against PyTorch: crnn max|d| 1.7e-05 across widths 32/47/63/64/128/200/256 including T values that are NOT floor(w/8), restorer 4.77e-07, encoder int8 O(1), head 8.94e-08 on identical fp32 input. crnn.onnx is DYNAMIC WIDTH ['batch',1,32,'width'] and the app serves every crop at its NATURAL width -- no padding at all. Two earlier notes here were wrong and are corrected: it said the width was 'FIXED at 256 because aten::lstm cannot export with a dynamic sequence length' (a MODE artefact -- set_export_mode(True) traces an explicit per-timestep loop that bakes T, while the FUSED nn.LSTM lowers to a real ONNX LSTM op with a dynamic axis) and then that it was fixed at 320. Both were below the width the training crops actually are: crop_to_array clamps natural width to realdata.MAX_W=320 and the corpus median IS that clamp, so a fixed graph truncated the tail off ~99% of lines (measured: 44.7% exact at natural width vs 0.0% cut to 256) and padded the rest (padding is NOT inert: the bidirectional LSTM reads back through it, costing 11.5 points of crop-level exact match). app/js/recognizer.js is width-ADAPTIVE: it reads the graph's own width axis at init and pads ONLY if that axis is a number. Keep TRAINING_CLAMP (= realdata.MAX_W) as the crop cap; it is not the tensor width. Enhanced reading is the app default; Original reading preserves the trained CRNN. This is a third-party pretrained model integration, not a SightLine-trained model. See ppocr-provenance.json.",
   "tesseract": false,
-  "generated_by": "export_onnx.py"
+  "generated_by": "export_onnx.py",
+  "ocr_engine": "ppocrv5",
+  "ocr_engines": [
+    "ppocrv5",
+    "crnn"
+  ]
 }

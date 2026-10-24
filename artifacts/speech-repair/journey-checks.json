@@ -1,0 +1,206 @@
+{
+  "checks": [
+    {
+      "name": "prescription retains complete safe medical text",
+      "ok": true
+    },
+    {
+      "name": "prescription reaches the local speech engine",
+      "ok": true
+    },
+    {
+      "name": "prescription utterance retains medicine and strength",
+      "ok": true
+    },
+    {
+      "name": "offline reload recognises real receipt",
+      "ok": true
+    },
+    {
+      "name": "offline local speech receives real end event",
+      "ok": true
+    },
+    {
+      "name": "Check Device is directly visible in Help",
+      "ok": true
+    },
+    {
+      "name": "Device voice test receives a real end event",
+      "ok": true
+    },
+    {
+      "name": "voice test asks for human sound confirmation",
+      "ok": true
+    },
+    {
+      "name": "device checks recognise complete offline cache and voices",
+      "ok": true,
+      "detail": {
+        "rows": [
+          {
+            "title": "Camera",
+            "state": "Available when you choose Scan",
+            "explanation": "SightLine asks permission when you start scanning. No camera was opened by this check.",
+            "ok": true
+          },
+          {
+            "title": "Reading software",
+            "state": "Supported",
+            "explanation": "The browser supports on-device reading. Use a real scan to check recognition.",
+            "ok": true
+          },
+          {
+            "title": "Offline reading",
+            "state": "Reading files saved",
+            "explanation": "The required files are available on this device.",
+            "ok": true
+          },
+          {
+            "title": "Recognition files",
+            "state": "Available",
+            "explanation": "The reading models and their runtime files are available. This is not an accuracy test.",
+            "ok": true
+          },
+          {
+            "title": "Read Aloud",
+            "state": "Offline English voice available",
+            "explanation": "An installed English voice is available. Cantonese is available too. Test the voice below to check sound.",
+            "ok": true
+          }
+        ],
+        "installed": true,
+        "models": true,
+        "english": true,
+        "cantonese": true,
+        "audioVerified": false,
+        "checkedAt": 1792816037304
+      }
+    },
+    {
+      "name": "checks never claim audio was heard from API presence",
+      "ok": true
+    },
+    {
+      "name": "device layout has no overflow at 320",
+      "ok": true
+    },
+    {
+      "name": "Back remains visible after scrolling at 320",
+      "ok": true
+    },
+    {
+      "name": "device layout has no overflow at 390",
+      "ok": true
+    },
+    {
+      "name": "Back remains visible after scrolling at 390",
+      "ok": true
+    },
+    {
+      "name": "device layout has no overflow at 768",
+      "ok": true
+    },
+    {
+      "name": "Back remains visible after scrolling at 768",
+      "ok": true
+    },
+    {
+      "name": "device layout has no overflow at 1440",
+      "ok": true
+    },
+    {
+      "name": "Back remains visible after scrolling at 1440",
+      "ok": true
+    },
+    {
+      "name": "device remains readable at doubled text size",
+      "ok": true
+    },
+    {
+      "name": "Device Check passes automated WCAG A/AA",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "return preserves the previous scan",
+      "ok": true
+    },
+    {
+      "name": "Return inside checks also restores reader",
+      "ok": true
+    },
+    {
+      "name": "receipt speech control is visible at 320",
+      "ok": true
+    },
+    {
+      "name": "receipt layout has no overflow at 320",
+      "ok": true
+    },
+    {
+      "name": "receipt speech control is visible at 390",
+      "ok": true
+    },
+    {
+      "name": "receipt layout has no overflow at 390",
+      "ok": true
+    },
+    {
+      "name": "receipt speech control is visible at 768",
+      "ok": true
+    },
+    {
+      "name": "receipt layout has no overflow at 768",
+      "ok": true
+    },
+    {
+      "name": "receipt speech control is visible at 1440",
+      "ok": true
+    },
+    {
+      "name": "receipt layout has no overflow at 1440",
+      "ok": true
+    }
+  ],
+  "device": {
+    "rows": [
+      {
+        "title": "Camera",
+        "state": "Available when you choose Scan",
+        "explanation": "SightLine asks permission when you start scanning. No camera was opened by this check.",
+        "ok": true
+      },
+      {
+        "title": "Reading software",
+        "state": "Supported",
+        "explanation": "The browser supports on-device reading. Use a real scan to check recognition.",
+        "ok": true
+      },
+      {
+        "title": "Offline reading",
+        "state": "Reading files saved",
+        "explanation": "The required files are available on this device.",
+        "ok": true
+      },
+      {
+        "title": "Recognition files",
+        "state": "Available",
+        "explanation": "The reading models and their runtime files are available. This is not an accuracy test.",
+        "ok": true
+      },
+      {
+        "title": "Read Aloud",
+        "state": "Offline English voice available",
+        "explanation": "An installed English voice is available. Cantonese is available too. Test the voice below to check sound.",
+        "ok": true
+      }
+    ],
+    "installed": true,
+    "models": true,
+    "english": true,
+    "cantonese": true,
+    "audioVerified": false,
+    "checkedAt": 1792816037304
+  },
+  "physicalAudioVerified": false
+}

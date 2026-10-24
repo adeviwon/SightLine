@@ -1,0 +1,74 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project SightLine.xcodeproj -scheme SightLine -sdk iphonesimulator -configuration Debug -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+    SDKROOT = iphonesimulator27.1
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, id:dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder, name:Any iOS Simulator Device }
+{ platform:iOS Simulator, arch:arm64, id:ABFF6B1A-F919-4D81-B93F-106E7C7946EE, OS:27.0, name:iPad (A16) }
+{ platform:iOS Simulator, arch:arm64, id:85AE4C7B-029E-44E7-89B9-44958A33166A, OS:27.0, name:iPad Air 11-inch (M4) }
+{ platform:iOS Simulator, arch:arm64, id:40FF675A-8766-40A3-9CE2-C7BD36D4013B, OS:27.0, name:iPad Air 13-inch (M4) }
+{ platform:iOS Simulator, arch:arm64, id:E0674375-910D-4273-AEB3-447ECC97B12A, OS:27.0, name:iPad Pro 11-inch (M5) }
+{ platform:iOS Simulator, arch:arm64, id:9FD1A12D-EC73-40CF-BF6F-4A489BA1742C, OS:27.0, name:iPad Pro 13-inch (M5) }
+{ platform:iOS Simulator, arch:arm64, id:D8EDAF4E-4E6A-45AE-B9DC-A3D020417406, OS:27.0, name:iPad mini (A17 Pro) }
+{ platform:iOS Simulator, arch:arm64, id:0BED3E95-24CC-4924-826D-562BF2A4943D, OS:27.0, name:iPhone 17 }
+{ platform:iOS Simulator, arch:arm64, id:B8772767-502A-4249-82D7-2E1AF531316F, OS:27.0, name:iPhone 17e }
+{ platform:iOS Simulator, arch:arm64, id:FCC62008-6DDA-4FC7-A120-0A8C6074D173, OS:27.0, name:iPhone 18 Pro Max }
+{ platform:iOS Simulator, arch:arm64, id:1A6042CE-9130-4469-96F0-8B6390EA2409, OS:27.0, name:iPhone Air }
+{ platform:macOS, arch:arm64, variant:Designed for [iPad,iPhone], id:00008112-000645DE1E04401E, name:My Mac }
+{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device }
+{ platform:iOS, arch:arm64, id:<DEVICE_UDID>, name:the iPhone }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'SightLine' in project 'SightLine' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 6b4b6019f3acc548ce1a3d69b1bd28e1
+Build description path: <repo>/ios/build/Build/Intermediates.noindex/XCBuildData/6b4b6019f3acc548ce1a3d69b1bd28e1.xcbuilddata
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk <repo>/ios/build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache
+    cd <repo>/ios/SightLine.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -o <repo>/ios/build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache
+
+CpResource <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/app <repo>/app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks <repo>/app <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app
+
+ProcessInfoPlistFile <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist <repo>/ios/Generated/Info.plist (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-infoPlistUtility <repo>/ios/Generated/Info.plist -producttype com.apple.product-type.application -genpkginfo <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -o <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist
+
+CopySwiftLibs <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-swiftStdLibTool --copy --verbose --scan-executable <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib --scan-folder <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/Frameworks --scan-folder <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/PlugIns --scan-folder <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/SystemExtensions --scan-folder <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/Extensions --platform iphonesimulator --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination <repo>/ios/build/Build/Products/Debug-iphonesimulator/SightLine.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info <repo>/ios/build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+Ignoring --strip-bitcode because --sign was not passed
+
+PruneExplicitPrecompiledModules <repo>/ios/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules <repo>/ios/build/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules <repo>/ios/build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+

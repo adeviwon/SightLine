@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: receipt uses Hong Kong Traditional Chinese and exact HKD cents
+ok 1 - receipt uses Hong Kong Traditional Chinese and exact HKD cents
+  ---
+  duration_ms: 0.886167
+  type: 'test'
+  ...
+# Subtest: unknown brand is preserved verbatim
+ok 2 - unknown brand is preserved verbatim
+  ---
+  duration_ms: 0.214584
+  type: 'test'
+  ...
+# Subtest: uncertain totals are never spoken
+ok 3 - uncertain totals are never spoken
+  ---
+  duration_ms: 0.38275
+  type: 'test'
+  ...
+# Subtest: unmarked currency is not invented as HKD
+ok 4 - unmarked currency is not invented as HKD
+  ---
+  duration_ms: 0.209
+  type: 'test'
+  ...
+# Subtest: fractional medicine strengths retain their decimal
+ok 5 - fractional medicine strengths retain their decimal
+  ---
+  duration_ms: 0.205833
+  type: 'test'
+  ...
+# Subtest: medical incompleteness remains a refusal
+ok 6 - medical incompleteness remains a refusal
+  ---
+  duration_ms: 0.057416
+  type: 'test'
+  ...
+# Subtest: multiple medicines cannot be paired to one dose
+ok 7 - multiple medicines cannot be paired to one dose
+  ---
+  duration_ms: 0.104083
+  type: 'test'
+  ...
+# Subtest: negated instructions never match a positive phrase
+ok 8 - negated instructions never match a positive phrase
+  ---
+  duration_ms: 0.052416
+  type: 'test'
+  ...
+# Subtest: malformed prices and uncertain unknown document types are refused
+ok 9 - malformed prices and uncertain unknown document types are refused
+  ---
+  duration_ms: 0.315584
+  type: 'test'
+  ...
+# Subtest: malformed separators are never repaired into a different price
+ok 10 - malformed separators are never repaired into a different price
+  ---
+  duration_ms: 0.268958
+  type: 'test'
+  ...
+# Subtest: Cantonese medical copy does not guess whether a quantity is strength or dose
+ok 11 - Cantonese medical copy does not guess whether a quantity is strength or dose
+  ---
+  duration_ms: 0.127875
+  type: 'test'
+  ...
+# Subtest: PDF scope is retained in the Cantonese summary
+ok 12 - PDF scope is retained in the Cantonese summary
+  ---
+  duration_ms: 0.055917
+  type: 'test'
+  ...
+# Subtest: Cantonese receipt speaks an unambiguous ISO date in Chinese
+ok 13 - Cantonese receipt speaks an unambiguous ISO date in Chinese
+  ---
+  duration_ms: 0.085917
+  type: 'test'
+  ...
+# Subtest: Cantonese receipt summary supports subtotal and discount
+ok 14 - Cantonese receipt summary supports subtotal and discount
+  ---
+  duration_ms: 0.04575
+  type: 'test'
+  ...
+# Subtest: Cantonese receipt speaks supported quantities without losing the count
+ok 15 - Cantonese receipt speaks supported quantities without losing the count
+  ---
+  duration_ms: 0.103167
+  type: 'test'
+  ...
+# Subtest: missing IndexedDB fails honestly without claiming a save
+ok 16 - missing IndexedDB fails honestly without claiming a save
+  ---
+  duration_ms: 0.673042
+  type: 'test'
+  ...
+# Subtest: receipt label and verified PARKnSHOP display localize with English preserved
+ok 17 - receipt label and verified PARKnSHOP display localize with English preserved
+  ---
+  duration_ms: 0.774541
+  type: 'test'
+  ...
+# Subtest: unknown merchant and unsupported language remain verbatim and marked
+ok 18 - unknown merchant and unsupported language remain verbatim and marked
+  ---
+  duration_ms: 0.169834
+  type: 'test'
+  ...
+# Subtest: HK currency spelling and numeric precision are not changed
+ok 19 - HK currency spelling and numeric precision are not changed
+  ---
+  duration_ms: 0.0775
+  type: 'test'
+  ...
+# Subtest: ISO date localized without changing its digits
+ok 20 - ISO date localized without changing its digits
+  ---
+  duration_ms: 0.411625
+  type: 'test'
+  ...
+# Subtest: verified payment method and quantity map without changing numbers
+ok 21 - verified payment method and quantity map without changing numbers
+  ---
+  duration_ms: 0.517709
+  type: 'test'
+  ...
+# Subtest: verified shop category maps while arbitrary categories do not
+ok 22 - verified shop category maps while arbitrary categories do not
+  ---
+  duration_ms: 0.063125
+  type: 'test'
+  ...
+# Subtest: dosage units localize while preserving numeric tokens and field confidence
+ok 23 - dosage units localize while preserving numeric tokens and field confidence
+  ---
+  duration_ms: 0.2895
+  type: 'test'
+  ...
+# Subtest: only exact supported medical instructions are translated
+ok 24 - only exact supported medical instructions are translated
+  ---
+  duration_ms: 0.164333
+  type: 'test'
+  ...
+# Subtest: unknown medical warning remains English with a truthful label
+ok 25 - unknown medical warning remains English with a truthful label
+  ---
+  duration_ms: 0.2285
+  type: 'test'
+  ...
+# Subtest: low confidence or values absent from OCR text are never localized
+ok 26 - low confidence or values absent from OCR text are never localized
+  ---
+  duration_ms: 0.288375
+  type: 'test'
+  ...
+# Subtest: numeric source matching rejects a value embedded in a different amount
+ok 27 - numeric source matching rejects a value embedded in a different amount
+  ---
+  duration_ms: 0.101
+  type: 'test'
+  ...
+# Subtest: English display preserves original labels, values, and language
+ok 28 - English display preserves original labels, values, and language
+  ---
+  duration_ms: 0.049333
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 63.344208

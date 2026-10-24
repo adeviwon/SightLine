@@ -24,6 +24,11 @@ for (const rel of listed) {
   if (!fs.existsSync(p)) { console.log("  MISSING  " + rel); missing++; }
 }
 console.log("precache entries: " + listed.length + ", missing: " + missing);
+const bytes = [...new Set(listed.filter(Boolean))].reduce((sum, rel) => {
+  const p = path.join(APP, rel);
+  return sum + (fs.existsSync(p) && fs.statSync(p).isFile() ? fs.statSync(p).size : 0);
+}, 0);
+console.log("required precache bytes: " + bytes + " (" + (bytes / 1048576).toFixed(2) + " MiB; ./ aliases index.html)");
 
 // Anything shipped outside vendor/ that the app loads but the SW does not list.
 const shipped = [];

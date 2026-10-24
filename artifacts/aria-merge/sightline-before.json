@@ -1,0 +1,39 @@
+{
+  "ocrText": "tan woon yann\nBOOKTAK(TAMANDAYA)SDN BHD\n789417-W\nNO.5 55,57859 DALANSAGU\nTAMAN DAYA.\n81100JOHOR BAHRU\nJOHOR\nDocumert TD01167104\nDate 25/12/20188 PM\nCashien MANIS\nMembet\nCASH BILL\nCODE/DESC PRI0 DisC ANOON\nQTY RTA\n9556939040116 KF MODELLNG LAY KIDDY\nP 9.000 0.00 9.00\nTotal 9.00\nRout dingAdjustment 0.00\nRound dTotai (RM) 9.00\nCasth 名00\nCHANGE 1o0\nGOODS 5OLD ARE NOT RE TURNABLLOH\nFXC HANGEABLE\nTHANK YOU\nPLEASE Cor AGAIN",
+  "normalized": "tan woon yann\nBOOKTAK(TAMANDAYA)SDN BHD\n789417-W\nNO.5 55,57859 DALANSAGU\nTAMAN DAYA.\n81100JOHOR BAHRU\nJOHOR\nDocumert TD01167104\nDate 25/12/20188 PM\nCashien MANIS\nMembet\nCASH BILL\nCODE/DESC PRI0 DisC ANOON\nQTY RTA\n9556939040116 KF MODELLNG LAY KIDDY\nP 9.000 0.00 9.00\nTotal 9.00\nRout dingAdjustment 0.00\nRound dTotai (RM) 9.00\nCasth 名00\nCHANGE 1o0\nGOODS 5OLD ARE NOT RE TURNABLLOH\nFXC HANGEABLE\nTHANK YOU\nPLEASE Cor AGAIN",
+  "category": "banking",
+  "categoryLabel": "Banking / Financial Document",
+  "classificationConfidence": 0.32240867614746094,
+  "classificationSource": "minilm",
+  "documentEvidence": 0,
+  "fields": [],
+  "entities": [],
+  "summary": "This is a banking document.",
+  "ocrConfidence": 0.8845656960716283,
+  "speechText": "",
+  "warnings": [
+    "No key details could be extracted. Try a closer, straighter photo with the whole page in frame.",
+    "Not clear enough to read aloud. Try another photo in better light.",
+    "The type is uncertain — this may not be a medicine label."
+  ],
+  "quality": 1,
+  "imageDims": "463×1013",
+  "skew": 0,
+  "engine": {
+    "restorer": "none",
+    "classifier": "onnx",
+    "ocr": "ppocrv5"
+  },
+  "sourceName": "sroie-X00016469612.jpg",
+  "pageNote": null,
+  "ms": 2628,
+  "modelProbs": {
+    "banking": 0.32240867614746094,
+    "medical": 0.2066551297903061,
+    "legal": 0.21943353116512299,
+    "general": 0.25150266289711
+  },
+  "timestamp": "2026-10-24T00:02:10.774Z",
+  "testElapsed": 2804,
+  "errors": []
+}

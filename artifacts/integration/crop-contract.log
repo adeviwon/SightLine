@@ -1,0 +1,17 @@
+crop geometry — every crop must be CROP_H tall (the training contract):
+  ok    228x15 box -> 320px wide, 32/32 rows filled
+  ok    209x10 box -> 320px wide, 32/32 rows filled
+  ok    257x13 box -> 320px wide, 32/32 rows filled
+  ok    259x14 box -> 320px wide, 32/32 rows filled
+  ok    296x20 box -> 320px wide, 32/32 rows filled
+  ok    80x12 box -> 213px wide, 32/32 rows filled
+
+crop geometry — width honours the cap, and the resize preserves the page:
+  ok    a very wide line never exceeds the graph's fixed width
+  ok    the crop's mean intensity matches the box it was cut from
+
+degenerate boxes must not become a black rectangle:
+  ok    an empty box returns a paper-filled crop, not ink
+
+9/9 checks passed
+CROP CONTRACT OK

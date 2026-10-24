@@ -1,0 +1,10 @@
+precache entries: 46, missing: 0
+required precache bytes: 40666316 (38.78 MiB; ./ aliases index.html)
+shipped files: 46
+  not precached:
+    js/aria/README.md
+    models/minilm_encoder.onnx
+    models/minilm_head.onnx
+    models/restorer.onnx
+    models/tokenizer.json
+    sw.js

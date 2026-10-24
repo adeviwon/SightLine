@@ -1,0 +1,9 @@
+
+per-vector-type (python vs javascript):
+  canonical    57 passed
+  decide      122 passed
+  resolve      72 passed
+  tokens       12 passed
+  validate    635 passed
+
+field guard contract: 898 vectors, 898 passed, 0 FAILED

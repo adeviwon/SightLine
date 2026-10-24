@@ -1,0 +1,3 @@
+PASS history starts empty with consent off
+PASS real receipt uses PP-OCRv5
+PASS scan alone does not save sensitive contents

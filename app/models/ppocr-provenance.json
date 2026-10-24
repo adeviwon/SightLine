@@ -1,0 +1,75 @@
+{
+  "engine": "PP-OCRv5 mobile",
+  "runtime": "Existing SightLine onnxruntime-web 1.20.1",
+  "source": {
+    "source": "https://huggingface.co/bukuroo/PPOCRv5-ONNX",
+    "commit": "47b3e1b4e90c79737cb71f562a6c85809067c7a5",
+    "license": "Apache-2.0",
+    "origin": "PaddlePaddle/PP-OCRv5_mobile_det, PaddlePaddle/PP-OCRv5_mobile_rec",
+    "upstream_fp32_bytes": {
+      "det": 4748769,
+      "rec": 16517247
+    },
+    "upstream_fp32_sha256": {
+      "det": "d7fe3ea74652890722c0f4d02458b7261d9f5ae6c92904d05707c9eb155c7924",
+      "rec": "bf66820f48fa99f779974c4df78e5274a9d8e0458c4137e8c5357e40e2c3faf2"
+    },
+    "dict_sha256": "1ea29636956177e400af712d9782e7693f3fb25f98617bed10479d2965a836fd",
+    "interface": {
+      "det": {
+        "inputs": [
+          {
+            "name": "x",
+            "shape": "NCHW dynamic, N=1, C=3, H/W multiples of 32",
+            "dtype": "float32"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "fetch_name_0",
+            "shape": "N,1,H,W",
+            "dtype": "float32"
+          }
+        ],
+        "preprocess": "RGB, resize long edge to a limit, /32-pad, x/255, then (x-mean)/std with ImageNet mean [0.485,0.456,0.406] std [0.229,0.224,0.225]",
+        "semantics": "DB text probability map in [0,1]; binarise then contour/unclip to boxes"
+      },
+      "rec": {
+        "inputs": [
+          {
+            "name": "x",
+            "shape": "NCHW, N=1, C=3, H=48, W dynamic",
+            "dtype": "float32"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "fetch_name_0",
+            "shape": "N, T, 18385",
+            "dtype": "float32"
+          }
+        ],
+        "preprocess": "crop resized to height 48, x/255, then (x-0.5)/0.5 (no ImageNet mean/std)",
+        "semantics": "CTC logits; T = W/8 for input width W; class 0 = blank, classes 1..18383 = dict lines, class 18384 = space"
+      }
+    }
+  },
+  "quantisation": {
+    "selected": "None: fp32 detector and fp32 recognizer",
+    "reason": "The local fixed-fixture native comparison measured lower CER with fp32. See artifacts/integration/precision-comparison.json."
+  },
+  "files": {
+    "ppocrv5-mobile-det.onnx": {
+      "bytes": 4748769,
+      "sha256": "d7fe3ea74652890722c0f4d02458b7261d9f5ae6c92904d05707c9eb155c7924"
+    },
+    "ppocrv5_dict.txt": {
+      "bytes": 92395,
+      "sha256": "1ea29636956177e400af712d9782e7693f3fb25f98617bed10479d2965a836fd"
+    },
+    "ppocrv5-mobile-rec.onnx": {
+      "bytes": 16517247,
+      "sha256": "bf66820f48fa99f779974c4df78e5274a9d8e0458c4137e8c5357e40e2c3faf2"
+    }
+  }
+}

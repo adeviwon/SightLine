@@ -1,0 +1,40 @@
+PASS history starts empty with consent off
+PASS real receipt uses PP-OCRv5
+PASS scan alone does not save sensitive contents
+PASS en-GB actual local platform speech ends
+PASS en-GB correct voice locale
+PASS language switches without OCR or source changes
+PASS main labels use Traditional Chinese
+PASS zh-HK actual local platform speech ends
+PASS zh-HK correct voice locale
+PASS Cantonese receipt is generated Chinese, not English with an accent
+PASS uncertain receipt total stays out of both languages
+PASS explicit consent precedes saving
+PASS successful transaction stores one record without an image
+PASS language and consent persist across reload
+PASS history opens saved source with no OCR
+PASS repeated switching never invokes OCR
+PASS saved result reopens offline
+PASS en-GB actual local platform speech ends
+PASS en-GB correct voice locale
+PASS zh-HK actual local platform speech ends
+PASS zh-HK correct voice locale
+PASS prescription retains full safe source
+PASS zh-HK actual local platform speech ends
+PASS zh-HK correct voice locale
+PASS Cantonese medicine keeps original name and safe strength
+PASS saved prescription reopens with medical gates
+PASS quota failure is honest and current result survives
+PASS single delete commits
+PASS bulk deletion requires confirmation
+PASS delete all commits and disables automatic saving
+PASS history no overflow 320 en-GB
+PASS history no overflow 320 zh-HK
+PASS history no overflow 390 en-GB
+PASS history no overflow 390 zh-HK
+PASS history no overflow 768 en-GB
+PASS history no overflow 768 zh-HK
+PASS history no overflow 1440 en-GB
+PASS history no overflow 1440 zh-HK
+PASS no unexplained page errors
+{"pass":39,"fail":0}

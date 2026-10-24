@@ -1,0 +1,1730 @@
+{
+ "url": "http://127.0.0.1:8147/selftest.html",
+ "at": "2026-10-24T00:37:56.968Z",
+ "allow": [
+  "app-title-size"
+ ],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.48,
+    0.46,
+    0.43
+   ],
+   "motion": {
+    "elements": 2,
+    "css": 0,
+    "transitions": 2,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 1918,
+     "screens": 2.1,
+     "words": 160,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 0,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Check your device",
+     "words": 3,
+     "chars": 17,
+     "lines": 1,
+     "size": 44,
+     "vw": 3.1,
+     "font": "-apple-system",
+     "weight": 650,
+     "tracking": -0.04,
+     "leading": 1.15,
+     "top": 117,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Check your device",
+     "words": 3,
+     "lines": 1,
+     "size": 44,
+     "font": "-apple-system"
+    },
+    "headings": [
+     {
+      "text": "Check your device",
+      "words": 3,
+      "chars": 17,
+      "lines": 1,
+      "size": 44,
+      "vw": 3.1,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.035,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.58,
+      "top": 117,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "-apple-system",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      20,
+      23,
+      44
+     ],
+     "sizeCount": 3,
+     "notLoaded": [],
+     "body": {
+      "font": "-apple-system",
+      "size": 20,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 10.7
+     },
+     "measureChars": 39,
+     "max": {
+      "size": 44,
+      "vw": 3.1,
+      "font": "-apple-system",
+      "text": "Check your device"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.08,
+     "centerShare": 0.01,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f7f8f5",
+     "bodyBgHsl": {
+      "h": 80,
+      "s": 0.18,
+      "l": 0.97
+     },
+     "dark": false,
+     "sectionBgs": [],
+     "textColors": [
+      {
+       "color": "#203844",
+       "share": 0.9
+      },
+      {
+       "color": "#32634a",
+       "share": 0.08
+      },
+      {
+       "color": "#000000",
+       "share": 0.01
+      },
+      {
+       "color": "#183b4e",
+       "share": 0
+      },
+      {
+       "color": "#765419",
+       "share": 0
+      }
+     ],
+     "button": {
+      "bg": "#efefef",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.94
+      },
+      "fg": "#000000"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 6,
+     "inHero": 1,
+     "radius": 14,
+     "height": 64,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Run device checks"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 1,
+     "hairlineSamples": [
+      "header.device-nav 1440px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 7,
+     "boxRadius": 20,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 5,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 491
+      }
+     ]
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 81,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 1918,
+    "margins": {
+     "left": 300,
+     "right": 476
+    },
+    "sections": [],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Check your device",
+      "size": 44,
+      "top": 117,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 300,
+      "n": 17
+     },
+     {
+      "x": 324,
+      "n": 13
+     }
+    ],
+    "leftBlocks": 30,
+    "bodySize": 20,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0.19,
+    "voidBox": {
+     "x": 840,
+     "y": 120,
+     "w": 600,
+     "h": 420
+    }
+   },
+   "app": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "dark": false,
+    "ground": "#f7f8f5",
+    "sidebar": null,
+    "topbar": {
+     "h": 81
+    },
+    "canvas": {
+     "left": 300,
+     "right": 300
+    },
+    "hero": {
+     "text": "Check your device",
+     "words": 3,
+     "chars": 17,
+     "lines": 1,
+     "size": 44,
+     "vw": 3.1,
+     "font": "-apple-system",
+     "weight": 650,
+     "tracking": -0.04,
+     "leading": 1.15,
+     "top": 117,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 7,
+     "firstScreen": 4,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 7,
+     "radii": [
+      [
+       20,
+       7
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      19,
+      20,
+      23,
+      44
+     ]
+    },
+    "title": {
+     "text": "Check your device",
+     "size": 44,
+     "top": 117
+    },
+    "colourShare": 0
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 2,
+   "filled": [
+    0.76,
+    0.71
+   ],
+   "motion": {
+    "elements": 1,
+    "css": 0,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 2035,
+     "screens": 2,
+     "words": 165,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 0,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Check your device",
+     "words": 3,
+     "chars": 17,
+     "lines": 1,
+     "size": 38,
+     "vw": 5,
+     "font": "-apple-system",
+     "weight": 650,
+     "tracking": -0.04,
+     "leading": 1.15,
+     "top": 117,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Check your device",
+     "words": 3,
+     "lines": 1,
+     "size": 38.4,
+     "font": "-apple-system"
+    },
+    "headings": [
+     {
+      "text": "Check your device",
+      "words": 3,
+      "chars": 17,
+      "lines": 1,
+      "size": 38.4,
+      "vw": 5,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.035,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.95,
+      "top": 117,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "-apple-system",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      20,
+      23,
+      38
+     ],
+     "sizeCount": 3,
+     "notLoaded": [],
+     "body": {
+      "font": "-apple-system",
+      "size": 20,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 10.7
+     },
+     "measureChars": 68,
+     "max": {
+      "size": 38.4,
+      "vw": 5,
+      "font": "-apple-system",
+      "text": "Check your device"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.08,
+     "centerShare": 0.01,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f7f8f5",
+     "bodyBgHsl": {
+      "h": 80,
+      "s": 0.18,
+      "l": 0.97
+     },
+     "dark": false,
+     "sectionBgs": [],
+     "textColors": [
+      {
+       "color": "#203844",
+       "share": 0.9
+      },
+      {
+       "color": "#32634a",
+       "share": 0.09
+      },
+      {
+       "color": "#000000",
+       "share": 0.01
+      },
+      {
+       "color": "#183b4e",
+       "share": 0
+      },
+      {
+       "color": "#ffffff",
+       "share": 0
+      }
+     ],
+     "button": {
+      "bg": "#efefef",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.94
+      },
+      "fg": "#000000"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 6,
+     "inHero": 1,
+     "radius": 14,
+     "height": 64,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Run device checks"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 1,
+     "hairlineSamples": [
+      "header.device-nav 768px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 7,
+     "boxRadius": 20,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 81,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 2035,
+    "margins": {
+     "left": 20,
+     "right": 127
+    },
+    "sections": [
+     {
+      "sel": "section.readiness-panel",
+      "tag": "section",
+      "top": 236,
+      "height": 221,
+      "words": 19,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Ready to try reading",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 44,
+      "right": 186,
+      "textLeft": 44,
+      "textRight": 186,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div#device-checks.device-checks",
+      "tag": "div",
+      "top": 485,
+      "height": 947,
+      "words": 93,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Camera",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 44,
+      "right": 63,
+      "textLeft": 44,
+      "textRight": 63,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.voice-panel",
+      "tag": "section",
+      "top": 1461,
+      "height": 288,
+      "words": 21,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Try the voice",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 44,
+      "right": 230,
+      "textLeft": 44,
+      "textRight": 230,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Check your device",
+      "size": 38,
+      "top": 117,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 20,
+      "n": 17
+     },
+     {
+      "x": 44,
+      "n": 13
+     }
+    ],
+    "leftBlocks": 30,
+    "bodySize": 20,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "dark": false,
+    "ground": "#f7f8f5",
+    "sidebar": null,
+    "topbar": {
+     "h": 81
+    },
+    "canvas": {
+     "left": 20,
+     "right": 20
+    },
+    "hero": {
+     "text": "Check your device",
+     "words": 3,
+     "chars": 17,
+     "lines": 1,
+     "size": 38,
+     "vw": 5,
+     "font": "-apple-system",
+     "weight": 650,
+     "tracking": -0.04,
+     "leading": 1.15,
+     "top": 117,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 7,
+     "firstScreen": 4,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 7,
+     "radii": [
+      [
+       20,
+       7
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      19,
+      20,
+      23,
+      38
+     ]
+    },
+    "title": {
+     "text": "Check your device",
+     "size": 38,
+     "top": 117
+    },
+    "colourShare": 0.001
+   },
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 3,
+   "filled": [
+    0.76,
+    0.85,
+    0.75
+   ],
+   "motion": {
+    "elements": 1,
+    "css": 0,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 2329,
+     "screens": 2.8,
+     "words": 164,
+     "img": 0,
+     "video": 0,
+     "canvas": 0,
+     "svg": 0,
+     "sections": 7,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Check your device",
+     "words": 3,
+     "chars": 17,
+     "lines": 1,
+     "size": 33,
+     "vw": 8.5,
+     "font": "-apple-system",
+     "weight": 650,
+     "tracking": -0.04,
+     "leading": 1.15,
+     "top": 109,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "h1": {
+     "text": "Check your device",
+     "words": 3,
+     "lines": 1,
+     "size": 33,
+     "font": "-apple-system"
+    },
+    "headings": [
+     {
+      "text": "Check your device",
+      "words": 3,
+      "chars": 17,
+      "lines": 1,
+      "size": 33,
+      "vw": 8.5,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.035,
+      "leading": 1.15,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 109,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Ready to try reading",
+      "words": 4,
+      "chars": 20,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 273,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Camera",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 545,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Reading software",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 767,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Offline reading",
+      "words": 2,
+      "chars": 15,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 989,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Recognition files",
+      "words": 2,
+      "chars": 17,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 1211,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Read Aloud",
+      "words": 2,
+      "chars": 10,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 1432,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Try the voice",
+      "words": 3,
+      "chars": 13,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.82,
+      "top": 1697,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "norm() — evaluate.py — 8/8",
+      "words": 5,
+      "chars": 26,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 2760,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "word_accuracy() — evaluate.py — 6/6",
+      "words": 5,
+      "chars": 35,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 3761,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "fields_found() — evaluate.py — 9/9",
+      "words": 5,
+      "chars": 34,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 4599,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "classify_doc() — evaluate.py keyword fallback — 7/7",
+      "words": 7,
+      "chars": 51,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 5929,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "normalizeOCRText() — the OCR-confusion normalizer — 19/19",
+      "words": 7,
+      "chars": 57,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 6910,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "understand() — the full post-OCR chain — 20/20",
+      "words": 8,
+      "chars": 46,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 9172,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Blurry-capture repair — the medical safety case — 7/7",
+      "words": 9,
+      "chars": 53,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 11826,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "extractEntities() — the NER layer — 7/7",
+      "words": 7,
+      "chars": 39,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 12993,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "OCR garbage rejection — 5/5",
+      "words": 5,
+      "chars": 27,
+      "lines": 1,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 13912,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "structure_score — account numbers (no lookbehind) — 7/7",
+      "words": 8,
+      "chars": 55,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 14546,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Robustness — no stage throws on bad input — 32/32",
+      "words": 10,
+      "chars": 49,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 15681,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "TTS chunking — iOS utterance limit — 4/4",
+      "words": 8,
+      "chars": 40,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 20051,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Classifier math — pooling and softmax — 6/6",
+      "words": 8,
+      "chars": 43,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 20665,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Restorer tiling — must match arm_restorer — 15/15",
+      "words": 8,
+      "chars": 49,
+      "lines": 2,
+      "size": 23,
+      "vw": 5.9,
+      "font": "-apple-system",
+      "weight": 650,
+      "tracking": -0.02,
+      "leading": 1.3,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 21534,
+      "tag": "h2",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 22,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": 5,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "-apple-system",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      20,
+      23,
+      33
+     ],
+     "sizeCount": 3,
+     "notLoaded": [],
+     "body": {
+      "font": "-apple-system",
+      "size": 20,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 10.7
+     },
+     "measureChars": 32,
+     "max": {
+      "size": 33,
+      "vw": 8.5,
+      "font": "-apple-system",
+      "text": "Check your device"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0.09,
+     "centerShare": 0.01,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#f7f8f5",
+     "bodyBgHsl": {
+      "h": 80,
+      "s": 0.18,
+      "l": 0.97
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#ffffff",
+       "top": 1677,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 1
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#203844",
+       "share": 0.89
+      },
+      {
+       "color": "#32634a",
+       "share": 0.09
+      },
+      {
+       "color": "#000000",
+       "share": 0.01
+      },
+      {
+       "color": "#183b4e",
+       "share": 0
+      },
+      {
+       "color": "#ffffff",
+       "share": 0
+      }
+     ],
+     "button": {
+      "bg": "#efefef",
+      "hsl": {
+       "h": 0,
+       "s": 0,
+       "l": 0.94
+      },
+      "fg": "#000000"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 6,
+     "inHero": 1,
+     "radius": 14,
+     "height": 64,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Run device checks"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 1,
+     "hairlineSamples": [
+      "header.device-nav 390px"
+     ],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 7,
+     "boxRadius": 20,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 81,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": []
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 2329,
+    "margins": {
+     "left": 16,
+     "right": 24
+    },
+    "sections": [
+     {
+      "sel": "section.readiness-panel",
+      "tag": "section",
+      "top": 253,
+      "height": 244,
+      "words": 19,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Ready to try reading",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 36,
+      "right": 44,
+      "textLeft": 36,
+      "textRight": 44,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "div#device-checks.device-checks",
+      "tag": "div",
+      "top": 525,
+      "height": 1124,
+      "words": 93,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Camera",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 36,
+      "right": 37,
+      "textLeft": 36,
+      "textRight": 37,
+      "fullBleed": false,
+      "footer": false,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "section.voice-panel",
+      "tag": "section",
+      "top": 1677,
+      "height": 342,
+      "words": 21,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Try the voice",
+       "size": 23,
+       "tag": "h2"
+      },
+      "left": 36,
+      "right": 91,
+      "textLeft": 36,
+      "textRight": 91,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Check your device",
+      "size": 33,
+      "top": 109,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 17
+     },
+     {
+      "x": 36,
+      "n": 13
+     }
+    ],
+    "leftBlocks": 30,
+    "bodySize": 20,
+    "stage": false,
+    "explains": true,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "dark": false,
+    "ground": "#f7f8f5",
+    "sidebar": null,
+    "topbar": {
+     "h": 81
+    },
+    "canvas": {
+     "left": 16,
+     "right": 16
+    },
+    "hero": {
+     "text": "Check your device",
+     "words": 3,
+     "chars": 17,
+     "lines": 1,
+     "size": 33,
+     "vw": 8.5,
+     "font": "-apple-system",
+     "weight": 650,
+     "tracking": -0.04,
+     "leading": 1.15,
+     "top": 109,
+     "tag": "h1",
+     "kind": "heading",
+     "align": "left",
+     "position": "left"
+    },
+    "charts": 0,
+    "layout": {
+     "panels": 7,
+     "firstScreen": 3,
+     "ragged": [],
+     "voids": []
+    },
+    "tiles": 0,
+    "panels": {
+     "count": 7,
+     "radii": [
+      [
+       20,
+       7
+      ]
+     ],
+     "heavyBorders": 0,
+     "borderSamples": [],
+     "heavyShadows": 0,
+     "softShadows": 0,
+     "shadowSamples": [],
+     "glass": 0
+    },
+    "chips": {
+     "count": 0,
+     "hues": 0,
+     "samples": []
+    },
+    "numbers": {
+     "cells": 0,
+     "leftAligned": 0,
+     "figures": 0,
+     "tabularShare": null,
+     "kpiMax": null
+    },
+    "rows": null,
+    "chartHues": 0,
+    "placeholders": [],
+    "type": {
+     "under13": 0,
+     "tiny": 0,
+     "tinySamples": [],
+     "sizes": [
+      19,
+      20,
+      23,
+      33
+     ]
+    },
+    "title": {
+     "text": "Check your device",
+     "size": 33,
+     "top": 109
+    },
+    "colourShare": 0.002
+   },
+   "consoleErrors": []
+  }
+ ],
+ "findings": [],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "<repo>/artifacts/speech-repair/taste-device/desktop-fold.jpg",
+   "pages": [
+    "<repo>/artifacts/speech-repair/taste-device/desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "<repo>/artifacts/speech-repair/taste-device/tablet-fold.jpg",
+   "pages": [
+    "<repo>/artifacts/speech-repair/taste-device/tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "<repo>/artifacts/speech-repair/taste-device/mobile-fold.jpg",
+   "pages": [
+    "<repo>/artifacts/speech-repair/taste-device/mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

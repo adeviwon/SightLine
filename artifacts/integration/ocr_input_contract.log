@@ -1,0 +1,10 @@
+the raw image must reach the recogniser:
+  ok    preprocess builds a `raw` candidate from the deskewed grayscale
+  ok    the candidate list offers raw alongside the processed ones
+  ok    the reporting arm names match the candidate list
+
+the tensor tail must not be decoded:
+  ok    recognise() limits decoding to the crop's true timesteps
+
+4/4 checks passed
+OCR INPUT CONTRACT OK

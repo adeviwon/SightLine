@@ -1,320 +1,651 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>SightLine — On-Device Medicine-Label Reader</title>
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>SightLine — A little clarity</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#f7f8f5" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="SightLine" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon" href="assets/icon-180.png" />
+    <link rel="icon" href="assets/favicon.ico" />
+    <link rel="stylesheet" href="assets/reader.css" />
+  </head>
+  <body data-screen="home">
+    <svg
+      class="icon-definitions"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <symbol id="i-camera" viewBox="0 0 24 24">
+          <path d="M8 5 9.5 3h5L16 5h3a2 2 0 0 1 2 2v12H3V7a2 2 0 0 1 2-2Z" />
+          <circle cx="12" cy="12" r="4" />
+        </symbol>
+        <symbol id="i-upload" viewBox="0 0 24 24">
+          <path d="M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6" />
+        </symbol>
+        <symbol id="i-sound" viewBox="0 0 24 24">
+          <path
+            d="m11 4-6 5H2v6h3l6 5ZM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"
+          />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="m14 5-7 7 7 7M7 12h14" />
+        </symbol>
+        <symbol id="i-close" viewBox="0 0 24 24">
+          <path d="m6 6 12 12M6 18 18 6" />
+        </symbol>
+        <symbol id="i-lock" viewBox="0 0 24 24">
+          <rect x="5" y="10" width="14" height="11" rx="3" />
+          <path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2" />
+        </symbol>
+        <symbol id="i-tune" viewBox="0 0 24 24">
+          <path d="M4 7h7m6 0h3M4 17h2m6 0h8" />
+          <circle cx="14" cy="7" r="3" />
+          <circle cx="9" cy="17" r="3" />
+        </symbol>
+        <symbol id="i-help" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M9.5 9a2.5 2.5 0 1 1 4 2c-1 .6-1.5 1-1.5 2m0 3v.1" />
+        </symbol>
+        <symbol id="i-doc" viewBox="0 0 24 24">
+          <path d="M14 3H5v18h14V8ZM14 3v5h5M8 12h8m-8 4h6" />
+        </symbol>
+        <symbol id="i-globe" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <ellipse cx="12" cy="12" rx="4" ry="9" />
+          <path d="M3 12h18" />
+        </symbol>
+      </defs>
+    </svg>
+    <a class="skip-link" href="#stage">Skip to the reader</a>
+    <header class="app-header">
+      <a class="wordmark" href="./" aria-label="SightLine home"
+        ><svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true">
+          <path d="M12 4H5v8m19-8h7v8M5 24v7h7m19-7v7h-7" />
+          <path d="M12 14h12m-12 8h8" /></svg
+        ><span>Sight<span class="brand-light">Line</span></span></a
+      >
+      <span
+        id="badge"
+        class="connection-status"
+        role="status"
+        data-state="pending"
+        >Checking offline access</span
+      >
+      <nav aria-label="Reader tools">
+        <button
+          class="icon-button"
+          id="btn-preferences"
+          aria-label="Reading preferences"
+        >
+          <svg class="icon"><use href="#i-tune" /></svg></button
+        ><button
+          class="icon-button"
+          id="btn-help"
+          aria-label="Help using SightLine"
+        >
+          <svg class="icon"><use href="#i-help" /></svg>
+        </button>
+      </nav>
+    </header>
+    <div
+      id="live"
+      class="sr-only"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+    <div
+      id="live-assertive"
+      class="sr-only"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    ></div>
+    <nav class="language-bar" aria-label="Main navigation">
+      <button id="btn-history" class="text-button">History</button>
+      <label class="sr-only" for="visible-language">Language</label
+      ><select id="visible-language" data-language>
+        <option value="en-GB">English</option>
+        <option value="zh-HK">繁體中文（廣東話）</option>
+      </select>
+    </nav>
+    <main id="stage" tabindex="-1">
+      <div id="error-banner" class="notice error-notice" hidden></div>
+      <section id="home-view" class="home-view" aria-labelledby="home-title">
+        <div class="home-copy">
+          <p class="supporting-line">
+            A little clarity. A little more independence.
+          </p>
+          <h1 id="home-title" tabindex="-1">
+            Make medicine labels easier to read.
+          </h1>
+          <p class="intro">
+            Take a photo. See the words more clearly, or hear them read aloud.
+          </p>
+          <div class="entry-actions">
+            <button id="btn-camera" class="button primary">
+              <svg class="icon"><use href="#i-camera" /></svg>Scan with Camera
+            </button>
+            <button id="btn-pick" class="button secondary">
+              <svg class="icon"><use href="#i-upload" /></svg>Upload Photo or
+              PDF
+            </button>
+          </div>
+          <p class="privacy-note">
+            <svg class="icon"><use href="#i-lock" /></svg>Your photos stay on
+            your device.
+          </p>
+        </div>
+        <figure class="positioning-guide">
+          <svg
+            class="label-drawing"
+            viewBox="0 0 420 350"
+            role="img"
+            aria-labelledby="guide-title"
+          >
+            <title id="guide-title">
+              Keep a flat medicine label within the camera frame
+            </title>
+            <rect
+              x="99"
+              y="60"
+              width="222"
+              height="237"
+              rx="12"
+              fill="var(--paper-edge)"
+            />
+            <rect
+              x="91"
+              y="50"
+              width="222"
+              height="237"
+              rx="12"
+              fill="var(--surface)"
+            />
+            <path
+              d="M122 94h57"
+              stroke="var(--primary)"
+              stroke-width="9"
+              stroke-linecap="round"
+            />
+            <path
+              d="M122 122h150m-150 17h121m-121 34h139m-139 17h105m-105 34h150m-150 17h83"
+              stroke="var(--drawing-ink)"
+              stroke-width="7"
+              stroke-linecap="round"
+            />
+            <path
+              d="M65 102V40h62m166 0h62v62M65 237v62h62m228-62v62h-62"
+              fill="none"
+              stroke="var(--accent)"
+              stroke-width="3"
+              stroke-linecap="round"
+            />
+          </svg>
+          <figcaption>
+            <strong>A clear photo makes a difference.</strong
+            ><span
+              >Keep the label flat, in good light, with all the words in
+              view.</span
+            >
+          </figcaption>
+        </figure>
+      </section>
 
-<!-- PWA / install -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0a0a0a">
-<meta name="color-scheme" content="dark light">
+      <section
+        id="capture-view"
+        class="capture-view"
+        aria-labelledby="capture-title"
+        hidden
+      >
+        <div class="screen-top">
+          <button id="btn-cancel-camera" class="text-button">
+            <svg class="icon"><use href="#i-arrow" /></svg>Back</button
+          ><span>Camera</span>
+        </div>
+        <div class="capture-heading">
+          <h1 id="capture-title" tabindex="-1">Bring the label into view.</h1>
+          <p id="capture-help">Keep your hands steady and use good light.</p>
+        </div>
+        <div id="viewfinder" data-mode="none">
+          <video
+            id="video"
+            hidden
+            autoplay
+            playsinline
+            muted
+            aria-label="Live camera preview"
+          ></video>
+          <img id="preview" alt="Your document photo" hidden />
+          <div class="frame-guide" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+          <div id="quality-hint" role="note" hidden></div>
+          <div id="scan-line" hidden></div>
+          <div id="scan-flash" hidden></div>
+          <p id="camera-placeholder">Opening your camera…</p>
+        </div>
+        <div class="capture-actions">
+          <button id="btn-camera-retake" class="text-button" hidden>
+            Retake photo</button
+          ><button
+            id="btn-capture"
+            class="button primary"
+            aria-describedby="capture-help"
+          >
+            <svg class="icon"><use href="#i-camera" /></svg>Take photo</button
+          ><button id="btn-read-photo" class="button primary" hidden>
+            Read this photo
+          </button>
+        </div>
+      </section>
 
-<!-- iOS home-screen app -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SightLine">
-<meta name="mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="assets/icon-180.png">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
-<link rel="icon" href="assets/favicon.ico" sizes="192x192">
+      <section
+        id="processing-view"
+        class="processing-view"
+        aria-labelledby="processing-title"
+        hidden
+      >
+        <div class="reading-animation" aria-hidden="true">
+          <svg viewBox="0 0 96 110">
+            <rect x="16" y="8" width="64" height="90" rx="9" />
+            <path d="M31 32h34M31 47h34M31 62h25M31 77h30" /></svg
+          ><span></span>
+        </div>
+        <h1 id="processing-title" tabindex="-1">Reading your document…</h1>
+        <p>Your photo stays private, right here on this device.</p>
+        <div id="progress-wrap">
+          <p id="progress-label">Getting ready to read.</p>
+          <div
+            id="progress-track"
+            class="progress-track"
+            role="progressbar"
+            aria-label="Document reading progress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          >
+            <div id="progress-fill"></div>
+          </div>
+        </div>
+        <button id="btn-cancel-reading" class="text-button">
+          Cancel reading
+        </button>
+      </section>
 
-<style>
-/* ── Design tokens ────────────────────────────────────────────────────
-   Contrast: body text #f2f5f7 on #0a0a0a = 18.1:1 (WCAG AAA).
-   Muted text #a8b3bd on #0a0a0a = 8.9:1 (WCAG AAA).
-   Accent #58c7ff on #0a0a0a = 9.2:1. Green #3ddc9a = 11.4:1.
-   Every status colour is paired with a text label — never colour alone. */
-:root {
-  --bg: #0a0a0a;
-  --panel: #14181c;
-  --panel-2: #1c2228;
-  --line: #2b343c;
-  --text: #f2f5f7;
-  --muted: #a8b3bd;
-  --accent: #58c7ff;
-  --ok: #3ddc9a;
-  --warn: #ffc84d;
-  --err: #ff8a8a;
-  --tap: 48px;              /* WCAG 2.5.5 minimum target size */
-  --radius: 14px;
-}
-@media (prefers-contrast: more) {
-  :root { --text: #ffffff; --muted: #d7dee4; --line: #5a6771; --panel: #0d1114; }
-}
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg: #f7f9fa; --panel: #ffffff; --panel-2: #eef2f5; --line: #c3ccd3;
-    --text: #0d1114; --muted: #4a555e; --accent: #0b5f8a; --ok: #0d6b47;
-    --warn: #8a5a00; --err: #8c1f1f;
-  }
-}
+      <section
+        id="results"
+        class="results-view"
+        aria-labelledby="results-title"
+        hidden
+      >
+        <div class="screen-top">
+          <button id="btn-result-back" class="text-button">
+            <svg class="icon"><use href="#i-arrow" /></svg>Back</button
+          ><button id="btn-retake" class="text-button">Scan another</button>
+        </div>
+        <header class="results-heading">
+          <div>
+            <p id="doc-type" class="document-kind"></p>
+            <h1 id="results-title" tabindex="-1">What we read.</h1>
+          </div>
+          <button id="btn-speak" class="button primary" aria-describedby="speech-note">
+            <svg class="icon"><use href="#i-sound" /></svg
+            ><span>Read Aloud</span>
+          </button>
+        </header>
+        <p id="speech-note" class="speech-note" role="status" hidden></p>
+        <p
+          id="playback-status"
+          class="playback-status"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          hidden
+        ></p>
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { min-height: 100%; }
-body {
-  background: var(--bg); color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px; line-height: 1.5;
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  display: flex; flex-direction: column; align-items: stretch;
-  -webkit-text-size-adjust: 100%;
-}
+        <div id="warning-box" class="notice" role="status" hidden></div>
+        <p id="association-notice" class="notice" hidden>
+          Directions couldn’t be matched to individual medicines. Check the
+          original text and confirm them with a pharmacist.
+        </p>
+        <div class="results-layout">
+          <div class="result-information">
+            <section id="fields-card" aria-labelledby="fields-title" hidden>
+              <h2 id="fields-title" class="sr-only">
+                Details from your document
+              </h2>
+              <div id="fields-list" class="field-groups"></div>
+              <p id="medicine-missing" class="group-note" hidden></p>
+            </section>
+            <div id="empty-fields" class="empty-fields" hidden>
+              <h2>Some words need a closer look.</h2>
+              <p>
+                We haven’t filled in details we can’t read reliably. You can
+                check the text below or try a clearer photo.
+              </p>
+            </div>
+            <p class="result-reminder">
+              Check the original. Ask a pharmacist if unsure.
+            </p>
+            <div class="result-saving">
+              <button id="btn-save-scan" class="text-button">Save scan</button>
+              <p id="save-status" role="status"></p>
+            </div>
+            <p id="history-image-note" class="notice" hidden>
+              Original image is unavailable. Recognised text is available below.
+            </p>
+          <details id="spoken-summary" class="transcript-card">
+              <summary>
+                Summary to read aloud<span
+                  class="disclosure-mark"
+                  aria-hidden="true"
+                  >+</span
+                >
+              </summary>
+          <div id="spoken-preview" class="spoken-summary-sections"></div>
+            </details>
+            <button id="btn-use-english" class="button secondary" hidden>
+              Use English
+            </button>
+            <details id="transcript-details" class="transcript-card">
+              <summary>
+                All recognised text<span
+                  class="disclosure-mark"
+                  aria-hidden="true"
+                  >+</span
+                >
+              </summary>
+              <p class="transcript-note">
+                These are the words the reader found. They may contain mistakes.
+              </p>
+              <div
+                id="ocr-text"
+                tabindex="0"
+                role="region"
+                aria-label="Recognised document text"
+              ></div>
+            </details>
+            <details id="entities-card" class="secondary-details" hidden>
+              <summary>
+                Other words found<span
+                  class="disclosure-mark"
+                  aria-hidden="true"
+                  >+</span
+                >
+              </summary>
+              <div id="entities-list"></div>
+            </details>
+            <p id="summary-text" hidden></p>
+          </div>
+          <aside class="result-companion" aria-label="Reading tools">
+            <div class="reading-tools">
+              <h2>Make it easier to read</h2>
+              <button id="btn-language" class="text-button">
+                <svg class="icon"><use href="#i-globe" /></svg
+                ><span id="language-label">Reading language: English</span>
+              </button>
+              <p id="cantonese" lang="zh-HK" hidden></p>
+            </div>
+            <details id="source-details" class="source-details" hidden>
+              <summary>
+                <svg class="icon"><use href="#i-doc" /></svg>View original
+                image<span class="disclosure-mark" aria-hidden="true">+</span>
+              </summary>
+              <img
+                id="source-image"
+                alt="Your original document, for comparison"
+              />
+              <p>Check the words against this image.</p>
+            </details>
+            <details class="secondary-details technical-details">
+              <summary>
+                Details for a helper<span
+                  class="disclosure-mark"
+                  aria-hidden="true"
+                  >+</span
+                >
+              </summary>
+              <p id="result-meta"></p>
+              <p>
+                Text confidence describes the reading. Check important details
+                against the original.
+              </p>
+            </details>
+          </aside>
+        </div>
+      </section>
 
-/* ── Header ── */
-header { padding: 14px 16px; background: var(--panel); border-bottom: 1px solid var(--line); text-align: center; }
-header h1 { font-size: 22px; letter-spacing: 0.4px; }
-header h1 span { color: var(--accent); }
-header p { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
-#badge {
-  display: inline-block; margin-top: 9px; padding: 5px 13px; border-radius: 999px;
-  background: var(--ok); color: #04150e; font-size: 11px; font-weight: 800; letter-spacing: 0.3px;
-}
-#badge[data-state="pending"] { background: var(--warn); color: #241a00; }
-#badge[data-state="offline"] { background: var(--accent); color: #041722; }
-#badge[data-state="warn"] { background: var(--err); color: #2a0606; }
+      <section
+        id="error-view"
+        class="error-view"
+        aria-labelledby="error-title"
+        hidden
+      >
+        <svg class="error-symbol icon" aria-hidden="true">
+          <use href="#i-doc" />
+        </svg>
+        <h1 id="error-title" tabindex="-1">Let’s try that again.</h1>
+        <p id="error-recovery">A clearer photo or another file may help.</p>
+        <details id="reader-error-details" class="secondary-details" hidden>
+          <summary>Details for a helper</summary>
+          <p id="reader-error-detail" class="technical-checks"></p>
+        </details>
+        <div class="entry-actions">
+          <button id="btn-retry" class="button primary">Try again</button
+          ><button id="btn-error-home" class="text-button">
+            Back to the reader
+          </button>
+        </div>
+      </section>
+      <input
+        type="file"
+        id="file-input"
+        accept="image/*,application/pdf"
+        aria-label="Upload a photo or PDF"
+        hidden
+      />
+      <section id="history-view" aria-labelledby="history-title" hidden>
+        <div class="history-heading">
+          <button id="history-back" class="text-button">
+            ← Back to SightLine</button
+          ><button id="history-clear" class="text-button">Delete all</button>
+        </div>
+        <h1 id="history-title" tabindex="-1">Your saved scans</h1>
+        <p>Scans stay on this device. Clearing browser data can erase them.</p>
+        <p id="history-status" role="status"></p>
+        <div id="history-empty" class="empty-fields" hidden>
+          <h2>No saved scans yet</h2>
+          <p>Save a scan from its results, or enable saving in preferences.</p>
+          <p>Scans that were never saved cannot be recovered automatically.</p>
+        </div>
+        <div id="history-list"></div>
+      </section>
+    </main>
+    <footer class="app-footer">
+      <p>A little clarity, every day.</p>
+      <button id="btn-footer-help" class="text-button">
+        Help &amp; privacy
+      </button>
+    </footer>
 
-/* Visually hidden but announced by screen readers. */
-.sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-}
-
-#error-banner {
-  margin: 10px 16px 0; padding: 12px 14px; border-radius: var(--radius);
-  background: #3d0f0f; border: 1px solid #7a2020; color: #ffb3b3; font-size: 14px;
-}
-@media (prefers-color-scheme: light) {
-  #error-banner { background: #fdecec; border-color: #8c1f1f; color: #6b1414; }
-}
-
-/* ── Layout ── */
-#stage { width: 100%; max-width: 620px; margin: 0 auto; padding: 12px 16px 24px; flex: 1; }
-
-/* ── Tabs ── */
-.tabs { display: flex; gap: 8px; margin-bottom: 12px; }
-.tab {
-  flex: 1; min-height: var(--tap); display: flex; align-items: center; justify-content: center;
-  border: 2px solid var(--line); border-radius: var(--radius); background: var(--panel);
-  color: var(--muted); font-size: 15px; font-weight: 700; cursor: pointer;
-}
-.tab.active { background: var(--accent); color: #041722; border-color: var(--accent); }
-@media (prefers-color-scheme: light) { .tab.active { color: #fff; } }
-.tab:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
-  outline: 3px solid var(--accent); outline-offset: 2px;
-}
-
-/* ── Viewfinder ── */
-#viewfinder {
-  position: relative; width: 100%; border-radius: var(--radius); overflow: hidden;
-  background: #000; border: 1px solid var(--line); min-height: 200px;
-}
-#video, #preview { width: 100%; display: block; max-height: 58vh; object-fit: contain; background: #000; }
-#scan-flash {
-  position: absolute; inset: 0; background: rgba(61, 220, 154, 0.35);
-  opacity: 0; pointer-events: none; transition: opacity 0.15s;
-}
-#scan-flash.on { opacity: 1; }
-#scan-line {
-  position: absolute; left: 0; right: 0; height: 3px; background: var(--ok);
-  box-shadow: 0 0 14px var(--ok); display: none; pointer-events: none;
-}
-#scan-line.on { display: block; animation: sweep 1.3s ease-in-out infinite; }
-@keyframes sweep { 0%, 100% { top: 6%; } 50% { top: 90%; } }
-@media (prefers-reduced-motion: reduce) {
-  #scan-line.on { animation: none; top: 48%; }
-  #scan-flash { transition: none; }
-}
-#quality-hint {
-  position: absolute; bottom: 8px; left: 8px; right: 8px; padding: 9px 11px;
-  background: rgba(0, 0, 0, 0.8); border-radius: 10px; font-size: 13px; color: var(--warn);
-}
-#viewfinder::after {
-  /* Framing guide — also a non-colour cue via dashed border. */
-  content: ""; position: absolute; inset: 8%; border: 2px dashed rgba(88, 199, 255, 0.35);
-  border-radius: 8px; pointer-events: none;
-}
-
-/* ── Controls ── */
-.controls { display: flex; flex-direction: column; gap: 10px; margin: 14px 0 6px; }
-button {
-  min-height: var(--tap); padding: 14px 20px; border: none; border-radius: var(--radius);
-  background: var(--accent); color: #041722; font-size: 17px; font-weight: 800;
-  font-family: inherit; cursor: pointer; width: 100%;
-}
-@media (prefers-color-scheme: light) { button { color: #fff; } }
-button.secondary { background: var(--panel-2); color: var(--text); border: 2px solid var(--line); }
-button:disabled { opacity: 0.4; cursor: not-allowed; }
-button:active:not(:disabled) { transform: scale(0.98); }
-@media (prefers-reduced-motion: reduce) { button:active:not(:disabled) { transform: none; } }
-#file-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-
-.toggles { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 10px 0 4px; font-size: 13px; color: var(--muted); }
-.toggles label { display: flex; align-items: center; gap: 8px; min-height: 40px; cursor: pointer; }
-.toggles input { width: 22px; height: 22px; accent-color: var(--accent); }
-
-/* ── Progress ── */
-#progress-wrap { margin: 14px 0 6px; }
-#progress-label { font-size: 13.5px; color: var(--muted); margin-bottom: 7px; min-height: 20px; }
-.progress-track { background: var(--panel-2); height: 10px; border-radius: 5px; overflow: hidden; border: 1px solid var(--line); }
-#progress-fill { height: 100%; width: 0%; background: var(--accent); transition: width 0.2s; }
-@media (prefers-reduced-motion: reduce) { #progress-fill { transition: none; } }
-
-/* ── Warnings ── */
-#warning-box {
-  background: #3a2a00; border: 1px solid #8a5a00; border-radius: var(--radius);
-  padding: 11px 13px; margin: 12px 0; font-size: 14px; color: var(--warn);
-}
-@media (prefers-color-scheme: light) {
-  #warning-box { background: #fff5df; border-color: #8a5a00; color: #5c3d00; }
-}
-
-/* ── Results ── */
-#results { margin-top: 16px; }
-.card {
-  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 15px; margin-bottom: 12px;
-}
-.card h2 {
-  font-size: 12.5px; color: var(--accent); text-transform: uppercase;
-  letter-spacing: 0.9px; margin-bottom: 9px;
-}
-.summary { font-size: 18px; line-height: 1.5; }
-.meta { font-size: 12.5px; color: var(--muted); margin-top: 11px; }
-.field-row {
-  display: flex; justify-content: space-between; gap: 14px;
-  padding: 10px 0; border-bottom: 1px solid var(--line);
-}
-.field-row:last-child { border-bottom: none; }
-.field-row .label { color: var(--muted); font-size: 14px; white-space: nowrap; }
-.field-row .val { font-size: 15.5px; font-weight: 600; text-align: right; word-break: break-word; }
-.tag {
-  display: inline-block; margin: 3px 5px 3px 0; padding: 5px 11px; border-radius: 999px;
-  font-size: 13px; background: var(--panel-2); color: var(--text); border: 1px solid var(--line);
-}
-#ocr-text {
-  font-size: 14px; color: var(--muted); max-height: 220px; overflow-y: auto;
-  white-space: pre-wrap; word-break: break-word; line-height: 1.55;
-}
-
-footer { padding: 16px 16px 28px; font-size: 12px; color: var(--muted); text-align: center; }
-footer a { color: var(--accent); }
-</style>
-</head>
-
-<body>
-<header>
-  <h1>Sight<span>Line</span></h1>
-  <p>Reads the medicine label aloud — the drug, the strength, the dose. Fully on-device.</p>
-  <p>Speaks English, and a first Cantonese build: the drug name and dose come from a licensed
-     zh/en medicine lexicon, and anything it cannot translate it <strong>refuses rather than
-     guesses</strong>. Not yet reviewed by a Cantonese speaker — see the note in the results.</p>
-  <span id="badge" data-state="pending" role="status">STARTING…</span>
-</header>
-
-<!-- Screen-reader announcements. Two regions, deliberately NOT one: progress
-     and results stay polite forever, errors go to an assertive region. -->
-<div id="live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
-<div id="live-assertive" class="sr-only" role="alert" aria-live="assertive" aria-atomic="true"></div>
-
-<div id="error-banner" role="alert" hidden></div>
-
-<main id="stage">
-  <div class="tabs" id="tabs" role="tablist" aria-label="Document source">
-    <div class="tab active" id="tab-cam" role="tab" tabindex="0"
-         aria-selected="true" aria-controls="viewfinder">Use Camera</div>
-    <div class="tab" id="tab-file" role="tab" tabindex="0"
-         aria-selected="false" aria-controls="viewfinder">Choose a Photo or PDF</div>
-  </div>
-
-  <div id="viewfinder" data-mode="none">
-    <video id="video" autoplay playsinline muted aria-label="Live camera preview"></video>
-    <img id="preview" alt="Captured medicine label preview" hidden>
-    <div id="scan-flash"></div>
-    <div id="scan-line"></div>
-    <div id="quality-hint" role="note" hidden></div>
-  </div>
-
-  <div class="controls">
-    <button id="btn-capture" type="button" aria-describedby="capture-help">Scan Label</button>
-    <button id="btn-pick" type="button" class="secondary">Choose a Photo or PDF</button>
-    <button id="btn-retake" type="button" class="secondary" hidden>Scan Another</button>
-    <button id="btn-speak" type="button" class="secondary" hidden>Read Aloud</button>
-    <label class="sr-only" for="speak-lang">Language to read aloud in</label>
-    <select id="speak-lang" hidden aria-label="Language to read aloud in">
-      <option value="en-GB">English</option>
-      <option value="zh-HK">廣東話 Cantonese</option>
-    </select>
-    <p id="cantonese" hidden></p>
-  </div>
-  <p id="capture-help" class="sr-only">
-    Scans the medicine label in the current camera frame or the selected photo. Works with no
-    internet connection. Reads aloud in English, or in Cantonese for the drug name and dose.
-  </p>
-
-  <input type="file" id="file-input" accept="image/*,application/pdf"
-         aria-label="Choose a medicine-label photo or PDF file">
-
-  <div class="toggles">
-    <label for="skip-restore">
-      <input type="checkbox" id="skip-restore">
-      Skip neural restoration (faster)
-    </label>
-    <label for="skip-classify">
-      <input type="checkbox" id="skip-classify">
-      Skip model classifier
-    </label>
-  </div>
-
-  <div id="progress-wrap" hidden>
-    <div id="progress-label">Starting…</div>
-    <div class="progress-track" id="progress-track" role="progressbar"
-         aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Scan progress">
-      <div id="progress-fill"></div>
-    </div>
-  </div>
-
-  <div id="warning-box" role="status" hidden></div>
-
-  <section id="results" hidden aria-labelledby="doc-type">
-    <div class="card">
-      <h2>Document Type</h2>
-      <p class="summary" id="doc-type">Document</p>
-      <p class="summary" id="summary-text"></p>
-      <p class="meta" id="result-meta"></p>
-    </div>
-
-    <div class="card" id="fields-card" hidden>
-      <h2>Key Details</h2>
-      <div id="fields-list"></div>
-    </div>
-
-    <div class="card" id="entities-card" hidden>
-      <h2>Detected Details</h2>
-      <div id="entities-list"></div>
-    </div>
-
-    <div class="card">
-      <h2>Recognised Text</h2>
-      <div id="ocr-text" tabindex="0" role="region" aria-label="Full recognised text"></div>
-    </div>
-  </section>
-</main>
-
-<footer>
-  SightLine · All OCR and classification happen in this browser · No data leaves the device<br>
-  <a href="README.md">Install &amp; serve instructions</a> ·
-  <a href="selftest.html">Run self-test</a>
-</footer>
-<script src="vendor/pdfjs/pdf.min.js"></script>
-<script src="js/pipeline.js"></script>
-<script src="js/gating.js"></script>
-<script src="js/restorer.js"></script>
-<script src="js/classifier.js"></script>
-<script src="js/tts.js"></script>
-<script src="js/say_cantonese.js"></script>
-<script src="js/app.js"></script>
-</body>
+    <dialog id="save-consent" aria-labelledby="save-consent-title">
+      <h2 id="save-consent-title">Keep scan history?</h2>
+      <p>
+        Enabling saving keeps this scan and future scans on this device. You can
+        turn it off in preferences.
+      </p>
+      <p>
+        Images are optional. Scans stay on this device and are never uploaded.
+      </p>
+      <p>
+        Anyone using SightLine on this device can open saved scans. Clearing
+        browser data or reinstalling can erase them.
+      </p>
+      <button id="consent-save" class="button primary">Enable saving</button
+      ><button class="text-button" data-close-dialog autofocus>Not now</button>
+    </dialog>
+    <dialog id="history-delete-dialog" aria-labelledby="delete-title">
+      <h2 id="delete-title">Delete saved scan?</h2>
+      <p id="delete-description"></p>
+      <button id="confirm-delete" class="button primary">
+        Confirm deletion</button
+      ><button class="text-button" data-close-dialog autofocus>
+        Keep scans
+      </button>
+    </dialog>
+    <dialog id="preferences-dialog" aria-labelledby="preferences-title">
+      <div class="dialog-heading">
+        <h2 id="preferences-title">Your reading preferences</h2>
+        <button
+          class="icon-button"
+          data-close-dialog
+          aria-label="Close preferences"
+        >
+          <svg class="icon"><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <p>Choose what feels comfortable. Changes save on this device.</p>
+      <label for="appearance">Appearance</label
+      ><select id="appearance">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="system">Match my device</option></select
+      ><label for="speak-lang">Reading language</label
+      ><select id="speak-lang" data-language>
+        <option value="en-GB">English</option>
+        <option value="zh-HK">繁體中文（廣東話）</option>
+      </select>
+      <p class="option-help">
+        Language changes the interface and supported summaries. Original
+        document text stays unchanged.
+      </p>
+      <section class="history-preferences">
+        <label class="consent-option"
+          ><input id="save-scans" type="checkbox" />Save scans on this
+          device</label
+        >
+        <p>New scans are saved only after you enable this preference.</p>
+        <label class="consent-option"
+          ><input id="save-images" type="checkbox" />Also save original
+          images</label
+        >
+        <p>
+          Images are optional. Scans stay on this device and are never uploaded.
+        </p>
+        <p>
+          Anyone using SightLine on this device can open saved scans. Clearing
+          browser data or reinstalling can erase them.
+        </p>
+        <p>
+          Turning saving off does not delete existing scans. Delete them in
+          History.
+        </p>
+      </section>
+      <details class="secondary-details">
+        <summary>
+          More reading options<span class="disclosure-mark" aria-hidden="true"
+            >+</span
+          >
+        </summary>
+        <label for="ocr-model">Reading method</label
+        ><select id="ocr-model">
+          <option value="ppocrv5" selected>Enhanced reader</option>
+          <option value="crnn">Original reader</option>
+        </select>
+        <div class="toggles">
+          <label
+            ><input type="checkbox" id="skip-restore" />Read without extra image
+            cleanup</label
+          ><label
+            ><input type="checkbox" id="skip-classify" />Use simple document
+            matching</label
+          >
+        </div>
+      </details>
+      <button class="button primary dialog-done" data-close-dialog>Done</button>
+    </dialog>
+    <dialog id="help-dialog" aria-labelledby="help-title">
+      <div class="dialog-heading">
+        <h2 id="help-title">A clearer read</h2>
+        <button class="icon-button" data-close-dialog aria-label="Close help">
+          <svg class="icon"><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <button class="button secondary device-shortcut" data-open-device>
+        Check Device
+      </button>
+      <h3>For a good photo</h3>
+      <p>
+        Lay the label flat. Use bright, even light and keep all the words in
+        view. Move closer if the text looks small.
+      </p>
+      <h3>Your privacy</h3>
+      <p>
+        Scans are kept only if you enable saving. Photos and text are never
+        uploaded.
+      </p>
+      <h3>Reading offline</h3>
+      <p id="offline-detail">
+        Checking whether the reading files have been saved on this device.
+      </p>
+      <button id="btn-save-offline" class="text-button" hidden>
+        Try saving for offline use
+      </button>
+      <h3>Check important information</h3>
+      <p>
+        The reader can make mistakes. It cannot give medical advice. Confirm
+        medicine names and directions with a pharmacist.
+      </p>
+      <details class="secondary-details">
+        <summary>
+          About SightLine<span class="disclosure-mark" aria-hidden="true"
+            >+</span
+          >
+        </summary>
+        <p>
+          Cantonese uses fixed summaries for supported, verified details. It
+          does not translate arbitrary text. Medicine names stay as recognised.
+          Chinese document extraction has not been validated. Check all medical
+          information with a pharmacist.
+        </p>
+        <a href="THIRD_PARTY.md">Model credits</a> ·
+        <button class="text-button" data-open-device>Check this device</button>
+      </details>
+      <button class="button primary dialog-done" data-close-dialog>
+        Got it
+      </button>
+    </dialog>
+    <dialog id="device-dialog" aria-labelledby="device-dialog-title">
+      <header class="device-dialog-nav">
+        <button class="text-button" id="close-device">
+          ← Back to SightLine
+        </button>
+        <h2 id="device-dialog-title">Device check</h2>
+      </header>
+      <iframe id="device-frame" title="SightLine device checks"></iframe>
+    </dialog>
+    <script src="vendor/pdfjs/pdf.min.js"></script>
+    <script src="js/pipeline.js"></script>
+    <script src="js/gating.js"></script>
+    <script src="js/restorer.js"></script>
+    <script src="js/classifier.js"></script>
+    <script src="js/tts.js"></script>
+    <script src="js/speech_plan.js"></script>
+    <script src="js/say_cantonese.js"></script>
+    <script src="js/cantonese_summary.js"></script>
+    <script src="js/field_localization.js"></script>
+    <script src="js/medicine_sections.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/app.js"></script>
+  </body>
 </html>

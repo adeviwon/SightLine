@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: single medicine separates form, strength, each dose, schedule and warnings
+ok 1 - single medicine separates form, strength, each dose, schedule and warnings
+  ---
+  duration_ms: 2.813292
+  type: 'test'
+  ...
+# Subtest: strength and tablet count are different observations, not competing doses
+ok 2 - strength and tablet count are different observations, not competing doses
+  ---
+  duration_ms: 0.316041
+  type: 'test'
+  ...
+# Subtest: bare amounts are not relabeled as confirmed strength or amount per dose
+ok 3 - bare amounts are not relabeled as confirmed strength or amount per dose
+  ---
+  duration_ms: 0.115708
+  type: 'test'
+  ...
+# Subtest: daily maximum and negative directions never become an amount to take
+ok 4 - daily maximum and negative directions never become an amount to take
+  ---
+  duration_ms: 0.0785
+  type: 'test'
+  ...
+# Subtest: multiple medicines never inherit a shared dose or timing
+ok 5 - multiple medicines never inherit a shared dose or timing
+  ---
+  duration_ms: 0.224917
+  type: 'test'
+  ...
+# Subtest: an unverified second medicine still prevents pairing to the first
+ok 6 - an unverified second medicine still prevents pairing to the first
+  ---
+  duration_ms: 0.077959
+  type: 'test'
+  ...
+# Subtest: conflicting schedules stay unassociated
+ok 7 - conflicting schedules stay unassociated
+  ---
+  duration_ms: 0.137958
+  type: 'test'
+  ...
+# Subtest: no trusted text, low field confidence and missing instructions never fabricate values
+ok 8 - no trusted text, low field confidence and missing instructions never fabricate values
+  ---
+  duration_ms: 0.096125
+  type: 'test'
+  ...
+# Subtest: a partial numeric substring cannot become an amount on the label
+ok 9 - a partial numeric substring cannot become an amount on the label
+  ---
+  duration_ms: 0.253208
+  type: 'test'
+  ...
+# Subtest: saved results rebuild the same sections without changing source data
+ok 10 - saved results rebuild the same sections without changing source data
+  ---
+  duration_ms: 0.729042
+  type: 'test'
+  ...
+# Subtest: strength text after an instruction never becomes a fabricated schedule
+ok 11 - strength text after an instruction never becomes a fabricated schedule
+  ---
+  duration_ms: 0.121542
+  type: 'test'
+  ...
+# Subtest: zero strengths, doses and durations are not presented as usable directions
+ok 12 - zero strengths, doses and durations are not presented as usable directions
+  ---
+  duration_ms: 0.087125
+  type: 'test'
+  ...
+# Subtest: negative source text cannot be stripped into an affirmative frequency
+ok 13 - negative source text cannot be stripped into an affirmative frequency
+  ---
+  duration_ms: 0.406333
+  type: 'test'
+  ...
+# Subtest: fallback timing retains route and exceptions rather than dropping qualifiers
+ok 14 - fallback timing retains route and exceptions rather than dropping qualifiers
+  ---
+  duration_ms: 0.140917
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 62.589584

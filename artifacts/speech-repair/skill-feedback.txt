@@ -1,0 +1,26 @@
+## UI Pro Max Search Results
+**Domain:** ux | **Query:** status live region feedback
+**Source:** ux-guidelines.csv | **Found:** 2 results
+
+### Result 1
+- **Category:** Forms
+- **Issue:** Submit Feedback
+- **Platform:** All
+- **Description:** Confirm form submission status
+- **Do:** Show loading then success/error state
+- **Don't:** No feedback after submit
+- **Code Example Good:** Loading -> Success message
+- **Code Example Bad:** Button click with no response
+- **Severity:** High
+
+### Result 2
+- **Category:** Accessibility
+- **Issue:** Contextual Live Badge Updates
+- **Platform:** Web
+- **Description:** Async badge and count changes should announce a meaningful contextual status without moving focus
+- **Do:** Use one appropriate atomic status message such as 3 items in cart
+- **Don't:** Announce a bare number or make every badge a competing live region
+- **Code Example Good:** <span role='status' aria-atomic='true'>3 items in cart</span>
+- **Code Example Bad:** <span aria-live='polite'>3</span>
+- **Severity:** High
+

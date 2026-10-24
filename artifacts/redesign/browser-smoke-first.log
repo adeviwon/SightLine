@@ -1,0 +1,46 @@
+serving <repo>/app on http://127.0.0.1:8426
+
+ok    index.html declares every script the app needs (7)
+FAIL  vendor asset served: http://127.0.0.1:8426/js/field_guard.js  -> not requested
+FAIL  vendor asset served: http://127.0.0.1:8426/js/field_spot.js  -> not requested
+FAIL  vendor asset served: http://127.0.0.1:8426/js/field_engine.js  -> not requested
+ok    vendor asset served: vendor/pdfjs/pdf.min.js
+ok    vendor asset served: js/pipeline.js
+ok    vendor asset served: js/gating.js
+ok    vendor asset served: js/restorer.js
+ok    vendor asset served: js/classifier.js
+ok    vendor asset served: js/tts.js
+ok    vendor asset served: js/say_cantonese.js
+ok    vendor asset served: js/app.js
+ok    SightLine (pipeline) global present
+ok    SightLineRestorer global present
+ok    SightLineClassifier global present
+ok    TTS global present
+ok    SightLineApp controller present
+ok    tesseract is NOT loaded — the recogniser is our own ONNX CRNN
+ok    pdf.js vendored and loaded
+ok    every asset the app pulled resolves 200 over HTTP (1 vendor files)
+ok    aria-live region exists
+ok    aria-live is polite
+ok    progressbar role present
+ok    alert role present for errors
+ok    manifest linked
+ok    aria labels present (11)
+ok    all rendered buttons are >= 48px tall (WCAG 2.5.5)
+ok    offline badge rendered
+FAIL  service worker registered  -> {"registered":false}
+FAIL  service worker is active  -> {"registered":false}
+FAIL  service worker cache created
+ok    every precache entry exists on disk (42 entries)
+FAIL  precache populated in the browser (>= 42 entries)  -> cached=undefined expected=42
+FAIL  app reloads fully while OFFLINE  -> {"title":"127.0.0.1","pipeline":"undefined"}
+FAIL  offline badge updates when disconnected  -> undefined
+ok    selftest.html image battery ran and all assertions passed
+ok    selftest.html has ZERO failures
+ok    selftest summary reports ALL PASSED
+ok    image-preprocessing battery ran in-browser
+ok    server logged no 404s
+ok    no console errors on any page
+
+32 passed, 9 FAILED
+paths requested: 42

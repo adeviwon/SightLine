@@ -37,7 +37,7 @@ APP_MODELS = APP / "models"
 # no longer in the pipeline -- so "the app still works without it" is no longer
 # true and must not be claimed.
 REQUIRED = ["minilm_encoder.onnx", "minilm_head.onnx", "restorer.onnx",
-            "crnn.onnx"]
+            "crnn.onnx", "ppocrv5-mobile-det.onnx", "ppocrv5-mobile-rec.onnx"]
 
 
 def main():
@@ -216,6 +216,28 @@ def main():
         print(f"  FAIL crnn inference: {type(e).__name__}: {e}")
         failures.append(f"crnn inference: {e}")
 
+    print("\n=== 3b. PP-OCRv5 detector, recognizer and dictionary contract ===")
+    try:
+        import hashlib
+        provenance = json.loads((APP_MODELS / "ppocr-provenance.json").read_text())
+        for name, expected in provenance["files"].items():
+            blob = (APP_MODELS / name).read_bytes()
+            if len(blob) != expected["bytes"] or hashlib.sha256(blob).hexdigest() != expected["sha256"]:
+                raise ValueError("Model provenance mismatch: " + name)
+        detector = ort.InferenceSession(str(APP_MODELS / "ppocrv5-mobile-det.onnx"), providers=["CPUExecutionProvider"])
+        detection = detector.run(None, {detector.get_inputs()[0].name: np.zeros((1, 3, 32, 32), dtype=np.float32)})[0]
+        recognizer = ort.InferenceSession(str(APP_MODELS / "ppocrv5-mobile-rec.onnx"), providers=["CPUExecutionProvider"])
+        recognition = recognizer.run(None, {recognizer.get_inputs()[0].name: np.zeros((1, 3, 48, 160), dtype=np.float32)})[0]
+        classes = len((APP_MODELS / "ppocrv5_dict.txt").read_text().splitlines()) + 2
+        if detection.shape != (1, 1, 32, 32) or recognition.ndim != 3 or recognition.shape[2] != classes:
+            raise ValueError("Detector/recognizer shape or dictionary mismatch")
+        if not np.isfinite(detection).all() or not np.isfinite(recognition).all():
+            raise ValueError("Nonfinite model output")
+        print("  OK   detector", detection.shape, "recognizer", recognition.shape, "dictionary", classes)
+    except Exception as error:
+        failures.append("PP-OCRv5 inference: " + str(error))
+        print("  FAIL", error)
+
     print("\n=== 4. manifest honesty ===")
     man = APP_MODELS / "ort.json"
     if man.exists():
@@ -230,7 +252,7 @@ def main():
         print("  FAIL no ort.json manifest")
         failures.append("ort.json missing")
 
-    print("\n=== 4b. no third-party OCR in the bundle ===")
+    print("\n=== 4b. no Tesseract in the bundle ===")
     # The project's central claim is that OCR is our own model. Until this
     # commit that claim was only half true: app/models/ort.json asserted
     # "tesseract": false while pipeline.js still created a tesseract worker,
@@ -340,6 +362,7 @@ def main():
     payload = list(REQUIRED)
     if (APP_MODELS / "tokenizer.json").exists():
         payload.append("tokenizer.json")
+    payload.append("ppocrv5_dict.txt")
     total = sum((APP_MODELS / n).stat().st_size for n in payload)
     for n in REQUIRED:
         b = APP_MODELS / (n + ".data")

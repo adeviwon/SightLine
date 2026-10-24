@@ -1,0 +1,10 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"successful\":true,\"data\":{\"stdout\":\"PASS 390px idle has no sideways scroll\\nPASS 320px idle has no sideways scroll\\nPASS 1280px idle has no sideways scroll\\nPASS prescription/studio_clean completes\\nPASS prescription/handheld_light completes\\nPASS banking/studio_clean completes\\nPASS legal/studio_clean completes\\nPASS prescription/studio_clean completes\\nPASS 390px results have no sideways scroll\\nPASS 320px results have no sideways scroll\\nPASS 1280px results have no sideways scroll\\nPASS no uncaught page errors\\nPASS no external runtime requests\\n{\\\"label\\\":\\\"before\\\",\\\"pass\\\":13,\\\"fail\\\":0,\\\"scans\\\":5}\\n\",\"stdoutLines\":14,\"stderr\":\"\",\"stderrLines\":0,\"sandbox_id_suffix\":\"iuib\",\"session\":{\"id\":\"wear\",\"instructions\":\"REQUIRED: Pass session_id \\\"wear\\\" in ALL subsequent meta tool calls for this workflow.\"}},\"error\":null,\"log_id\":\"log_1NDmj69BHhcg\"}"
+    }
+  ],
+  "structuredContent": null,
+  "isError": false
+}

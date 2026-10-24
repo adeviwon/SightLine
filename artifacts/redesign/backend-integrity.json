@@ -1,0 +1,98 @@
+[
+  {
+    "file": "js/pipeline.js",
+    "before": "f6d569df190747630b29b249aea45d333893d0d0e16a139dd34a44ea52de2683",
+    "after": "f6d569df190747630b29b249aea45d333893d0d0e16a139dd34a44ea52de2683",
+    "unchanged": true
+  },
+  {
+    "file": "js/ocr_engine.js",
+    "before": "831531385e32ca8586e6a99ca8613f8d32d3cf12ed112f3fda17faed30817a2d",
+    "after": "831531385e32ca8586e6a99ca8613f8d32d3cf12ed112f3fda17faed30817a2d",
+    "unchanged": true
+  },
+  {
+    "file": "js/recognizer.js",
+    "before": "eb4743d77b87df82c91b1052695e8f17f76264f1d906c308ed7f18cf9e611b73",
+    "after": "eb4743d77b87df82c91b1052695e8f17f76264f1d906c308ed7f18cf9e611b73",
+    "unchanged": true
+  },
+  {
+    "file": "js/layout.js",
+    "before": "d34e0fa017e6805410b3611a7be6b59e01365040fc5afd766779f51ee4508b7f",
+    "after": "d34e0fa017e6805410b3611a7be6b59e01365040fc5afd766779f51ee4508b7f",
+    "unchanged": true
+  },
+  {
+    "file": "js/ppocr.js",
+    "before": "09d0dac65404569381940ebccb217b6dcba80ada855e34b2bc2fd5dac058832e",
+    "after": "09d0dac65404569381940ebccb217b6dcba80ada855e34b2bc2fd5dac058832e",
+    "unchanged": true
+  },
+  {
+    "file": "js/ppocr.worker.js",
+    "before": "33d30cf25b174b5cc50cfe2b21dcf32fe7c41dc72f57902aeadf32a65d7c940a",
+    "after": "33d30cf25b174b5cc50cfe2b21dcf32fe7c41dc72f57902aeadf32a65d7c940a",
+    "unchanged": true
+  },
+  {
+    "file": "js/ppocr_core.js",
+    "before": "18cac0b5f11196e0b553618d71c0e233eb8f9c37caca446cee5d9d813b252c1f",
+    "after": "18cac0b5f11196e0b553618d71c0e233eb8f9c37caca446cee5d9d813b252c1f",
+    "unchanged": true
+  },
+  {
+    "file": "js/ppocr_math.js",
+    "before": "44f973c8a4a94b0f16a4ee87ef5711c0dfb8c62742a009e206150b34da26d97d",
+    "after": "44f973c8a4a94b0f16a4ee87ef5711c0dfb8c62742a009e206150b34da26d97d",
+    "unchanged": true
+  },
+  {
+    "file": "js/restorer.js",
+    "before": "c7539e94427ded5d57f43669c5e8859bb6080cc93dcf22dfdcef72f202aebf8c",
+    "after": "c7539e94427ded5d57f43669c5e8859bb6080cc93dcf22dfdcef72f202aebf8c",
+    "unchanged": true
+  },
+  {
+    "file": "js/classifier.js",
+    "before": "f2b6eb97e156291cec666544937cebd00c4530ddbedf3011d456f258426ea7fb",
+    "after": "f2b6eb97e156291cec666544937cebd00c4530ddbedf3011d456f258426ea7fb",
+    "unchanged": true
+  },
+  {
+    "file": "js/tts.js",
+    "before": "28bf87549dc7754013041b64ef3283777cb8fba4733ee32d85ffd02012216f4d",
+    "after": "28bf87549dc7754013041b64ef3283777cb8fba4733ee32d85ffd02012216f4d",
+    "unchanged": true
+  },
+  {
+    "file": "js/say_cantonese.js",
+    "before": "c00f94bba375ad9d9ced86862c734083c9fb27bdd1abdbdf1bc16b6622670ff1",
+    "after": "c00f94bba375ad9d9ced86862c734083c9fb27bdd1abdbdf1bc16b6622670ff1",
+    "unchanged": true
+  },
+  {
+    "file": "models/ppocrv5-mobile-det.onnx",
+    "before": "d7fe3ea74652890722c0f4d02458b7261d9f5ae6c92904d05707c9eb155c7924",
+    "after": "d7fe3ea74652890722c0f4d02458b7261d9f5ae6c92904d05707c9eb155c7924",
+    "unchanged": true
+  },
+  {
+    "file": "models/ppocrv5-mobile-rec.onnx",
+    "before": "bf66820f48fa99f779974c4df78e5274a9d8e0458c4137e8c5357e40e2c3faf2",
+    "after": "bf66820f48fa99f779974c4df78e5274a9d8e0458c4137e8c5357e40e2c3faf2",
+    "unchanged": true
+  },
+  {
+    "file": "models/crnn.onnx",
+    "before": "7a14abf1313aa55df4654864cf4574318132aa96addbcafa4ab6e94ed00e29e6",
+    "after": "7a14abf1313aa55df4654864cf4574318132aa96addbcafa4ab6e94ed00e29e6",
+    "unchanged": true
+  },
+  {
+    "file": "models/ppocrv5_dict.txt",
+    "before": "1ea29636956177e400af712d9782e7693f3fb25f98617bed10479d2965a836fd",
+    "after": "1ea29636956177e400af712d9782e7693f3fb25f98617bed10479d2965a836fd",
+    "unchanged": true
+  }
+]

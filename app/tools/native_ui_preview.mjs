@@ -1,0 +1,28 @@
+// Visual review fixture using actual native WASM output, not browser inference.
+import { PaddleReader } from '../js/ppocr_core.js';
+import * as runtime from '../vendor/ort/ort.min.mjs';
+import { createRequire } from 'node:module';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { resolve } from 'node:path';
+const root=resolve(import.meta.dirname,'../..'), require=createRequire(import.meta.url);
+const pipe=require('../js/pipeline.js');
+const p=spawnSync('bash',['run.sh','py','-c',`from PIL import Image\nImage.open('/tmp/sightline_samples/prescription__studio_clean.png').convert('L').save('/tmp/sl-preview.pgm')`],{cwd:root});
+if(p.status!==0)throw Error('Generate the synthetic SightLine fixtures first.');
+const bytes=readFileSync('/tmp/sl-preview.pgm'),m=/^P5\n(\d+) (\d+)\n255\n/.exec(bytes.subarray(0,80).toString('ascii'));
+const reader=new PaddleReader(),start=performance.now();
+await reader.prepare({runtime,detModel:new Uint8Array(readFileSync(resolve(root,'app/models/ppocrv5-mobile-det.onnx'))),recModel:new Uint8Array(readFileSync(resolve(root,'app/models/ppocrv5-mobile-rec.onnx'))),dictionary:readFileSync(resolve(root,'app/models/ppocrv5_dict.txt'),'utf8')});
+const result=await reader.recognize({data:new Uint8Array(bytes.subarray(m[0].length)),width:+m[1],height:+m[2]});
+const r=pipe.understand(result.text),trusted=pipe.understand(result.speechText);
+r.fields=pipe.retainVerbatim(trusted.fields,result.speechText);
+r.entities=pipe.retainVerbatim(trusted.entities,result.speechText,'text');
+r.summary=pipe.buildSummary(r.category,r.fields);
+Object.assign(r,{ocrConfidence:result.confidence,speechText:result.speechText,warnings:['Visual preview from a synthetic document. Browser inference is not being tested here.'],engine:{ocr:'ppocrv5',restorer:'none',classifier:'keywords'},ms:Math.round(performance.now()-start),sourceName:'Synthetic prescription',imageDims:m[1]+'×'+m[2]});
+writeFileSync(resolve(root,'artifacts/integration/native-preview-data.json'),JSON.stringify(r,null,2)+'\n');
+const base=new URL('../../',import.meta.url);
+let html=readFileSync(resolve(root,'app/index.html'),'utf8').replace('<head>',`<head><base href="${new URL('app/',base).href}">`);
+const safe=JSON.stringify(r).replace(/</g,'\\u003c');
+html=html.replace('</body>',`<script>window.addEventListener('load',()=>{SightLineApp.render(${safe});document.getElementById('badge').textContent='Layout preview';document.getElementById('badge').dataset.state='pending';});</script></body>`);
+writeFileSync(resolve(root,'artifacts/integration/ui-preview.html'),html);
+await reader.dispose();
+console.log(JSON.stringify({engine:result.engine,characters:result.text.length,fields:r.fields.length,scope:'Layout preview using real native WASM output; not a browser scan'}));

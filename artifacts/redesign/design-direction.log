@@ -1,0 +1,52 @@
+# APP SHEET — Pastel consumer
+seed 1624706442 · drawn 2026-10-23 · kind wallet · light
+Brief: SightLine accessible private reading companion; warm off-white, slate and soft sky blue; one task per screen
+
+This is the style for this product. Adopt it whole and keep its move intact; everything the sheet does not fix comes from the
+shared defaults in references/app-screens.md. Redraw only for a reason you can state (it contradicts the brand, or the product is
+used in a way the style does not suit) and say why in your report. The values were measured on real product screens: use them
+as given rather than rounding them towards your habits.
+
+## 1. The style
+Categories are coded by pale tints whose ink is the dark of the same hue, all under one large radius, and each headline sum sits inside the card that explains it.
+
+**The move:** Pale category tiles with the dark of their own hue as ink (#dcf1ff with #0a3a80), one large radius (20px on cards, stepping down to 10, 8 and 5 inside), and quiet money polarity: income green with a plus sign, spending in ink, no red on ordinary outgoings. Tints go on small tiles, avatars and chips; a panel that holds a list stays white. When the product has people (two partners, a family), each gets one hue, at least 60 degrees from the next.
+
+**Colour budget:** 5-8%, as pale tiles and data marks.
+**Off-style here:** a gradient balance card; two data palettes on one page (flagged in the study); red on every outgoing amount; a 624px phone-width column on a desktop screen (flagged as a stretched phone screen); a KPI strip on top: the sums belong in their cards; whole panels tinted per person or category beside white cards (two surface languages on one screen).
+Distilled from 2 screens: a wallet home and a personal finance home. The two studied screens used a pure #0000ff and an indigo #4723f5 as their brand colour, and pastels such as #7cbecf that fall under 3:1 on white. The library uses a cobalt that reads as blue rather than indigo, and data colours darkened to at least 3:1 on the card.
+
+**Its face.** Choose one of these (or one of your own of the same weight) before you build, write it in your notes next to
+the screen's question, and check that it shows on the first screen. Without one the screen reads as a well-applied kit.
+- The tile hues from the account's own colours (the card's colour, each pot's colour in the app) in place of the dealt cobalt, each tile pale with the dark of its own hue as ink.
+- The money's own objects: the card art at its real ratio, merchant marks at 24px in the rows, the goal's picture on its pot.
+- Manrope's figures carry the balance: 30-36px at 600 with tabular figures and the pence in a smaller grey, so the number itself is the face.
+
+## 2. Tokens
+Kept from the brand: map its colours onto this style's roles (ground, surface, raised, border, rule, control, text, muted, accent, status pills, chart) and keep its proportions: 5-8%, as pale tiles and data marks. Take the sizes, radii, row and control heights from the style as they are.
+
+## 4. Shell — Open plane
+The labelled sidebar sits on the page ground with nothing or one hairline between it and the canvas; there is no top bar, and the page header and cards sit straight on the ground about 32-36px from the top. Workspace or account switcher at the top of the sidebar, primary nav on a 34px pitch, groups under 12-13px sentence-case grey labels with 22-56px of air above, utilities and the user row pushed to the bottom. Cards are white on the off-white ground (or the sidebar is white with a 1px border on a #f9fafb canvas). The canvas is fluid with one gutter value, or a centred column for personal homes.
+Numbers: sidebarWidth 230-256 (230, 240, 256 in the study; 280 and 292 with a built-in icon rail); separation none, or one 1px hairline; the sidebar sits on the page ground or within 1-2% of it; navPitch 34; navRowHeight 32; navIcon 16px outline, about 1.5px stroke; navLabel 14px, 400, grey or ink; activeItem neutral grey pill, radius 6-12, inset 8-12px from the sidebar edges (#e9e9e9-#ededed); topBar none; canvas fluid with a 24-64px gutter, or a centred 1100px column.
+On a phone: The sidebar folds into a 48px top bar holding the screen's name, a menu button that opens a full-screen sheet with the nav and the switcher, and at most one action. Content takes the full width with 16px margins.
+
+## 5. Screens
+
+### home
+No pattern in the library for this screen. Compose it from the rules in references/app-screens.md.
+
+### detail
+No pattern in the library for this screen. Compose it from the rules in references/app-screens.md.
+
+### settings — Settings in two columns
+A centred column of about 1152px. Each section is one row: a label column of about 450px (16/500 title, 14px grey description; the title's cap top 6-8px below the panel top, level with the panel's first line) beside a panel of about 700px with a #fafafa fill, 16px radius, 16px padding, no border and no shadow. Sections are split by a full-width 1px rule with 32px above and below. Inside a panel: field labels 14/500 above 40px white inputs (1px #e8e8e8, radius 10), 8px from label to field, 16px between fields, 24px from the description to the first label, 16px to the Save button; switch rows with a 14/500 title, a 20px status badge 8px after it, a 14px grey description and a 28x16 toggle 16px from the right edge, centred on the title line. A plan-gated feature shows a 48px tinted strip with a 32px button directly above its panel, and the panel stays readable. When a panel runs much taller than its label, put the section's help or a summary of the current values in the label column rather than 250px of nothing.
+On a phone: Each section stacks: title and description, then the panel at full width. Inside, label, 8-10px, field, 16-26px to the next pair; toggles stay on the right of their title.
+
+## 6. Always
+Real data for this product, written before the markup: names, amounts that add up, dates in order, units on every figure,
+honest zeros and dashes. One chart answers one question. No gradients, glows, glass, icons in tinted squares, sparklines on KPIs,
+rainbow charts, emoji, lorem or Acme. `<skill>/assets/app.css` and `<skill>/assets/charts.js` are a neutral start set to these
+rules. Check with `node <skill>/scripts/lint.mjs <files>` and `node <skill>/scripts/inspect.mjs <page>`: this sheet switches both
+to app rules.
+
+Saved to <repo>/.taste-skill/direction.json · reprint with `node draw.mjs --show`

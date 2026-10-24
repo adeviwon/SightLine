@@ -1,0 +1,76 @@
+[
+  {
+    "engine": "chromium",
+    "checks": [
+      {
+        "name": "optional image really persists as a Blob",
+        "ok": true
+      },
+      {
+        "name": "real browser restart and offline reopen retains image and fields",
+        "ok": true
+      },
+      {
+        "name": "quota abort never claims Saved",
+        "ok": true
+      },
+      {
+        "name": "failed write did not erase existing record",
+        "ok": true
+      },
+      {
+        "name": "save retries after a transaction failure",
+        "ok": true
+      },
+      {
+        "name": "permission failure is rendered clearly",
+        "ok": true
+      },
+      {
+        "name": "denied storage gives a specific recovery reason",
+        "ok": true
+      },
+      {
+        "name": "erased browser database shows an honest empty history",
+        "ok": true
+      }
+    ]
+  },
+  {
+    "engine": "webkit",
+    "checks": [
+      {
+        "name": "optional image really persists as a Blob",
+        "ok": true
+      },
+      {
+        "name": "real browser restart and offline reopen retains image and fields",
+        "ok": true
+      },
+      {
+        "name": "quota abort never claims Saved",
+        "ok": true
+      },
+      {
+        "name": "failed write did not erase existing record",
+        "ok": true
+      },
+      {
+        "name": "save retries after a transaction failure",
+        "ok": true
+      },
+      {
+        "name": "permission failure is rendered clearly",
+        "ok": true
+      },
+      {
+        "name": "denied storage gives a specific recovery reason",
+        "ok": true
+      },
+      {
+        "name": "erased browser database shows an honest empty history",
+        "ok": true
+      }
+    ]
+  }
+]

@@ -1,4 +1,67 @@
+**Latest Read Aloud and results summary update:** [Voice retry and section cards](docs/36_VOICE_RETRY_AND_SUMMARY_CARDS.md).
+Fixed delayed Cantonese voice discovery so the updated iOS voice list is checked
+before declaring no voice. The expandable speech preview now uses separate
+structured cards for medicine and receipt details. 26 focused contracts and
+94 real-browser/UI checks pass; the signed build is installed/launched on the
+connected iPhone. Audible output still requires physical confirmation.
+
+**Latest iPhone Read Aloud repair:** [Native iOS speech output](docs/35_NATIVE_IPHONE_SPEECH.md).
+The Xcode reader now uses iOS AVSpeechSynthesizer and a spoken-audio session.
+The user reports “Reading aloud” but hears no sound, confirming the native start
+event without confirming audible output. The new installed build reports iPhone
+speaker/headphone route and media volume in its status so the remaining device
+cause can be identified. 25 focused contracts pass; actual acoustic output still
+needs user confirmation.
+
+**Latest medicine result layout:** [Sectioned medicine results](docs/34_SECTIONED_MEDICINE_RESULTS.md).
+Medicine/type, strength, amount each time and timing are separate cards built
+from verified source text. Ambiguous medicine associations remain blocked.
+92 UI checks, 14 section contracts and 14 localization contracts pass; the
+signed update was installed on the connected iPhone.
+
+**Latest native loading repair:** [Foreground and module recovery](docs/33_NATIVE_READER_RESUME.md).
+Read Aloud now stays visible on recognized results; blocked playback has a
+disabled control and an adjacent reason. UI regression: 88/88; actual local
+speech/Stop/replay and the complete speech/device journey pass. This update
+was installed and launched on the connected iPhone.
+The native server restarts after backgrounding; OCR JavaScript warms before
+capture without loading weights. Module failures offer a localized Reload
+reader action. The signed build was installed/launched on the physical iPhone;
+the phone's return-and-scan journey remains for user confirmation.
+
+**Current bilingual/history UX:** [Bilingual reading and local history](docs/31_BILINGUAL_HISTORY.md).
+Visible persistent English/Cantonese switching; deterministic safety-gated summaries;
+opt-in IndexedDB history, optional images, confirmed deletion and offline reopen.
+Native production origin is fixed at port 18192 so history survives app restarts.
+Read the report for actual platform speech evidence and physical-iPhone limits.
+The newest iOS and PWA icon uses SightLine's ear/listening mark; see
+[the icon asset and build note](docs/32_EAR_APP_ICON.md).
+
+**Previous speech/device UX:** [Read Aloud and Device Check repair](docs/30_READ_ALOUD_DEVICE_UX.md).
+Receipts speak accepted fields independently of the prescription completeness gate.
+Local platform speech start/end, Stop/replay and offline receipt speech were exercised.
+32 contracts, 88 UI, 75 browser checks per engine, 196 self-test assertions and device
+navigation/negative controls pass. Audible iPhone output remains unverified.
+
+**Latest targeted fixes:** [Aria receipt integration and offline diagnosis](docs/29_ARIA_RECEIPTS_OFFLINE.md).
+PP-OCRv5 remains the default; Aria's pure receipt parser adds the missing category.
+The native shell validates the required installed payload before reporting offline
+readiness. Targeted validation: 20 contracts, 88 UI checks, 69 browser checks per
+engine; actual receipt offline in Chromium, WebKit and native macOS WKWebView.
+See the report for public-receipt evidence and physical-iPhone limits.
+
 # HANDOFF — picking this repo up
+
+**Current frontend:** [Consumer UI redesign](docs/28_CONSUMER_UI_REDESIGN.md).
+88 UI checks, 194 full browser checks and 196 WebKit self-test assertions passed.
+Review the report's separate legacy CDP cache failure and physical-device limits.
+Start with `bash run.sh serve 8080`; `test-ui` runs the new real-browser UI suite.
+
+**Latest local work:** [PP-OCR/UI integration report](docs/27_PP_OCR_UI_INTEGRATION.md).
+Default reading is now pretrained PP-OCRv5; Original reader retains the CRNN.
+Use `ios/SightLine.xcodeproj` for the new iOS shell. Physical-device validation,
+medical speech coverage and the 25 MiB offline target remain release blockers.
+Historical measurements below are not validation of this new engine.
 
 You are taking over SightLine: an offline PWA that photographs a document,
 detects text lines, recognises them with a CRNN we trained ourselves, classifies

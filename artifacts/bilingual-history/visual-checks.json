@@ -1,0 +1,78 @@
+{
+  "checks": [
+    {
+      "name": "Chinese home fits 320",
+      "ok": true
+    },
+    {
+      "name": "Chinese receipt fits 320",
+      "ok": true
+    },
+    {
+      "name": "Chinese populated history fits 320",
+      "ok": true
+    },
+    {
+      "name": "English history label restores 320",
+      "ok": true
+    },
+    {
+      "name": "Chinese home fits 390",
+      "ok": true
+    },
+    {
+      "name": "Chinese receipt fits 390",
+      "ok": true
+    },
+    {
+      "name": "Chinese receipt automated accessibility",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "Chinese populated history fits 390",
+      "ok": true
+    },
+    {
+      "name": "Chinese history automated accessibility",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "English history label restores 390",
+      "ok": true
+    },
+    {
+      "name": "Chinese home fits 768",
+      "ok": true
+    },
+    {
+      "name": "Chinese receipt fits 768",
+      "ok": true
+    },
+    {
+      "name": "Chinese populated history fits 768",
+      "ok": true
+    },
+    {
+      "name": "English history label restores 768",
+      "ok": true
+    },
+    {
+      "name": "Chinese home fits 1440",
+      "ok": true
+    },
+    {
+      "name": "Chinese receipt fits 1440",
+      "ok": true
+    },
+    {
+      "name": "Chinese populated history fits 1440",
+      "ok": true
+    },
+    {
+      "name": "English history label restores 1440",
+      "ok": true
+    }
+  ]
+}

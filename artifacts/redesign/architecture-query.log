@@ -1,0 +1,138 @@
+[graphify] note: this graph uses the pre-#1504 node-ID scheme; rebuild with `graphify extract --force` to get path-qualified IDs (fixes same-name-file collisions).
+Graph: artifacts/redesign/graphify-out/graph.json (147 nodes) | Traversal: BFS depth=2 | Start: ['goHome()', 'render()', 'runScan()', 'setStage()', 'startCamera()'] | 36 nodes found
+
+[i] Complete answer over budget: all 36 nodes and 97 edges shown (~3496 tokens vs the requested ~1500-token budget). Edges are never dropped once every node fits, so this is already the full answer — raising --budget further will not shrink it. Narrow with context_filter=['call'] or use get_node for a specific symbol to reduce size instead.
+
+NODE goHome() [src=app/js/app.js loc=L91 community=0]
+NODE render() [src=app/js/app.js loc=L686 community=0]
+NODE runScan() [src=app/js/app.js loc=L398 community=0]
+NODE setStage() [src=app/js/app.js loc=L57 community=0]
+NODE startCamera() [src=app/js/app.js loc=L206 community=0]
+NODE app.js [src=app/js/app.js loc=L1 community=0]
+NODE init() [src=app/js/app.js loc=L1113 community=0]
+NODE onFile() [src=app/js/app.js loc=L303 community=0]
+NODE scanPDF() [src=app/js/app.js loc=L354 community=0]
+NODE showError() [src=app/js/app.js loc=L192 community=0]
+NODE announce() [src=app/js/app.js loc=L155 community=0]
+NODE setScanEnabled() [src=app/js/app.js loc=L672 community=0]
+NODE showProgress() [src=app/js/app.js loc=L183 community=0]
+NODE stopCamera() [src=app/js/app.js loc=L265 community=0]
+NODE setProgress() [src=app/js/app.js loc=L165 community=0]
+NODE updateBadge() [src=app/js/app.js loc=L36 community=0]
+NODE The honesty gate — `js/app.js` [src=ORCHESTRATION.md loc=L275 community=1]
+NODE frame() [src=app/js/app.js loc=L666 community=0]
+NODE lastResult() [src=app/js/app.js loc=L1262 community=0]
+NODE precacheModelsOnce() [src=app/js/app.js loc=L882 community=0]
+NODE JS module boundaries — and the Python each one mirrors [src=ORCHESTRATION.md loc=L1 community=1]
+NODE speakSummary() [src=app/js/app.js loc=L919 community=0]
+NODE setBadge() [src=app/js/app.js loc=L187 community=0]
+NODE registerSW() [src=app/js/app.js loc=L1025 community=0]
+NODE updateOnlineBadge() [src=app/js/app.js loc=L1014 community=0]
+NODE captureFrame() [src=app/js/app.js loc=L280 community=0]
+NODE appearanceChanged() [src=app/js/app.js loc=L121 community=0]
+NODE cacheDom() [src=app/js/app.js loc=L1068 community=0]
+NODE languageChanged() [src=app/js/app.js loc=L134 community=0]
+NODE loadLexicon() [src=app/js/app.js loc=L904 community=0]
+NODE openDialog() [src=app/js/app.js loc=L118 community=0]
+NODE pickFile() [src=app/js/app.js loc=L299 community=0]
+NODE speechLabel() [src=app/js/app.js loc=L913 community=0]
+NODE Accessibility wiring [src=ORCHESTRATION.md loc=L197 community=1]
+NODE strengthWord() [src=app/js/app.js loc=L893 community=0]
+NODE The invariant, stated precisely [src=ORCHESTRATION.md loc=L299 community=1]
+EDGE goHome() --calls [EXTRACTED context=call]--> showError() at=app/js/app.js:L112
+EDGE goHome() --calls [EXTRACTED context=call]--> showProgress() at=app/js/app.js:L113
+EDGE goHome() --calls [EXTRACTED context=call]--> setScanEnabled() at=app/js/app.js:L114
+EDGE goHome() --calls [EXTRACTED context=call]--> stopCamera() at=app/js/app.js:L99
+EDGE init() --indirect_call [INFERRED context=argument]--> goHome() at=app/js/app.js:L1162
+EDGE app.js --contains [EXTRACTED]--> goHome() at=app/js/app.js:L91
+EDGE init() --indirect_call [INFERRED context=argument]--> startCamera() at=app/js/app.js:L1137
+EDGE startCamera() --calls [EXTRACTED context=call]--> showError() at=app/js/app.js:L208
+EDGE startCamera() --calls [EXTRACTED context=call]--> stopCamera() at=app/js/app.js:L209
+EDGE startCamera() --calls [EXTRACTED context=call]--> announce() at=app/js/app.js:L249
+EDGE app.js --contains [EXTRACTED]--> startCamera() at=app/js/app.js:L206
+EDGE app.js --indirect_call [INFERRED context=collection]--> render() at=app/js/app.js:L1261
+EDGE init() --calls [EXTRACTED context=call]--> runScan() at=app/js/app.js:L1152
+EDGE onFile() --calls [EXTRACTED context=call]--> runScan() at=app/js/app.js:L330
+EDGE runScan() --calls [EXTRACTED context=call]--> setScanEnabled() at=app/js/app.js:L406
+EDGE runScan() --calls [EXTRACTED context=call]--> showError() at=app/js/app.js:L407
+EDGE runScan() --calls [EXTRACTED context=call]--> showProgress() at=app/js/app.js:L408
+EDGE runScan() --calls [EXTRACTED context=call]--> setProgress() at=app/js/app.js:L409
+EDGE runScan() --calls [EXTRACTED context=call]--> announce() at=app/js/app.js:L410
+EDGE runScan() --calls [EXTRACTED context=call]--> frame() at=app/js/app.js:L435
+EDGE runScan() --calls [EXTRACTED context=call]--> precacheModelsOnce() at=app/js/app.js:L629
+EDGE runScan() --indirect_call [INFERRED context=argument]--> lastResult() at=app/js/app.js:L626
+EDGE scanPDF() --calls [EXTRACTED context=call]--> runScan() at=app/js/app.js:L385
+EDGE app.js --indirect_call [INFERRED context=collection]--> runScan() at=app/js/app.js:L1260
+EDGE The honesty gate — `js/app.js` --references [INFERRED context=runScan()]--> runScan() at=ORCHESTRATION.md:L283
+EDGE init() --calls [EXTRACTED context=call]--> setStage() at=app/js/app.js:L1246
+EDGE onFile() --calls [EXTRACTED context=call]--> setStage() at=app/js/app.js:L315
+EDGE scanPDF() --calls [EXTRACTED context=call]--> setStage() at=app/js/app.js:L358
+EDGE setStage() --calls [EXTRACTED context=call]--> updateBadge() at=app/js/app.js:L73
+EDGE app.js --contains [EXTRACTED]--> setStage() at=app/js/app.js:L57
+EDGE JS module boundaries — and the Python each one mirrors --contains [EXTRACTED]--> The honesty gate — `js/app.js` at=ORCHESTRATION.md:L275
+EDGE The honesty gate — `js/app.js` --contains [EXTRACTED]--> The invariant, stated precisely at=ORCHESTRATION.md:L299
+EDGE init() --calls [EXTRACTED context=call]--> cacheDom() at=app/js/app.js:L1114
+EDGE init() --calls [EXTRACTED context=call]--> captureFrame() at=app/js/app.js:L1139
+EDGE init() --calls [EXTRACTED context=call]--> openDialog() at=app/js/app.js:L1173
+EDGE init() --calls [EXTRACTED context=call]--> setBadge() at=app/js/app.js:L1238
+EDGE init() --calls [EXTRACTED context=call]--> registerSW() at=app/js/app.js:L1239
+EDGE init() --indirect_call [INFERRED context=argument]--> pickFile() at=app/js/app.js:L1163
+EDGE init() --indirect_call [INFERRED context=argument]--> speakSummary() at=app/js/app.js:L1164
+EDGE init() --indirect_call [INFERRED context=argument]--> languageChanged() at=app/js/app.js:L1187
+EDGE init() --indirect_call [INFERRED context=argument]--> appearanceChanged() at=app/js/app.js:L1194
+EDGE init() --indirect_call [INFERRED context=argument]--> updateOnlineBadge() at=app/js/app.js:L1201
+EDGE captureFrame() --calls [EXTRACTED context=call]--> showError() at=app/js/app.js:L282
+EDGE speakSummary() --calls [EXTRACTED context=call]--> showError() at=app/js/app.js:L927
+EDGE speakSummary() --calls [EXTRACTED context=call]--> announce() at=app/js/app.js:L933
+EDGE Accessibility wiring --references [INFERRED context=announce()]--> announce() at=ORCHESTRATION.md:L204
+EDGE setBadge() --calls [EXTRACTED context=call]--> updateBadge() at=app/js/app.js:L189
+EDGE app.js --contains [EXTRACTED]--> updateOnlineBadge() at=app/js/app.js:L1014
+EDGE app.js --contains [EXTRACTED]--> registerSW() at=app/js/app.js:L1025
+EDGE app.js --contains [EXTRACTED]--> cacheDom() at=app/js/app.js:L1068
+EDGE app.js --contains [EXTRACTED]--> openDialog() at=app/js/app.js:L118
+EDGE app.js --contains [EXTRACTED]--> appearanceChanged() at=app/js/app.js:L121
+EDGE app.js --contains [EXTRACTED]--> languageChanged() at=app/js/app.js:L134
+EDGE app.js --contains [EXTRACTED]--> setBadge() at=app/js/app.js:L187
+EDGE app.js --contains [EXTRACTED]--> captureFrame() at=app/js/app.js:L280
+EDGE app.js --contains [EXTRACTED]--> pickFile() at=app/js/app.js:L299
+EDGE app.js --contains [EXTRACTED]--> strengthWord() at=app/js/app.js:L893
+EDGE app.js --contains [EXTRACTED]--> loadLexicon() at=app/js/app.js:L904
+EDGE app.js --contains [EXTRACTED]--> speechLabel() at=app/js/app.js:L913
+EDGE app.js --contains [EXTRACTED]--> speakSummary() at=app/js/app.js:L919
+EDGE app.js --contains [EXTRACTED]--> lastResult() at=app/js/app.js:L1262
+EDGE app.js --contains [EXTRACTED]--> announce() at=app/js/app.js:L155
+EDGE app.js --contains [EXTRACTED]--> setProgress() at=app/js/app.js:L165
+EDGE app.js --contains [EXTRACTED]--> showProgress() at=app/js/app.js:L183
+EDGE app.js --contains [EXTRACTED]--> showError() at=app/js/app.js:L192
+EDGE app.js --contains [EXTRACTED]--> stopCamera() at=app/js/app.js:L265
+EDGE app.js --contains [EXTRACTED]--> onFile() at=app/js/app.js:L303
+EDGE app.js --contains [EXTRACTED]--> scanPDF() at=app/js/app.js:L354
+EDGE app.js --contains [EXTRACTED]--> updateBadge() at=app/js/app.js:L36
+EDGE app.js --contains [EXTRACTED]--> frame() at=app/js/app.js:L666
+EDGE app.js --contains [EXTRACTED]--> setScanEnabled() at=app/js/app.js:L672
+EDGE app.js --contains [EXTRACTED]--> precacheModelsOnce() at=app/js/app.js:L882
+EDGE app.js --indirect_call [INFERRED context=argument]--> init() at=app/js/app.js:L1250
+EDGE scanPDF() --calls [EXTRACTED context=call]--> announce() at=app/js/app.js:L363
+EDGE showError() --calls [EXTRACTED context=call]--> announce() at=app/js/app.js:L201
+EDGE goHome() --calls [EXTRACTED context=call]--> setStage() at=app/js/app.js:L115
+EDGE init() --calls [EXTRACTED context=call]--> stopCamera() at=app/js/app.js:L1141
+EDGE init() --indirect_call [INFERRED context=argument]--> onFile() at=app/js/app.js:L1165
+EDGE speakSummary() --calls [EXTRACTED context=call]--> loadLexicon() at=app/js/app.js:L962
+EDGE onFile() --calls [EXTRACTED context=call]--> showError() at=app/js/app.js:L310
+EDGE onFile() --calls [EXTRACTED context=call]--> stopCamera() at=app/js/app.js:L312
+EDGE onFile() --calls [EXTRACTED context=call]--> setScanEnabled() at=app/js/app.js:L314
+EDGE onFile() --calls [EXTRACTED context=call]--> showProgress() at=app/js/app.js:L316
+EDGE onFile() --calls [EXTRACTED context=call]--> setProgress() at=app/js/app.js:L317
+EDGE onFile() --calls [EXTRACTED context=call]--> scanPDF() at=app/js/app.js:L320
+EDGE registerSW() --calls [EXTRACTED context=call]--> setBadge() at=app/js/app.js:L1027
+EDGE registerSW() --calls [EXTRACTED context=call]--> updateOnlineBadge() at=app/js/app.js:L1053
+EDGE render() --calls [EXTRACTED context=call]--> setStage() at=app/js/app.js:L687
+EDGE runScan() --calls [EXTRACTED context=call]--> render() at=app/js/app.js:L626
+EDGE runScan() --calls [EXTRACTED context=call]--> setStage() at=app/js/app.js:L405
+EDGE scanPDF() --calls [EXTRACTED context=call]--> showError() at=app/js/app.js:L357
+EDGE scanPDF() --calls [EXTRACTED context=call]--> setScanEnabled() at=app/js/app.js:L359
+EDGE scanPDF() --calls [EXTRACTED context=call]--> setProgress() at=app/js/app.js:L362
+EDGE scanPDF() --calls [EXTRACTED context=call]--> showProgress() at=app/js/app.js:L392
+EDGE updateOnlineBadge() --calls [EXTRACTED context=call]--> setBadge() at=app/js/app.js:L1015
+EDGE startCamera() --calls [EXTRACTED context=call]--> setStage() at=app/js/app.js:L214
+EDGE speakSummary() --calls [EXTRACTED context=call]--> speechLabel() at=app/js/app.js:L923

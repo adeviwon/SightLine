@@ -1,5 +1,22 @@
 # AGENTS.md — operational contract for any AI agent taking over this repo
 
+**Latest language/storage work:** read `docs/31_BILINGUAL_HISTORY.md`. Preserve
+the opt-in IndexedDB history and stable native origin (18192). Language switching
+must never alter OCR values, rerun inference, substitute Mandarin for Cantonese,
+or relax receipt/medical confidence gates. The old Cantonese mapper is retained
+for historical tests; the controller now uses `cantonese_summary.js`.
+
+**Current frontend:** read `docs/28_CONSUMER_UI_REDESIGN.md` for the dedicated
+screen states, actual screenshots and current test evidence. Keep the OCR
+backend unchanged during presentation work; `backend-integrity.json` records
+the preserved files. The legacy CDP install failure remains a documented limit.
+
+**Integration update:** read `docs/27_PP_OCR_UI_INTEGRATION.md` first. This local
+branch defaults to third-party PP-OCRv5; the original trained CRNN is selectable.
+The user's requested integration changes the historical own-model-only product
+description below, but does not relax safety, attribution or honest reporting.
+This branch has unresolved release blockers; inherited pass counts are historical.
+
 You are taking over SightLine: an offline PWA that photographs a document,
 detects text lines, recognises them with a CRNN we trained ourselves
 (942,166 params, CTC), classifies the text with frozen MiniLM + a 49,796-param

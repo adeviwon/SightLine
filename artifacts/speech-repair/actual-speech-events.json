@@ -1,0 +1,46 @@
+{
+  "state": {
+    "status": "ended",
+    "error": null,
+    "voice": "Daniel",
+    "lang": "en-GB",
+    "chunks": 1,
+    "chunk": 1
+  },
+  "audit": {
+    "states": [
+      {
+        "status": "starting",
+        "error": null,
+        "voice": "Daniel",
+        "lang": "en-GB",
+        "chunks": 1,
+        "chunk": 0
+      },
+      {
+        "status": "speaking",
+        "error": null,
+        "voice": "Daniel",
+        "lang": "en-GB",
+        "chunks": 1,
+        "chunk": 1
+      },
+      {
+        "status": "ended",
+        "error": null,
+        "voice": "Daniel",
+        "lang": "en-GB",
+        "chunks": 1,
+        "chunk": 1
+      }
+    ],
+    "utterances": [
+      {
+        "text": "Receipt. Shop: BOOKTAK(TAMANDAYA)SDN BHD. Payment method: cash. Some details were unclear and have not been read. Check important amounts against the original receipt.",
+        "lang": "en-GB",
+        "voice": "Daniel",
+        "local": true
+      }
+    ]
+  }
+}

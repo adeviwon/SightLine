@@ -1,0 +1,23 @@
+TASTESKILL · INSPECT   http://127.0.0.1:8080
+
+MEASURED (first viewport listed)
+  hero headline   "Make medicine labels easier to read."  6 words · 2 line(s) · 48px (3.3vw) · -apple-system 650 · tracking -0.03em · leading 1.13
+  @768px          1 line(s) · 42px
+  @390px          2 line(s) · 38px
+  typefaces       -apple-system 100%
+  sizes in use    17 / 19 / 20 / 22 / 28 / 48 px   body 22px / 1.5
+  colour          page #f7f8f5 · button #ffffff
+  page            1 screens · 76 words · 2 images · hero media 15% svg
+  headings        2 · longest 2 line(s) · median 1 words
+
+FINDINGS  none. Measurements are clean — now judge the pictures.
+LOOK AT THE RENDER — open these with your image viewer / Read tool before saying anything about quality:
+  desktop 1440px  artifacts/redesign/taste-inspect/desktop-fold.jpg
+                  artifacts/redesign/taste-inspect/desktop-page-01.jpg
+  tablet 768px    artifacts/redesign/taste-inspect/tablet-fold.jpg
+                  artifacts/redesign/taste-inspect/tablet-page-01.jpg
+  mobile 390px    artifacts/redesign/taste-inspect/mobile-fold.jpg
+                  artifacts/redesign/taste-inspect/mobile-page-01.jpg
+
+report: artifacts/redesign/taste-inspect/report.json
+RESULT: 0 FAIL, 0 WARN — measurements pass. Passing the meter is the floor, not the grade: score the screenshots with references/critique.md.

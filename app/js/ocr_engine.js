@@ -61,6 +61,7 @@ import {
 } from "./recognizer.js";
 import { detectLines, cropForRecognizer } from "./layout.js";
 import { EXPORT_W, CROP_H } from "./recognizer.js";
+import { runPaddleOCR, reset as resetPaddle } from "./ppocr.js";
 
 // Re-exported so the UI can explain an environment that cannot run the model
 // (no WebAssembly SIMD => iOS/Safari before 16.4) without reaching into the
@@ -183,7 +184,11 @@ export async function initWorker(onProgress) {
  * recorded in docs/10_ACCURACY_GAP.md is that confidence and field recovery can
  * disagree, and the product metric must win.
  */
-export async function runOCR(candidates, onProgress, structureScore) {
+export async function runOCR(candidates, onProgress, structureScore, options = {}) {
+  if (options.engine === 'ppocrv5') {
+    return runPaddleOCR(candidates, onProgress, structureScore);
+  }
+  if (options.engine && options.engine !== 'crnn') throw new Error('Choose a reading method.');
   await initWorker(onProgress);
   let best = null;
   const seen = new Set();
@@ -222,6 +227,7 @@ export async function runOCR(candidates, onProgress, structureScore) {
 /** Release the onnxruntime-web session. Called from pipeline.dispose(). */
 export function reset() {
   resetRecognizer();
+  resetPaddle();
 }
 
 export default { initWorker, runOCR, reset };

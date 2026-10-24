@@ -1,0 +1,41 @@
+
+ios-compat: scanned 25 shipped files, 0 problem(s)
+  no parse-time Safari-16.4 blockers found
+── engine ──────────────────────────────────────────────
+  UA             : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+  WebAssembly    : true
+  WASM SIMD      : true (ok)
+  SharedArrayBuf : false | crossOriginIsolated: false
+  lookbehind re  : supported
+  window.TTS     : object
+  page errors    : 0 []
+  console errors : 0 []
+
+── selftest.html in WebKit ─────────────────────────────
+  ALL 196 ASSERTIONS PASSED
+   · Ready to try reading
+   · Camera
+   · Reading software
+   · Offline reading
+   · Recognition files
+   · Read Aloud
+   · Try the voice
+   · norm() — evaluate.py — 8/8
+   · word_accuracy() — evaluate.py — 6/6
+   · fields_found() — evaluate.py — 9/9
+   · classify_doc() — evaluate.py keyword fallback — 7/7
+   · normalizeOCRText() — the OCR-confusion normalizer — 19/19
+   · understand() — the full post-OCR chain — 20/20
+   · Blurry-capture repair — the medical safety case — 7/7
+   · extractEntities() — the NER layer — 7/7
+   · OCR garbage rejection — 5/5
+   · structure_score — account numbers (no lookbehind) — 7/7
+   · Robustness — no stage throws on bad input — 32/32
+   · TTS chunking — iOS utterance limit — 4/4
+   · Classifier math — pooling and softmax — 6/6
+   · Restorer tiling — must match arm_restorer — 15/15
+   · Skew estimation — projection profile — 5/5
+   · Image preprocessing — the canvas path — 27/27
+   · ONNX runtime — real crnn.onnx inference — 12/12
+
+WEBKIT: PASS

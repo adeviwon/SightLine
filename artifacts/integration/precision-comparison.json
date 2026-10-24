@@ -1,0 +1,283 @@
+{
+  "scope": "Native ORT Web 1.20.1 WASM, fixed synthetic SightLine images, no browser preprocessing",
+  "results": [
+    {
+      "precision": "uint8",
+      "prepareMs": 366.82420800000006,
+      "meanCER": 0.7911117736470636,
+      "samples": [
+        {
+          "file": "prescription__studio_clean",
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "precision": "uint8",
+          "ms": 1360,
+          "cer": 0.5091324200913242,
+          "words": 16,
+          "speechCharacters": 0,
+          "confidence": 0.6675628936746228
+        },
+        {
+          "file": "prescription__handheld_light",
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "precision": "uint8",
+          "ms": 1104,
+          "cer": 0.7671232876712328,
+          "words": 10,
+          "speechCharacters": 0,
+          "confidence": 0.6829205282521342
+        },
+        {
+          "file": "prescription__off_axis",
+          "doc": "prescription",
+          "profile": "off_axis",
+          "precision": "uint8",
+          "ms": 683,
+          "cer": 1,
+          "words": 0,
+          "speechCharacters": 0,
+          "confidence": 0
+        },
+        {
+          "file": "prescription__jpeg_social",
+          "doc": "prescription",
+          "profile": "jpeg_social",
+          "precision": "uint8",
+          "ms": 955,
+          "cer": 0.9840182648401826,
+          "words": 2,
+          "speechCharacters": 0,
+          "confidence": 0.5485498234629631
+        },
+        {
+          "file": "banking__studio_clean",
+          "doc": "banking",
+          "profile": "studio_clean",
+          "precision": "uint8",
+          "ms": 1394,
+          "cer": 0.2653927813163482,
+          "words": 25,
+          "speechCharacters": 265,
+          "confidence": 0.8080388179898429
+        },
+        {
+          "file": "banking__handheld_light",
+          "doc": "banking",
+          "profile": "handheld_light",
+          "precision": "uint8",
+          "ms": 1197,
+          "cer": 0.8237791932059448,
+          "words": 11,
+          "speechCharacters": 0,
+          "confidence": 0.6629640763329601
+        },
+        {
+          "file": "banking__off_axis",
+          "doc": "banking",
+          "profile": "off_axis",
+          "precision": "uint8",
+          "ms": 863,
+          "cer": 0.970276008492569,
+          "words": 2,
+          "speechCharacters": 0,
+          "confidence": 0.7019325420260429
+        },
+        {
+          "file": "banking__jpeg_social",
+          "doc": "banking",
+          "profile": "jpeg_social",
+          "precision": "uint8",
+          "ms": 1119,
+          "cer": 0.9957537154989384,
+          "words": 1,
+          "speechCharacters": 0,
+          "confidence": 0.5319330841302872
+        },
+        {
+          "file": "legal__studio_clean",
+          "doc": "legal",
+          "profile": "studio_clean",
+          "precision": "uint8",
+          "ms": 1359,
+          "cer": 0.4367588932806324,
+          "words": 14,
+          "speechCharacters": 0,
+          "confidence": 0.7044867461020663
+        },
+        {
+          "file": "legal__handheld_light",
+          "doc": "legal",
+          "profile": "handheld_light",
+          "precision": "uint8",
+          "ms": 1237,
+          "cer": 0.7450592885375494,
+          "words": 9,
+          "speechCharacters": 0,
+          "confidence": 0.7053893248807817
+        },
+        {
+          "file": "legal__off_axis",
+          "doc": "legal",
+          "profile": "off_axis",
+          "precision": "uint8",
+          "ms": 754,
+          "cer": 0.9960474308300395,
+          "words": 1,
+          "speechCharacters": 0,
+          "confidence": 0.5040744096040726
+        },
+        {
+          "file": "legal__jpeg_social",
+          "doc": "legal",
+          "profile": "jpeg_social",
+          "precision": "uint8",
+          "ms": 1177,
+          "cer": 1,
+          "words": 0,
+          "speechCharacters": 0,
+          "confidence": 0
+        }
+      ]
+    },
+    {
+      "precision": "fp32",
+      "prepareMs": 133.6708749999998,
+      "meanCER": 0.504133463709986,
+      "samples": [
+        {
+          "file": "prescription__studio_clean",
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "precision": "fp32",
+          "ms": 1161,
+          "cer": 0.0273972602739726,
+          "words": 17,
+          "speechCharacters": 407,
+          "confidence": 0.9592176253669623
+        },
+        {
+          "file": "prescription__handheld_light",
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "precision": "fp32",
+          "ms": 1050,
+          "cer": 0.10273972602739725,
+          "words": 18,
+          "speechCharacters": 369,
+          "confidence": 0.9014120732132324
+        },
+        {
+          "file": "prescription__off_axis",
+          "doc": "prescription",
+          "profile": "off_axis",
+          "precision": "fp32",
+          "ms": 644,
+          "cer": 0.9748858447488584,
+          "words": 1,
+          "speechCharacters": 0,
+          "confidence": 0.6886463246562264
+        },
+        {
+          "file": "prescription__jpeg_social",
+          "doc": "prescription",
+          "profile": "jpeg_social",
+          "precision": "fp32",
+          "ms": 862,
+          "cer": 0.9383561643835616,
+          "words": 5,
+          "speechCharacters": 0,
+          "confidence": 0.639254042364302
+        },
+        {
+          "file": "banking__studio_clean",
+          "doc": "banking",
+          "profile": "studio_clean",
+          "precision": "fp32",
+          "ms": 1374,
+          "cer": 0.02335456475583864,
+          "words": 27,
+          "speechCharacters": 465,
+          "confidence": 0.9581039538423433
+        },
+        {
+          "file": "banking__handheld_light",
+          "doc": "banking",
+          "profile": "handheld_light",
+          "precision": "fp32",
+          "ms": 1119,
+          "cer": 0.12314225053078556,
+          "words": 25,
+          "speechCharacters": 303,
+          "confidence": 0.8785264893113812
+        },
+        {
+          "file": "banking__off_axis",
+          "doc": "banking",
+          "profile": "off_axis",
+          "precision": "fp32",
+          "ms": 801,
+          "cer": 0.8726114649681529,
+          "words": 9,
+          "speechCharacters": 0,
+          "confidence": 0.7028174823857344
+        },
+        {
+          "file": "banking__jpeg_social",
+          "doc": "banking",
+          "profile": "jpeg_social",
+          "precision": "fp32",
+          "ms": 992,
+          "cer": 0.9851380042462845,
+          "words": 2,
+          "speechCharacters": 0,
+          "confidence": 0.6743992537260055
+        },
+        {
+          "file": "legal__studio_clean",
+          "doc": "legal",
+          "profile": "studio_clean",
+          "precision": "fp32",
+          "ms": 1294,
+          "cer": 0.01383399209486166,
+          "words": 17,
+          "speechCharacters": 513,
+          "confidence": 0.9631876534884782
+        },
+        {
+          "file": "legal__handheld_light",
+          "doc": "legal",
+          "profile": "handheld_light",
+          "precision": "fp32",
+          "ms": 1178,
+          "cer": 0.1067193675889328,
+          "words": 17,
+          "speechCharacters": 401,
+          "confidence": 0.8823740062941201
+        },
+        {
+          "file": "legal__off_axis",
+          "doc": "legal",
+          "profile": "off_axis",
+          "precision": "fp32",
+          "ms": 705,
+          "cer": 0.9565217391304348,
+          "words": 4,
+          "speechCharacters": 0,
+          "confidence": 0.6519217767160047
+        },
+        {
+          "file": "legal__jpeg_social",
+          "doc": "legal",
+          "profile": "jpeg_social",
+          "precision": "fp32",
+          "ms": 1039,
+          "cer": 0.924901185770751,
+          "words": 10,
+          "speechCharacters": 0,
+          "confidence": 0.6004333415379126
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,723 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project ios/SightLine.xcodeproj -scheme SightLine -sdk iphonesimulator -configuration Debug -derivedDataPath /tmp/sightline-ear-icon-build CODE_SIGNING_ALLOWED=NO build
+
+Build settings from command line:
+    CODE_SIGNING_ALLOWED = NO
+    SDKROOT = iphonesimulator27.1
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, id:dvtdevice-DVTiOSDeviceSimulatorPlaceholder-iphonesimulator:placeholder, name:Any iOS Simulator Device }
+{ platform:iOS Simulator, arch:arm64, id:ABFF6B1A-F919-4D81-B93F-106E7C7946EE, OS:27.0, name:iPad (A16) }
+{ platform:iOS Simulator, arch:arm64, id:85AE4C7B-029E-44E7-89B9-44958A33166A, OS:27.0, name:iPad Air 11-inch (M4) }
+{ platform:iOS Simulator, arch:arm64, id:40FF675A-8766-40A3-9CE2-C7BD36D4013B, OS:27.0, name:iPad Air 13-inch (M4) }
+{ platform:iOS Simulator, arch:arm64, id:E0674375-910D-4273-AEB3-447ECC97B12A, OS:27.0, name:iPad Pro 11-inch (M5) }
+{ platform:iOS Simulator, arch:arm64, id:9FD1A12D-EC73-40CF-BF6F-4A489BA1742C, OS:27.0, name:iPad Pro 13-inch (M5) }
+{ platform:iOS Simulator, arch:arm64, id:D8EDAF4E-4E6A-45AE-B9DC-A3D020417406, OS:27.0, name:iPad mini (A17 Pro) }
+{ platform:iOS Simulator, arch:arm64, id:0BED3E95-24CC-4924-826D-562BF2A4943D, OS:27.0, name:iPhone 17 }
+{ platform:iOS Simulator, arch:arm64, id:B8772767-502A-4249-82D7-2E1AF531316F, OS:27.0, name:iPhone 17e }
+{ platform:iOS Simulator, arch:arm64, id:FCC62008-6DDA-4FC7-A120-0A8C6074D173, OS:27.0, name:iPhone 18 Pro Max }
+{ platform:iOS Simulator, arch:arm64, id:1A6042CE-9130-4469-96F0-8B6390EA2409, OS:27.0, name:iPhone Air }
+{ platform:macOS, arch:arm64, variant:Designed for [iPad,iPhone], id:00008112-000645DE1E04401E, name:My Mac }
+{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device }
+{ platform:iOS, arch:arm64, id:<DEVICE_UDID>, name:the iPhone }
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (1 target)
+    Target 'SightLine' in project 'SightLine' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 <repo>/ios/Assets.xcassets
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 2f5ccefe0da5326debcc7dd28259cfd2
+Build description path: /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/XCBuildData/2f5ccefe0da5326debcc7dd28259cfd2.xcbuilddata
+CreateBuildDirectory /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/sightline-ear-icon-build/ModuleCache.noindex
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/ModuleCache.noindex
+
+CreateBuildDirectory /tmp/sightline-ear-icon-build/CompilationCache.noindex
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/CompilationCache.noindex
+
+CreateBuildDirectory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex
+
+CreateBuildDirectory /tmp/sightline-ear-icon-build/Build/Products
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/Build/Products
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk /tmp/sightline-ear-icon-build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache
+    cd <repo>/ios/SightLine.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -o /tmp/sightline-ear-icon-build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache
+
+CreateBuildDirectory /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator
+
+CreateBuildDirectory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+CreateBuildDirectory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/PrecompiledHeaders
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/PrecompiledHeaders
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine-4a135435cb5d97a05460818d32a3bdcf-VFS-iphonesimulator/all-product-headers.yaml
+    cd <repo>/ios/SightLine.xcodeproj
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine-4a135435cb5d97a05460818d32a3bdcf-VFS-iphonesimulator/all-product-headers.yaml
+
+CreateBuildDirectory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+    cd <repo>/ios/SightLine.xcodeproj
+    builtin-create-build-directory /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.hmap
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-non-framework-target-headers.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibPath-normal-x86_64.txt (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibPath-normal-x86_64.txt
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyStaticMetadataFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyMetadataFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyMetadataFileList
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibPath-normal-arm64.txt (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibInstallName-normal-x86_64.txt (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibInstallName-normal-x86_64.txt
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibInstallName-normal-arm64.txt (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine_const_extract_protocols.json (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.SwiftFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.SwiftFileList
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.SwiftConstValuesFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.LinkFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.LinkFileList
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-OutputFileMap.json (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-OutputFileMap.json
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftConstValuesFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.LinkFileList (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.LinkFileList
+
+WriteAuxiliaryFile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    write-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json
+
+MkDir /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /bin/mkdir -p /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app
+
+Ld /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/__preview.dylib normal x86_64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target x86_64-apple-ios17.0-simulator -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -install_name @rpath/SightLine.debug.dylib -Xlinker -dead_strip -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine_dependency_info.dat -o /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/__preview.dylib
+
+Ld /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/__preview.dylib normal arm64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0-simulator -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -install_name @rpath/SightLine.debug.dylib -Xlinker -dead_strip -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_dependency_info.dat -o /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/__preview.dylib
+
+GenerateAssetSymbols <repo>/ios/Assets.xcassets (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool <repo>/ios/Assets.xcassets --compile /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_dependencies --output-partial-info-plist /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist --app-icon AppIcon --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --target-device ipad --minimum-deployment-target 17.0 --platform iphonesimulator --bundle-identifier com.sightline.reader --generate-swift-asset-symbol-extensions NO --generate-swift-asset-symbols /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/* com.apple.actool.compilation-results */
+/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.h
+/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift
+
+
+MkDir /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /bin/mkdir -p /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned
+
+CpResource /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/app <repo>/app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks <repo>/app /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app
+
+MkDir /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/unthinned (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /bin/mkdir -p /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/unthinned
+
+CompileAssetCatalogVariant thinned /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app <repo>/ios/Assets.xcassets (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/usr/bin/actool <repo>/ios/Assets.xcassets --compile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_dependencies_thinned --output-partial-info-plist /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist_thinned --app-icon AppIcon --compress-pngs --enable-on-demand-resources YES --development-region en --target-device iphone --target-device ipad --minimum-deployment-target 17.0 --platform iphonesimulator
+/* com.apple.actool.compilation-results */
+/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist_thinned
+/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned/AppIcon60x60@2x.png
+/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned/AppIcon76x76@2x~ipad.png
+/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned/Assets.car
+
+
+CreateUniversalBinary /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/__preview.dylib normal arm64\ x86_64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo -create /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/__preview.dylib /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/__preview.dylib -output /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/__preview.dylib
+
+SwiftDriver SightLine normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SightLine -Onone @/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/sightline-ear-icon-build/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/sightline-ear-icon-build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -sdk-module-cache-path /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/sightline-ear-icon-build/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources-normal/arm64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/arm64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h -working-directory <repo>/ios -experimental-emit-module-separately -disable-cmo
+
+SwiftDriver SightLine normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SightLine -Onone @/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target x86_64-apple-ios17.0-simulator -g -module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/sightline-ear-icon-build/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/sightline-ear-icon-build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -sdk-module-cache-path /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/sightline-ear-icon-build/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources-normal/x86_64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/x86_64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-Swift.h -working-directory <repo>/ios -experimental-emit-module-separately -disable-cmo
+
+LinkAssetCatalog <repo>/ios/Assets.xcassets (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-linkAssetCatalog --thinned /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/thinned --thinned-dependencies /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist_thinned --unthinned /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_output/unthinned --unthinned-dependencies /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist_unthinned --output /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app --plist-output /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist
+note: Emplaced /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/Assets.car (in target 'SightLine' from project 'SightLine')
+note: Emplaced /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/AppIcon76x76@2x~ipad.png (in target 'SightLine' from project 'SightLine')
+note: Emplaced /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/AppIcon60x60@2x.png (in target 'SightLine' from project 'SightLine')
+
+ProcessInfoPlistFile /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist <repo>/ios/Generated/Info.plist (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-infoPlistUtility <repo>/ios/Generated/Info.plist -producttype com.apple.product-type.application -genpkginfo /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/assetcatalog_generated_info.plist -o /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stdbool-8ZLG7HMFD8ZXLJASPY0QP6IDA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_AvailabilityInternal-1H6T7G0KZAKJOONQ2NPRN2JTG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-2IPZE5WB2HABIE6L02BF73N8E.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/SwiftShims-9FJOOUXIKWTMY70DWK6TNBSR4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/ptrauth-2F74EE25CNGLYIZ0MHIJYVXEM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/ptrcheck-E1TMFFY4V4Y6Z2752QOUYASDH.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/ptrcheck-DHX2M7NLFZBZYTCXLNRIN0BL6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/DeveloperToolsSupport-DH6GPHUGT7MIH51J4QOOSEXMX.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/DeveloperToolsSupport-B6EEUGB1X63XTE358KXFAFRJA.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/ptrauth-2RP63HUV4VSS0S18AFINBCGKO.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_AvailabilityInternal-ASKWQD7LZ8W7IU84TSF25NVNN.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stddef-1H5CJ92JW5K8EDHSUHOV3QR0W.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stdbool-D9J3OQDG3BNK6PIA4S062YQBZ.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-RBDEWGYHA6AIIBD01C7K51Z3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stddef-7LKM2V95LLYXTISYZIY47Z95B.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/SwiftShims-EFUYKV4EFHW8U5QAOM6PCPZUQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stdarg-CSS8R8LG6X0NF8HFFFZG6M4GS.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stdarg-8DW8UAY9GGYO9Z07GLV9WK2SK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_float-19REHHBZJ8PNCX8SAKKMZUCYA.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_float-6TVY4NJU7XR8TI0DTEU7TW4B2.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_DarwinFoundation1-4RBMI4HBSETJU5B1L6PMTTGPX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_DarwinFoundation1-CT0B6NMBA4QHB80IBOCN9PXCB.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_DarwinFoundation2-8YNHAO2RUDWTN3CW29O008GT0.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_limits-2S8T35C3J1MW5G8B87E04TCSI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_limits-4M1LQOPGFBJQCEOE0TBDACVFJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_DarwinFoundation2-4HV88QLS2W22ASQXXY4F2B8HO.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_tgmath-D6ECX1J4X5LCHZSS4GYF6C3DD.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/string_h-403MQ9MNUKVIQ19IZDUYFNUMT.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stdint-97CAV6TZHQUMCXRUPC2WQU3I6.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/sys_types-ANZHEQE7SZN4KGMPASG6TKEE5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_tgmath-A1MI4L8H2ITS4TL7FTXZWVQBD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/sys_types-9AWI5MO9AME2O4VNS92L5FL79.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stdint-31NLKQY3B05CHHR451BXW0BJC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/string_h-9GV7RBM3HS0SJRAHK48TPP4FK.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stdatomic-5UU0DFHXYU4PEP9TU4OBSRO42.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_DarwinFoundation3-Z6VIEF3HC7W2H5GMM9D4LF9U.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_intrinsics-C3UZTTNC1LDM21H3UI8OABGJW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_DarwinFoundation3-1ZKVWE7Q8GTYKR048TN26N4OH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_stdatomic-4AWN2MVUK6KAMJGDGZPHCI7TZ.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_intrinsics-1XEJ64Q81IJS1TIWC5VWIXFG3.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_inttypes-76CVSVT7GD6V7I9U6FZUWX0D2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_Builtin_inttypes-5RJU5GYSW5P8EHQIOSF3HGQ60.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Darwin-7MCVHRX787V77NWN9AJ3ODFQC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Darwin-69KLQS4J84TTBS4PP3A2FACJC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/simd-9Q90C0KWBXZG2BBRN4142U67L.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/ObjectiveC-EHQE7E8UBR1YDFCNZPCEQDFHR.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/MachO-9O07H3VEHXL4L9IA53DCYIYNX.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/simd-7S9MIQCD9UEUR3LA6K7SFNMQU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/MachO-EK5MC074ISWHWU1M3MXLHAKEU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/ObjectiveC-EQ5GOALB6MJX0HAQIH2O6J6MM.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/os_object-6A8HJN4435PR5XG5ZUM2BMUV3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/os_object-A5HYMG6AHBE7XAJ6DBZDREJ9N.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/os_workgroup-CDM9W34WEN9ZB62D0A68CNPZP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Spatial-97SUYUX0NUMRBM7UDX9I56W2A.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/os_workgroup-8G7TRVUNCGE3SUKX0X2CQ2E27.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Dispatch-7QOTH75QEVQ9CO4RIJHQULX0U.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Dispatch-3PSMZZHGZ2FHJSOX92ELWZ5A.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreFoundation-E7AE4G86OP2Z6BIYE5MFSZ8VU.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/XPC-CE2L7SN7C09NM1LMSI550C3QF.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/dnssd-83N960L33706MCV5WFJZ1B5WQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/XPC-8UIVACXA8HTRBJJP9165DOD2Y.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/dnssd-9MDY5KOR28BONY3WVCLIIP80N.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreFoundation-4PU8L080VP6MO2067X7YVKBGA.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Spatial-AOYZ6B4TMNQOGJGLMYKPEWM24.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/os-8103FP7B3PEC6WYPURI4NBTW6.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreGraphics-AQKNJ5XHYIFU8VJQND66O2RXZ.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CFNetwork-5BRIS0YVYJTG7HGC2TZLHAT0D.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreAudioTypes-MHEQEK63LL2OIJWV8R0TP11R.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Security-33ZWRJSF0MT36UGCAV443231A.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/os-8M46WLR60I7RZ1JJMSYUSIXFJ.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreAudio-6Y43IMM1VK1TBS5YWBJP9GNLP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Security-EO333YYB0M5PTFA4UJ5BFY7JQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreAudioTypes-7JI7D6M1IMM0DLQUE39HN8E1C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CFNetwork-B43F8Y5EPVS1K13PXCUMJ8KP8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreGraphics-3HNVU62H2RCY01V8NEFR0N4SN.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Foundation-WW9MN0ZS5GGJ75VTMIV94BRT.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/ImageIO-6QTA2791XFZ1VN72UWKK3423.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreText-D3JRJLNI45YLG8RSCTNJBSCGO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreAudio-1M7P9R4RDIR7Q19GGBE30QNIX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Foundation-1FP9JDZ9YMT08H3J7TB9D9YYA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/ImageIO-C02IQFP0YV8TK1PSG62CZP9O5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreText-EXTJI9DUDI67VIWQAJ8K5MGZQ.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreData-13HFQBR5UL60A553OL4I7K39O.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreTransferable-DJ6B3HS220ZYAZLNWE7IRC215.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-6I4C5F3NM06XRP35CPBPVGJ42.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Network-3GF80BJP3OVPWIYHMNHLJW09H.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/UserNotifications-CDYP4RTALBF8MXD4TII370SXD.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/FileProvider-4DY64J8A3YJWXWT8E7UTKRTLO.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Accessibility-E820MVQA4GXE8WH6YC8JGVUMQ.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/OpenGLES-BXU1MUTSLROXSGBM77Q6AC9O5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-4SX9R7G99EJNOMAL17HI82EW2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreTransferable-D3MPXAYSF02CI0YOBMX3GRXSK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/OpenGLES-4T15EBRO6EM78V86TQLQUA6HS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Symbols-E1EAM10RCMUI9E6IHW6W05GB4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/FileProvider-367L68OPUWKLY9O6MV0MP4YZ0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/DataDetection-CNRN3KAD9F2KMHVURMJ1FWKR4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_LocationEssentials-AM5M1V4OSAT49DRHQ8SOQZP0C.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/OSLog-AZDO5TK1INAMQYLFLKSFBFIDA.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/UIUtilities-3EC5DO5QRUFUBCU6I1TJAA63Y.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/UIUtilities-AUCSEQQEKCHNYRG5TE5NBFTHP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Network-7LXMT4RKWRJ8F6Z5H9BSPL9P0.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/IOSurface-2NHZNXHDE6BYBSS2LYWSWLA8I.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreData-BCNYON6ACMHK6SCWCDM0KEDBV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/UserNotifications-QLR6L8GOSZ4CHX9NQVLS9FGM.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/OSLog-166D7VZIXYL47QDIR8Q1BLRGG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreLocation-4BOO39K0Z0LY5SJ6F8XFNL4CE.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Symbols-3PSUJQTNZR861C6GLGUBGMQHF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/IOSurface-8BGRDHJ9B5WQ97UI98G2M69J0.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/_LocationEssentials-LAHBY609IJJJS33MDDJFVYK4.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Metal-53611BAUD3DCQZ3C78WAZVZU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Accessibility-8XBAQL4XEA5FJRCKDFHZ4PBIE.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/DataDetection-8YE1E01O5WHUP1406C8B1B94H.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreMotion-59SRWCJUSQCJ0PV2Y0Y7P1Z9D.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/Metal-46O7YIR1D3XPWNNFLYMY3SEXU.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreLocation-57FKY7XOVSBK6KKDFS36KYBEO.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreMotion-C3RLXAIM0OYR2JAEV7X2HBR8T.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreVideo-DF89PCME3DYTEVIPD0CVZBSUG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreVideo-80AZ0BH5JRD2K2BWYS1MB3Y94.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreImage-9HQKW8ZGV8U0TVWO9PVP9JGT0.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreMedia-84IN7820QSORKCZCHB54WJPO2.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/QuartzCore-8RPNLI97DELMFEIPJUF5NJI45.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreMedia-CW6EY4N8FESWBHQH013NK5A1P.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/QuartzCore-9RXG9K2I32HVJSGYL11HRBER5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/CoreImage-1VV5T30QKUJ55OLC75DT3UZ74.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/SwiftUICore-1B8VSZZQBVU4W666NKVMQVFXG.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/UIKit-45YPXCVDW05K0DSQKFC2XCUVA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/SwiftUICore-8ZIWZ5WULHG9KCGU4V5U91KR9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/UIKit-7EJSTSVISNGK3GZKD30Q8PZ2T.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/SwiftUI-AM5ZYGQ51B3BEDCGGFSQTJPTS.pcm
+
+SwiftExplicitDependencyGeneratePcm x86_64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/WebKit-6ZGDKRDJKXU22GND1527YFETJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/SwiftUI-480LJQYCHVB5E8F4UMC1GR4GH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules/WebKit-1SPHS0PC5O3HDYFXP9WAGH9DV.pcm
+
+SwiftEmitModule normal x86_64 Emitting\ module\ for\ SightLine (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal x86_64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    
+
+SwiftCompile normal x86_64 Compiling\ SightLineApp.swift <repo>/ios/Sources/SightLineApp.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal x86_64 <repo>/ios/Sources/SightLineApp.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile SightLineApp.swift
+
+SwiftCompile normal x86_64 Compiling\ WebAssetServer.swift <repo>/ios/Sources/WebAssetServer.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal x86_64 <repo>/ios/Sources/WebAssetServer.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile WebAssetServer.swift
+
+SwiftCompile normal x86_64 Compiling\ OfflineAssets.swift <repo>/ios/Sources/OfflineAssets.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal x86_64 <repo>/ios/Sources/OfflineAssets.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile OfflineAssets.swift
+
+SwiftCompile normal x86_64 Compiling\ GeneratedAssetSymbols.swift /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal x86_64 /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile GeneratedAssetSymbols.swift
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ SightLine (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    
+
+SwiftCompile normal arm64 Compiling\ SightLineApp.swift <repo>/ios/Sources/SightLineApp.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 <repo>/ios/Sources/SightLineApp.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile SightLineApp.swift
+
+SwiftCompile normal arm64 Compiling\ GeneratedAssetSymbols.swift /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/GeneratedAssetSymbols.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile GeneratedAssetSymbols.swift
+
+SwiftCompile normal arm64 Compiling\ WebAssetServer.swift <repo>/ios/Sources/WebAssetServer.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 <repo>/ios/Sources/WebAssetServer.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile WebAssetServer.swift
+
+SwiftDriverJobDiscovery normal x86_64 Emitting module for SightLine (in target 'SightLine' from project 'SightLine')
+
+SwiftDriver\ Compilation\ Requirements SightLine normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SightLine -Onone @/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target x86_64-apple-ios17.0-simulator -g -module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/sightline-ear-icon-build/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/sightline-ear-icon-build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -sdk-module-cache-path /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/sightline-ear-icon-build/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources-normal/x86_64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/x86_64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-Swift.h -working-directory <repo>/ios -experimental-emit-module-separately -disable-cmo
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for SightLine (in target 'SightLine' from project 'SightLine')
+
+SwiftDriver\ Compilation\ Requirements SightLine normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SightLine -Onone @/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/sightline-ear-icon-build/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/sightline-ear-icon-build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -sdk-module-cache-path /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/sightline-ear-icon-build/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources-normal/arm64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/arm64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h -working-directory <repo>/ios -experimental-emit-module-separately -disable-cmo
+
+Copy /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/x86_64-apple-ios-simulator.swiftmodule /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftmodule (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftmodule /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/x86_64-apple-ios-simulator.swiftmodule
+
+SwiftMergeGeneratedHeaders /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/SightLine-Swift.h /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-Swift.h (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-swiftHeaderTool -arch arm64 /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h -arch x86_64 /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-Swift.h -o /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/SightLine-Swift.h
+
+Copy /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/x86_64-apple-ios-simulator.swiftdoc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftdoc (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftdoc /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/x86_64-apple-ios-simulator.swiftdoc
+
+Copy /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/x86_64-apple-ios-simulator.abi.json /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.abi.json (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.abi.json /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/x86_64-apple-ios-simulator.abi.json
+
+Copy /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.swiftmodule /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.swiftdoc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftdoc (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftdoc /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Copy /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.abi.json /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.abi.json (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.abi.json /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftsourceinfo (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftsourceinfo /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo
+
+Copy /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftsourceinfo (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftsourceinfo /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+SwiftCompile normal arm64 Compiling\ OfflineAssets.swift <repo>/ios/Sources/OfflineAssets.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftCompile normal arm64 <repo>/ios/Sources/OfflineAssets.swift (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-SwiftPerFileCompile OfflineAssets.swift
+
+SwiftDriverJobDiscovery normal arm64 Compiling GeneratedAssetSymbols.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal x86_64 Compiling GeneratedAssetSymbols.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal arm64 Compiling OfflineAssets.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal x86_64 Compiling OfflineAssets.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal arm64 Compiling WebAssetServer.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal x86_64 Compiling WebAssetServer.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal arm64 Compiling SightLineApp.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriverJobDiscovery normal x86_64 Compiling SightLineApp.swift (in target 'SightLine' from project 'SightLine')
+
+SwiftDriver\ Compilation SightLine normal arm64 com.apple.xcode.tools.swift.compiler (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SightLine -Onone @/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target arm64-apple-ios17.0-simulator -g -module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/sightline-ear-icon-build/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/sightline-ear-icon-build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -sdk-module-cache-path /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/sightline-ear-icon-build/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources-normal/arm64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/arm64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine-Swift.h -working-directory <repo>/ios -experimental-emit-module-separately -disable-cmo
+
+SwiftDriver\ Compilation SightLine normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-Swift-Compilation -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name SightLine -Onone @/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.SwiftFileList -DDEBUG -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -target x86_64-apple-ios17.0-simulator -g -module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /tmp/sightline-ear-icon-build/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 5 -I /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -c -j8 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /tmp/sightline-ear-icon-build/SDKStatCaches.noindex/iphonesimulator27.1-24A94232-35d3147121984ba087c28d913653d626.sdkstatcache -output-file-map /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /tmp/sightline-ear-icon-build/ModuleCache.noindex -sdk-module-cache-path /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /tmp/sightline-ear-icon-build/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine_const_extract_protocols.json -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-generated-files.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-own-target-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-all-target-headers.hmap -Xcc -iquote -Xcc /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-project-headers.hmap -Xcc -I/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/include -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources-normal/x86_64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources/x86_64 -Xcc -I/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine-Swift.h -working-directory <repo>/ios -experimental-emit-module-separately -disable-cmo
+
+Ld /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/SightLine.debug.dylib normal arm64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0-simulator -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -filelist /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.LinkFileList -install_name @rpath/SightLine.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -o /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/SightLine.debug.dylib
+
+Ld /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/SightLine.debug.dylib normal x86_64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target x86_64-apple-ios17.0-simulator -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -L/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F/tmp/sightline-ear-icon-build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator -F/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -filelist /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.LinkFileList -install_name @rpath/SightLine.debug.dylib -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine_lto.o -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine_dependency_info.dat -fobjc-link-runtime -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.swiftmodule -Xlinker -alias -Xlinker _main -Xlinker ___debug_main_executable_dylib_entry_point -o /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/SightLine.debug.dylib
+
+CreateUniversalBinary /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib normal arm64\ x86_64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo -create /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/SightLine.debug.dylib /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/SightLine.debug.dylib -output /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib
+
+ConstructStubExecutorLinkFileList /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-ExecutorLinkFileList-normal-x86_64.txt (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    construct-stub-executor-link-file-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/SightLine.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-ExecutorLinkFileList-normal-x86_64.txt
+note: Using stub executor library with Swift entry point. (in target 'SightLine' from project 'SightLine')
+
+ConstructStubExecutorLinkFileList /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-ExecutorLinkFileList-normal-arm64.txt (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    construct-stub-executor-link-file-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/SightLine.debug.dylib /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor_no_swift_entry_point.a /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/lib/libPreviewsJITStubExecutor.a --output /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-ExecutorLinkFileList-normal-arm64.txt
+note: Using stub executor library with Swift entry point. (in target 'SightLine' from project 'SightLine')
+
+Ld /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/SightLine normal x86_64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target x86_64-apple-ios17.0-simulator -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibPath-normal-x86_64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibInstallName-normal-x86_64.txt -Xlinker -filelist -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-ExecutorLinkFileList-normal-x86_64.txt /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/SightLine.debug.dylib -o /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/SightLine
+
+Ld /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/SightLine normal arm64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios17.0-simulator -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -F/tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator -Xlinker -rpath -Xlinker @executable_path -Xlinker -rpath -Xlinker @executable_path/Frameworks -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -e ___debug_blank_executor_main -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_dylib -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibPath-normal-arm64.txt -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __debug_instlnm -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-DebugDylibInstallName-normal-arm64.txt -Xlinker -filelist -Xlinker /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine-ExecutorLinkFileList-normal-arm64.txt /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/SightLine.debug.dylib -o /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/SightLine
+
+CreateUniversalBinary /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine normal arm64\ x86_64 (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo -create /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/Binary/SightLine /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/Binary/SightLine -output /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine
+
+CopySwiftLibs /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-swiftStdLibTool --copy --verbose --scan-executable /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine.debug.dylib --scan-folder /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/Frameworks --scan-folder /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/PlugIns --scan-folder /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/SystemExtensions --scan-folder /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/Extensions --platform iphonesimulator --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+Ignoring --strip-bitcode because --sign was not passed
+
+ExtractAppIntentsMetadata (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --module-name SightLine --sdk-root /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk --xcode-version 27A9275 --platform-family iOS --deployment-target 17.0 --bundle-identifier com.sightline.reader --output /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app --target-triple arm64-apple-ios17.0-simulator --target-triple x86_64-apple-ios17.0-simulator --binary-file /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/SightLine --dependency-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine_dependency_info.dat --dependency-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine_dependency_info.dat --stringsdata-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --stringsdata-file /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftFileList --source-file-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.SwiftFileList --metadata-file-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyMetadataFileList --static-metadata-file-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyStaticMetadataFileList --swift-const-vals-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/arm64/SightLine.SwiftConstValuesFileList --swift-const-vals-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/Objects-normal/x86_64/SightLine.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --no-app-shortcuts-localization
+2026-10-24 10:36:26.715 appintentsmetadataprocessor[7904:101367] Starting appintentsmetadataprocessor export
+2026-10-24 10:36:26.723 appintentsmetadataprocessor[7904:101367] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+
+AppIntentsSSUTraining (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist --temp-dir-path /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/ssu --bundle-id com.sightline.reader --product-path /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app --extracted-metadata-path /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/Metadata.appintents --metadata-file-list /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SightLine.build/Debug-iphonesimulator/SightLine.build/SightLine.DependencyMetadataFileList --source-file /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app/Info.plist --archive-ssu-assets
+2026-10-24 10:36:26.764 appintentsnltrainingprocessor[7905:101369] Parsing options for appintentsnltrainingprocessor
+2026-10-24 10:36:26.765 appintentsnltrainingprocessor[7905:101369] Starting AppIntents SSU YAML Generation
+2026-10-24 10:36:26.768 appintentsnltrainingprocessor[7905:101369] No AppShortcuts found - Skipping.
+
+RegisterExecutionPolicyException /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-RegisterExecutionPolicyException /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app
+
+Validate /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    builtin-validationUtility /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app -shallow-bundle -infoplist-subpath Info.plist
+
+Touch /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app (in target 'SightLine' from project 'SightLine')
+    cd <repo>/ios
+    /usr/bin/touch -c /tmp/sightline-ear-icon-build/Build/Products/Debug-iphonesimulator/SightLine.app
+
+PruneExplicitPrecompiledModules /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/sightline-ear-icon-build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /tmp/sightline-ear-icon-build/SDKExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+

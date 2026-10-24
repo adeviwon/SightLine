@@ -1,0 +1,46 @@
+
+[webkit] boot — shell, service worker, layout, a11y
+  ok    pipeline global present
+  ok    classifier + restorer + tts + app globals present
+  ok    tesseract is not loaded (own CRNN instead)
+  ok    no horizontal overflow at 390px
+  ok    aria-live region is polite
+  ok    every visible button is >= 44px tall
+  ok    service worker registered and active
+  ok    cache is the shipped VERSION
+  ok    no page errors on boot
+  ok    no console errors on boot
+  ok    server served every requested asset
+
+[webkit] cold install — install online, airplane mode before the FIRST scan
+  ok    service worker installed a cache
+  ok    the OCR engine modules are precached at install (no scan needed)
+  ok    app boots offline straight after install
+  ok    a never-scanned install completes its FIRST scan offline
+  ok    cold offline first scan genuinely uses the default PP-OCRv5 reader
+
+[webkit] 16/16 checks passed
+[webkit] PASS
+
+[chromium] boot — shell, service worker, layout, a11y
+  ok    pipeline global present
+  ok    classifier + restorer + tts + app globals present
+  ok    tesseract is not loaded (own CRNN instead)
+  ok    no horizontal overflow at 390px
+  ok    aria-live region is polite
+  ok    every visible button is >= 44px tall
+  ok    service worker registered and active
+  ok    cache is the shipped VERSION
+  ok    no page errors on boot
+  ok    no console errors on boot
+  ok    server served every requested asset
+
+[chromium] cold install — install online, airplane mode before the FIRST scan
+  ok    service worker installed a cache
+  ok    the OCR engine modules are precached at install (no scan needed)
+  ok    app boots offline straight after install
+  ok    a never-scanned install completes its FIRST scan offline
+  ok    cold offline first scan genuinely uses the default PP-OCRv5 reader
+
+[chromium] 16/16 checks passed
+[chromium] PASS

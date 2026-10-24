@@ -1,0 +1,206 @@
+TAP version 13
+# (node:57820) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file://<repo>/app/js/ppocr_core.js is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to ~/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: model bytes match the recorded conversion and dictionary
+ok 1 - model bytes match the recorded conversion and dictionary
+  ---
+  duration_ms: 24.154917
+  type: 'test'
+  ...
+# Subtest: CTC uses dictionary offset and preserves decimal punctuation
+ok 2 - CTC uses dictionary offset and preserves decimal punctuation
+  ---
+  duration_ms: 0.258042
+  type: 'test'
+  ...
+# Subtest: an incomplete medicine read cannot turn a daily maximum into a spoken dosage
+ok 3 - an incomplete medicine read cannot turn a daily maximum into a spoken dosage
+  ---
+  duration_ms: 0.067584
+  type: 'test'
+  ...
+# Subtest: partially initialized models release sessions when recognizer loading fails
+ok 4 - partially initialized models release sessions when recognizer loading fails
+  ---
+  duration_ms: 0.391333
+  type: 'test'
+  ...
+# Subtest: invalid image dimensions are rejected before inference
+ok 5 - invalid image dimensions are rejected before inference
+  ---
+  duration_ms: 0.28375
+  type: 'test'
+  ...
+# Subtest: busy calls cannot overlap; successful result preserves engine identity
+ok 6 - busy calls cannot overlap; successful result preserves engine identity
+  ---
+  duration_ms: 0.307625
+  type: 'test'
+  ...
+# Subtest: a timeout terminates unfinished WASM and allows a clean retry
+ok 7 - a timeout terminates unfinished WASM and allows a clean retry
+  ---
+  duration_ms: 6.519542
+  type: 'test'
+  ...
+# Subtest: reset cancels an active scan and unavailable workers fail with an action
+ok 8 - reset cancels an active scan and unavailable workers fail with an action
+  ---
+  duration_ms: 0.135417
+  type: 'test'
+  ...
+# Subtest: speech fields cannot turn lookalike characters into an invented dose
+ok 9 - speech fields cannot turn lookalike characters into an invented dose
+  ---
+  duration_ms: 1.937792
+  type: 'test'
+  ...
+# Subtest: clear receipt gets its own category and source-backed total
+ok 10 - clear receipt gets its own category and source-backed total
+  ---
+  duration_ms: 8.526916
+  type: 'test'
+  ...
+# Subtest: literal bare total preserves amount without inventing a currency
+ok 11 - literal bare total preserves amount without inventing a currency
+  ---
+  duration_ms: 2.236625
+  type: 'test'
+  ...
+# Subtest: a 94 percent OCR score does not force unreadable text into receipt classification
+ok 12 - a 94 percent OCR score does not force unreadable text into receipt classification
+  ---
+  duration_ms: 0.304959
+  type: 'test'
+  ...
+# Subtest: prescription stays on existing medical path with its own medicine/dose guards
+ok 13 - prescription stays on existing medical path with its own medicine/dose guards
+  ---
+  duration_ms: 4.463125
+  type: 'test'
+  ...
+# Subtest: uncertain source lines never become confirmed receipt fields
+ok 14 - uncertain source lines never become confirmed receipt fields
+  ---
+  duration_ms: 0.717875
+  type: 'test'
+  ...
+# Subtest: low local confidence overrules high page confidence
+ok 15 - low local confidence overrules high page confidence
+  ---
+  duration_ms: 0.361709
+  type: 'test'
+  ...
+# Subtest: product barcodes are never represented as shop phone numbers
+ok 16 - product barcodes are never represented as shop phone numbers
+  ---
+  duration_ms: 0.778
+  type: 'test'
+  ...
+# Subtest: missing OCR confidence fails closed
+ok 17 - missing OCR confidence fails closed
+  ---
+  duration_ms: 0.704791
+  type: 'test'
+  ...
+# Subtest: conflicting totals are omitted rather than choosing one
+ok 18 - conflicting totals are omitted rather than choosing one
+  ---
+  duration_ms: 0.470875
+  type: 'test'
+  ...
+# Subtest: bank statements with totals and shop names retain the banking pipeline
+ok 19 - bank statements with totals and shop names retain the banking pipeline
+  ---
+  duration_ms: 1.806666
+  type: 'test'
+  ...
+# Subtest: invalid local confidence cannot bypass the field gate
+ok 20 - invalid local confidence cannot bypass the field gate
+  ---
+  duration_ms: 0.188917
+  type: 'test'
+  ...
+# Subtest: receipt fields speak independently of unrelated unclear page lines
+ok 21 - receipt fields speak independently of unrelated unclear page lines
+  ---
+  duration_ms: 0.606541
+  type: 'test'
+  ...
+# Subtest: medical partial pages remain refused despite high OCR confidence
+ok 22 - medical partial pages remain refused despite high OCR confidence
+  ---
+  duration_ms: 0.10625
+  type: 'test'
+  ...
+# Subtest: confirmed complete prescription retains original medicine-dose relationships
+ok 23 - confirmed complete prescription retains original medicine-dose relationships
+  ---
+  duration_ms: 0.054458
+  type: 'test'
+  ...
+# Subtest: every chunk has handlers before speak and early errors reject
+ok 24 - every chunk has handlers before speak and early errors reject
+  ---
+  duration_ms: 1.872042
+  type: 'test'
+  ...
+# Subtest: stop settles without browser events and late events cannot affect retry
+ok 25 - stop settles without browser events and late events cannot affect retry
+  ---
+  duration_ms: 0.447458
+  type: 'test'
+  ...
+# Subtest: all chunks must end; earlier chunks cannot silently fail
+ok 26 - all chunks must end; earlier chunks cannot silently fail
+  ---
+  duration_ms: 0.39375
+  type: 'test'
+  ...
+# Subtest: voice discovery can complete after an initially empty list
+ok 27 - voice discovery can complete after an initially empty list
+  ---
+  duration_ms: 3.830292
+  type: 'test'
+  ...
+# Subtest: missing local voice gives a specific retryable error, never network speech
+ok 28 - missing local voice gives a specific retryable error, never network speech
+  ---
+  duration_ms: 0.424875
+  type: 'test'
+  ...
+# Subtest: Mandarin does not masquerade as a Cantonese voice
+ok 29 - Mandarin does not masquerade as a Cantonese voice
+  ---
+  duration_ms: 0.41325
+  type: 'test'
+  ...
+# Subtest: missing start events fail instead of pretending playback finished
+ok 30 - missing start events fail instead of pretending playback finished
+  ---
+  duration_ms: 13.306958
+  type: 'test'
+  ...
+# Subtest: chunking preserves decimal amounts and medicine strengths
+ok 31 - chunking preserves decimal amounts and medicine strengths
+  ---
+  duration_ms: 0.441875
+  type: 'test'
+  ...
+# Subtest: an empty voice catalog reports discovery delay and allows retry
+ok 32 - an empty voice catalog reports discovery delay and allows retry
+  ---
+  duration_ms: 5.705209
+  type: 'test'
+  ...
+1..32
+# tests 32
+# suites 0
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 95.315875
