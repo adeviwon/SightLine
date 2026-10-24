@@ -82,17 +82,17 @@
   "pipeline": {
     "n": 12,
     "errors": 0,
-    "field_recovery": 0.3333333333333333,
-    "classification": 0.9166666666666666,
-    "word_accuracy": 0.5715791133599353,
-    "cer": 0.21709805749692557,
+    "field_recovery": 0.4583333333333333,
+    "classification": 1.0,
+    "word_accuracy": 0.7029388978019115,
+    "cer": 0.14816004860810142,
     "headline": {
       "n": 12,
       "errors": 0,
-      "field_recovery": 0.3333333333333333,
-      "classification": 0.9166666666666666,
-      "word_accuracy": 0.5715791133599353,
-      "cer": 0.21709805749692557
+      "field_recovery": 0.4583333333333333,
+      "classification": 1.0,
+      "word_accuracy": 0.7029388978019115,
+      "cer": 0.14816004860810142
     },
     "headline_profiles": [
       "handheld_light",
@@ -115,32 +115,32 @@
         "errors": 0,
         "field_recovery": 0.6666666666666666,
         "classification": 1.0,
-        "word_accuracy": 0.7517654640942313,
-        "cer": 0.07487492882992142
+        "word_accuracy": 0.8206425603685877,
+        "cer": 0.07262200888396818
       },
       "jpeg_social": {
         "n": 3,
         "errors": 0,
-        "field_recovery": 0.3333333333333333,
-        "classification": 0.6666666666666666,
-        "word_accuracy": 0.4368999136122424,
-        "cer": 0.36924991289632175
+        "field_recovery": 0.5,
+        "classification": 1.0,
+        "word_accuracy": 0.8095931547986343,
+        "cer": 0.07453986799088537
       },
       "off_axis": {
         "n": 3,
         "errors": 0,
-        "field_recovery": 0.0,
+        "field_recovery": 0.3333333333333333,
         "classification": 1.0,
-        "word_accuracy": 0.4963922826936525,
-        "cer": 0.2552306517540313
+        "word_accuracy": 0.5474282501679762,
+        "cer": 0.27435412774315887
       },
       "studio_clean": {
         "n": 3,
         "errors": 0,
         "field_recovery": 0.3333333333333333,
         "classification": 1.0,
-        "word_accuracy": 0.6012587930396149,
-        "cer": 0.1690367365074278
+        "word_accuracy": 0.6340916258724478,
+        "cer": 0.17112418981439328
       }
     },
     "metric_definitions": {
@@ -166,7 +166,7 @@
         ],
         "ocr_confidence": 0.9304619344639292,
         "error": null,
-        "ms": 4556
+        "ms": 2870
       },
       {
         "doc": "prescription",
@@ -181,11 +181,12 @@
           "500 MG",
           "400 MG",
           "1200 MG",
-          "WARNING MAY CAUSE DROWSINESS"
+          "WARNING MAY CAUSE DROWSINESS",
+          "DO NOT ORVE OR ODERATE MACHINER"
         ],
         "ocr_confidence": 0.965038358902265,
         "error": null,
-        "ms": 6960
+        "ms": 5355
       },
       {
         "doc": "prescription",
@@ -197,12 +198,13 @@
           "400mg"
         ],
         "fields": [
-          "1200 MG",
-          "WARNING MAY CAUSE DROWSINESS"
+          "500 MG",
+          "400 MG",
+          "DO NOT CHIVE OR ODERATE MACHINER"
         ],
-        "ocr_confidence": 0.9031542405592532,
+        "ocr_confidence": 0.7823088616195966,
         "error": null,
-        "ms": 3673
+        "ms": 2343
       },
       {
         "doc": "prescription",
@@ -214,12 +216,16 @@
           "400mg"
         ],
         "fields": [
+          "500 MG",
           "400 MG",
-          "1200 MG"
+          "1200 MG",
+          "WARNING MAY CAUSE DROWSINESS",
+          "DO NOT DRIVE OR OPERATE MACHINER",
+          "KEEP OUT OF REACH OF CHILDREN"
         ],
-        "ocr_confidence": 0.768350784863625,
+        "ocr_confidence": 0.9602035094999778,
         "error": null,
-        "ms": 8186
+        "ms": 6347
       },
       {
         "doc": "banking",
@@ -237,7 +243,7 @@
         ],
         "ocr_confidence": 0.9690253323928464,
         "error": null,
-        "ms": 2349
+        "ms": 2572
       },
       {
         "doc": "banking",
@@ -255,7 +261,7 @@
         ],
         "ocr_confidence": 0.977326045821021,
         "error": null,
-        "ms": 5247
+        "ms": 5414
       },
       {
         "doc": "banking",
@@ -271,7 +277,7 @@
         ],
         "ocr_confidence": 0.966911539679554,
         "error": null,
-        "ms": 2248
+        "ms": 2673
       },
       {
         "doc": "banking",
@@ -289,7 +295,7 @@
         ],
         "ocr_confidence": 0.9760901316432573,
         "error": null,
-        "ms": 5392
+        "ms": 5548
       },
       {
         "doc": "legal",
@@ -301,11 +307,11 @@
           "2024-CV-00456"
         ],
         "fields": [
-          "TE LANDLORO THE ENANT 2\nPROPERT 123 BAKE STET IONDON"
+          "TE LANDLORD THE TENANT 2\nPROPERT 123 BAKE STET IONDON"
         ],
         "ocr_confidence": 0.9072195058575433,
         "error": null,
-        "ms": 2210
+        "ms": 2581
       },
       {
         "doc": "legal",
@@ -317,13 +323,15 @@
           "2024-CV-00456"
         ],
         "fields": [
+          "1 FEBRUARY 2024",
           "32",
+          "51",
           "74",
-          "THE LANDLORD THE TENANT 2\nPROPERT 123 AKE SRET IONDON"
+          "THE LANDLORD THE TENANT 2\nPROPERT 123 AKE STET INDON W"
         ],
         "ocr_confidence": 0.9454579942380125,
         "error": null,
-        "ms": 5243
+        "ms": 5241
       },
       {
         "doc": "legal",
@@ -337,21 +345,27 @@
         "fields": [],
         "ocr_confidence": 0.7996335966825211,
         "error": null,
-        "ms": 2639
+        "ms": 2472
       },
       {
         "doc": "legal",
         "profile": "jpeg_social",
         "expected_category": "legal",
-        "category": "banking",
+        "category": "legal",
         "expected_fields": [
           "2500",
           "2024-CV-00456"
         ],
-        "fields": [],
-        "ocr_confidence": 0.6904521583790912,
+        "fields": [
+          "1 FEBRUARY 2024",
+          "32",
+          "51",
+          "74",
+          "THE LANDLORD THE TENANT 2\nPROPERT 123 ALE SPE INDOM W1"
+        ],
+        "ocr_confidence": 0.9397741563911848,
         "error": null,
-        "ms": 6232
+        "ms": 7262
       }
     ]
   },

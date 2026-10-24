@@ -62,6 +62,13 @@ case "$cmd" in
   # every accuracy experiment is scored by (IMPROVED / REGRESSED / INCONCLUSIVE).
   build-lm)    exec $PYRUN ml/src/build_lm.py "$@" ;;
   decode-ab)   exec $PYRUN ml/src/eval_decode_ab.py "$@" ;;
+  # The word-level LM: build/export the shipped trie, sweep the decoder's
+  # hyper-parameters on held-out crops, and prove the BROWSER decoder returns the
+  # same string as the Python one on the recogniser's own logits.
+  word-lm)     exec $PYRUN ml/src/word_lm.py "$@" ;;
+  decode-sweep) exec $PYRUN ml/src/eval_decode_sweep.py "$@" ;;
+  word-lm-vectors) exec $PYRUN ml/src/gen_wordlm_vectors.py "$@" ;;
+  word-lm-parity) exec node app/tools/word_lm_parity.js "$@" ;;
   compare)     exec $PYRUN ml/src/compare_runs.py "$@" ;;
   # Generic passthrough so any module can be run through the venv with
   # PYTHONPATH stripped: bash run.sh py ml/src/realdata.py --selftest

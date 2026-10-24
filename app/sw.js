@@ -25,7 +25,7 @@
  * sightline-* cache, so old wasm never lingers.
  */
 
-const VERSION = "v1.6.0";
+const VERSION = "v1.7.0";
 const CACHE = "sightline-" + VERSION;
 
 /** Everything required for a scan to complete with no network. */
@@ -42,10 +42,16 @@ const PRECACHE = [
   "./js/gating.js",
   "./js/restorer.js",
   "./js/recognizer.js",
+  "./js/word_beam.js",
   "./js/classifier.js",
   "./js/tts.js",
   "./js/say_cantonese.js",
   "./data/drug_lexicon.json",
+  // The word-LM lexicon trie. PRECACHED, not fetched on demand: a cold offline
+  // install that cannot reach it would silently fall back to the greedy decoder
+  // — the older, measurably worse read (67.97% vs 70.67% exact on held-out
+  // crops) with nothing in the UI to say so.
+  "./data/word_trie.json",
   "./js/app.js",
   // The OCR ENGINE's own modules. pipeline.js dynamic-imports these on the
   // first scan; without them in the precache a scan on a device that is already

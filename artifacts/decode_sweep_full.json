@@ -1,0 +1,84 @@
+{
+ "split": "test",
+ "n": 3375,
+ "ckpt": "/home/ubuntu/Projects/sightline/models/ocr/crnn.pt",
+ "greedy": {
+  "exact": 2294,
+  "exact_rate": 0.6797037037037037,
+  "cer": 0.16365868631062
+ },
+ "cells": [
+  {
+   "kind": "none",
+   "beam": 4,
+   "alpha": 0.0,
+   "exact": 2306,
+   "exact_rate": 0.6832592592592592,
+   "cer": 0.16108041743400858,
+   "p_vs_greedy": 0.007537841796875,
+   "both_right": 2291,
+   "variant_only": 15,
+   "greedy_only": 3,
+   "both_wrong": 1066
+  },
+  {
+   "kind": "none",
+   "beam": 8,
+   "alpha": 0.0,
+   "exact": 2307,
+   "exact_rate": 0.6835555555555556,
+   "cer": 0.16022099447513813,
+   "p_vs_greedy": 0.004425048828125,
+   "both_right": 2291,
+   "variant_only": 16,
+   "greedy_only": 3,
+   "both_wrong": 1065
+  },
+  {
+   "kind": "word",
+   "beam": 4,
+   "alpha": 0.25,
+   "exact": 2385,
+   "exact_rate": 0.7066666666666667,
+   "cer": 0.16751381215469613,
+   "decode_s": 42.827537536621094,
+   "p_vs_greedy": 1.090507026135235e-15,
+   "changed": 1060,
+   "both_right": 2271,
+   "variant_only": 114,
+   "greedy_only": 23,
+   "both_wrong": 967
+  },
+  {
+   "kind": "word",
+   "beam": 8,
+   "alpha": 0.25,
+   "exact": 2392,
+   "exact_rate": 0.7087407407407408,
+   "cer": 0.16647022713321055,
+   "decode_s": 117.42637968063354,
+   "p_vs_greedy": 2.923580700821239e-17,
+   "changed": 1061,
+   "both_right": 2271,
+   "variant_only": 121,
+   "greedy_only": 23,
+   "both_wrong": 960
+  }
+ ],
+ "best": {
+  "kind": "word",
+  "beam": 8,
+  "alpha": 0.25,
+  "exact": 2392,
+  "exact_rate": 0.7087407407407408,
+  "cer": 0.16647022713321055,
+  "decode_s": 117.42637968063354,
+  "p_vs_greedy": 2.923580700821239e-17,
+  "changed": 1061,
+  "both_right": 2271,
+  "variant_only": 121,
+  "greedy_only": 23,
+  "both_wrong": 960
+ },
+ "note": "winner by exact match, CER as tie-break; every cell decoded from the SAME logits, paired McNemar against greedy"
+}

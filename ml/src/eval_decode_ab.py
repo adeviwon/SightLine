@@ -45,6 +45,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import build_dataset as B      # noqa: E402
 import build_lm as BL          # noqa: E402
 import ctc_decode as CD        # noqa: E402
+import word_lm as WL           # noqa: E402
 import eval_ocr as EO          # noqa: E402
 import realdata as R           # noqa: E402
 import render_corpus as RC     # noqa: E402
@@ -115,12 +116,39 @@ def log_probs_for(model, arrays, batch=16):
     return out
 
 
-def score(refs, lps, beam, lm, alpha):
+class CombinedLM:
+    """Shallow fusion over two LMs: the beam asks ONCE and gets the sum, so the
+    two sources cannot be weighted inconsistently inside one search."""
+
+    def __init__(self, a, b):
+        self.a, self.b = a, b
+
+    def logp(self, prefix, ch):
+        return self.a.logp(prefix, ch) + self.b.logp(prefix, ch)
+
+
+def load_lm(kind, char_path, word_path=None):
+    """`kind` in {none, char, word, both} -> an LM object with .logp, or None."""
+    char_lm = None
+    if kind in ("char", "both") and Path(char_path).exists():
+        char_lm = BL.load_model(char_path)
+    word_lm = None
+    if kind in ("word", "both"):
+        wp = word_path or (Path(__file__).resolve().parents[2] / "app" / "data"
+                           / "word_trie.json")
+        if Path(wp).exists():
+            word_lm = WL.load_trie_json(wp)
+    if kind == "both":
+        return CombinedLM(char_lm, word_lm) if char_lm and word_lm else (char_lm or word_lm)
+    return char_lm or word_lm
+
+
+def score(refs, lps, beam, lm, alpha, tag="LM"):
     """Every decoder over the SAME crops -> one predictions list per variant."""
     variants = {"greedy": [R.decode_greedy(lp.argmax(-1)) for lp in lps],
                 "beam%d" % beam: [CD.beam_decode(lp, beam=beam) for lp in lps]}
     if lm is not None:
-        variants["beam%d+LM" % beam] = [
+        variants["beam%d+%s" % (beam, tag)] = [
             CD.beam_decode(lp, beam=beam, lm=lm, alpha=alpha) for lp in lps]
     rows = {}
     for name, preds_ in variants.items():
@@ -147,6 +175,9 @@ def main():
     ap.add_argument("--alpha", type=float, default=0.5,
                     help="LM weight for shallow fusion (0 disables the LM)")
     ap.add_argument("--lm", default=str(BL.DEFAULT_OUT))
+    ap.add_argument("--lm-kind", default="char", choices=["char", "word", "both"],
+                    help="char = the existing character n-gram LM, word = the "
+                         "lexicon-trie word LM, both = shallow fusion of the two")
     ap.add_argument("--ckpt", default="")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--threads", type=int, default=2,
@@ -171,13 +202,12 @@ def main():
               "(bash run.sh render-corpus --pages 400)" % a.split, file=sys.stderr)
         return 1
 
-    lm = None
-    if Path(a.lm).exists() and a.alpha > 0:
-        lm = BL.load_model(a.lm)
-    elif a.alpha > 0:
-        print("note: no LM at %s -- run `bash run.sh py ml/src/build_lm.py`; "
-              "reporting greedy vs beam only" % a.lm, file=sys.stderr)
-    lm_note = "alpha=%.2f (LM %s)" % (a.alpha, "on" if lm else "off")
+    lm = load_lm(a.lm_kind, a.lm) if a.alpha > 0 else None
+    if a.alpha > 0 and lm is None:
+        print("note: no LM for kind=%s -- reporting greedy vs beam only"
+              % a.lm_kind, file=sys.stderr)
+    lm_note = "alpha=%.2f (LM %s, kind=%s)" % (
+        a.alpha, "on" if lm else "off", a.lm_kind)
 
     print("preparing %d %s crops ..." % (n, a.split), flush=True)
     from PIL import Image
@@ -190,11 +220,12 @@ def main():
     lps = log_probs_for(model, arrays)
     t_fwd = time.time() - t0
     t0 = time.time()
-    rows = score(refs, lps, a.beam, lm, a.alpha)
+    tag = {"char": "charLM", "word": "wordLM", "both": "char+wordLM"}[a.lm_kind]
+    rows = score(refs, lps, a.beam, lm, a.alpha, tag=tag)
     t_dec = time.time() - t0
 
-    order = ["greedy", "beam%d" % a.beam] + \
-            (["beam%d+LM" % a.beam] if "beam%d+LM" % a.beam in rows else [])
+    lm_key = "beam%d+%s" % (a.beam, tag)
+    order = ["greedy", "beam%d" % a.beam] + ([lm_key] if lm_key in rows else [])
     bench = best_variant(rows)
 
     print("=" * 78)
