@@ -108,6 +108,10 @@ case "$cmd" in
   fetch-dose-labels)   exec $PYRUN ml/tools/fetch_dose_labels.py "$@" ;;    # real FDA panel TEXT
   build-bottle-corpus) exec $PYRUN ml/tools/build_bottle_corpus.py "$@" ;;  # real text, curved, photographed
   eval-real-bottles)   exec $PYRUN ml/tools/eval_real_bottles.py "$@" ;;    # the DECIDING measurement
+  # Which WORD LM decodes doses best, PAIRED against the shipped one on held-out
+  # crops from both corpora (doses = the point, render = the no-regression check).
+  eval-decoder-doses)  exec $PYRUN ml/tools/eval_decoder_doses.py "$@" ;;
+  dose-lexicon)        exec $PYRUN ml/src/dose_lexicon.py "$@" ;;           # build/cover the doses LM
   compare)     exec $PYRUN ml/src/compare_runs.py "$@" ;;
   # Generic passthrough so any module can be run through the venv with
   # PYTHONPATH stripped: bash run.sh py ml/src/realdata.py --selftest
