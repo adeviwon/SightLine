@@ -99,6 +99,15 @@ case "$cmd" in
   word-counts) exec $PYRUN ml/src/word_counts.py "$@" ;;
   decode-confirm) exec $PYRUN ml/src/eval_decode_confirm.py "$@" ;;
   word-lm-cost) exec node app/tools/word_lm_cost.js "$@" ;;
+
+  # ── the REAL-WORLD doses path (curved bottles, camera photos) ─────────────
+  # Four steps, in order, and each one is cheap; nothing here needs the others to
+  # be re-run, so a corpus can be rebuilt without re-fetching 467 MB of photos.
+  fetch-real-bottles)  exec $PYRUN ml/tools/fetch_real_bottles.py "$@" ;;   # CC photos + licences
+  triage-real-bottles) exec $PYRUN ml/tools/triage_real_bottles.py "$@" ;;  # which show a panel
+  fetch-dose-labels)   exec $PYRUN ml/tools/fetch_dose_labels.py "$@" ;;    # real FDA panel TEXT
+  build-bottle-corpus) exec $PYRUN ml/tools/build_bottle_corpus.py "$@" ;;  # real text, curved, photographed
+  eval-real-bottles)   exec $PYRUN ml/tools/eval_real_bottles.py "$@" ;;    # the DECIDING measurement
   compare)     exec $PYRUN ml/src/compare_runs.py "$@" ;;
   # Generic passthrough so any module can be run through the venv with
   # PYTHONPATH stripped: bash run.sh py ml/src/realdata.py --selftest

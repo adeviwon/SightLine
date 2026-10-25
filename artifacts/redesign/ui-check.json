@@ -230,10 +230,10 @@
     },
     {
       "name": "first recognised value is visible at 320",
-      "ok": true,
+      "ok": false,
       "detail": {
         "x": 41,
-        "y": 509.703125,
+        "y": 657.703125,
         "width": 238,
         "height": 49.59375
       }
@@ -257,7 +257,7 @@
       "ok": true,
       "detail": {
         "x": 45,
-        "y": 551.703125,
+        "y": 668.703125,
         "width": 300,
         "height": 49.59375
       }
@@ -301,7 +301,7 @@
     },
     {
       "name": "English reads trusted words without inferred prescription advice",
-      "ok": true
+      "ok": false
     },
     {
       "name": "speech control preserves its icon",
@@ -395,133 +395,13 @@
     },
     {
       "name": "real OCR completes prescription__studio_clean.png",
-      "ok": true,
-      "detail": ""
+      "ok": false,
+      "detail": "We couldn’t finish reading this document. Cannot read properties of undefined (reading 'toLowerCase')"
     },
     {
-      "name": "partial prescription retains conservative refusal",
-      "ok": true,
-      "detail": {
-        "speech": "",
-        "fields": 0
-      }
-    },
-    {
-      "name": "unverified medicine offers reading help with its safety explanation",
-      "ok": true
-    },
-    {
-      "name": "unverified medicine speaks only a safe recovery message",
-      "ok": true
-    },
-    {
-      "name": "needs-checking WCAG A/AA automated checks",
-      "ok": true,
-      "detail": []
-    },
-    {
-      "name": "real OCR completes banking__studio_clean.png",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "other supported document fields still render",
-      "ok": true
-    },
-    {
-      "name": "real OCR completes synthetic-general-document.png",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "unsupported document retains genuinely recognised words",
-      "ok": true
-    },
-    {
-      "name": "clear unstructured text is not described as blurry OCR",
-      "ok": true
-    },
-    {
-      "name": "unknown document is not presented as a prescription",
-      "ok": true
-    },
-    {
-      "name": "real OCR completes synthetic-two-medicines.png",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "multiple-medicine test really has speech-eligible OCR",
-      "ok": true,
-      "detail": {
-        "speechCharacters": 73
-      }
-    },
-    {
-      "name": "unmatched doses are not combined in structured results",
-      "ok": true
-    },
-    {
-      "name": "Cantonese refuses unmatched medicine directions",
-      "ok": true
-    },
-    {
-      "name": "real OCR completes synthetic-single-label.png",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "no uncaught application errors",
-      "ok": true,
-      "detail": []
-    },
-    {
-      "name": "no external runtime requests",
-      "ok": true,
-      "detail": []
-    },
-    {
-      "name": "failed required cache never claims offline readiness",
-      "ok": true
-    },
-    {
-      "name": "offline saving failure offers a useful retry",
-      "ok": true
-    },
-    {
-      "name": "saving retry recovers the complete required cache",
-      "ok": true
-    },
-    {
-      "name": "processing cancel stays within the narrow phone viewport",
-      "ok": true,
-      "detail": {
-        "x": 94.484375,
-        "y": 404.421875,
-        "width": 131.015625,
-        "height": 48
-      }
-    },
-    {
-      "name": "cancelled scan cannot restore stale results",
-      "ok": true
-    },
-    {
-      "name": "real OCR completes synthetic-single-label.png",
-      "ok": true,
-      "detail": ""
-    },
-    {
-      "name": "new scan works after cancellation",
-      "ok": true
-    },
-    {
-      "name": "runtime failure has retry and no false result",
-      "ok": true
-    },
-    {
-      "name": "real reader recovers after runtime failure",
-      "ok": true
+      "name": "suite completes",
+      "ok": false,
+      "detail": "Error: Actual scan failed\n    at scan (/home/ubuntu/Projects/sightline/app/tools/ui_redesign_check.cjs:126:17)\n    at async /home/ubuntu/Projects/sightline/app/tools/ui_redesign_check.cjs:454:3"
     }
   ],
   "records": [
@@ -532,7 +412,7 @@
         "classifier": "onnx",
         "ocr": "ppocrv5"
       },
-      "ms": 1171,
+      "ms": 3633,
       "characters": 113,
       "fields": 3,
       "speechCharacters": 113
@@ -544,79 +424,7 @@
         "classifier": "onnx",
         "ocr": "ppocrv5"
       },
-      "ms": 890,
-      "characters": 113,
-      "fields": 3,
-      "speechCharacters": 113
-    },
-    {
-      "fixture": "prescription__studio_clean.png",
-      "engine": {
-        "restorer": "none",
-        "classifier": "onnx",
-        "ocr": "ppocrv5"
-      },
-      "ms": 1205,
-      "characters": 431,
-      "fields": 0,
-      "speechCharacters": 0
-    },
-    {
-      "fixture": "banking__studio_clean.png",
-      "engine": {
-        "restorer": "none",
-        "classifier": "onnx",
-        "ocr": "ppocrv5"
-      },
-      "ms": 1438,
-      "characters": 465,
-      "fields": 3,
-      "speechCharacters": 465
-    },
-    {
-      "fixture": "synthetic-general-document.png",
-      "engine": {
-        "restorer": "none",
-        "classifier": "onnx",
-        "ocr": "ppocrv5"
-      },
-      "ms": 453,
-      "characters": 72,
-      "fields": 0,
-      "speechCharacters": 72
-    },
-    {
-      "fixture": "synthetic-two-medicines.png",
-      "engine": {
-        "restorer": "none",
-        "classifier": "onnx",
-        "ocr": "ppocrv5"
-      },
-      "ms": 508,
-      "characters": 73,
-      "fields": 2,
-      "speechCharacters": 73
-    },
-    {
-      "fixture": "synthetic-single-label.png",
-      "engine": {
-        "restorer": "none",
-        "classifier": "onnx",
-        "ocr": "ppocrv5"
-      },
-      "ms": 546,
-      "characters": 113,
-      "fields": 3,
-      "speechCharacters": 113
-    },
-    {
-      "fixture": "synthetic-single-label.png",
-      "engine": {
-        "restorer": "none",
-        "classifier": "onnx",
-        "ocr": "ppocrv5"
-      },
-      "ms": 1133,
+      "ms": 3019,
       "characters": 113,
       "fields": 3,
       "speechCharacters": 113
