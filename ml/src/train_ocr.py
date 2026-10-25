@@ -234,6 +234,8 @@ def main():
     ap.add_argument("--seed", type=int, default=1234)
     ap.add_argument("--data", default=str(CACHE))
     ap.add_argument("--threads", type=int, default=4)
+    ap.add_argument("--init", default="",
+                    help="fine-tune FROM this checkpoint instead of training from scratch")
     args = ap.parse_args()
 
     torch.manual_seed(args.seed)
@@ -333,6 +335,22 @@ def main():
     test_ds = CRNNDataset(images, widths, labels, idx_by_split["test"])
 
     model = model.to(device)
+
+    # FINE-TUNE, don't retrain, when the new domain is an ADDITION to an existing one.
+    # A from-scratch 40-epoch pass over 81k crops is a 7-hour loop on 4 cores, and it
+    # discards a checkpoint that already reads our rendered documents and real
+    # hand-held receipts. Loading the shipped weights and starting at a lower LR keeps
+    # what works and spends the budget on the new domain (curved dose panels) -- the
+    # standard recipe for adding a distribution to a trained recogniser.
+    if args.init:
+        ck = torch.load(args.init, map_location="cpu")
+        sd = ck["model"] if isinstance(ck, dict) and "model" in ck else ck
+        missing, unexpected = model.load_state_dict(sd, strict=False)
+        # A silent partial load would train a half-initialised model and then look
+        # like a bad recipe rather than a bad load, so the shapes are checked.
+        assert not [k for k in missing if "num_batches" not in k], f"uninitialised: {missing[:4]}"
+        assert not unexpected, f"unexpected keys: {list(unexpected)[:4]}"
+        print(f"fine-tuning from {args.init} (lr {args.lr})")
     n_params = model.n_params()
     print(f"\nmodel: {n_params:,} params, {R.NUM_CLASSES} classes, "
           f"charset={len(R.CHARSET)} symbols")

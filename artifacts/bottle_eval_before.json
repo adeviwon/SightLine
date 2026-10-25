@@ -1,0 +1,21 @@
+{
+ "when": "2026-10-25 15:32",
+ "checkpoint": "models/ocr/crnn.pre-bottle.pt",
+ "real_photos": {
+  "n_pages": 2,
+  "positionally_scored": 0,
+  "order_free_word_recall": [
+   3,
+   58,
+   0.052
+  ],
+  "read_precision": [
+   3,
+   25,
+   0.12
+  ],
+  "note": "detected-line counts differ from transcripts, so no positional score; the reader also fires on bottle ridges/reflections"
+ },
+ "metric": "order-free word recall over data/real_bottles/truth (person-read off the pixels)",
+ "source": "bash run.sh py ml/tools/eval_real_bottles.py --ckpt models/ocr/crnn.pre-bottle.pt"
+}

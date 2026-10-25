@@ -144,7 +144,7 @@ def assign_splits(page_ids):
 
 
 def build(n_pages=400, profiles=None, seed=0, out_dir=None, width=900,
-          scales=(0.85, 1.0, 1.15), verbose=True):
+          scales=(0.85, 1.0, 1.15), verbose=True, panels=None, page_transform=None):
     """Render pages, cut their lines, and write a split corpus.
 
     Returns the dict that was written: crops (object array of uint8 arrays),
@@ -164,22 +164,39 @@ def build(n_pages=400, profiles=None, seed=0, out_dir=None, width=900,
     # names any profile missing from the corpus; run it after a rebuild.
     profiles = list(profiles or PROFILES)
     rng = random.Random(seed)
-    page_ids = ["%s-%04d" % (dtype, i)
-                for i in range(n_pages) for _, dtype in capture.DOCS]
+    if panels:
+        lines_of = dict(panels)
+        page_ids = [pid for pid, _ in panels]
+    else:
+        lines_of = None
+        page_ids = ["%s-%04d" % (dtype, i)
+                    for i in range(n_pages) for _, dtype in capture.DOCS]
     splits = assign_splits(page_ids)
 
     crops, labels, docs, profs, spl, fonts = [], [], [], [], [], []
     for pid in page_ids:
-        dtype = pid.rsplit("-", 1)[0]
-        lines = next(l for l, d in capture.DOCS if d == dtype)
+        if lines_of is not None:
+            lines = lines_of[pid]
+        else:
+            dtype = pid.rsplit("-", 1)[0]
+            lines = next(l for l, d in capture.DOCS if d == dtype)
         scale = rng.choice(scales)
         profile = profiles[rng.randrange(len(profiles))]
         page_font = font_for_page(pid)
         clean = capture.render_document(lines, width=width,
                                         seed=page_seed(pid), scale=scale,
                                         font=page_font)
+        base_profile = profile
+        tag = ""
+        if page_transform is not None:
+            # the transform returns a TAG, not the profile name: the profile is what
+            # supplies the capture parameters below, and overwriting it made the
+            # lookup KeyError on the very first bottle page.
+            clean, tag = page_transform(clean, page_seed(pid, 2))
         deg = capture.apply_profile(clean, seed=page_seed(pid, 1),
-                                    **capture.CAPTURE_PROFILES[profile])
+                                    **capture.CAPTURE_PROFILES[base_profile])
+        if tag:
+            profile = "%s+%s" % (base_profile, tag)
         gray = np.asarray(deg.convert("L"), dtype=np.uint8)
         for crop, label in page_crops(gray, lines, scale):
             crops.append(crop)

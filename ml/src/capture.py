@@ -173,6 +173,34 @@ def render_document(lines, width=900, seed=None, bg=248, ink=28, scale=1.0,
 
 # ── Physical degradations ───────────────────────────────────────────────
 
+def cylinder_wrap(img, strength=0.42, seed=None):
+    """Wrap a flat page around a cylinder: the curvature every real bottle adds.
+
+    Horizontal only, source column u -> output x = sin(u) scaled by the wrap angle,
+    inverted by arcsin. Glyphs near the panel edges get COMPRESSED, which is what a
+    wrapped dose panel does to its own text — and exactly what the shipped model
+    fails on (real bottle crops decode to 'JFDF'/'TB' while the same text rendered
+    flat decodes clean). `strength` 0 = flat, ->1 = a full half-turn of curvature.
+
+    ponytail: no vertical foreshortening (the second curvature axis) and no depth
+    cue — add them if a measured real page shows they matter more than the
+    horizontal squeeze, which is the one the failure signature points at.
+    """
+    a = np.asarray(img.convert("L"), np.float64) if hasattr(img, "convert") else np.asarray(img, np.float64)
+    h, w = a.shape
+    s = float(np.clip(strength, 0.0, 0.95))
+    if s <= 0.0:
+        return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+    xs = np.linspace(-1.0, 1.0, w)
+    src = np.arcsin(np.clip(xs * np.sin(np.pi / 2 * s), -1.0, 1.0)) / (np.pi / 2 * s)
+    src = (src + 1.0) * 0.5 * (w - 1)
+    i0 = np.clip(np.floor(src).astype(int), 0, w - 1)
+    i1 = np.clip(i0 + 1, 0, w - 1)
+    frac = (src - i0)[None, :]
+    out = a[:, i0] * (1.0 - frac) + a[:, i1] * frac
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
+
+
 def _kernel(img_filter, k):
     """
     Apply a convolution kernel via OpenCV.

@@ -24,3 +24,8 @@ artifacts/*.npz
 # TRANSCRIPTS are the irreplaceable part (a person read them off the pixels) and they
 # are tracked, so the eval set survives a fresh clone.
 /data/real_bottles/raw/
+
+# Bottle corpus: re-creatable in ~2 minutes from the tracked real label text
+# (bash run.sh py ml/tools/build_bottle_corpus.py --pages 600). The TEXT is the
+# irreplaceable part and data/dose_panels.txt is tracked, so a clone rebuilds it.
+/data/bottle_corpus/
