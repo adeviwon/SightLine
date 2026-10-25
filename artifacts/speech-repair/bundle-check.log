@@ -1,0 +1,47 @@
+=== 1. files present ===
+  OK   minilm_encoder.onnx          22349 KB
+  OK   minilm_head.onnx               195 KB
+  OK   restorer.onnx                  150 KB
+  OK   crnn.onnx                     3697 KB
+  OK   ppocrv5-mobile-det.onnx       4637 KB
+  OK   ppocrv5-mobile-rec.onnx      16130 KB
+
+=== 2. weights actually resolve (full load, not load_external_data=False) ===
+  OK   minilm_encoder.onnx      204 init  self-contained
+  OK   minilm_head.onnx           4 init  self-contained
+  OK   restorer.onnx             12 init  self-contained
+  OK   crnn.onnx                 29 init  self-contained
+  OK   ppocrv5-mobile-det.onnx    0 init  self-contained
+  OK   ppocrv5-mobile-rec.onnx    0 init  self-contained
+
+=== 2b. NO EXTERNAL DATA — onnxruntime-web cannot load it ===
+  OK   minilm_encoder.onnx      self-contained, 0 external tensors
+  OK   minilm_head.onnx         self-contained, 0 external tensors
+  OK   restorer.onnx            self-contained, 0 external tensors
+  OK   crnn.onnx                self-contained, 0 external tensors
+  OK   ppocrv5-mobile-det.onnx  self-contained, 0 external tensors
+  OK   ppocrv5-mobile-rec.onnx  self-contained, 0 external tensors
+
+=== 3. real inference through the shipped bundle ===
+  OK   restorer (1, 1, 64, 256) -> (1, 1, 64, 256)  range [-0.175, 1.483]  finite=True
+  OK   head (3,384) -> logits (3, 4)  argmax [3, 3, 3]
+  OK   crnn width='width' (symbolic or 320)  (1,1,32,256) -> logits (1, 32, 38)  expect (1,32,38)  finite=True
+
+=== 3b. PP-OCRv5 detector, recognizer and dictionary contract ===
+  OK   detector (1, 1, 32, 32) recognizer (1, 20, 18385) dictionary 18385
+
+=== 4. manifest honesty ===
+  OK   manifest declares restorer=True classifier=True
+
+=== 4b. no Tesseract in the bundle ===
+  ok   no tess* files under app/vendor/
+  ok   index.html has no tesseract script tag
+  ok   sw.js precaches no tesseract assets
+  ok   pipeline.js makes no tesseract calls
+       -> bundle is genuinely tesseract-free
+
+=== 5. tokenizer asset ===
+  OK   tokenizer.json  695 KB  vocab=30,522 tokens
+
+shipped model payload: 46.82 MB
+BUNDLE CHECK PASSED — every shipped model loads and runs

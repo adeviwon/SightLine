@@ -34,6 +34,29 @@ case "$cmd" in
   eval)        exec $PYRUN ml/src/evaluate.py "$@" ;;
   export)      exec $PYRUN ml/src/export_onnx.py "$@" ;;
   test)        exec $PYRUN -m pytest ml/tests -q "$@" ;;
+  test-ui)     exec node app/tools/ui_redesign_check.cjs "$@" ;;
+  test-bilingual) exec node --test app/tools/bilingual_contract.test.cjs ;;
+  test-field-localization) exec node --test app/tools/field_localization.test.cjs ;;
+  test-medicine-sections) exec node --test app/tools/medicine_sections.test.cjs ;;
+  test-medicine-ui) exec node app/tools/medicine_sections_visual.cjs ;;
+  test-bilingual-ui) exec node app/tools/bilingual_history_check.cjs ;;
+  test-history) exec node app/tools/history_persistence_check.cjs ;;
+  test-native-history) exec bash app/tools/native_history_check.sh ;;
+  test-speech) exec node --test app/tools/speech_contract.test.cjs ;;
+  test-speech-ui) SPEECH_PHASE=after exec node app/tools/speech_ui_check.cjs ;;
+  test-receipts) exec node --test app/tools/receipt_regression.test.mjs ;;
+  test-offline-receipt) exec node app/tools/receipt_offline_check.cjs ;;
+  test-native-offline)
+    build_dir=$(mktemp -d /tmp/sightline-native-audit.XXXXXX)
+    swiftc ios/Sources/OfflineAssets.swift ios/Sources/WebAssetServer.swift app/tools/native_offline/main.swift -o "$build_dir/audit" || exit 1
+    exec "$build_dir/audit" "$PWD/app" "$PWD/artifacts/aria-merge/sroie-X00016469612.jpg" "$PWD/artifacts/aria-merge/native-webkit-offline.json" ;;
+  test-native-resume)
+    build_dir=$(mktemp -d /tmp/sightline-native-resume.XXXXXX)
+    swiftc ios/Sources/OfflineAssets.swift ios/Sources/WebAssetServer.swift app/tools/native_offline/main.swift -o "$build_dir/audit" || exit 1
+    exec "$build_dir/audit" "$PWD/app" "$PWD/artifacts/aria-merge/sroie-X00016469612.jpg" "$PWD/artifacts/bilingual-history/native-resume.json" --restart-server ;;
+  test-reader) exec node --test app/tools/ppocr_contract.test.mjs "$@" ;;
+  test-reader-loading) exec node app/tools/reader_loading_check.cjs "$@" ;;
+  bench-reader) exec node app/tools/ppocr_native.mjs "$@" ;;
   # ── real-data text recogniser (replaces Tesseract) ──────────────────────
   fetch-data) exec bash fetch_data.sh "$@";;
   # iOS gate: parse-time Safari compatibility scan of the shipped JS, then run
@@ -90,5 +113,5 @@ case "$cmd" in
     bash run.sh export
     bash run.sh test
     ;;
-  *) echo "usage: bash run.sh <target> [args]"; echo "  train/test: train-clf train-dncnn train-ocr eval eval-ocr test"; echo "  measure:    bench bench-pipeline bench-hackathon gating results bundle-check repro-check ios-check ios-full"; echo "  data/other: capture corpus build-data export diagnose privacy errors py serve shell"; exit 1 ;;
+  *) echo "usage: bash run.sh <target> [args]"; echo "  train/test: train-clf train-dncnn train-ocr eval eval-ocr test test-reader test-ui"; echo "  measure:    bench bench-reader bench-pipeline bench-hackathon gating results bundle-check repro-check ios-check ios-full"; echo "  data/other: capture corpus build-data export diagnose privacy errors py serve shell"; exit 1 ;;
 esac

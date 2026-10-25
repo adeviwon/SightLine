@@ -1,0 +1,1653 @@
+{
+  "result": {
+    "ocrText": "tan woon yann\nBOOKTAK(TAMANDAYA)SDN BHD\n789417-W\nNO.5 55,57859 DALANSAGU\nTAMAN DAYA.\n81100JOHOR BAHRU\nJOHOR\nDocumert TD01167104\nDate 25/12/20188 PM\nCashien MANIS\nMembet\nCASH BILL\nCODE/DESC PRI0 DisC ANOON\nQTY RTA\n9556939040116 KF MODELLNG LAY KIDDY\nP 9.000 0.00 9.00\nTotal 9.00\nRout dingAdjustment 0.00\nRound dTotai (RM) 9.00\nCasth 名00\nCHANGE 1o0\nGOODS 5OLD ARE NOT RE TURNABLLOH\nFXC HANGEABLE\nTHANK YOU\nPLEASE Cor AGAIN",
+    "normalized": "tan woon yann\nBOOKTAK(TAMANDAYA)SDN BHD\n789417-W\nNO.5 55,57859 DALANSAGU\nTAMAN DAYA.\n81100JOHOR BAHRU\nJOHOR\nDocumert TD01167104\nDate 25/12/20188 PM\nCashien MANIS\nMembet\nCASH BILL\nCODE/DESC PRI0 DisC ANOON\nQTY RTA\n9556939040116 KF MODELLNG LAY KIDDY\nP 9.000 0.00 9.00\nTotal 9.00\nRout dingAdjustment 0.00\nRound dTotai (RM) 9.00\nCasth 名00\nCHANGE 1o0\nGOODS 5OLD ARE NOT RE TURNABLLOH\nFXC HANGEABLE\nTHANK YOU\nPLEASE Cor AGAIN",
+    "category": "receipt",
+    "categoryLabel": "Receipt",
+    "classificationConfidence": 1,
+    "classificationSource": "aria-weighted-keywords",
+    "documentEvidence": 7,
+    "fields": [
+      {
+        "label": "Shop",
+        "value": "BOOKTAK(TAMANDAYA)SDN BHD",
+        "confidence": 0.86,
+        "sourceLine": "BOOKTAK(TAMANDAYA)SDN BHD"
+      },
+      {
+        "label": "Payment method",
+        "value": "cash",
+        "confidence": 0.8,
+        "sourceLine": "CASH BILL"
+      }
+    ],
+    "entities": [],
+    "summary": "Receipt details. Check important amounts against the original.",
+    "receiptDiagnostics": {
+      "source": "aria-weighted-keywords",
+      "type": "receipt",
+      "scores": {
+        "receipt": 7,
+        "prescription": 0
+      },
+      "ranked": [
+        "receipt",
+        "prescription"
+      ],
+      "confidence": 1,
+      "evidence": [
+        "Total",
+        "CASH",
+        "QTY"
+      ],
+      "reason": "weighted score 7 for receipt vs 0 for prescription",
+      "ocrConfidence": 0.8845656960716283,
+      "confidenceSource": "live-inference",
+      "rejected": [
+        {
+          "key": "shop_phone",
+          "reason": "confidence 0.6392760127782822 < CONFIDENCE_MIN 0.75",
+          "confidence": 0.6392760127782822
+        },
+        {
+          "key": "total",
+          "reason": "confidence 0.7278392434120178 < CONFIDENCE_MIN 0.75",
+          "confidence": 0.7278392434120178
+        }
+      ],
+      "missing": [
+        {
+          "key": "purchase_date",
+          "reason": "no valid, unambiguous recognised value"
+        }
+      ]
+    },
+    "documentDiagnostics": {
+      "source": "aria-weighted-keywords",
+      "type": "receipt",
+      "scores": {
+        "receipt": 7,
+        "prescription": 0
+      },
+      "ranked": [
+        "receipt",
+        "prescription"
+      ],
+      "confidence": 1,
+      "evidence": [
+        "Total",
+        "CASH",
+        "QTY"
+      ],
+      "reason": "weighted score 7 for receipt vs 0 for prescription",
+      "ocrConfidence": 0.8845656960716283,
+      "confidenceSource": "live-inference",
+      "rejected": [
+        {
+          "key": "shop_phone",
+          "reason": "confidence 0.6392760127782822 < CONFIDENCE_MIN 0.75",
+          "confidence": 0.6392760127782822
+        },
+        {
+          "key": "total",
+          "reason": "confidence 0.7278392434120178 < CONFIDENCE_MIN 0.75",
+          "confidence": 0.7278392434120178
+        }
+      ],
+      "missing": [
+        {
+          "key": "purchase_date",
+          "reason": "no valid, unambiguous recognised value"
+        }
+      ]
+    },
+    "ocrWords": [
+      {
+        "text": "tan woon yann",
+        "confidence": 0.9727665781974792,
+        "bbox": {
+          "x0": 75,
+          "y0": 27,
+          "x1": 319,
+          "y1": 68
+        }
+      },
+      {
+        "text": "BOOKTAK(TAMANDAYA)SDN BHD",
+        "confidence": 0.9510316371917724,
+        "bbox": {
+          "x0": 73,
+          "y0": 90,
+          "x1": 419,
+          "y1": 117
+        }
+      },
+      {
+        "text": "789417-W",
+        "confidence": 0.9185331091284752,
+        "bbox": {
+          "x0": 209,
+          "y0": 116,
+          "x1": 284,
+          "y1": 141
+        }
+      },
+      {
+        "text": "NO.5",
+        "confidence": 0.947093203663826,
+        "bbox": {
+          "x0": 113,
+          "y0": 141,
+          "x1": 155,
+          "y1": 167
+        }
+      },
+      {
+        "text": "55,57859",
+        "confidence": 0.9555400609970093,
+        "bbox": {
+          "x0": 165,
+          "y0": 141,
+          "x1": 248,
+          "y1": 167
+        }
+      },
+      {
+        "text": "DALANSAGU",
+        "confidence": 0.926501472791036,
+        "bbox": {
+          "x0": 260,
+          "y0": 141,
+          "x1": 353,
+          "y1": 167
+        }
+      },
+      {
+        "text": "TAMAN",
+        "confidence": 0.9778282165527343,
+        "bbox": {
+          "x0": 193,
+          "y0": 165,
+          "x1": 247,
+          "y1": 189
+        }
+      },
+      {
+        "text": "DAYA.",
+        "confidence": 0.8976520538330078,
+        "bbox": {
+          "x0": 255,
+          "y0": 165,
+          "x1": 299,
+          "y1": 189
+        }
+      },
+      {
+        "text": "81100JOHOR",
+        "confidence": 0.9721800804138183,
+        "bbox": {
+          "x0": 164,
+          "y0": 189,
+          "x1": 268,
+          "y1": 213
+        }
+      },
+      {
+        "text": "BAHRU",
+        "confidence": 0.988097858428955,
+        "bbox": {
+          "x0": 276,
+          "y0": 189,
+          "x1": 329,
+          "y1": 213
+        }
+      },
+      {
+        "text": "JOHOR",
+        "confidence": 0.917129635810852,
+        "bbox": {
+          "x0": 220,
+          "y0": 212,
+          "x1": 271,
+          "y1": 235
+        }
+      },
+      {
+        "text": "Documert",
+        "confidence": 0.9520091190934181,
+        "bbox": {
+          "x0": 52,
+          "y0": 338,
+          "x1": 128,
+          "y1": 362
+        }
+      },
+      {
+        "text": "TD01167104",
+        "confidence": 0.9709087610244751,
+        "bbox": {
+          "x0": 186,
+          "y0": 338,
+          "x1": 278,
+          "y1": 362
+        }
+      },
+      {
+        "text": "Date",
+        "confidence": 0.974264606833458,
+        "bbox": {
+          "x0": 52,
+          "y0": 367,
+          "x1": 85,
+          "y1": 394
+        }
+      },
+      {
+        "text": "25/12/20188",
+        "confidence": 0.9910134022886102,
+        "bbox": {
+          "x0": 166,
+          "y0": 367,
+          "x1": 265,
+          "y1": 393
+        }
+      },
+      {
+        "text": "PM",
+        "confidence": 0.98890820145607,
+        "bbox": {
+          "x0": 322,
+          "y0": 367,
+          "x1": 342,
+          "y1": 393
+        }
+      },
+      {
+        "text": "Cashien",
+        "confidence": 0.9505456941468375,
+        "bbox": {
+          "x0": 51,
+          "y0": 394,
+          "x1": 104,
+          "y1": 417
+        }
+      },
+      {
+        "text": "MANIS",
+        "confidence": 0.9971519708633423,
+        "bbox": {
+          "x0": 167,
+          "y0": 393,
+          "x1": 215,
+          "y1": 417
+        }
+      },
+      {
+        "text": "Membet",
+        "confidence": 0.8577805161476135,
+        "bbox": {
+          "x0": 52,
+          "y0": 420,
+          "x1": 109,
+          "y1": 443
+        }
+      },
+      {
+        "text": "CASH",
+        "confidence": 0.960493192076683,
+        "bbox": {
+          "x0": 193,
+          "y0": 456,
+          "x1": 244,
+          "y1": 481
+        }
+      },
+      {
+        "text": "BILL",
+        "confidence": 0.991291344165802,
+        "bbox": {
+          "x0": 254,
+          "y0": 456,
+          "x1": 298,
+          "y1": 481
+        }
+      },
+      {
+        "text": "CODE/DESC",
+        "confidence": 0.9816643198331197,
+        "bbox": {
+          "x0": 31,
+          "y0": 502,
+          "x1": 120,
+          "y1": 528
+        }
+      },
+      {
+        "text": "PRI0",
+        "confidence": 0.6476453170180321,
+        "bbox": {
+          "x0": 202,
+          "y0": 504,
+          "x1": 232,
+          "y1": 524
+        }
+      },
+      {
+        "text": "DisC",
+        "confidence": 0.7422466427087784,
+        "bbox": {
+          "x0": 277,
+          "y0": 504,
+          "x1": 305,
+          "y1": 525
+        }
+      },
+      {
+        "text": "ANOON",
+        "confidence": 0.75021413564682,
+        "bbox": {
+          "x0": 377,
+          "y0": 504,
+          "x1": 440,
+          "y1": 524
+        }
+      },
+      {
+        "text": "QTY",
+        "confidence": 0.7186804016431173,
+        "bbox": {
+          "x0": 72,
+          "y0": 526,
+          "x1": 102,
+          "y1": 555
+        }
+      },
+      {
+        "text": "RTA",
+        "confidence": 0.5102872053782145,
+        "bbox": {
+          "x0": 224,
+          "y0": 526,
+          "x1": 245,
+          "y1": 550
+        }
+      },
+      {
+        "text": "9556939040116",
+        "confidence": 0.9895831988408015,
+        "bbox": {
+          "x0": 30,
+          "y0": 567,
+          "x1": 137,
+          "y1": 588
+        }
+      },
+      {
+        "text": "KF",
+        "confidence": 0.6392760127782822,
+        "bbox": {
+          "x0": 162,
+          "y0": 565,
+          "x1": 176,
+          "y1": 587
+        }
+      },
+      {
+        "text": "MODELLNG",
+        "confidence": 0.9352114126086235,
+        "bbox": {
+          "x0": 184,
+          "y0": 565,
+          "x1": 275,
+          "y1": 587
+        }
+      },
+      {
+        "text": "LAY",
+        "confidence": 0.7366386950016022,
+        "bbox": {
+          "x0": 283,
+          "y0": 565,
+          "x1": 306,
+          "y1": 587
+        }
+      },
+      {
+        "text": "KIDDY",
+        "confidence": 0.9610715866088867,
+        "bbox": {
+          "x0": 314,
+          "y0": 565,
+          "x1": 357,
+          "y1": 587
+        }
+      },
+      {
+        "text": "P",
+        "confidence": 0.7713109254837036,
+        "bbox": {
+          "x0": 91,
+          "y0": 592,
+          "x1": 106,
+          "y1": 618
+        }
+      },
+      {
+        "text": "9.000",
+        "confidence": 0.96646089553833,
+        "bbox": {
+          "x0": 205,
+          "y0": 592,
+          "x1": 246,
+          "y1": 616
+        }
+      },
+      {
+        "text": "0.00",
+        "confidence": 0.8875433504581451,
+        "bbox": {
+          "x0": 277,
+          "y0": 592,
+          "x1": 308,
+          "y1": 615
+        }
+      },
+      {
+        "text": "9.00",
+        "confidence": 0.9119240045547485,
+        "bbox": {
+          "x0": 412,
+          "y0": 590,
+          "x1": 443,
+          "y1": 617
+        }
+      },
+      {
+        "text": "Total",
+        "confidence": 0.7278392434120178,
+        "bbox": {
+          "x0": 249,
+          "y0": 637,
+          "x1": 281,
+          "y1": 661
+        }
+      },
+      {
+        "text": "9.00",
+        "confidence": 0.9706301242113113,
+        "bbox": {
+          "x0": 412,
+          "y0": 635,
+          "x1": 443,
+          "y1": 659
+        }
+      },
+      {
+        "text": "Rout",
+        "confidence": 0.950861006975174,
+        "bbox": {
+          "x0": 120,
+          "y0": 667,
+          "x1": 152,
+          "y1": 691
+        }
+      },
+      {
+        "text": "dingAdjustment",
+        "confidence": 0.9663461702210563,
+        "bbox": {
+          "x0": 161,
+          "y0": 667,
+          "x1": 291,
+          "y1": 691
+        }
+      },
+      {
+        "text": "0.00",
+        "confidence": 0.9474073946475983,
+        "bbox": {
+          "x0": 412,
+          "y0": 666,
+          "x1": 443,
+          "y1": 689
+        }
+      },
+      {
+        "text": "Round",
+        "confidence": 0.9937682628631592,
+        "bbox": {
+          "x0": 88,
+          "y0": 698,
+          "x1": 153,
+          "y1": 727
+        }
+      },
+      {
+        "text": "dTotai (RM)",
+        "confidence": 0.9052149545062672,
+        "bbox": {
+          "x0": 164,
+          "y0": 698,
+          "x1": 291,
+          "y1": 727
+        }
+      },
+      {
+        "text": "9.00",
+        "confidence": 0.9474199712276459,
+        "bbox": {
+          "x0": 402,
+          "y0": 701,
+          "x1": 444,
+          "y1": 723
+        }
+      },
+      {
+        "text": "Casth",
+        "confidence": 0.8730371236801148,
+        "bbox": {
+          "x0": 206,
+          "y0": 741,
+          "x1": 241,
+          "y1": 767
+        }
+      },
+      {
+        "text": "名00",
+        "confidence": 0.7394001483917236,
+        "bbox": {
+          "x0": 399,
+          "y0": 746,
+          "x1": 442,
+          "y1": 768
+        }
+      },
+      {
+        "text": "CHANGE",
+        "confidence": 0.9932553569475809,
+        "bbox": {
+          "x0": 206,
+          "y0": 767,
+          "x1": 269,
+          "y1": 790
+        }
+      },
+      {
+        "text": "1o0",
+        "confidence": 0.5686689913272858,
+        "bbox": {
+          "x0": 413,
+          "y0": 766,
+          "x1": 443,
+          "y1": 793
+        }
+      },
+      {
+        "text": "GOODS",
+        "confidence": 0.9341057062149047,
+        "bbox": {
+          "x0": 98,
+          "y0": 841,
+          "x1": 152,
+          "y1": 862
+        }
+      },
+      {
+        "text": "5OLD",
+        "confidence": 0.8229918926954269,
+        "bbox": {
+          "x0": 160,
+          "y0": 841,
+          "x1": 197,
+          "y1": 862
+        }
+      },
+      {
+        "text": "ARE",
+        "confidence": 0.8566083312034607,
+        "bbox": {
+          "x0": 205,
+          "y0": 841,
+          "x1": 230,
+          "y1": 862
+        }
+      },
+      {
+        "text": "NOT",
+        "confidence": 0.8573921322822571,
+        "bbox": {
+          "x0": 238,
+          "y0": 841,
+          "x1": 266,
+          "y1": 862
+        }
+      },
+      {
+        "text": "RE",
+        "confidence": 0.8828104734420776,
+        "bbox": {
+          "x0": 276,
+          "y0": 841,
+          "x1": 291,
+          "y1": 862
+        }
+      },
+      {
+        "text": "TURNABLLOH",
+        "confidence": 0.7196938663721084,
+        "bbox": {
+          "x0": 298,
+          "y0": 841,
+          "x1": 397,
+          "y1": 862
+        }
+      },
+      {
+        "text": "FXC",
+        "confidence": 0.6579905649026235,
+        "bbox": {
+          "x0": 192,
+          "y0": 861,
+          "x1": 214,
+          "y1": 882
+        }
+      },
+      {
+        "text": "HANGEABLE",
+        "confidence": 0.9870265258683099,
+        "bbox": {
+          "x0": 222,
+          "y0": 861,
+          "x1": 308,
+          "y1": 882
+        }
+      },
+      {
+        "text": "THANK",
+        "confidence": 0.9382280111312866,
+        "bbox": {
+          "x0": 205,
+          "y0": 939,
+          "x1": 255,
+          "y1": 960
+        }
+      },
+      {
+        "text": "YOU",
+        "confidence": 0.9903323252995809,
+        "bbox": {
+          "x0": 262,
+          "y0": 939,
+          "x1": 292,
+          "y1": 960
+        }
+      },
+      {
+        "text": "PLEASE",
+        "confidence": 0.9917877018451691,
+        "bbox": {
+          "x0": 165,
+          "y0": 959,
+          "x1": 218,
+          "y1": 980
+        }
+      },
+      {
+        "text": "Cor",
+        "confidence": 0.7174491087595621,
+        "bbox": {
+          "x0": 225,
+          "y0": 959,
+          "x1": 262,
+          "y1": 980
+        }
+      },
+      {
+        "text": "AGAIN",
+        "confidence": 0.8097632527351379,
+        "bbox": {
+          "x0": 273,
+          "y0": 959,
+          "x1": 318,
+          "y1": 980
+        }
+      }
+    ],
+    "ocrLatencyMs": 1740,
+    "ocrConfidence": 0.8845656960716283,
+    "speechText": "",
+    "warnings": [
+      "Some details are unclear. They won’t be read aloud."
+    ],
+    "quality": 1,
+    "imageDims": "463×1013",
+    "skew": 0,
+    "engine": {
+      "restorer": "none",
+      "classifier": "onnx",
+      "ocr": "ppocrv5"
+    },
+    "sourceName": "sroie-X00016469612.jpg",
+    "pageNote": null,
+    "ms": 2783,
+    "modelProbs": {
+      "banking": 0.32240867614746094,
+      "medical": 0.2066551297903061,
+      "legal": 0.21943353116512299,
+      "general": 0.25150266289711
+    },
+    "timestamp": "2026-10-24T04:45:35.980Z",
+    "speechEligibility": {
+      "eligible": true,
+      "source": "verified-receipt-fields",
+      "text": "Receipt. Shop: BOOKTAK(TAMANDAYA)SDN BHD. Payment method: cash. Some details were unclear and have not been read. Check important amounts against the original receipt."
+    }
+  },
+  "speech": {
+    "speechText": "",
+    "visible": true,
+    "note": "Listen at your own pace. You can stop the reading at any time.",
+    "voices": [
+      {
+        "name": "Samantha",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Albert",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Alice",
+        "lang": "it-IT",
+        "local": true
+      },
+      {
+        "name": "Alva",
+        "lang": "sv-SE",
+        "local": true
+      },
+      {
+        "name": "Amélie",
+        "lang": "fr-CA",
+        "local": true
+      },
+      {
+        "name": "Amira",
+        "lang": "ms-MY",
+        "local": true
+      },
+      {
+        "name": "Anna",
+        "lang": "de-DE",
+        "local": true
+      },
+      {
+        "name": "Bad News",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Bahh",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Bells",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Boing",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Bubbles",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Carmit",
+        "lang": "he-IL",
+        "local": true
+      },
+      {
+        "name": "Cellos",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Damayanti",
+        "lang": "id-ID",
+        "local": true
+      },
+      {
+        "name": "Daniel",
+        "lang": "en-GB",
+        "local": true
+      },
+      {
+        "name": "Daria",
+        "lang": "bg-BG",
+        "local": true
+      },
+      {
+        "name": "Eddy (English (United States))",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Eddy (English (United Kingdom))",
+        "lang": "en-GB",
+        "local": true
+      },
+      {
+        "name": "Eddy (Chinese (China mainland))",
+        "lang": "zh-CN",
+        "local": true
+      },
+      {
+        "name": "Eddy (Chinese (Taiwan))",
+        "lang": "zh-TW",
+        "local": true
+      },
+      {
+        "name": "Eddy (German (Germany))",
+        "lang": "de-DE",
+        "local": true
+      },
+      {
+        "name": "Eddy (Spanish (Spain))",
+        "lang": "es-ES",
+        "local": true
+      },
+      {
+        "name": "Eddy (Spanish (Mexico))",
+        "lang": "es-MX",
+        "local": true
+      },
+      {
+        "name": "Eddy (Finnish (Finland))",
+        "lang": "fi-FI",
+        "local": true
+      },
+      {
+        "name": "Eddy (French (Canada))",
+        "lang": "fr-CA",
+        "local": true
+      },
+      {
+        "name": "Eddy (French (France))",
+        "lang": "fr-FR",
+        "local": true
+      },
+      {
+        "name": "Eddy (Italian (Italy))",
+        "lang": "it-IT",
+        "local": true
+      },
+      {
+        "name": "Eddy (Japanese (Japan))",
+        "lang": "ja-JP",
+        "local": true
+      },
+      {
+        "name": "Eddy (Korean (South Korea))",
+        "lang": "ko-KR",
+        "local": true
+      },
+      {
+        "name": "Eddy (Portuguese (Brazil))",
+        "lang": "pt-BR",
+        "local": true
+      },
+      {
+        "name": "Ellen",
+        "lang": "nl-BE",
+        "local": true
+      },
+      {
+        "name": "Flo (English (United States))",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Flo (English (United Kingdom))",
+        "lang": "en-GB",
+        "local": true
+      },
+      {
+        "name": "Flo (Chinese (China mainland))",
+        "lang": "zh-CN",
+        "local": true
+      },
+      {
+        "name": "Flo (Chinese (Taiwan))",
+        "lang": "zh-TW",
+        "local": true
+      },
+      {
+        "name": "Flo (German (Germany))",
+        "lang": "de-DE",
+        "local": true
+      },
+      {
+        "name": "Flo (Spanish (Spain))",
+        "lang": "es-ES",
+        "local": true
+      },
+      {
+        "name": "Flo (Spanish (Mexico))",
+        "lang": "es-MX",
+        "local": true
+      },
+      {
+        "name": "Flo (Finnish (Finland))",
+        "lang": "fi-FI",
+        "local": true
+      },
+      {
+        "name": "Flo (French (Canada))",
+        "lang": "fr-CA",
+        "local": true
+      },
+      {
+        "name": "Flo (French (France))",
+        "lang": "fr-FR",
+        "local": true
+      },
+      {
+        "name": "Flo (Italian (Italy))",
+        "lang": "it-IT",
+        "local": true
+      },
+      {
+        "name": "Flo (Japanese (Japan))",
+        "lang": "ja-JP",
+        "local": true
+      },
+      {
+        "name": "Flo (Korean (South Korea))",
+        "lang": "ko-KR",
+        "local": true
+      },
+      {
+        "name": "Flo (Portuguese (Brazil))",
+        "lang": "pt-BR",
+        "local": true
+      },
+      {
+        "name": "Fred",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Geeta",
+        "lang": "te-IN",
+        "local": true
+      },
+      {
+        "name": "Good News",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Grandma (English (United States))",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Grandma (English (United Kingdom))",
+        "lang": "en-GB",
+        "local": true
+      },
+      {
+        "name": "Grandma (Chinese (China mainland))",
+        "lang": "zh-CN",
+        "local": true
+      },
+      {
+        "name": "Grandma (Chinese (Taiwan))",
+        "lang": "zh-TW",
+        "local": true
+      },
+      {
+        "name": "Grandma (German (Germany))",
+        "lang": "de-DE",
+        "local": true
+      },
+      {
+        "name": "Grandma (Spanish (Spain))",
+        "lang": "es-ES",
+        "local": true
+      },
+      {
+        "name": "Grandma (Spanish (Mexico))",
+        "lang": "es-MX",
+        "local": true
+      },
+      {
+        "name": "Grandma (Finnish (Finland))",
+        "lang": "fi-FI",
+        "local": true
+      },
+      {
+        "name": "Grandma (French (Canada))",
+        "lang": "fr-CA",
+        "local": true
+      },
+      {
+        "name": "Grandma (French (France))",
+        "lang": "fr-FR",
+        "local": true
+      },
+      {
+        "name": "Grandma (Italian (Italy))",
+        "lang": "it-IT",
+        "local": true
+      },
+      {
+        "name": "Grandma (Japanese (Japan))",
+        "lang": "ja-JP",
+        "local": true
+      },
+      {
+        "name": "Grandma (Korean (South Korea))",
+        "lang": "ko-KR",
+        "local": true
+      },
+      {
+        "name": "Grandma (Portuguese (Brazil))",
+        "lang": "pt-BR",
+        "local": true
+      },
+      {
+        "name": "Grandpa (English (United States))",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Grandpa (English (United Kingdom))",
+        "lang": "en-GB",
+        "local": true
+      },
+      {
+        "name": "Grandpa (Chinese (China mainland))",
+        "lang": "zh-CN",
+        "local": true
+      },
+      {
+        "name": "Grandpa (Chinese (Taiwan))",
+        "lang": "zh-TW",
+        "local": true
+      },
+      {
+        "name": "Grandpa (German (Germany))",
+        "lang": "de-DE",
+        "local": true
+      },
+      {
+        "name": "Grandpa (Spanish (Spain))",
+        "lang": "es-ES",
+        "local": true
+      },
+      {
+        "name": "Grandpa (Spanish (Mexico))",
+        "lang": "es-MX",
+        "local": true
+      },
+      {
+        "name": "Grandpa (Finnish (Finland))",
+        "lang": "fi-FI",
+        "local": true
+      },
+      {
+        "name": "Grandpa (French (Canada))",
+        "lang": "fr-CA",
+        "local": true
+      },
+      {
+        "name": "Grandpa (French (France))",
+        "lang": "fr-FR",
+        "local": true
+      },
+      {
+        "name": "Grandpa (Italian (Italy))",
+        "lang": "it-IT",
+        "local": true
+      },
+      {
+        "name": "Grandpa (Japanese (Japan))",
+        "lang": "ja-JP",
+        "local": true
+      },
+      {
+        "name": "Grandpa (Korean (South Korea))",
+        "lang": "ko-KR",
+        "local": true
+      },
+      {
+        "name": "Grandpa (Portuguese (Brazil))",
+        "lang": "pt-BR",
+        "local": true
+      },
+      {
+        "name": "Ioana",
+        "lang": "ro-RO",
+        "local": true
+      },
+      {
+        "name": "Jacques",
+        "lang": "fr-FR",
+        "local": true
+      },
+      {
+        "name": "Jester",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Joana",
+        "lang": "pt-PT",
+        "local": true
+      },
+      {
+        "name": "Junior",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Kanya",
+        "lang": "th-TH",
+        "local": true
+      },
+      {
+        "name": "Karen",
+        "lang": "en-AU",
+        "local": true
+      },
+      {
+        "name": "Kathy",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Kyoko",
+        "lang": "ja-JP",
+        "local": true
+      },
+      {
+        "name": "Lana",
+        "lang": "hr-HR",
+        "local": true
+      },
+      {
+        "name": "Laura",
+        "lang": "sk-SK",
+        "local": true
+      },
+      {
+        "name": "Lekha",
+        "lang": "hi-IN",
+        "local": true
+      },
+      {
+        "name": "Lesya",
+        "lang": "uk-UA",
+        "local": true
+      },
+      {
+        "name": "Linh",
+        "lang": "vi-VN",
+        "local": true
+      },
+      {
+        "name": "Luciana",
+        "lang": "pt-BR",
+        "local": true
+      },
+      {
+        "name": "Majed",
+        "lang": "ar-001",
+        "local": true
+      },
+      {
+        "name": "Meijia",
+        "lang": "zh-TW",
+        "local": true
+      },
+      {
+        "name": "Melina",
+        "lang": "el-GR",
+        "local": true
+      },
+      {
+        "name": "Milena",
+        "lang": "ru-RU",
+        "local": true
+      },
+      {
+        "name": "Moira",
+        "lang": "en-IE",
+        "local": true
+      },
+      {
+        "name": "Montse",
+        "lang": "ca-ES",
+        "local": true
+      },
+      {
+        "name": "Mónica",
+        "lang": "es-ES",
+        "local": true
+      },
+      {
+        "name": "Nora",
+        "lang": "nb-NO",
+        "local": true
+      },
+      {
+        "name": "Organ",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Paulina",
+        "lang": "es-MX",
+        "local": true
+      },
+      {
+        "name": "Piya",
+        "lang": "bn-IN",
+        "local": true
+      },
+      {
+        "name": "Ralph",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Reed (English (United States))",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Reed (English (United Kingdom))",
+        "lang": "en-GB",
+        "local": true
+      },
+      {
+        "name": "Reed (Chinese (China mainland))",
+        "lang": "zh-CN",
+        "local": true
+      },
+      {
+        "name": "Reed (Chinese (Taiwan))",
+        "lang": "zh-TW",
+        "local": true
+      },
+      {
+        "name": "Reed (German (Germany))",
+        "lang": "de-DE",
+        "local": true
+      },
+      {
+        "name": "Reed (Spanish (Spain))",
+        "lang": "es-ES",
+        "local": true
+      },
+      {
+        "name": "Reed (Spanish (Mexico))",
+        "lang": "es-MX",
+        "local": true
+      },
+      {
+        "name": "Reed (Finnish (Finland))",
+        "lang": "fi-FI",
+        "local": true
+      },
+      {
+        "name": "Reed (French (Canada))",
+        "lang": "fr-CA",
+        "local": true
+      },
+      {
+        "name": "Reed (Italian (Italy))",
+        "lang": "it-IT",
+        "local": true
+      },
+      {
+        "name": "Reed (Japanese (Japan))",
+        "lang": "ja-JP",
+        "local": true
+      },
+      {
+        "name": "Reed (Korean (South Korea))",
+        "lang": "ko-KR",
+        "local": true
+      },
+      {
+        "name": "Reed (Portuguese (Brazil))",
+        "lang": "pt-BR",
+        "local": true
+      },
+      {
+        "name": "Rishi",
+        "lang": "en-IN",
+        "local": true
+      },
+      {
+        "name": "Rocko (English (United States))",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Rocko (English (United Kingdom))",
+        "lang": "en-GB",
+        "local": true
+      },
+      {
+        "name": "Rocko (Chinese (China mainland))",
+        "lang": "zh-CN",
+        "local": true
+      },
+      {
+        "name": "Rocko (Chinese (Taiwan))",
+        "lang": "zh-TW",
+        "local": true
+      },
+      {
+        "name": "Rocko (German (Germany))",
+        "lang": "de-DE",
+        "local": true
+      },
+      {
+        "name": "Rocko (Spanish (Spain))",
+        "lang": "es-ES",
+        "local": true
+      },
+      {
+        "name": "Rocko (Spanish (Mexico))",
+        "lang": "es-MX",
+        "local": true
+      },
+      {
+        "name": "Rocko (Finnish (Finland))",
+        "lang": "fi-FI",
+        "local": true
+      },
+      {
+        "name": "Rocko (French (Canada))",
+        "lang": "fr-CA",
+        "local": true
+      },
+      {
+        "name": "Rocko (French (France))",
+        "lang": "fr-FR",
+        "local": true
+      },
+      {
+        "name": "Rocko (Italian (Italy))",
+        "lang": "it-IT",
+        "local": true
+      },
+      {
+        "name": "Rocko (Japanese (Japan))",
+        "lang": "ja-JP",
+        "local": true
+      },
+      {
+        "name": "Rocko (Korean (South Korea))",
+        "lang": "ko-KR",
+        "local": true
+      },
+      {
+        "name": "Rocko (Portuguese (Brazil))",
+        "lang": "pt-BR",
+        "local": true
+      },
+      {
+        "name": "Sandy (English (United States))",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Sandy (English (United Kingdom))",
+        "lang": "en-GB",
+        "local": true
+      },
+      {
+        "name": "Sandy (Chinese (China mainland))",
+        "lang": "zh-CN",
+        "local": true
+      },
+      {
+        "name": "Sandy (Chinese (Taiwan))",
+        "lang": "zh-TW",
+        "local": true
+      },
+      {
+        "name": "Sandy (German (Germany))",
+        "lang": "de-DE",
+        "local": true
+      },
+      {
+        "name": "Sandy (Spanish (Spain))",
+        "lang": "es-ES",
+        "local": true
+      },
+      {
+        "name": "Sandy (Spanish (Mexico))",
+        "lang": "es-MX",
+        "local": true
+      },
+      {
+        "name": "Sandy (Finnish (Finland))",
+        "lang": "fi-FI",
+        "local": true
+      },
+      {
+        "name": "Sandy (French (Canada))",
+        "lang": "fr-CA",
+        "local": true
+      },
+      {
+        "name": "Sandy (French (France))",
+        "lang": "fr-FR",
+        "local": true
+      },
+      {
+        "name": "Sandy (Italian (Italy))",
+        "lang": "it-IT",
+        "local": true
+      },
+      {
+        "name": "Sandy (Japanese (Japan))",
+        "lang": "ja-JP",
+        "local": true
+      },
+      {
+        "name": "Sandy (Korean (South Korea))",
+        "lang": "ko-KR",
+        "local": true
+      },
+      {
+        "name": "Sandy (Portuguese (Brazil))",
+        "lang": "pt-BR",
+        "local": true
+      },
+      {
+        "name": "Sara",
+        "lang": "da-DK",
+        "local": true
+      },
+      {
+        "name": "Satu",
+        "lang": "fi-FI",
+        "local": true
+      },
+      {
+        "name": "Shelley (English (United States))",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Shelley (English (United Kingdom))",
+        "lang": "en-GB",
+        "local": true
+      },
+      {
+        "name": "Shelley (Chinese (China mainland))",
+        "lang": "zh-CN",
+        "local": true
+      },
+      {
+        "name": "Shelley (Chinese (Taiwan))",
+        "lang": "zh-TW",
+        "local": true
+      },
+      {
+        "name": "Shelley (German (Germany))",
+        "lang": "de-DE",
+        "local": true
+      },
+      {
+        "name": "Shelley (Spanish (Spain))",
+        "lang": "es-ES",
+        "local": true
+      },
+      {
+        "name": "Shelley (Spanish (Mexico))",
+        "lang": "es-MX",
+        "local": true
+      },
+      {
+        "name": "Shelley (Finnish (Finland))",
+        "lang": "fi-FI",
+        "local": true
+      },
+      {
+        "name": "Shelley (French (Canada))",
+        "lang": "fr-CA",
+        "local": true
+      },
+      {
+        "name": "Shelley (French (France))",
+        "lang": "fr-FR",
+        "local": true
+      },
+      {
+        "name": "Shelley (Italian (Italy))",
+        "lang": "it-IT",
+        "local": true
+      },
+      {
+        "name": "Shelley (Japanese (Japan))",
+        "lang": "ja-JP",
+        "local": true
+      },
+      {
+        "name": "Shelley (Korean (South Korea))",
+        "lang": "ko-KR",
+        "local": true
+      },
+      {
+        "name": "Shelley (Portuguese (Brazil))",
+        "lang": "pt-BR",
+        "local": true
+      },
+      {
+        "name": "Sinji",
+        "lang": "yue-HK",
+        "local": true
+      },
+      {
+        "name": "Soumya",
+        "lang": "kn-IN",
+        "local": true
+      },
+      {
+        "name": "Superstar",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Tessa",
+        "lang": "en-ZA",
+        "local": true
+      },
+      {
+        "name": "Thomas",
+        "lang": "fr-FR",
+        "local": true
+      },
+      {
+        "name": "Tina",
+        "lang": "sl-SI",
+        "local": true
+      },
+      {
+        "name": "Tingting",
+        "lang": "zh-CN",
+        "local": true
+      },
+      {
+        "name": "Trinoids",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Tünde",
+        "lang": "hu-HU",
+        "local": true
+      },
+      {
+        "name": "Vani",
+        "lang": "ta-IN",
+        "local": true
+      },
+      {
+        "name": "Whisper",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Wobble",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Xander",
+        "lang": "nl-NL",
+        "local": true
+      },
+      {
+        "name": "Yelda",
+        "lang": "tr-TR",
+        "local": true
+      },
+      {
+        "name": "Yuna",
+        "lang": "ko-KR",
+        "local": true
+      },
+      {
+        "name": "Zarvox",
+        "lang": "en-US",
+        "local": true
+      },
+      {
+        "name": "Zosia",
+        "lang": "pl-PL",
+        "local": true
+      },
+      {
+        "name": "Zuzana",
+        "lang": "cs-CZ",
+        "local": true
+      }
+    ]
+  }
+}

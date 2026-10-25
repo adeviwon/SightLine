@@ -1,0 +1,9 @@
+precache entries: 27, missing: 0
+shipped files: 30
+  not precached:
+    models/crnn.onnx
+    models/minilm_encoder.onnx
+    models/minilm_head.onnx
+    models/restorer.onnx
+    models/tokenizer.json
+    sw.js

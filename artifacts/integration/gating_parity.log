@@ -1,0 +1,17 @@
+generating reference tiles in Python ...
+30 tiles from 10 profiles
+
+
+per-profile mean weights (python vs javascript):
+  studio_clean     py 0.0000   js 0.0000   ok
+  handheld_light   py 0.8746   js 0.8746   ok
+  handheld_heavy   py 0.9911   js 0.9911   ok
+  low_light        py 1.0000   js 1.0000   ok
+  hand_shadow      py 0.6667   js 0.6667   ok
+  off_axis         py 0.2497   js 0.2497   ok
+  glossy_glare     py 0.0000   js 0.0000   ok
+  jpeg_social      py 1.0000   js 1.0000   ok
+  paper_texture    py 0.0000   js 0.0000   ok
+  worst_case       py 1.0000   js 1.0000   ok
+
+30 passed, 0 FAILED

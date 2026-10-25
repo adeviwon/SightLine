@@ -1,0 +1,57 @@
+{
+  "info" : {
+    "arguments" : [
+      "devicectl",
+      "device",
+      "process",
+      "launch",
+      "--device",
+      "<DEVICE_UDID>",
+      "--terminate-existing",
+      "com.sightline.reader",
+      "--json-output",
+      "artifacts/bilingual-history/iphone-visible-speech-launch.json"
+    ],
+    "commandType" : "devicectl.device.process.launch",
+    "environment" : {
+      "TERM" : "dumb"
+    },
+    "jsonVersion" : 5,
+    "outcome" : "success",
+    "version" : "651.13.5"
+  },
+  "result" : {
+    "deviceIdentifier" : "402CBBBE-9D33-5875-A5C0-98755F254C09",
+    "launchOptions" : {
+      "activatedWhenStarted" : true,
+      "arguments" : [
+
+      ],
+      "environmentVariables" : {
+        "TERM" : "dumb"
+      },
+      "platformSpecificOptions" : {
+
+      },
+      "startStopped" : false,
+      "terminateExistingInstances" : true,
+      "user" : {
+        "active" : true
+      }
+    },
+    "process" : {
+      "auditToken" : [
+        4294967295,
+        501,
+        501,
+        501,
+        501,
+        11890,
+        0,
+        32949
+      ],
+      "executable" : "file:///private/var/containers/Bundle/Application/887C7278-AA6F-4918-B963-C91BEC4FBF75/SightLine.app/SightLine",
+      "processIdentifier" : 11890
+    }
+  }
+}

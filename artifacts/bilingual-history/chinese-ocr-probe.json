@@ -1,0 +1,112 @@
+{
+  "scope": "Single synthetic capability probe, not an accuracy benchmark",
+  "result": {
+    "ocrText": "收據\n百佳超級市場\n總額 HK$155.36\n多謝惠顧",
+    "normalized": "收據\n百佳超級市場\n總額 HK$155.36\n多謝惠顧",
+    "category": "banking",
+    "categoryLabel": "Banking / Financial Document",
+    "classificationConfidence": 0.3183911442756653,
+    "classificationSource": "minilm",
+    "documentEvidence": 0,
+    "fields": [],
+    "entities": [
+      {
+        "label": "MONEY",
+        "text": "$155.36",
+        "confidence": 0.9
+      }
+    ],
+    "summary": "This is a banking document.",
+    "documentDiagnostics": {
+      "source": "aria-weighted-keywords",
+      "type": "unrecognised",
+      "scores": {
+        "receipt": 0,
+        "prescription": 0
+      },
+      "ranked": [
+        "receipt",
+        "prescription"
+      ],
+      "confidence": 0,
+      "evidence": [],
+      "reason": "no receipt or prescription keywords matched",
+      "ocrConfidence": 0.9957599664727846,
+      "confidenceSource": "live-inference",
+      "rejected": []
+    },
+    "ocrWords": [
+      {
+        "text": "收據",
+        "confidence": 0.9995972514152527,
+        "bbox": {
+          "x0": 63,
+          "y0": 63,
+          "x1": 162,
+          "y1": 137
+        }
+      },
+      {
+        "text": "百佳超級市場",
+        "confidence": 0.9997453689575195,
+        "bbox": {
+          "x0": 62,
+          "y0": 197,
+          "x1": 370,
+          "y1": 264
+        }
+      },
+      {
+        "text": "總額 HK$155.36",
+        "confidence": 0.9870959917704264,
+        "bbox": {
+          "x0": 62,
+          "y0": 324,
+          "x1": 443,
+          "y1": 399
+        }
+      },
+      {
+        "text": "多謝惠顧",
+        "confidence": 0.9966012537479401,
+        "bbox": {
+          "x0": 65,
+          "y0": 457,
+          "x1": 267,
+          "y1": 526
+        }
+      }
+    ],
+    "ocrLatencyMs": 381,
+    "ocrConfidence": 0.9957599664727846,
+    "speechText": "收據\n百佳超級市場\n總額 HK$155.36\n多謝惠顧",
+    "warnings": [
+      "Some text could be read, but the document’s details may be incomplete. Check the original text below.",
+      "The type is uncertain — this may not be a medicine label."
+    ],
+    "quality": 1,
+    "imageDims": "780×700",
+    "skew": 0,
+    "engine": {
+      "restorer": "none",
+      "classifier": "onnx",
+      "ocr": "ppocrv5"
+    },
+    "sourceName": "Synthetic Traditional Chinese OCR capability probe",
+    "pageNote": null,
+    "ms": 1189,
+    "modelProbs": {
+      "banking": 0.3183911442756653,
+      "medical": 0.22004388272762299,
+      "legal": 0.22334399819374084,
+      "general": 0.2382209599018097
+    },
+    "timestamp": "2026-10-24T01:49:51.987Z",
+    "speechEligibility": {
+      "eligible": true,
+      "source": "complete-document",
+      "text": "收據\n百佳超級市場\n總額 HK$155.36\n多謝惠顧",
+      "reason": ""
+    }
+  }
+}

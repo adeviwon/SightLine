@@ -1,0 +1,255 @@
+{
+  "scope": "Native ORT Web 1.20.1 WASM, fixed synthetic SightLine images, no browser preprocessing",
+  "results": [
+    {
+      "precision": "fp32",
+      "runtimeImportMs": 23.56245899999999,
+      "prepareMs": 591.5114169999999,
+      "warmPrepareMs": 0.003582999999707681,
+      "meanCER": 0.504133463709986,
+      "samples": [
+        {
+          "file": "prescription__studio_clean",
+          "doc": "prescription",
+          "profile": "studio_clean",
+          "precision": "fp32",
+          "ms": 1466,
+          "cer": 0.0273972602739726,
+          "punctuationCER": 0.04241071428571429,
+          "expectedFields": 2,
+          "recognitionFieldHits": 2,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 17,
+          "speechCharacters": 0,
+          "confidence": 0.9592176253669623
+        },
+        {
+          "file": "prescription__handheld_light",
+          "doc": "prescription",
+          "profile": "handheld_light",
+          "precision": "fp32",
+          "ms": 1338,
+          "cer": 0.10273972602739725,
+          "punctuationCER": 0.125,
+          "expectedFields": 2,
+          "recognitionFieldHits": 2,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 18,
+          "speechCharacters": 0,
+          "confidence": 0.9014120732132324
+        },
+        {
+          "file": "prescription__off_axis",
+          "doc": "prescription",
+          "profile": "off_axis",
+          "precision": "fp32",
+          "ms": 745,
+          "cer": 0.9748858447488584,
+          "punctuationCER": 0.9754464285714286,
+          "expectedFields": 2,
+          "recognitionFieldHits": 0,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 1,
+          "speechCharacters": 0,
+          "confidence": 0.6886463246562264
+        },
+        {
+          "file": "prescription__jpeg_social",
+          "doc": "prescription",
+          "profile": "jpeg_social",
+          "precision": "fp32",
+          "ms": 993,
+          "cer": 0.9383561643835616,
+          "punctuationCER": 0.9397321428571429,
+          "expectedFields": 2,
+          "recognitionFieldHits": 0,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 5,
+          "speechCharacters": 0,
+          "confidence": 0.639254042364302
+        },
+        {
+          "file": "banking__studio_clean",
+          "doc": "banking",
+          "profile": "studio_clean",
+          "precision": "fp32",
+          "ms": 1482,
+          "cer": 0.02335456475583864,
+          "punctuationCER": 0.041407867494824016,
+          "expectedFields": 2,
+          "recognitionFieldHits": 2,
+          "speechFieldHits": 2,
+          "extractedFieldHits": 2,
+          "words": 27,
+          "speechCharacters": 465,
+          "confidence": 0.9581039538423433
+        },
+        {
+          "file": "banking__handheld_light",
+          "doc": "banking",
+          "profile": "handheld_light",
+          "precision": "fp32",
+          "ms": 1203,
+          "cer": 0.12314225053078556,
+          "punctuationCER": 0.15113871635610765,
+          "expectedFields": 2,
+          "recognitionFieldHits": 2,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 25,
+          "speechCharacters": 0,
+          "confidence": 0.8785264893113812
+        },
+        {
+          "file": "banking__off_axis",
+          "doc": "banking",
+          "profile": "off_axis",
+          "precision": "fp32",
+          "ms": 872,
+          "cer": 0.8726114649681529,
+          "punctuationCER": 0.8757763975155279,
+          "expectedFields": 2,
+          "recognitionFieldHits": 0,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 9,
+          "speechCharacters": 0,
+          "confidence": 0.7028174823857344
+        },
+        {
+          "file": "banking__jpeg_social",
+          "doc": "banking",
+          "profile": "jpeg_social",
+          "precision": "fp32",
+          "ms": 1065,
+          "cer": 0.9851380042462845,
+          "punctuationCER": 0.9855072463768116,
+          "expectedFields": 2,
+          "recognitionFieldHits": 0,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 2,
+          "speechCharacters": 0,
+          "confidence": 0.6743992537260055
+        },
+        {
+          "file": "legal__studio_clean",
+          "doc": "legal",
+          "profile": "studio_clean",
+          "precision": "fp32",
+          "ms": 1433,
+          "cer": 0.01383399209486166,
+          "punctuationCER": 0.015533980582524271,
+          "expectedFields": 2,
+          "recognitionFieldHits": 1,
+          "speechFieldHits": 1,
+          "extractedFieldHits": 1,
+          "words": 17,
+          "speechCharacters": 513,
+          "confidence": 0.9631876534884782
+        },
+        {
+          "file": "legal__handheld_light",
+          "doc": "legal",
+          "profile": "handheld_light",
+          "precision": "fp32",
+          "ms": 1259,
+          "cer": 0.1067193675889328,
+          "punctuationCER": 0.11844660194174757,
+          "expectedFields": 2,
+          "recognitionFieldHits": 1,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 17,
+          "speechCharacters": 0,
+          "confidence": 0.8823740062941201
+        },
+        {
+          "file": "legal__off_axis",
+          "doc": "legal",
+          "profile": "off_axis",
+          "precision": "fp32",
+          "ms": 731,
+          "cer": 0.9565217391304348,
+          "punctuationCER": 0.9572815533980582,
+          "expectedFields": 2,
+          "recognitionFieldHits": 0,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 4,
+          "speechCharacters": 0,
+          "confidence": 0.6519217767160047
+        },
+        {
+          "file": "legal__jpeg_social",
+          "doc": "legal",
+          "profile": "jpeg_social",
+          "precision": "fp32",
+          "ms": 1126,
+          "cer": 0.924901185770751,
+          "punctuationCER": 0.9262135922330097,
+          "expectedFields": 2,
+          "recognitionFieldHits": 0,
+          "speechFieldHits": 0,
+          "extractedFieldHits": 0,
+          "words": 10,
+          "speechCharacters": 0,
+          "confidence": 0.6004333415379126
+        }
+      ],
+      "invalidInputRejected": true,
+      "blank": {
+        "characters": 0,
+        "speechCharacters": 0,
+        "confidence": 0,
+        "ms": 134
+      },
+      "memoryBeforeRepeats": {
+        "rss": 264011776,
+        "heapTotal": 18382848,
+        "heapUsed": 8088224,
+        "external": 38972342,
+        "arrayBuffers": 36969411
+      },
+      "repeats": [
+        {
+          "ms": 1243,
+          "characters": 431,
+          "memory": {
+            "rss": 269533184,
+            "heapTotal": 18382848,
+            "heapUsed": 7633808,
+            "external": 44070485,
+            "arrayBuffers": 42067514
+          }
+        },
+        {
+          "ms": 1241,
+          "characters": 431,
+          "memory": {
+            "rss": 270450688,
+            "heapTotal": 18382848,
+            "heapUsed": 7718000,
+            "external": 51754395,
+            "arrayBuffers": 49751424
+          }
+        },
+        {
+          "ms": 1241,
+          "characters": 431,
+          "memory": {
+            "rss": 264404992,
+            "heapTotal": 18382848,
+            "heapUsed": 7724800,
+            "external": 52276395,
+            "arrayBuffers": 50273424
+          }
+        }
+      ]
+    }
+  ]
+}

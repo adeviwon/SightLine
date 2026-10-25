@@ -1,0 +1,134 @@
+TAP version 13
+# (node:54610) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file://<repo>/app/js/ppocr_core.js is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to ~/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: model bytes match the recorded conversion and dictionary
+ok 1 - model bytes match the recorded conversion and dictionary
+  ---
+  duration_ms: 24.435791
+  type: 'test'
+  ...
+# Subtest: CTC uses dictionary offset and preserves decimal punctuation
+ok 2 - CTC uses dictionary offset and preserves decimal punctuation
+  ---
+  duration_ms: 0.265708
+  type: 'test'
+  ...
+# Subtest: an incomplete medicine read cannot turn a daily maximum into a spoken dosage
+ok 3 - an incomplete medicine read cannot turn a daily maximum into a spoken dosage
+  ---
+  duration_ms: 0.069583
+  type: 'test'
+  ...
+# Subtest: partially initialized models release sessions when recognizer loading fails
+ok 4 - partially initialized models release sessions when recognizer loading fails
+  ---
+  duration_ms: 0.407166
+  type: 'test'
+  ...
+# Subtest: invalid image dimensions are rejected before inference
+ok 5 - invalid image dimensions are rejected before inference
+  ---
+  duration_ms: 0.270291
+  type: 'test'
+  ...
+# Subtest: busy calls cannot overlap; successful result preserves engine identity
+ok 6 - busy calls cannot overlap; successful result preserves engine identity
+  ---
+  duration_ms: 0.752875
+  type: 'test'
+  ...
+# Subtest: a timeout terminates unfinished WASM and allows a clean retry
+ok 7 - a timeout terminates unfinished WASM and allows a clean retry
+  ---
+  duration_ms: 6.07475
+  type: 'test'
+  ...
+# Subtest: reset cancels an active scan and unavailable workers fail with an action
+ok 8 - reset cancels an active scan and unavailable workers fail with an action
+  ---
+  duration_ms: 0.123583
+  type: 'test'
+  ...
+# Subtest: speech fields cannot turn lookalike characters into an invented dose
+ok 9 - speech fields cannot turn lookalike characters into an invented dose
+  ---
+  duration_ms: 1.966167
+  type: 'test'
+  ...
+# Subtest: clear receipt gets its own category and source-backed total
+ok 10 - clear receipt gets its own category and source-backed total
+  ---
+  duration_ms: 10.072584
+  type: 'test'
+  ...
+# Subtest: literal bare total preserves amount without inventing a currency
+ok 11 - literal bare total preserves amount without inventing a currency
+  ---
+  duration_ms: 2.227291
+  type: 'test'
+  ...
+# Subtest: a 94 percent OCR score does not force unreadable text into receipt classification
+ok 12 - a 94 percent OCR score does not force unreadable text into receipt classification
+  ---
+  duration_ms: 0.274292
+  type: 'test'
+  ...
+# Subtest: prescription stays on existing medical path with its own medicine/dose guards
+ok 13 - prescription stays on existing medical path with its own medicine/dose guards
+  ---
+  duration_ms: 4.421958
+  type: 'test'
+  ...
+# Subtest: uncertain source lines never become confirmed receipt fields
+ok 14 - uncertain source lines never become confirmed receipt fields
+  ---
+  duration_ms: 0.685958
+  type: 'test'
+  ...
+# Subtest: low local confidence overrules high page confidence
+ok 15 - low local confidence overrules high page confidence
+  ---
+  duration_ms: 0.343791
+  type: 'test'
+  ...
+# Subtest: product barcodes are never represented as shop phone numbers
+ok 16 - product barcodes are never represented as shop phone numbers
+  ---
+  duration_ms: 0.7335
+  type: 'test'
+  ...
+# Subtest: missing OCR confidence fails closed
+ok 17 - missing OCR confidence fails closed
+  ---
+  duration_ms: 1.589375
+  type: 'test'
+  ...
+# Subtest: conflicting totals are omitted rather than choosing one
+ok 18 - conflicting totals are omitted rather than choosing one
+  ---
+  duration_ms: 0.4215
+  type: 'test'
+  ...
+# Subtest: bank statements with totals and shop names retain the banking pipeline
+ok 19 - bank statements with totals and shop names retain the banking pipeline
+  ---
+  duration_ms: 1.749042
+  type: 'test'
+  ...
+# Subtest: invalid local confidence cannot bypass the field gate
+ok 20 - invalid local confidence cannot bypass the field gate
+  ---
+  duration_ms: 0.190709
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 91.659583

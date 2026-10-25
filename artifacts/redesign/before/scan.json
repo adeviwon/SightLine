@@ -1,0 +1,9 @@
+{
+  "engine": {
+    "restorer": "none",
+    "classifier": "onnx",
+    "ocr": "ppocrv5"
+  },
+  "characters": 113,
+  "fields": 3
+}

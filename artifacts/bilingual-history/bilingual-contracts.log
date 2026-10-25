@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: receipt uses Hong Kong Traditional Chinese and exact HKD cents
+ok 1 - receipt uses Hong Kong Traditional Chinese and exact HKD cents
+  ---
+  duration_ms: 0.84725
+  type: 'test'
+  ...
+# Subtest: unknown brand is preserved verbatim
+ok 2 - unknown brand is preserved verbatim
+  ---
+  duration_ms: 0.220208
+  type: 'test'
+  ...
+# Subtest: uncertain totals are never spoken
+ok 3 - uncertain totals are never spoken
+  ---
+  duration_ms: 0.064875
+  type: 'test'
+  ...
+# Subtest: unmarked currency is not invented as HKD
+ok 4 - unmarked currency is not invented as HKD
+  ---
+  duration_ms: 0.191584
+  type: 'test'
+  ...
+# Subtest: fractional medicine strengths retain their decimal
+ok 5 - fractional medicine strengths retain their decimal
+  ---
+  duration_ms: 0.801833
+  type: 'test'
+  ...
+# Subtest: medical incompleteness remains a refusal
+ok 6 - medical incompleteness remains a refusal
+  ---
+  duration_ms: 0.086125
+  type: 'test'
+  ...
+# Subtest: multiple medicines cannot be paired to one dose
+ok 7 - multiple medicines cannot be paired to one dose
+  ---
+  duration_ms: 0.129833
+  type: 'test'
+  ...
+# Subtest: negated instructions never match a positive phrase
+ok 8 - negated instructions never match a positive phrase
+  ---
+  duration_ms: 0.061667
+  type: 'test'
+  ...
+# Subtest: malformed prices and uncertain unknown document types are refused
+ok 9 - malformed prices and uncertain unknown document types are refused
+  ---
+  duration_ms: 0.257333
+  type: 'test'
+  ...
+# Subtest: malformed separators are never repaired into a different price
+ok 10 - malformed separators are never repaired into a different price
+  ---
+  duration_ms: 0.267792
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 57.960208

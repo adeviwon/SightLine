@@ -1,0 +1,3 @@
+PASS chromium offline cold reload and two real PP-OCRv5 receipt scans [ 2280, 1740 ]
+PASS webkit offline cold reload and two real PP-OCRv5 receipt scans [ 2219, 1650 ]
+PASS 2 browser engines

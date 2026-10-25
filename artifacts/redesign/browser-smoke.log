@@ -1,0 +1,46 @@
+serving <repo>/app on http://127.0.0.1:8324
+
+ok    index.html declares every script the app needs (7)
+ok    vendor asset served: http://127.0.0.1:8324/js/field_guard.js
+ok    vendor asset served: http://127.0.0.1:8324/js/field_spot.js
+ok    vendor asset served: http://127.0.0.1:8324/js/field_engine.js
+ok    vendor asset served: vendor/pdfjs/pdf.min.js
+ok    vendor asset served: js/pipeline.js
+ok    vendor asset served: js/gating.js
+ok    vendor asset served: js/restorer.js
+ok    vendor asset served: js/classifier.js
+ok    vendor asset served: js/tts.js
+ok    vendor asset served: js/say_cantonese.js
+ok    vendor asset served: js/app.js
+ok    SightLine (pipeline) global present
+ok    SightLineRestorer global present
+ok    SightLineClassifier global present
+ok    TTS global present
+ok    SightLineApp controller present
+ok    tesseract is NOT loaded — the recogniser is our own ONNX CRNN
+ok    pdf.js vendored and loaded
+ok    every asset the app pulled resolves 200 over HTTP (1 vendor files)
+ok    aria-live region exists
+ok    aria-live is polite
+ok    progressbar role present
+ok    alert role present for errors
+ok    manifest linked
+ok    aria labels present (11)
+ok    all rendered buttons are >= 48px tall (WCAG 2.5.5)
+ok    offline badge rendered
+FAIL  service worker registered  -> {"registered":false,"badge":"Offline saving did not finish","readyState":"complete","reports":[{"type":"precache-report","ok":40,"total":42,"failed":2,"failures":[{"asset":"./models/ppocrv5-mobile-rec.onnx","reason":"NetworkError: Failed to execute 'add' on 'Cache': Cache.add() encountered a network error"},{"asset":"./vendor/ort/ort-wasm-simd-threaded.wasm","reason":"NetworkError: Failed to execute 'add' on 'Cache': Cache.add() encountered a network error"}]}],"caches":["sightline-v1.8.2-consumer"],"assets":["/","/selftest.html","/index.html","/manifest.json","/README.md","/models/ort.json","/js/gating.js","/js/restorer.js","/js/pipeline.js","/js/classifier.js","/js/tts.js","/js/recognizer.js","/js/say_cantonese.js","/js/app.js","/js/ocr_engine.js","/js/layout.js","/js/field_spot.js","/js/field_guard.js","/data/drug_lexicon.json","/js/ORCHESTRATION.md","/js/field_engine.js","/assets/icon-192.png","/assets/icon-180.png","/assets/icon-512.png","/assets/favicon.ico","/assets/reader.css","/THIRD_PARTY.md","/js/ppocr.js","/js/ppocr.worker.js","/js/ppocr_core.js","/js/ppocr_math.js","/models/ppocrv5_dict.txt","/models/ppocr-provenance.json","/models/PP-OCR-LICENSE.txt","/models/ppocrv5-mobile-det.onnx","/vendor/ort/ort.min.mjs","/models/crnn.onnx","/vendor/ort/ort-wasm-simd-threaded.mjs","/vendor/pdfjs/pdf.min.js","/vendor/pdfjs/pdf.worker.min.js"]}
+FAIL  service worker is active  -> {"registered":false,"badge":"Offline saving did not finish","readyState":"complete","reports":[{"type":"precache-report","ok":40,"total":42,"failed":2,"failures":[{"asset":"./models/ppocrv5-mobile-rec.onnx","reason":"NetworkError: Failed to execute 'add' on 'Cache': Cache.add() encountered a network error"},{"asset":"./vendor/ort/ort-wasm-simd-threaded.wasm","reason":"NetworkError: Failed to execute 'add' on 'Cache': Cache.add() encountered a network error"}]}],"caches":["sightline-v1.8.2-consumer"],"assets":["/","/selftest.html","/index.html","/manifest.json","/README.md","/models/ort.json","/js/gating.js","/js/restorer.js","/js/pipeline.js","/js/classifier.js","/js/tts.js","/js/recognizer.js","/js/say_cantonese.js","/js/app.js","/js/ocr_engine.js","/js/layout.js","/js/field_spot.js","/js/field_guard.js","/data/drug_lexicon.json","/js/ORCHESTRATION.md","/js/field_engine.js","/assets/icon-192.png","/assets/icon-180.png","/assets/icon-512.png","/assets/favicon.ico","/assets/reader.css","/THIRD_PARTY.md","/js/ppocr.js","/js/ppocr.worker.js","/js/ppocr_core.js","/js/ppocr_math.js","/models/ppocrv5_dict.txt","/models/ppocr-provenance.json","/models/PP-OCR-LICENSE.txt","/models/ppocrv5-mobile-det.onnx","/vendor/ort/ort.min.mjs","/models/crnn.onnx","/vendor/ort/ort-wasm-simd-threaded.mjs","/vendor/pdfjs/pdf.min.js","/vendor/pdfjs/pdf.worker.min.js"]}
+ok    service worker cache created
+ok    every precache entry exists on disk (42 entries)
+FAIL  precache populated in the browser (>= 42 entries)  -> cached=undefined expected=42
+FAIL  app reloads fully while OFFLINE  -> {"title":"127.0.0.1","pipeline":"undefined"}
+FAIL  offline badge updates when disconnected  -> undefined
+ok    selftest.html image battery ran and all assertions passed
+ok    selftest.html has ZERO failures
+ok    selftest summary reports ALL PASSED
+ok    image-preprocessing battery ran in-browser
+ok    server logged no 404s
+ok    no console errors on any page
+
+36 passed, 5 FAILED
+paths requested: 42

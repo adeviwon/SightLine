@@ -1,0 +1,37 @@
+{
+  "info" : {
+    "arguments" : [
+      "devicectl",
+      "device",
+      "install",
+      "app",
+      "--device",
+      "<DEVICE_UDID>",
+      "/tmp/sightline-bilingual-device/Build/Products/Debug-iphoneos/SightLine.app",
+      "--json-output",
+      "artifacts/bilingual-history/iphone-visible-speech-install.json"
+    ],
+    "commandType" : "devicectl.device.install.app",
+    "environment" : {
+      "TERM" : "dumb"
+    },
+    "jsonVersion" : 5,
+    "outcome" : "success",
+    "version" : "651.13.5"
+  },
+  "result" : {
+    "deviceIdentifier" : "402CBBBE-9D33-5875-A5C0-98755F254C09",
+    "installedApplications" : [
+      {
+        "bundleID" : "com.sightline.reader",
+        "databaseSequenceNumber" : 16280,
+        "databaseUUID" : "AC166BEB-427C-4CCA-B18D-69316757263A",
+        "installationURL" : "file:///private/var/containers/Bundle/Application/887C7278-AA6F-4918-B963-C91BEC4FBF75/SightLine.app/",
+        "launchServicesIdentifier" : "unknown",
+        "options" : {
+
+        }
+      }
+    ]
+  }
+}

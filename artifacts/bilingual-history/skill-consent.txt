@@ -1,0 +1,26 @@
+## UI Pro Max Search Results
+**Domain:** ux | **Query:** confirmation dialogs feedback
+**Source:** ux-guidelines.csv | **Found:** 2 results
+
+### Result 1
+- **Category:** Interaction
+- **Issue:** Confirmation Dialogs
+- **Platform:** All
+- **Description:** Prevent accidental destructive actions
+- **Do:** Confirm before delete/irreversible actions
+- **Don't:** Delete without confirmation
+- **Code Example Good:** Are you sure modal
+- **Code Example Bad:** Direct delete on click
+- **Severity:** High
+
+### Result 2
+- **Category:** Feedback
+- **Issue:** Confirmation Messages
+- **Platform:** All
+- **Description:** Confirm successful actions
+- **Do:** Brief success message
+- **Don't:** Silent success
+- **Code Example Good:** Saved successfully toast
+- **Code Example Bad:** No confirmation
+- **Severity:** Medium
+

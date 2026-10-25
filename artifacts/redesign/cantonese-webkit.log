@@ -1,0 +1,17 @@
+  ok    the module is loaded by the app itself (not just by node)
+  ok    a spoken-language control exists
+  ok    it offers Cantonese (zh-HK)
+  ok    an on-screen element exists for the Cantonese text
+  ok    the Cantonese control starts hidden until there is a result
+  ok    a known name is spoken in Cantonese
+  ok    its dose survives into the utterance
+  ok    an UNKNOWN name is refused, never guessed
+  ok    and the refusal names no drug
+  ok    a noise read is refused outright
+  ok    a dosage form is never offered as a drug name
+  note  voices in this engine: 0, Chinese: NONE -- the app will show the Cantonese text instead of faking a voice
+  ok    the UI no longer promises Cantonese is only 'next' (it is built)
+  ok    the UI states the refusal property
+  ok    no page errors
+
+  14/14 checks passed

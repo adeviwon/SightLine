@@ -1,0 +1,9 @@
+app/js/tts.js 48ms
+app/js/speech_plan.js 5ms
+app/js/device_check.js 15ms
+app/js/app.js 71ms
+app/index.html 49ms
+app/selftest.html 70ms
+app/assets/device.css 23ms
+app/tools/speech_contract.test.cjs 6ms
+app/tools/speech_ui_check.cjs 5ms

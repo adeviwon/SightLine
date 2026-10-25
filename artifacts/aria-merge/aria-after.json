@@ -1,0 +1,1915 @@
+{
+  "record": {
+    "startedAt": "2026-10-24T00:04:36.012Z",
+    "source": "photo",
+    "cameraRungs": [],
+    "cameraRung": null,
+    "capture": {
+      "via": "createImageBitmap:from-image",
+      "exifOrientation": 1,
+      "sourceWidth": 463,
+      "sourceHeight": 1013,
+      "width": 463,
+      "height": 1013,
+      "bytes": 61403,
+      "type": "image/jpeg"
+    },
+    "preprocess": {
+      "version": 1,
+      "input": {
+        "width": 463,
+        "height": 1013
+      },
+      "contrastStretch": {
+        "low": 95,
+        "high": 255,
+        "skipped": false,
+        "reason": null
+      },
+      "threshold": {
+        "method": "sauvola",
+        "window": 29,
+        "k": 0.34,
+        "C": null
+      },
+      "deskew": {
+        "angleDeg": 0,
+        "bestAngleDeg": 0,
+        "applied": false,
+        "scoreAtZero": 0.0094,
+        "scoreAtBest": 0.0094,
+        "relativeGain": 0,
+        "margin": 0.04,
+        "searched": "-8..+8 deg in 0.5 deg steps (33 candidates)",
+        "reason": "0 deg is already the best angle"
+      },
+      "median3x3": true,
+      "stepsMs": {
+        "downscale": 0,
+        "contrast": 2.6,
+        "threshold": 12.6,
+        "deskew": 11.4,
+        "median": 6.7
+      },
+      "ms": 33.4,
+      "ocrWidth": 463,
+      "ocrHeight": 1013,
+      "downscaleFactor": 1,
+      "downscaled": false,
+      "budgetMs": 1500,
+      "withinBudget": true,
+      "decode": {
+        "via": "OffscreenCanvas+createImageBitmap",
+        "width": 463,
+        "height": 1013
+      },
+      "ranIn": "worker",
+      "fallbackReason": null,
+      "wallMs": 49
+    },
+    "ocr": {
+      "engine": "tesseract.js",
+      "version": "5.1.0-288-g2a9c1",
+      "psm": 11,
+      "psm_requested": 11,
+      "ms": 633,
+      "char_count": 362,
+      "mean_confidence": 71,
+      "rungs_tried": [
+        {
+          "name": "thresholded-psm6",
+          "psm_requested": 6,
+          "image_kind": "binary",
+          "char_count": 343,
+          "mean_confidence": 46,
+          "ms": 356,
+          "ok": true,
+          "error": null
+        },
+        {
+          "name": "greyscale-psm11",
+          "psm_requested": 11,
+          "image_kind": "gray",
+          "char_count": 362,
+          "mean_confidence": 71,
+          "ms": 277,
+          "ok": true,
+          "error": null
+        }
+      ],
+      "decision": "kept \"greyscale-psm11\" with 362 alphanumeric characters (others: thresholded-psm6=343)",
+      "second_pass_attempted": true,
+      "camera_rungs": [],
+      "preprocess": {
+        "version": 1,
+        "input": {
+          "width": 463,
+          "height": 1013
+        },
+        "contrastStretch": {
+          "low": 95,
+          "high": 255,
+          "skipped": false,
+          "reason": null
+        },
+        "threshold": {
+          "method": "sauvola",
+          "window": 29,
+          "k": 0.34,
+          "C": null
+        },
+        "deskew": {
+          "angleDeg": 0,
+          "bestAngleDeg": 0,
+          "applied": false,
+          "scoreAtZero": 0.0094,
+          "scoreAtBest": 0.0094,
+          "relativeGain": 0,
+          "margin": 0.04,
+          "searched": "-8..+8 deg in 0.5 deg steps (33 candidates)",
+          "reason": "0 deg is already the best angle"
+        },
+        "median3x3": true,
+        "stepsMs": {
+          "downscale": 0,
+          "contrast": 2.6,
+          "threshold": 12.6,
+          "deskew": 11.4,
+          "median": 6.7
+        },
+        "ms": 33.4,
+        "ocrWidth": 463,
+        "ocrHeight": 1013,
+        "downscaleFactor": 1,
+        "downscaled": false,
+        "budgetMs": 1500,
+        "withinBudget": true,
+        "decode": {
+          "via": "OffscreenCanvas+createImageBitmap",
+          "width": 463,
+          "height": 1013
+        }
+      },
+      "boxes": [],
+      "wallMs": 633
+    },
+    "fields": {
+      "docType": {
+        "type": "receipt",
+        "confidence": 1,
+        "reason": "weighted score 5 for receipt vs 0 for prescription"
+      },
+      "counts": {
+        "money": 22,
+        "dates": 1,
+        "dosage": 0,
+        "accounts": 1,
+        "fields": 5
+      },
+      "spoken": [],
+      "omitted": [
+        {
+          "kind": "money",
+          "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "failed validation: parsed"
+        },
+        {
+          "kind": "money",
+          "reason": "ambiguous: single separator followed by three digits could be a decimal comma"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "money",
+          "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "date",
+          "reason": "confidence 0.71 < CONFIDENCE_MIN 0.75"
+        },
+        {
+          "kind": "dosage",
+          "reason": "no candidate found"
+        },
+        {
+          "kind": "account",
+          "reason": "failed validation: digit run with no account context"
+        }
+      ]
+    },
+    "summary": {
+      "text": "This looks like a shop receipt. The amount is unclear. The date is unclear. The account number is unclear. The full text is on screen.",
+      "clauses": [
+        "the amount is unclear",
+        "the date is unclear",
+        "the account number is unclear"
+      ],
+      "lowQuality": false,
+      "noText": false,
+      "dark": false
+    },
+    "speech": {
+      "attempted": false,
+      "reason": "speech not unlocked by a user gesture"
+    },
+    "totalMs": 914,
+    "finishedAt": "2026-10-24T00:04:36.926Z"
+  },
+  "extraction": {
+    "money": [
+      {
+        "kind": "money",
+        "value": 55.57,
+        "amount": "55.57",
+        "currency": null,
+        "negative": false,
+        "raw": "55,57",
+        "line": "NOS? 55,57 & 59, JALAN SAGU 18,",
+        "index": 62,
+        "confidence": 0.28,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": 199.938
+      },
+      {
+        "kind": "money",
+        "value": 6,
+        "amount": "6.00",
+        "currency": null,
+        "negative": false,
+        "raw": "6,00",
+        "line": "6,00",
+        "index": 330,
+        "confidence": 0.28,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": 199.67
+      },
+      {
+        "kind": "money",
+        "value": 9,
+        "amount": "9.00",
+        "currency": null,
+        "negative": false,
+        "raw": "9.00",
+        "line": "9.00",
+        "index": 336,
+        "confidence": 0.28,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": 199.664
+      },
+      {
+        "kind": "money",
+        "value": 9,
+        "amount": "9.00",
+        "currency": null,
+        "negative": false,
+        "raw": "9.00",
+        "line": "9.00",
+        "index": 362,
+        "confidence": 0.28,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": 199.638
+      },
+      {
+        "kind": "money",
+        "value": 0,
+        "amount": "0.00",
+        "currency": null,
+        "negative": false,
+        "raw": "0.00",
+        "line": "0.00",
+        "index": 390,
+        "confidence": 0.28,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": 199.61
+      },
+      {
+        "kind": "money",
+        "value": 9,
+        "amount": "9.00",
+        "currency": null,
+        "negative": false,
+        "raw": "9.00",
+        "line": "9.00",
+        "index": 396,
+        "confidence": 0.28,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": 199.604
+      },
+      {
+        "kind": "money",
+        "value": 7891,
+        "amount": "7891",
+        "currency": null,
+        "negative": false,
+        "raw": "7891",
+        "line": "7891 7-W",
+        "index": 48,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.048
+      },
+      {
+        "kind": "money",
+        "value": -7,
+        "amount": "7",
+        "currency": null,
+        "negative": true,
+        "raw": "7-",
+        "line": "7891 7-W",
+        "index": 53,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.053
+      },
+      {
+        "kind": "money",
+        "value": 59,
+        "amount": "59",
+        "currency": null,
+        "negative": false,
+        "raw": "59",
+        "line": "NOS? 55,57 & 59, JALAN SAGU 18,",
+        "index": 70,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.07
+      },
+      {
+        "kind": "money",
+        "value": 18,
+        "amount": "18",
+        "currency": null,
+        "negative": false,
+        "raw": "18",
+        "line": "NOS? 55,57 & 59, JALAN SAGU 18,",
+        "index": 85,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.085
+      },
+      {
+        "kind": "money",
+        "value": 81100,
+        "amount": "81100",
+        "currency": null,
+        "negative": false,
+        "raw": "81100",
+        "line": "81100 JOHOR BAHRU.",
+        "index": 104,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.104
+      },
+      {
+        "kind": "money",
+        "value": 1167104,
+        "amount": "1167104",
+        "currency": null,
+        "negative": false,
+        "raw": "1167104",
+        "line": "TDO1167104",
+        "index": 161,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.161
+      },
+      {
+        "kind": "money",
+        "value": 25,
+        "amount": "25",
+        "currency": null,
+        "negative": false,
+        "raw": "25",
+        "line": "25/12/2018 8:13:39 PM",
+        "index": 176,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.176
+      },
+      {
+        "kind": "money",
+        "value": 12,
+        "amount": "12",
+        "currency": null,
+        "negative": false,
+        "raw": "12",
+        "line": "25/12/2018 8:13:39 PM",
+        "index": 179,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.179
+      },
+      {
+        "kind": "money",
+        "value": 2018,
+        "amount": "2018",
+        "currency": null,
+        "negative": false,
+        "raw": "2018",
+        "line": "25/12/2018 8:13:39 PM",
+        "index": 182,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.182
+      },
+      {
+        "kind": "money",
+        "value": 8,
+        "amount": "8",
+        "currency": null,
+        "negative": false,
+        "raw": "8",
+        "line": "25/12/2018 8:13:39 PM",
+        "index": 187,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.187
+      },
+      {
+        "kind": "money",
+        "value": 13,
+        "amount": "13",
+        "currency": null,
+        "negative": false,
+        "raw": "13",
+        "line": "25/12/2018 8:13:39 PM",
+        "index": 189,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.189
+      },
+      {
+        "kind": "money",
+        "value": 39,
+        "amount": "39",
+        "currency": null,
+        "negative": false,
+        "raw": "39",
+        "line": "25/12/2018 8:13:39 PM",
+        "index": 192,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.192
+      },
+      {
+        "kind": "money",
+        "value": 9556939040118,
+        "amount": "9556939040118",
+        "currency": null,
+        "negative": false,
+        "raw": "9556939040118",
+        "line": "9556939040118 KF MODELLING CLAY KIDDY FISH",
+        "index": 279,
+        "confidence": 0,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": false,
+        "reason": "parsed",
+        "rank": -0.279
+      },
+      {
+        "kind": "money",
+        "value": 9009,
+        "amount": "9009",
+        "currency": null,
+        "negative": false,
+        "raw": "9.009",
+        "line": "9.009",
+        "index": 323,
+        "confidence": 0.08,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": true,
+        "valid": true,
+        "reason": "single separator followed by three digits could be a decimal comma",
+        "rank": -0.323
+      },
+      {
+        "kind": "money",
+        "value": 2,
+        "amount": "2",
+        "currency": null,
+        "negative": false,
+        "raw": "2",
+        "line": "2",
+        "index": 425,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.425
+      },
+      {
+        "kind": "money",
+        "value": 0,
+        "amount": "0",
+        "currency": null,
+        "negative": true,
+        "raw": "00)",
+        "line": "X00)",
+        "index": 443,
+        "confidence": 0.2,
+        "context": [],
+        "contextWeight": 0,
+        "ambiguous": false,
+        "valid": true,
+        "reason": "parsed",
+        "rank": -0.443
+      }
+    ],
+    "dates": [
+      {
+        "kind": "date",
+        "format": "numeric",
+        "raw": "25/12/2018",
+        "iso": "2018-12-25",
+        "index": 176,
+        "valid": true,
+        "ambiguous": false,
+        "confidence": 0.71,
+        "reason": "first field > 12, so DD/MM is the only valid reading",
+        "readings": {
+          "ddmm": "2018-12-25",
+          "mmdd": null
+        }
+      }
+    ],
+    "dosage": [],
+    "accounts": [
+      {
+        "kind": "account",
+        "digits": "9556939040118",
+        "raw": "9556939040118",
+        "masked": "•••••••••0118",
+        "speakAs": "ending 0118",
+        "length": 13,
+        "isCard": false,
+        "luhn": null,
+        "context": [],
+        "index": 279,
+        "confidence": 0.5,
+        "valid": false,
+        "reason": "digit run with no account context"
+      }
+    ],
+    "docType": {
+      "type": "receipt",
+      "scores": {
+        "receipt": 5,
+        "prescription": 0
+      },
+      "ranked": [
+        "receipt",
+        "prescription"
+      ],
+      "confidence": 1,
+      "evidence": [
+        "Total",
+        "CASH"
+      ],
+      "reason": "weighted score 5 for receipt vs 0 for prescription"
+    },
+    "gated": {
+      "spoken": [],
+      "omitted": [
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 55.57,
+            "amount": "55.57",
+            "currency": null,
+            "negative": false,
+            "raw": "55,57",
+            "line": "NOS? 55,57 & 59, JALAN SAGU 18,",
+            "index": 62,
+            "confidence": 0.28,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": 199.938
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.28
+          },
+          "rank": 0
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 6,
+            "amount": "6.00",
+            "currency": null,
+            "negative": false,
+            "raw": "6,00",
+            "line": "6,00",
+            "index": 330,
+            "confidence": 0.28,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": 199.67
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.28
+          },
+          "rank": 1
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 9,
+            "amount": "9.00",
+            "currency": null,
+            "negative": false,
+            "raw": "9.00",
+            "line": "9.00",
+            "index": 336,
+            "confidence": 0.28,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": 199.664
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.28
+          },
+          "rank": 2
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 9,
+            "amount": "9.00",
+            "currency": null,
+            "negative": false,
+            "raw": "9.00",
+            "line": "9.00",
+            "index": 362,
+            "confidence": 0.28,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": 199.638
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.28
+          },
+          "rank": 3
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 0,
+            "amount": "0.00",
+            "currency": null,
+            "negative": false,
+            "raw": "0.00",
+            "line": "0.00",
+            "index": 390,
+            "confidence": 0.28,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": 199.61
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.28
+          },
+          "rank": 4
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 9,
+            "amount": "9.00",
+            "currency": null,
+            "negative": false,
+            "raw": "9.00",
+            "line": "9.00",
+            "index": 396,
+            "confidence": 0.28,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": 199.604
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.28
+          },
+          "rank": 5
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 7891,
+            "amount": "7891",
+            "currency": null,
+            "negative": false,
+            "raw": "7891",
+            "line": "7891 7-W",
+            "index": 48,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.048
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 6
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": -7,
+            "amount": "7",
+            "currency": null,
+            "negative": true,
+            "raw": "7-",
+            "line": "7891 7-W",
+            "index": 53,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.053
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 7
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 59,
+            "amount": "59",
+            "currency": null,
+            "negative": false,
+            "raw": "59",
+            "line": "NOS? 55,57 & 59, JALAN SAGU 18,",
+            "index": 70,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.07
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 8
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 18,
+            "amount": "18",
+            "currency": null,
+            "negative": false,
+            "raw": "18",
+            "line": "NOS? 55,57 & 59, JALAN SAGU 18,",
+            "index": 85,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.085
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 9
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 81100,
+            "amount": "81100",
+            "currency": null,
+            "negative": false,
+            "raw": "81100",
+            "line": "81100 JOHOR BAHRU.",
+            "index": 104,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.104
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 10
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 1167104,
+            "amount": "1167104",
+            "currency": null,
+            "negative": false,
+            "raw": "1167104",
+            "line": "TDO1167104",
+            "index": 161,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.161
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 11
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 25,
+            "amount": "25",
+            "currency": null,
+            "negative": false,
+            "raw": "25",
+            "line": "25/12/2018 8:13:39 PM",
+            "index": 176,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.176
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 12
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 12,
+            "amount": "12",
+            "currency": null,
+            "negative": false,
+            "raw": "12",
+            "line": "25/12/2018 8:13:39 PM",
+            "index": 179,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.179
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 13
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 2018,
+            "amount": "2018",
+            "currency": null,
+            "negative": false,
+            "raw": "2018",
+            "line": "25/12/2018 8:13:39 PM",
+            "index": 182,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.182
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 14
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 8,
+            "amount": "8",
+            "currency": null,
+            "negative": false,
+            "raw": "8",
+            "line": "25/12/2018 8:13:39 PM",
+            "index": 187,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.187
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 15
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 13,
+            "amount": "13",
+            "currency": null,
+            "negative": false,
+            "raw": "13",
+            "line": "25/12/2018 8:13:39 PM",
+            "index": 189,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.189
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 16
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 39,
+            "amount": "39",
+            "currency": null,
+            "negative": false,
+            "raw": "39",
+            "line": "25/12/2018 8:13:39 PM",
+            "index": 192,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.192
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 17
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 9556939040118,
+            "amount": "9556939040118",
+            "currency": null,
+            "negative": false,
+            "raw": "9556939040118",
+            "line": "9556939040118 KF MODELLING CLAY KIDDY FISH",
+            "index": 279,
+            "confidence": 0,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": false,
+            "reason": "parsed",
+            "rank": -0.279
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "failed validation: parsed",
+            "confidence": 0
+          },
+          "rank": 18
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 9009,
+            "amount": "9009",
+            "currency": null,
+            "negative": false,
+            "raw": "9.009",
+            "line": "9.009",
+            "index": 323,
+            "confidence": 0.08,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": true,
+            "valid": true,
+            "reason": "single separator followed by three digits could be a decimal comma",
+            "rank": -0.323
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "ambiguous: single separator followed by three digits could be a decimal comma",
+            "confidence": 0.08
+          },
+          "rank": 19
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 2,
+            "amount": "2",
+            "currency": null,
+            "negative": false,
+            "raw": "2",
+            "line": "2",
+            "index": 425,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.425
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 20
+        },
+        {
+          "kind": "money",
+          "field": {
+            "kind": "money",
+            "value": 0,
+            "amount": "0",
+            "currency": null,
+            "negative": true,
+            "raw": "00)",
+            "line": "X00)",
+            "index": 443,
+            "confidence": 0.2,
+            "context": [],
+            "contextWeight": 0,
+            "ambiguous": false,
+            "valid": true,
+            "reason": "parsed",
+            "rank": -0.443
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.2
+          },
+          "rank": 21
+        },
+        {
+          "kind": "date",
+          "field": {
+            "kind": "date",
+            "format": "numeric",
+            "raw": "25/12/2018",
+            "iso": "2018-12-25",
+            "index": 176,
+            "valid": true,
+            "ambiguous": false,
+            "confidence": 0.71,
+            "reason": "first field > 12, so DD/MM is the only valid reading",
+            "readings": {
+              "ddmm": "2018-12-25",
+              "mmdd": null
+            }
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "confidence 0.71 < CONFIDENCE_MIN 0.75",
+            "confidence": 0.71
+          },
+          "rank": 0
+        },
+        {
+          "kind": "dosage",
+          "field": null,
+          "verdict": {
+            "speak": false,
+            "reason": "no candidate found",
+            "confidence": 0
+          },
+          "rank": 0
+        },
+        {
+          "kind": "account",
+          "field": {
+            "kind": "account",
+            "digits": "9556939040118",
+            "raw": "9556939040118",
+            "masked": "•••••••••0118",
+            "speakAs": "ending 0118",
+            "length": 13,
+            "isCard": false,
+            "luhn": null,
+            "context": [],
+            "index": 279,
+            "confidence": 0.5,
+            "valid": false,
+            "reason": "digit run with no account context"
+          },
+          "verdict": {
+            "speak": false,
+            "reason": "failed validation: digit run with no account context",
+            "confidence": 0.5
+          },
+          "rank": 0
+        }
+      ],
+      "confidenceMin": 0.75
+    },
+    "fields": {
+      "merchant": {
+        "key": "merchant",
+        "type": "receipt",
+        "group": "shop",
+        "kind": "text",
+        "label": "merchant",
+        "value": "tan woon yann",
+        "raw": "tan woon yann",
+        "line": "tan woon yann",
+        "confidence": 0.71,
+        "valid": true,
+        "ambiguous": false
+      },
+      "shop_phone": {
+        "key": "shop_phone",
+        "type": "receipt",
+        "group": "shop",
+        "kind": "phone",
+        "label": "shopPhone",
+        "value": "9556939040118",
+        "raw": "9556939040118",
+        "line": "9556939040118 KF MODELLING CLAY KIDDY FISH",
+        "confidence": 0.71,
+        "valid": true,
+        "ambiguous": false
+      },
+      "purchase_date": {
+        "key": "purchase_date",
+        "type": "receipt",
+        "group": "purchase",
+        "kind": "date",
+        "label": "purchaseDate",
+        "value": "2018-12-25",
+        "raw": "25/12/2018",
+        "line": "25/12/2018 8:13:39 PM",
+        "confidence": 0.71,
+        "valid": true,
+        "ambiguous": false
+      },
+      "purchase_time": {
+        "key": "purchase_time",
+        "type": "receipt",
+        "group": "purchase",
+        "kind": "time",
+        "label": "purchaseTime",
+        "value": "08:13",
+        "raw": "8:13",
+        "line": "25/12/2018 8:13:39 PM",
+        "confidence": 0.71,
+        "valid": true,
+        "ambiguous": false
+      },
+      "payment_method": {
+        "key": "payment_method",
+        "type": "receipt",
+        "group": "payment",
+        "kind": "payment",
+        "label": "paymentMethod",
+        "value": "cash",
+        "raw": "CASH",
+        "line": "CASH BILL",
+        "confidence": 0.71,
+        "valid": true,
+        "ambiguous": false
+      }
+    },
+    "groups": [
+      {
+        "id": "shop",
+        "label": "groupShop",
+        "fields": [
+          {
+            "key": "merchant",
+            "type": "receipt",
+            "group": "shop",
+            "kind": "text",
+            "label": "merchant",
+            "value": "tan woon yann",
+            "raw": "tan woon yann",
+            "line": "tan woon yann",
+            "confidence": 0.71,
+            "valid": true,
+            "ambiguous": false
+          },
+          {
+            "key": "shop_phone",
+            "type": "receipt",
+            "group": "shop",
+            "kind": "phone",
+            "label": "shopPhone",
+            "value": "9556939040118",
+            "raw": "9556939040118",
+            "line": "9556939040118 KF MODELLING CLAY KIDDY FISH",
+            "confidence": 0.71,
+            "valid": true,
+            "ambiguous": false
+          }
+        ]
+      },
+      {
+        "id": "purchase",
+        "label": "groupPurchase",
+        "fields": [
+          {
+            "key": "purchase_date",
+            "type": "receipt",
+            "group": "purchase",
+            "kind": "date",
+            "label": "purchaseDate",
+            "value": "2018-12-25",
+            "raw": "25/12/2018",
+            "line": "25/12/2018 8:13:39 PM",
+            "confidence": 0.71,
+            "valid": true,
+            "ambiguous": false
+          },
+          {
+            "key": "purchase_time",
+            "type": "receipt",
+            "group": "purchase",
+            "kind": "time",
+            "label": "purchaseTime",
+            "value": "08:13",
+            "raw": "8:13",
+            "line": "25/12/2018 8:13:39 PM",
+            "confidence": 0.71,
+            "valid": true,
+            "ambiguous": false
+          }
+        ]
+      },
+      {
+        "id": "payment",
+        "label": "groupPayment",
+        "fields": [
+          {
+            "key": "payment_method",
+            "type": "receipt",
+            "group": "payment",
+            "kind": "payment",
+            "label": "paymentMethod",
+            "value": "cash",
+            "raw": "CASH",
+            "line": "CASH BILL",
+            "confidence": 0.71,
+            "valid": true,
+            "ambiguous": false
+          }
+        ]
+      }
+    ],
+    "counts": {
+      "money": 22,
+      "dates": 1,
+      "dosage": 0,
+      "accounts": 1,
+      "fields": 5
+    }
+  },
+  "summary": {
+    "text": "This looks like a shop receipt. The amount is unclear. The date is unclear. The account number is unclear. The full text is on screen.",
+    "clauses": [
+      "the amount is unclear",
+      "the date is unclear",
+      "the account number is unclear"
+    ],
+    "docType": "receipt",
+    "omittedKinds": [
+      "money",
+      "date",
+      "dosage",
+      "account"
+    ],
+    "lowQuality": false,
+    "noText": false,
+    "dark": false
+  },
+  "text": "tan woon yann\n\nBOOK TA -K (TAMAN DAYA) SDN BHD\n\n7891 7-W\n\nNOS? 55,57 & 59, JALAN SAGU 18,\n\nTAMAN DAYA,\n\n81100 JOHOR BAHRU.\n\nJOHOR\n\n|\n\nWT MI\n\nUL\n\nDocument No\n\nTDO1167104\n\nDate\n\n25/12/2018 8:13:39 PM\n\nCashier\n\nMANIS\n\nMember\n\nCASH BILL\n\nAMOUAT\n\nCODE/DESC\n\n“PRICE Dise\n\nQuy\n\nRM\n\n-_\n\n9556939040118 KF MODELLING CLAY KIDDY FISH\n\n9.009\n\n6,00\n\n9.00\n\nUne  *\n\n=\n\nTotal :\n\n9.00\n\nRour ding Adjustment\n\n0.00\n\n9.00\n\nRound: :d Total (RM);\n\n2\n\nCash\n\nCHANGE\n\nX00)\n\nGOODS SOLD ARE NOT RETURNAT\n\ni\n\n. EXC HANGEABLE\n\nay\n\n#\n\nfr\n\nAl\n\nTHANK YOU\n\nPLEASE COMME AGAIN |\n",
+  "diagnostics": {
+    "appName": "Aria Reader",
+    "generatedAt": "2026-10-24T00:04:36.934Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+    "workerSupport": {
+      "hasOffscreen": true,
+      "hasWorker": true,
+      "hasBitmap": true,
+      "usable": true,
+      "reason": null
+    },
+    "serviceWorker": {
+      "supported": true,
+      "registered": true,
+      "scope": "http://127.0.0.1:58529/aria/",
+      "precache": {
+        "active": false,
+        "done": true,
+        "filesLoaded": 32,
+        "filesTotal": 32,
+        "bytesLoaded": 14439448,
+        "bytesTotal": 14439448,
+        "failures": [],
+        "startedAt": 1792800275978,
+        "finishedAt": 1792800276183,
+        "version": "aria-v18"
+      },
+      "precacheDone": true,
+      "error": null,
+      "persisted": false
+    },
+    "preferences": {
+      "size": "normal",
+      "contrast": null,
+      "onScreen": {
+        "size": "normal",
+        "contrast": "normal"
+      }
+    },
+    "ui": {
+      "state": "results",
+      "nav": "read",
+      "hasScan": true
+    },
+    "engine": {
+      "name": "tesseract.js",
+      "version": null,
+      "ready": true,
+      "state": {
+        "status": "ready",
+        "phrase": "Text engine ready",
+        "progress": 1,
+        "error": null,
+        "createdAt": 1792800276269,
+        "prepares": 1
+      }
+    },
+    "speech": {
+      "available": true,
+      "unlocked": false,
+      "unlockedAt": null,
+      "voice": "Samantha",
+      "voicesCount": 180,
+      "voicesReady": true,
+      "voicesSource": "voiceschanged",
+      "speaking": false,
+      "chunkIndex": 0,
+      "chunkTotal": 0,
+      "lastText": "",
+      "lastError": null,
+      "unavailableReason": null
+    },
+    "lastScan": {
+      "startedAt": "2026-10-24T00:04:36.012Z",
+      "source": "photo",
+      "cameraRungs": [],
+      "cameraRung": null,
+      "capture": {
+        "via": "createImageBitmap:from-image",
+        "exifOrientation": 1,
+        "sourceWidth": 463,
+        "sourceHeight": 1013,
+        "width": 463,
+        "height": 1013,
+        "bytes": 61403,
+        "type": "image/jpeg"
+      },
+      "preprocess": {
+        "version": 1,
+        "input": {
+          "width": 463,
+          "height": 1013
+        },
+        "contrastStretch": {
+          "low": 95,
+          "high": 255,
+          "skipped": false,
+          "reason": null
+        },
+        "threshold": {
+          "method": "sauvola",
+          "window": 29,
+          "k": 0.34,
+          "C": null
+        },
+        "deskew": {
+          "angleDeg": 0,
+          "bestAngleDeg": 0,
+          "applied": false,
+          "scoreAtZero": 0.0094,
+          "scoreAtBest": 0.0094,
+          "relativeGain": 0,
+          "margin": 0.04,
+          "searched": "-8..+8 deg in 0.5 deg steps (33 candidates)",
+          "reason": "0 deg is already the best angle"
+        },
+        "median3x3": true,
+        "stepsMs": {
+          "downscale": 0,
+          "contrast": 2.6,
+          "threshold": 12.6,
+          "deskew": 11.4,
+          "median": 6.7
+        },
+        "ms": 33.4,
+        "ocrWidth": 463,
+        "ocrHeight": 1013,
+        "downscaleFactor": 1,
+        "downscaled": false,
+        "budgetMs": 1500,
+        "withinBudget": true,
+        "decode": {
+          "via": "OffscreenCanvas+createImageBitmap",
+          "width": 463,
+          "height": 1013
+        },
+        "ranIn": "worker",
+        "fallbackReason": null,
+        "wallMs": 49
+      },
+      "ocr": {
+        "engine": "tesseract.js",
+        "version": "5.1.0-288-g2a9c1",
+        "psm": 11,
+        "psm_requested": 11,
+        "ms": 633,
+        "char_count": 362,
+        "mean_confidence": 71,
+        "rungs_tried": [
+          {
+            "name": "thresholded-psm6",
+            "psm_requested": 6,
+            "image_kind": "binary",
+            "char_count": 343,
+            "mean_confidence": 46,
+            "ms": 356,
+            "ok": true,
+            "error": null
+          },
+          {
+            "name": "greyscale-psm11",
+            "psm_requested": 11,
+            "image_kind": "gray",
+            "char_count": 362,
+            "mean_confidence": 71,
+            "ms": 277,
+            "ok": true,
+            "error": null
+          }
+        ],
+        "decision": "kept \"greyscale-psm11\" with 362 alphanumeric characters (others: thresholded-psm6=343)",
+        "second_pass_attempted": true,
+        "camera_rungs": [],
+        "preprocess": {
+          "version": 1,
+          "input": {
+            "width": 463,
+            "height": 1013
+          },
+          "contrastStretch": {
+            "low": 95,
+            "high": 255,
+            "skipped": false,
+            "reason": null
+          },
+          "threshold": {
+            "method": "sauvola",
+            "window": 29,
+            "k": 0.34,
+            "C": null
+          },
+          "deskew": {
+            "angleDeg": 0,
+            "bestAngleDeg": 0,
+            "applied": false,
+            "scoreAtZero": 0.0094,
+            "scoreAtBest": 0.0094,
+            "relativeGain": 0,
+            "margin": 0.04,
+            "searched": "-8..+8 deg in 0.5 deg steps (33 candidates)",
+            "reason": "0 deg is already the best angle"
+          },
+          "median3x3": true,
+          "stepsMs": {
+            "downscale": 0,
+            "contrast": 2.6,
+            "threshold": 12.6,
+            "deskew": 11.4,
+            "median": 6.7
+          },
+          "ms": 33.4,
+          "ocrWidth": 463,
+          "ocrHeight": 1013,
+          "downscaleFactor": 1,
+          "downscaled": false,
+          "budgetMs": 1500,
+          "withinBudget": true,
+          "decode": {
+            "via": "OffscreenCanvas+createImageBitmap",
+            "width": 463,
+            "height": 1013
+          }
+        },
+        "boxes": [],
+        "wallMs": 633
+      },
+      "fields": {
+        "docType": {
+          "type": "receipt",
+          "confidence": 1,
+          "reason": "weighted score 5 for receipt vs 0 for prescription"
+        },
+        "counts": {
+          "money": 22,
+          "dates": 1,
+          "dosage": 0,
+          "accounts": 1,
+          "fields": 5
+        },
+        "spoken": [],
+        "omitted": [
+          {
+            "kind": "money",
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.28 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "failed validation: parsed"
+          },
+          {
+            "kind": "money",
+            "reason": "ambiguous: single separator followed by three digits could be a decimal comma"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "money",
+            "reason": "confidence 0.2 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "date",
+            "reason": "confidence 0.71 < CONFIDENCE_MIN 0.75"
+          },
+          {
+            "kind": "dosage",
+            "reason": "no candidate found"
+          },
+          {
+            "kind": "account",
+            "reason": "failed validation: digit run with no account context"
+          }
+        ]
+      },
+      "summary": {
+        "text": "This looks like a shop receipt. The amount is unclear. The date is unclear. The account number is unclear. The full text is on screen.",
+        "clauses": [
+          "the amount is unclear",
+          "the date is unclear",
+          "the account number is unclear"
+        ],
+        "lowQuality": false,
+        "noText": false,
+        "dark": false
+      },
+      "speech": {
+        "attempted": false,
+        "reason": "speech not unlocked by a user gesture"
+      },
+      "totalMs": 914,
+      "finishedAt": "2026-10-24T00:04:36.926Z"
+    },
+    "diagnostics": [
+      "00:04:35.960 preprocess: worker path available — will run on the main thread",
+      "00:04:35.962 init: elder-first UI ready (nav -> screens -> capture -> read -> speak)",
+      "00:04:35.965 speak: 180 voice(s) after voiceschanged",
+      "00:04:35.978 sw: registered, scope http://127.0.0.1:58529/aria/",
+      "00:04:36.062 preprocess: 463x1013 in 49 ms (worker), deskew 0 deg applied=false, threshold sauvola window 29",
+      "00:04:36.184 sw: precache complete — 32/32 files, 14439448 bytes",
+      "00:04:36.186 sw: precache status complete — 32/32 files, 14439448 bytes",
+      "00:04:36.188 sw: navigator.storage.persist() -> false",
+      "00:04:36.269 ocr: worker ready in 206 ms (engine tesseract.js)",
+      "00:04:36.626 ocr: pass 1 was hard to read (mean confidence 46 (< 60) on 343 characters) — retrying on the greyscale image at PSM 11",
+      "00:04:36.903 ocr: chose \"greyscale-psm11\" — 362 alphanumeric characters, mean confidence 71, 633 ms",
+      "00:04:36.903 ocr: 362 alphanumeric characters, mean confidence 71, 633 ms, rungs [{\"name\":\"thresholded-psm6\",\"psm_requested\":6,\"image_kind\":\"binary\",\"char_count\":343,\"mean_confidence\":46,\"ms\":356,\"ok\":true,\"error\":null},{\"name\":\"greyscale-psm11\",\"psm_requested\":11,\"image_kind\":\"gray\",\"char_count\":362,\"mean_confidence\":71,\"ms\":277,\"ok\":true,\"error\":null}]",
+      "00:04:36.921 fields: type receipt; spoken 0; omitted 25",
+      "00:04:36.926 pipeline: complete in 914 ms"
+    ]
+  },
+  "testElapsed": 962,
+  "errors": []
+}

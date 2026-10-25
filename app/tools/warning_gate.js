@@ -22,6 +22,7 @@ const MANIFEST = path.join(SAMPLES, "manifest.json");
 const CHROME = require("./chrome_path.js")();
 
 const MIME = {
+  ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml",
   ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
   // .mjs MUST be a JavaScript MIME type: the app dynamic-imports
   // vendor/ort/ort.min.mjs, and a browser refuses to execute a module served as

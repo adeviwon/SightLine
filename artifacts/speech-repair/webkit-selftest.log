@@ -1,0 +1,50 @@
+
+ios-compat: scanned 22 shipped files, 0 problem(s)
+  no parse-time Safari-16.4 blockers found
+── engine ──────────────────────────────────────────────
+  UA             : Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+  WebAssembly    : true
+  WASM SIMD      : true (ok)
+  SharedArrayBuf : false | crossOriginIsolated: false
+  lookbehind re  : supported
+  window.TTS     : object
+  page errors    : 0 []
+  console errors : 0 []
+runner failed: page.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#run')[22m
+[2m    - locator resolved to <button id="run" type="button">Run detailed checks</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at main (<repo>/app/tools/ios_webkit_check.js:116:14) {
+  log: [
+    "  - waiting for locator('#run')",
+    '    - locator resolved to <button id="run" type="button">Run detailed checks</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    58 × waiting for element to be visible, enabled and stable',
+    '       - element is not visible',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

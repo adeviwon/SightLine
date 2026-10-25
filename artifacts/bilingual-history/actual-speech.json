@@ -1,0 +1,79 @@
+{
+  "receiptEnglish": {
+    "state": {
+      "status": "ended",
+      "error": null,
+      "voice": "Daniel",
+      "lang": "en-GB",
+      "chunks": 1,
+      "chunk": 1
+    },
+    "utterances": [
+      {
+        "text": "Receipt. Shop: BOOKTAK(TAMANDAYA)SDN BHD. Payment method: cash. Some details were unclear and have not been read. Check important amounts against the original receipt.",
+        "lang": "en-GB",
+        "voice": "Daniel",
+        "voiceLang": "en-GB",
+        "local": true
+      }
+    ]
+  },
+  "receiptCantonese": {
+    "state": {
+      "status": "ended",
+      "error": null,
+      "voice": "Sinji",
+      "lang": "yue-HK",
+      "chunks": 1,
+      "chunk": 1
+    },
+    "utterances": [
+      {
+        "text": "呢張係收據。 店舖係BOOKTAK(TAMANDAYA)SDN BHD。 付款方式係現金。 未能確認嘅資料唔會讀出，請核對收據原文。",
+        "lang": "zh-HK",
+        "voice": "Sinji",
+        "voiceLang": "yue-HK",
+        "local": true
+      }
+    ]
+  },
+  "prescriptionEnglish": {
+    "state": {
+      "status": "ended",
+      "error": null,
+      "voice": "Daniel",
+      "lang": "en-GB",
+      "chunks": 1,
+      "chunk": 1
+    },
+    "utterances": [
+      {
+        "text": "AMOXICILLIN 500 mg capsules Take one capsule three times daily Keep out of reach of children SYNTHETIC TEST LABEL",
+        "lang": "en-GB",
+        "voice": "Daniel",
+        "voiceLang": "en-GB",
+        "local": true
+      }
+    ]
+  },
+  "prescriptionCantonese": {
+    "state": {
+      "status": "ended",
+      "error": null,
+      "voice": "Sinji",
+      "lang": "yue-HK",
+      "chunks": 1,
+      "chunk": 1
+    },
+    "utterances": [
+      {
+        "text": "呢張係藥物標籤。 原文藥名係Amoxicillin。 藥名保留原文，唔會估中文譯名。 原文強度或用量係五百毫克。 每日三次，每次一粒膠囊。 請放喺兒童接觸唔到嘅地方。 只讀出已核對同支援嘅資料。 其餘指示同警告可能未有翻譯，請核對原文，並同藥劑師確認。",
+        "lang": "zh-HK",
+        "voice": "Sinji",
+        "voiceLang": "yue-HK",
+        "local": true
+      }
+    ]
+  },
+  "physicalAudioHeard": false
+}

@@ -860,9 +860,9 @@ const SightLine = (() => {
 
   // pipeline.js is a CLASSIC script, so it cannot `import` the ES-module
   // engine at the top level. Both callers below are already async, so a
-  // dynamic import() is the right tool: the module is fetched once, on first
-  // OCR, and cached here. Loading it eagerly would put the ~4 MB recogniser on
-  // the critical path of page load for a user who may never scan anything.
+  // Importing this graph only loads JavaScript; it does not load model weights.
+  // Warm it while the native server is active, before a photo picker can suspend
+  // the app. Model sessions and inference remain lazy.
   let _enginePromise = null;
   function getEngine() {
     if (!_enginePromise) {
@@ -872,11 +872,10 @@ const SightLine = (() => {
           // Clear the cache so a later call can retry rather than replaying
           // this rejection forever.
           _enginePromise = null;
-          throw new Error(
-            "could not load ocr_engine.js: " + e.message +
-              ". The app has no tesseract fallback by design -- OCR requires " +
-              "our own model, so a missing module is a hard failure."
-          );
+          const error = new Error("The reading software could not load.");
+          error.code = "READER_LOAD_FAILED";
+          error.cause = e;
+          throw error;
         });
     }
     return _enginePromise;
@@ -1022,9 +1021,9 @@ const SightLine = (() => {
    * structure_score is passed in rather than imported so it stays defined once,
    * here, next to the metric that ranks by it.
    */
-  async function runOCR(candidates, onProgress) {
+  async function runOCR(candidates, onProgress, options) {
     const engine = await getEngine();
-    return engine.runOCR(candidates, onProgress, structure_score);
+    return engine.runOCR(candidates, onProgress, structure_score, options);
   }
 
   async function dispose() {
@@ -1060,6 +1059,29 @@ const SightLine = (() => {
    *   Pre-computed classification (e.g. from classifier.js). Falls back to the
    *   keyword classifier when absent.
    */
+  // Model-backed fields must remain literal observations. The legacy normalizer
+  // repairs lookalike characters; those repairs are not evidence for a dose.
+  function retainVerbatim(fields, rawText, key) {
+    const literal = value => String(value == null ? "" : value).toUpperCase().replace(/\s+/g, "");
+    const source = literal(rawText);
+    return (fields || []).filter(field => {
+      const value = literal(field[key || "value"]);
+      return value.length > 0 && source.includes(value);
+    });
+  }
+
+  function medicalFieldContext(fields, rawText) {
+    const compact = value => String(value).toLowerCase().replace(/\s+/g, "");
+    const lines = String(rawText || "").split(/\r?\n/);
+    return (fields || []).map(field => {
+      if (field.label !== "Dosage") return field;
+      const matches = lines.filter(line => compact(line).includes(compact(field.value)));
+      const limit = line => /\b(maximum|max|do not exceed|not more than)\b/i.test(line);
+      return matches.length && matches.every(limit)
+        ? Object.assign({}, field, { label: "Warning", value: matches[0].trim() }) : field;
+    });
+  }
+
   function understand(rawText, override) {
     const normalized = normalizeOCRText(rawText);
     let cls;
@@ -1178,7 +1200,7 @@ const SightLine = (() => {
     classify_doc, classify_doc_scores,
     // pipeline
     normalizeOCRText, classify, extractFields, extractEntities, buildSummary,
-    understand, scan,
+    understand, scan, retainVerbatim, medicalFieldContext,
     // the opt-in measured path (field_spot + field_guard via field_engine.js):
     // FIELD_ENGINE is the switch, fieldEngineFields the call the app makes.
     FIELD_ENGINE, fieldEngineFields, fieldDocType,
@@ -1187,6 +1209,7 @@ const SightLine = (() => {
     toGrayCanvas, makeCanvas, _ctx2d, preprocess,
     // ocr
     initWorker, runOCR, isGarbage, structure_score, dispose, vendorBase,
+    prepareReader: getEngine,
   };
 })();
 

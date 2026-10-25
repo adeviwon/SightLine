@@ -1,0 +1,26 @@
+{
+  "badge": "Ready offline",
+  "reports": [
+    {
+      "type": "precache-report",
+      "ok": 52,
+      "total": 52,
+      "failed": 0,
+      "failures": []
+    },
+    {
+      "type": "precache-report",
+      "ok": 52,
+      "total": 52,
+      "failed": 0
+    }
+  ],
+  "storage": {
+    "quota": 20615843021,
+    "usage": 40761684
+  },
+  "serviceWorker": true,
+  "keys": [
+    "sightline-v1.9.0-bilingual-history"
+  ]
+}

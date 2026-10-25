@@ -1,0 +1,17 @@
+PASS chromium optional image really persists as a Blob
+PASS chromium real browser restart and offline reopen retains image and fields
+PASS chromium quota abort never claims Saved
+PASS chromium failed write did not erase existing record
+PASS chromium save retries after a transaction failure
+PASS chromium denied storage gives a specific recovery reason
+PASS chromium erased browser database shows an honest empty history
+PASS webkit optional image really persists as a Blob
+PASS webkit real browser restart and offline reopen retains image and fields
+PASS webkit quota abort never claims Saved
+PASS webkit failed write did not erase existing record
+PASS webkit save retries after a transaction failure
+page.waitForFunction: Timeout 30000ms exceeded.
+    at <repo>/app/tools/history_persistence_check.cjs:174:15 {
+  log: [],
+  name: 'TimeoutError'
+}

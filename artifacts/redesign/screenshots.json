@@ -1,0 +1,130 @@
+[
+  {
+    "width": 320,
+    "headers": 1,
+    "scroll": 320,
+    "engine": {
+      "restorer": "none",
+      "classifier": "onnx",
+      "ocr": "ppocrv5"
+    },
+    "ms": 1467,
+    "sourceOpen": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 320,
+      "height": 116.796875,
+      "top": 0,
+      "right": 320,
+      "bottom": 116.796875,
+      "left": 0
+    },
+    "footer": {
+      "x": 0,
+      "y": 1729.203125,
+      "width": 320,
+      "height": 114.796875,
+      "top": 1729.203125,
+      "right": 320,
+      "bottom": 1844,
+      "left": 0
+    }
+  },
+  {
+    "width": 390,
+    "headers": 1,
+    "scroll": 390,
+    "engine": {
+      "restorer": "none",
+      "classifier": "onnx",
+      "ocr": "ppocrv5"
+    },
+    "ms": 1545,
+    "sourceOpen": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 116.796875,
+      "top": 0,
+      "right": 390,
+      "bottom": 116.796875,
+      "left": 0
+    },
+    "footer": {
+      "x": 0,
+      "y": 1713.828125,
+      "width": 390,
+      "height": 82,
+      "top": 1713.828125,
+      "right": 390,
+      "bottom": 1795.828125,
+      "left": 0
+    }
+  },
+  {
+    "width": 768,
+    "headers": 1,
+    "scroll": 768,
+    "engine": {
+      "restorer": "none",
+      "classifier": "onnx",
+      "ocr": "ppocrv5"
+    },
+    "ms": 1315,
+    "sourceOpen": false,
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 768,
+      "height": 112,
+      "top": 0,
+      "right": 768,
+      "bottom": 112,
+      "left": 0
+    },
+    "footer": {
+      "x": 0,
+      "y": 1328.578125,
+      "width": 768,
+      "height": 88,
+      "top": 1328.578125,
+      "right": 768,
+      "bottom": 1416.578125,
+      "left": 0
+    }
+  },
+  {
+    "width": 1440,
+    "headers": 1,
+    "scroll": 1440,
+    "engine": {
+      "restorer": "none",
+      "classifier": "onnx",
+      "ocr": "ppocrv5"
+    },
+    "ms": 1360,
+    "sourceOpen": true,
+    "header": {
+      "x": 100,
+      "y": 0,
+      "width": 1240,
+      "height": 112,
+      "top": 0,
+      "right": 1340,
+      "bottom": 112,
+      "left": 100
+    },
+    "footer": {
+      "x": 120,
+      "y": 1300.6875,
+      "width": 1200,
+      "height": 88,
+      "top": 1300.6875,
+      "right": 1320,
+      "bottom": 1388.6875,
+      "left": 120
+    }
+  }
+]

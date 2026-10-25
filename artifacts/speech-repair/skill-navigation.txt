@@ -1,0 +1,26 @@
+## UI Pro Max Search Results
+**Domain:** ux | **Query:** predictable back navigation mobile
+**Source:** ux-guidelines.csv | **Found:** 2 results
+
+### Result 1
+- **Category:** Navigation
+- **Issue:** Back Button
+- **Platform:** Mobile
+- **Description:** Users expect back to work predictably
+- **Do:** Preserve navigation history properly
+- **Don't:** Break browser/app back button behavior
+- **Code Example Good:** history.pushState()
+- **Code Example Bad:** location.replace()
+- **Severity:** High
+
+### Result 2
+- **Category:** Navigation
+- **Issue:** Sticky Navigation
+- **Platform:** Web
+- **Description:** Fixed nav should not obscure content
+- **Do:** Add padding-top to body equal to nav height
+- **Don't:** Let nav overlap first section content
+- **Code Example Good:** pt-20 (if nav is h-20)
+- **Code Example Bad:** No padding compensation
+- **Severity:** Medium
+

@@ -1,0 +1,266 @@
+
+[webkit] boot — shell, service worker, layout, a11y
+  ok    pipeline global present
+  ok    classifier + restorer + tts + app globals present
+  ok    tesseract is not loaded (own CRNN instead)
+  ok    no horizontal overflow at 390px
+  ok    aria-live region is polite
+  ok    every visible button is >= 44px tall
+  ok    service worker registered and active
+  ok    cache is the shipped VERSION
+  ok    no page errors on boot
+  ok    no console errors on boot
+  ok    server served every requested asset
+
+[webkit] wasm — SIMD probe agrees with the engine
+  ok    simdSupported() is true on this engine
+  ok    recogniser session created
+
+[webkit] scan — studio_clean documents (3 types)
+  ok    prescription: scan completed without error
+  ok    prescription: results shown and result object present
+  ok    prescription: classified as medical
+  ok    prescription: recovers at least one ground-truth field (500mg/400mg)
+  ok    prescription: OCR text produced
+  ok    prescription: OCR confidence sane (0..1)
+  ok    prescription: no page errors during scan
+  ok    banking: scan completed without error
+  ok    banking: results shown and result object present
+  ok    banking: classified as banking
+  ok    banking: recovers at least one ground-truth field (40218877/401104)
+  ok    banking: OCR text produced
+  ok    banking: OCR confidence sane (0..1)
+  ok    banking: no page errors during scan
+  ok    legal: scan completed without error
+  ok    legal: results shown and result object present
+  ok    legal: classified as legal
+  ok    legal: recovers at least one ground-truth field (2500/2024cv00456)
+  ok    legal: OCR text produced
+  ok    legal: OCR confidence sane (0..1)
+  ok    legal: no page errors during scan
+
+[webkit] scan — handheld_light captures (honest degradation)
+  ok    prescription handheld: no crash and a result or an honest error
+  ok    prescription handheld: low confidence or no fields implies a warning
+  ok    banking handheld: no crash and a result or an honest error
+  ok    banking handheld: low confidence or no fields implies a warning
+  ok    legal handheld: no crash and a result or an honest error
+  ok    legal handheld: low confidence or no fields implies a warning
+
+[webkit] release — dispose() then scan again (iOS memory path)
+  ok    round 1: scan produced a result
+  ok    round 1: original CRNN selected
+  ok    round 1: recogniser is ready mid-flight
+  ok    round 1: dispose() released the recogniser session
+  ok    round 2: scan produced a result
+  ok    round 2: original CRNN selected
+  ok    round 2: recogniser is ready mid-flight
+  ok    round 2: dispose() released the recogniser session
+  ok    round 3: scan produced a result
+  ok    round 3: original CRNN selected
+  ok    round 3: recogniser is ready mid-flight
+  ok    round 3: dispose() released the recogniser session
+  ok    re-scan after release leaves no page errors
+
+[webkit] no-simd device — the iOS < 16.4 path explains itself
+  ok    simdSupported() is false under the spoof
+  ok    init() resolves to null instead of throwing
+  ok    the error names the real cause (WebAssembly SIMD / iOS version)
+  ok    a scan on a no-SIMD device fails fast, not by hanging
+  ok    the user sees the SIMD reason, not a generic failure
+  ok    no unhandled page errors on the no-SIMD path
+
+[webkit] refusal — blank and speckle pages are not guessed at
+  ok    blank: no crash
+  ok    blank: invents no fields
+  ok    blank: says it could not read the document
+  ok    speckle: no crash
+  ok    speckle: invents no fields
+  ok    speckle: says it could not read the document
+  ok    refusal path leaves no page errors
+
+[webkit] pdf — a letter that arrives as a PDF
+  ok    pdf scan completed without error
+  FAIL  pdf produced OCR text  -> ocr chars=65 read=false
+  ok    pdf scan is labelled as a file, not a camera frame
+
+[webkit] offline — reload with no network, then scan
+  ok    online scan warms the cache
+  ok    after one scan the recogniser model is in the SERVICE-WORKER cache
+  ok    after one scan the ORT wasm runtime is in the SERVICE-WORKER cache
+  ok    app boots while OFFLINE
+  ok    offline badge is shown
+  ok    scan still works OFFLINE (models came from cache)
+
+[webkit] tts — chunking and the no-voice path
+  ok    long text splits into multiple chunks
+  ok    every chunk is within the 180-char iOS limit
+  ok    chunking loses no words
+  ok    empty text yields no chunks
+  ok    TTS reports availability honestly
+  ok    speak() settles cleanly with no voices
+
+[webkit] pagehide — the iOS memory release actually fires
+  ok    pagehide contract exercises the original CRNN
+  ok    recogniser ready before pagehide
+  ok    pagehide releases the recogniser session
+  ok    pagehide also releases the classifier (22.9 MB encoder)
+  ok    a scan after pagehide re-initialises and succeeds
+
+[webkit] geometry — what the recogniser is actually fed
+  FAIL  the detector finds text lines on the page  -> 0 lines on 900x640
+  FAIL  every crop fills the model's full 32px training height  -> 0/0 crops are 32px tall; e.g. box []
+  FAIL  median crop keeps at least half the training height  -> []
+
+[webkit] cold install — install online, airplane mode before the FIRST scan
+  ok    service worker installed a cache
+  ok    the OCR engine modules are precached at install (no scan needed)
+  ok    app boots offline straight after install
+  ok    a never-scanned install completes its FIRST scan offline
+  ok    cold offline first scan genuinely uses the default PP-OCRv5 reader
+
+[webkit] bench — the shipped pipeline, one record per sample
+............
+  ok    recorded one row per sample (no silent skips)
+  ok    every row carries the read text or a reason it is empty
+
+[webkit] 92/96 checks passed
+   FAILED: pdf — a letter that arrives as a PDF / pdf produced OCR text
+   FAILED: geometry — what the recogniser is actually fed / the detector finds text lines on the page
+   FAILED: geometry — what the recogniser is actually fed / every crop fills the model's full 32px training height
+   FAILED: geometry — what the recogniser is actually fed / median crop keeps at least half the training height
+[webkit] FAIL
+
+[chromium] boot — shell, service worker, layout, a11y
+  ok    pipeline global present
+  ok    classifier + restorer + tts + app globals present
+  ok    tesseract is not loaded (own CRNN instead)
+  ok    no horizontal overflow at 390px
+  ok    aria-live region is polite
+  ok    every visible button is >= 44px tall
+  ok    service worker registered and active
+  ok    cache is the shipped VERSION
+  ok    no page errors on boot
+  ok    no console errors on boot
+  ok    server served every requested asset
+
+[chromium] wasm — SIMD probe agrees with the engine
+  ok    simdSupported() is true on this engine
+  ok    recogniser session created
+
+[chromium] scan — studio_clean documents (3 types)
+  ok    prescription: scan completed without error
+  ok    prescription: results shown and result object present
+  ok    prescription: classified as medical
+  ok    prescription: recovers at least one ground-truth field (500mg/400mg)
+  ok    prescription: OCR text produced
+  ok    prescription: OCR confidence sane (0..1)
+  ok    prescription: no page errors during scan
+  ok    banking: scan completed without error
+  ok    banking: results shown and result object present
+  ok    banking: classified as banking
+  ok    banking: recovers at least one ground-truth field (40218877/401104)
+  ok    banking: OCR text produced
+  ok    banking: OCR confidence sane (0..1)
+  ok    banking: no page errors during scan
+  ok    legal: scan completed without error
+  ok    legal: results shown and result object present
+  ok    legal: classified as legal
+  ok    legal: recovers at least one ground-truth field (2500/2024cv00456)
+  ok    legal: OCR text produced
+  ok    legal: OCR confidence sane (0..1)
+  ok    legal: no page errors during scan
+
+[chromium] scan — handheld_light captures (honest degradation)
+  ok    prescription handheld: no crash and a result or an honest error
+  ok    prescription handheld: low confidence or no fields implies a warning
+  ok    banking handheld: no crash and a result or an honest error
+  ok    banking handheld: low confidence or no fields implies a warning
+  ok    legal handheld: no crash and a result or an honest error
+  ok    legal handheld: low confidence or no fields implies a warning
+
+[chromium] release — dispose() then scan again (iOS memory path)
+  ok    round 1: scan produced a result
+  ok    round 1: original CRNN selected
+  ok    round 1: recogniser is ready mid-flight
+  ok    round 1: dispose() released the recogniser session
+  ok    round 2: scan produced a result
+  ok    round 2: original CRNN selected
+  ok    round 2: recogniser is ready mid-flight
+  ok    round 2: dispose() released the recogniser session
+  ok    round 3: scan produced a result
+  ok    round 3: original CRNN selected
+  ok    round 3: recogniser is ready mid-flight
+  ok    round 3: dispose() released the recogniser session
+  ok    re-scan after release leaves no page errors
+
+[chromium] no-simd device — the iOS < 16.4 path explains itself
+  ok    simdSupported() is false under the spoof
+  ok    init() resolves to null instead of throwing
+  ok    the error names the real cause (WebAssembly SIMD / iOS version)
+  ok    a scan on a no-SIMD device fails fast, not by hanging
+  ok    the user sees the SIMD reason, not a generic failure
+  ok    no unhandled page errors on the no-SIMD path
+
+[chromium] refusal — blank and speckle pages are not guessed at
+  ok    blank: no crash
+  ok    blank: invents no fields
+  ok    blank: says it could not read the document
+  ok    speckle: no crash
+  ok    speckle: invents no fields
+  ok    speckle: says it could not read the document
+  ok    refusal path leaves no page errors
+
+[chromium] pdf — a letter that arrives as a PDF
+  ok    pdf scan completed without error
+  FAIL  pdf produced OCR text  -> ocr chars=65 read=false
+  ok    pdf scan is labelled as a file, not a camera frame
+
+[chromium] offline — reload with no network, then scan
+  ok    online scan warms the cache
+  ok    after one scan the recogniser model is in the SERVICE-WORKER cache
+  ok    after one scan the ORT wasm runtime is in the SERVICE-WORKER cache
+  ok    app boots while OFFLINE
+  ok    offline badge is shown
+  ok    scan still works OFFLINE (models came from cache)
+
+[chromium] tts — chunking and the no-voice path
+  ok    long text splits into multiple chunks
+  ok    every chunk is within the 180-char iOS limit
+  ok    chunking loses no words
+  ok    empty text yields no chunks
+  ok    TTS reports availability honestly
+  ok    speak() settles cleanly with no voices
+
+[chromium] pagehide — the iOS memory release actually fires
+  ok    pagehide contract exercises the original CRNN
+  ok    recogniser ready before pagehide
+  ok    pagehide releases the recogniser session
+  ok    pagehide also releases the classifier (22.9 MB encoder)
+  ok    a scan after pagehide re-initialises and succeeds
+
+[chromium] geometry — what the recogniser is actually fed
+  FAIL  the detector finds text lines on the page  -> 0 lines on 900x640
+  FAIL  every crop fills the model's full 32px training height  -> 0/0 crops are 32px tall; e.g. box []
+  FAIL  median crop keeps at least half the training height  -> []
+
+[chromium] cold install — install online, airplane mode before the FIRST scan
+  ok    service worker installed a cache
+  ok    the OCR engine modules are precached at install (no scan needed)
+  ok    app boots offline straight after install
+  ok    a never-scanned install completes its FIRST scan offline
+  ok    cold offline first scan genuinely uses the default PP-OCRv5 reader
+
+[chromium] bench — the shipped pipeline, one record per sample
+............
+  ok    recorded one row per sample (no silent skips)
+  ok    every row carries the read text or a reason it is empty
+
+[chromium] 92/96 checks passed
+   FAILED: pdf — a letter that arrives as a PDF / pdf produced OCR text
+   FAILED: geometry — what the recogniser is actually fed / the detector finds text lines on the page
+   FAILED: geometry — what the recogniser is actually fed / every crop fills the model's full 32px training height
+   FAILED: geometry — what the recogniser is actually fed / median crop keeps at least half the training height
+[chromium] FAIL
+
+[json] 24 record(s) -> artifacts/redesign/full-browser-records.json

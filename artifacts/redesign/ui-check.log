@@ -1,0 +1,83 @@
+PASS ready screen has exactly two entry choices
+PASS redundant source tabs removed
+PASS home 320 has no horizontal overflow
+PASS home 320 controls meet 48px minimum
+PASS home 390 has no horizontal overflow
+PASS home 390 controls meet 48px minimum
+PASS home 768 has no horizontal overflow
+PASS home 768 controls meet 48px minimum
+PASS home 1440 has no horizontal overflow
+PASS home 1440 controls meet 48px minimum
+PASS home WCAG A/AA automated checks
+PASS preferences WCAG A/AA automated checks
+PASS dark appearance applies
+PASS preferences-dark WCAG A/AA automated checks
+PASS dialog restores focus to its opener
+PASS language preference persists
+PASS camera has no horizontal overflow
+PASS camera controls meet 48px minimum
+PASS camera photo review has read and retake choices
+PASS camera stops after taking photo
+PASS cancel camera returns home
+PASS camera stopped on cancel
+PASS real OCR completes synthetic-single-label.png
+PASS selected PP-OCRv5 genuinely used
+PASS optional classifier still used
+PASS literal medicine name is prominent
+PASS processing and ready screens hidden on results
+PASS results have no synthetic preview notice
+PASS results focused for screen-reader navigation
+PASS results 320 has no horizontal overflow
+PASS results 320 controls meet 48px minimum
+PASS first recognised value is visible at 320
+PASS results 390 has no horizontal overflow
+PASS results 390 controls meet 48px minimum
+PASS first recognised value is visible at 390
+PASS results 768 has no horizontal overflow
+PASS results 768 controls meet 48px minimum
+PASS results 1440 has no horizontal overflow
+PASS results 1440 controls meet 48px minimum
+PASS results WCAG A/AA automated checks
+PASS original image can be compared
+PASS English reads trusted words without inferred prescription advice
+PASS speech control preserves its icon
+PASS results 200% text 320 has no horizontal overflow
+PASS results 200% text 320 controls meet 48px minimum
+PASS results 200% text 390 has no horizontal overflow
+PASS results 200% text 390 controls meet 48px minimum
+PASS results 200% text 1440 has no horizontal overflow
+PASS results 200% text 1440 controls meet 48px minimum
+PASS home 200% text has no horizontal overflow
+PASS home 200% text controls meet 48px minimum
+PASS bad file never leaves previous results active
+PASS invalid-file WCAG A/AA automated checks
+PASS retry recovers from invalid image
+PASS offline reload reaches ready screen
+PASS real OCR completes synthetic-single-label.png
+PASS offline cold-page OCR still uses PP-OCRv5
+PASS real OCR completes prescription__studio_clean.png
+PASS partial prescription retains conservative refusal
+PASS unusable read-aloud is not presented as an action
+PASS needs-checking WCAG A/AA automated checks
+PASS real OCR completes banking__studio_clean.png
+PASS other supported document fields still render
+PASS real OCR completes synthetic-general-document.png
+PASS unsupported document retains genuinely recognised words
+PASS clear unstructured text is not described as blurry OCR
+PASS unknown document is not presented as a prescription
+PASS real OCR completes synthetic-two-medicines.png
+PASS multiple-medicine test really has speech-eligible OCR
+PASS unmatched doses are not combined in structured results
+PASS Cantonese refuses unmatched medicine directions
+PASS real OCR completes synthetic-single-label.png
+PASS no uncaught application errors
+PASS no external runtime requests
+PASS failed required cache never claims offline readiness
+PASS offline saving failure offers a useful retry
+PASS saving retry recovers the complete required cache
+PASS cancelled scan cannot restore stale results
+PASS real OCR completes synthetic-single-label.png
+PASS new scan works after cancellation
+PASS runtime failure has retry and no false result
+PASS real reader recovers after runtime failure
+{"pass":82,"fail":0}

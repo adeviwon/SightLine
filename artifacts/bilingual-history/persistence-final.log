@@ -1,0 +1,28 @@
+PASS chromium optional image really persists as a Blob
+PASS chromium real browser restart and offline reopen retains image and fields
+PASS chromium quota abort never claims Saved
+PASS chromium failed write did not erase existing record
+PASS chromium save retries after a transaction failure
+Permission probe {
+  name: 'SecurityError',
+  message: 'blocked',
+  display: 'History storage is blocked. Check browser privacy settings, or try the installed app.'
+}
+Permission UI History storage is blocked. Check browser privacy settings, or try the installed app.
+PASS chromium permission failure is rendered clearly
+PASS chromium denied storage gives a specific recovery reason
+PASS chromium erased browser database shows an honest empty history
+PASS webkit optional image really persists as a Blob
+PASS webkit real browser restart and offline reopen retains image and fields
+PASS webkit quota abort never claims Saved
+PASS webkit failed write did not erase existing record
+PASS webkit save retries after a transaction failure
+Permission probe {
+  name: 'SecurityError',
+  message: 'blocked',
+  display: 'History storage is blocked. Check browser privacy settings, or try the installed app.'
+}
+Permission UI History storage is blocked. Check browser privacy settings, or try the installed app.
+PASS webkit permission failure is rendered clearly
+PASS webkit denied storage gives a specific recovery reason
+PASS webkit erased browser database shows an honest empty history

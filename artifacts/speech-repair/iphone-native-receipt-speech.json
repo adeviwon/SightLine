@@ -1,0 +1,69 @@
+{
+  "buttonEnabled": true,
+  "english": {
+    "identifier": "com.apple.voice.enhanced.en-GB.Daniel",
+    "lang": "en-GB",
+    "localService": true,
+    "name": "Daniel (Enhanced)"
+  },
+  "events": [
+    {
+      "chunk": 0,
+      "chunks": 1,
+      "error": null,
+      "lang": "en-GB",
+      "status": "starting",
+      "voice": "Daniel (Enhanced)"
+    },
+    {
+      "chunk": 1,
+      "chunks": 1,
+      "error": null,
+      "lang": "en-GB",
+      "outputKind": "Speaker",
+      "outputName": "Speaker",
+      "outputVolume": 1,
+      "status": "speaking",
+      "voice": "Daniel (Enhanced)",
+      "voiceName": "Daniel (Enhanced)"
+    },
+    {
+      "chunk": 1,
+      "chunks": 1,
+      "error": null,
+      "lang": "en-GB",
+      "outputKind": "Speaker",
+      "outputName": "Speaker",
+      "outputVolume": 1,
+      "status": "ended",
+      "voice": "Daniel (Enhanced)",
+      "voiceName": "Daniel (Enhanced)"
+    }
+  ],
+  "native": true,
+  "playback": {
+    "chunk": 1,
+    "chunks": 1,
+    "error": null,
+    "lang": "en-GB",
+    "outputKind": "Speaker",
+    "outputName": "Speaker",
+    "outputVolume": 1,
+    "status": "ended",
+    "voice": "Daniel (Enhanced)",
+    "voiceName": "Daniel (Enhanced)"
+  },
+  "scan": {
+    "category": "receipt",
+    "engine": {
+      "classifier": "onnx",
+      "ocr": "ppocrv5",
+      "restorer": "none"
+    },
+    "fields": 2
+  },
+  "voiceCount": 181,
+  "fixture": "public SROIE X00016469612 receipt image",
+  "physicalDevice": "iPhone 13 Pro",
+  "audioConfirmation": "User confirmed hearing the preceding native English test sentence; receipt playback has real native start/end events."
+}

@@ -1,0 +1,25 @@
+{
+  "ocrText": "PRESCRIPTION\nPatient JaneDoe DOB04/02/1979\nDate: 01/10/2026\nPRESCRIBER Dr A Ahmed, MBBS\nPharmacy Northgate Pharmacy\nRxAmoxicillin 500 mg capsules\nTake one capsule three times daily with foo\nComplete the full7 day course\nIbuprofen 400mg tablets\nEvery 6 to 8 hours as required for pain\nMaximum 1200mg in 24 hours\nWARNING: may cause drowsiness\nDo not drive or operate machinery\nKeep out of reach of children\nPharmacistRSilva GPhC20441",
+  "normalized": "PRESCRIPTION\nPatient JaneDoe DOB04/02/1979\nDate: 01/10/2026\nPRESCRIBER Dr A Ahmed, MBBS\nPharmacy Northgate Pharmacy\nRxAmoxicillin 500 mg capsules\nTake one capsule three times daily with foo\nComplete the full7 day course\nIbuprofen 400mg tablets\nEvery 6 to 8 hours as required for pain\nMaximum 1200mg in 24 hours\nWARNING: may cause drowsiness\nDo not drive or operate machinery\nKeep out of reach of children\nPharmacistRSilva GPhC20441",
+  "category": "medical",
+  "categoryLabel": "Medical Prescription",
+  "classificationConfidence": 0.95,
+  "classificationSource": "keywords",
+  "documentEvidence": 8,
+  "fields": [],
+  "entities": [],
+  "summary": "This is a medical prescription.",
+  "ocrConfidence": 0.9592176253669623,
+  "speechText": "",
+  "warnings": [
+    "Visual preview from a synthetic document. Browser inference is not being tested here."
+  ],
+  "engine": {
+    "ocr": "ppocrv5",
+    "restorer": "none",
+    "classifier": "keywords"
+  },
+  "ms": 1750,
+  "sourceName": "Synthetic prescription",
+  "imageDims": "900×580"
+}

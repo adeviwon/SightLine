@@ -1,0 +1,64 @@
+
+[webkit] release — dispose() then scan again (iOS memory path)
+  ok    round 1: scan produced a result
+  ok    round 1: original CRNN selected
+  ok    round 1: recogniser is ready mid-flight
+  ok    round 1: dispose() released the recogniser session
+  ok    round 2: scan produced a result
+  ok    round 2: original CRNN selected
+  ok    round 2: recogniser is ready mid-flight
+  ok    round 2: dispose() released the recogniser session
+  ok    round 3: scan produced a result
+  ok    round 3: original CRNN selected
+  ok    round 3: recogniser is ready mid-flight
+  ok    round 3: dispose() released the recogniser session
+  ok    re-scan after release leaves no page errors
+
+[webkit] pagehide — the iOS memory release actually fires
+  ok    pagehide contract exercises the original CRNN
+  ok    recogniser ready before pagehide
+  ok    pagehide releases the recogniser session
+  ok    pagehide also releases the classifier (22.9 MB encoder)
+  ok    a scan after pagehide re-initialises and succeeds
+
+[webkit] cold install — install online, airplane mode before the FIRST scan
+  ok    service worker installed a cache
+  ok    the OCR engine modules are precached at install (no scan needed)
+  ok    app boots offline straight after install
+  ok    a never-scanned install completes its FIRST scan offline
+  ok    cold offline first scan genuinely uses the default PP-OCRv5 reader
+
+[webkit] 23/23 checks passed
+[webkit] PASS
+
+[chromium] release — dispose() then scan again (iOS memory path)
+  ok    round 1: scan produced a result
+  ok    round 1: original CRNN selected
+  ok    round 1: recogniser is ready mid-flight
+  ok    round 1: dispose() released the recogniser session
+  ok    round 2: scan produced a result
+  ok    round 2: original CRNN selected
+  ok    round 2: recogniser is ready mid-flight
+  ok    round 2: dispose() released the recogniser session
+  ok    round 3: scan produced a result
+  ok    round 3: original CRNN selected
+  ok    round 3: recogniser is ready mid-flight
+  ok    round 3: dispose() released the recogniser session
+  ok    re-scan after release leaves no page errors
+
+[chromium] pagehide — the iOS memory release actually fires
+  ok    pagehide contract exercises the original CRNN
+  ok    recogniser ready before pagehide
+  ok    pagehide releases the recogniser session
+  ok    pagehide also releases the classifier (22.9 MB encoder)
+  ok    a scan after pagehide re-initialises and succeeds
+
+[chromium] cold install — install online, airplane mode before the FIRST scan
+  ok    service worker installed a cache
+  ok    the OCR engine modules are precached at install (no scan needed)
+  ok    app boots offline straight after install
+  ok    a never-scanned install completes its FIRST scan offline
+  ok    cold offline first scan genuinely uses the default PP-OCRv5 reader
+
+[chromium] 23/23 checks passed
+[chromium] PASS

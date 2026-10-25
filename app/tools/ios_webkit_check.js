@@ -26,6 +26,7 @@ const PW_CANDIDATES = [
 ].filter(Boolean);
 
 const MIME = {
+  ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml",
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".mjs": "text/javascript; charset=utf-8",
@@ -112,6 +113,7 @@ async function main() {
   pageErrors.length = 0;
   await page.goto(base + "/selftest.html", { waitUntil: "load" });
   await page.waitForTimeout(800);
+  await page.locator(".technical-checks > summary").click();
   await page.click("#run");
   // The page auto-runs the TEXT battery on load, so a bare wait on the summary
   // returns immediately with the 145-assertion text-only result while the

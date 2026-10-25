@@ -1,0 +1,57 @@
+{
+  "info" : {
+    "arguments" : [
+      "devicectl",
+      "device",
+      "process",
+      "launch",
+      "--device",
+      "<DEVICE_UDID>",
+      "--terminate-existing",
+      "com.sightline.reader",
+      "--json-output",
+      "artifacts/medicine-sections/iphone-launch.json"
+    ],
+    "commandType" : "devicectl.device.process.launch",
+    "environment" : {
+      "TERM" : "dumb"
+    },
+    "jsonVersion" : 5,
+    "outcome" : "success",
+    "version" : "651.13.5"
+  },
+  "result" : {
+    "deviceIdentifier" : "402CBBBE-9D33-5875-A5C0-98755F254C09",
+    "launchOptions" : {
+      "activatedWhenStarted" : true,
+      "arguments" : [
+
+      ],
+      "environmentVariables" : {
+        "TERM" : "dumb"
+      },
+      "platformSpecificOptions" : {
+
+      },
+      "startStopped" : false,
+      "terminateExistingInstances" : true,
+      "user" : {
+        "active" : true
+      }
+    },
+    "process" : {
+      "auditToken" : [
+        4294967295,
+        501,
+        501,
+        501,
+        501,
+        11917,
+        0,
+        33021
+      ],
+      "executable" : "file:///private/var/containers/Bundle/Application/2C247C5E-41E2-4B58-A077-8FAF0B7A3A4B/SightLine.app/SightLine",
+      "processIdentifier" : 11917
+    }
+  }
+}

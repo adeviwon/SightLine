@@ -1,8 +1,19 @@
 # SightLine — on-device document reader (PWA)
 
+**Current interface:** choose Scan with Camera or Upload Photo or PDF. Camera
+photos can be reviewed and retaken before reading. Results have individual
+recognized details, original-image comparison and read-aloud when usable.
+English / 繁體中文（廣東話） switching and History are visible in main navigation.
+Reading preferences offer opt-in local scan saving and optional original images.
+Saved results reopen offline with their original confidence and safety data;
+language switching never reruns OCR. Cantonese requires a local Cantonese voice.
+Appearance and reading method are in Reading preferences. Help shows
+the actual offline-saving status and offers retry if saving failed. This local
+version has not been deployed; see `../docs/31_BILINGUAL_HISTORY.md` for evidence.
+
 Point a phone at a prescription, bank statement or lease. SightLine reads the
 text, pulls out the key details, and **reads them aloud** — entirely inside the
-browser. No account, no server, no network call after first load.
+browser. No account. Photos stay on your device; offline availability is checked in the app.
 
 Built for the users a policy address actually names: someone who cannot read a
 printed label, or whose vision makes small print unusable. That constraint is
@@ -18,8 +29,8 @@ read it aloud is a privacy problem, not a feature.
 | Capture | Camera, photo library, or PDF (pdf.js, page 1) | `index.html` |
 | Preprocess | Downscale → grayscale → blur/dark quality gate → deskew → adaptive restore → tile-CLAHE | `js/pipeline.js` |
 | Restore *(optional)* | SightLineNet via ONNX Runtime Web, 64×256 tiles | `js/restorer.js` |
-| OCR | tesseract.js 5.x, multi-pass PSM 6/3/11, early exit at ≥75% confidence | `js/pipeline.js` |
-| Normalise | OCR-confusion repair (`S00m9` → `500mg`) | `js/pipeline.js` |
+| OCR | Enhanced PP-OCRv5 mobile in a worker; selectable Original trained CRNN | `js/ocr_engine.js`, `js/ppocr.worker.js` |
+| Normalise | Original reader's repair rules; Enhanced results retain literal values and conservative speech guards | `js/pipeline.js`, `js/app.js` |
 | Understand | Classify, extract fields, NER, build a spoken summary | `js/pipeline.js` |
 | Classify *(optional)* | MiniLM encoder + head via ONNX Runtime Web | `js/classifier.js` |
 | Speak | Platform speech synthesis, sentence-chunked | `js/tts.js` |

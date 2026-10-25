@@ -1,0 +1,16 @@
+PASS chromium verified current cache
+PASS chromium no-SIMD negative control reports incompatibility
+PASS chromium no speech API is reported without pretending audio worked
+PASS chromium top exit stays in viewport
+PASS chromium Escape restores reader
+PASS chromium checks follow reading appearance
+PASS chromium narrow checks do not overflow at doubled text
+PASS chromium no runtime errors
+PASS webkit verified current cache
+PASS webkit no-SIMD negative control reports incompatibility
+PASS webkit no speech API is reported without pretending audio worked
+PASS webkit top exit stays in viewport
+PASS webkit Escape restores reader
+PASS webkit checks follow reading appearance
+PASS webkit narrow checks do not overflow at doubled text
+PASS webkit no runtime errors

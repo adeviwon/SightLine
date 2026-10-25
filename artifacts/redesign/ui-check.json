@@ -1,0 +1,626 @@
+{
+  "scope": "Real Chrome, synthetic documents, test camera; speech transport stub only for utterance assertion",
+  "checks": [
+    {
+      "name": "ready screen has exactly two entry choices",
+      "ok": true
+    },
+    {
+      "name": "redundant source tabs removed",
+      "ok": true
+    },
+    {
+      "name": "home 320 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320,
+        "targets": []
+      }
+    },
+    {
+      "name": "home 320 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "home 390 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390,
+        "targets": []
+      }
+    },
+    {
+      "name": "home 390 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "home 768 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768,
+        "targets": []
+      }
+    },
+    {
+      "name": "home 768 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "home 1440 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "scroll": 1440,
+        "targets": []
+      }
+    },
+    {
+      "name": "home 1440 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "home WCAG A/AA automated checks",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "preferences WCAG A/AA automated checks",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "dark appearance applies",
+      "ok": true
+    },
+    {
+      "name": "preferences-dark WCAG A/AA automated checks",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "dialog restores focus to its opener",
+      "ok": true
+    },
+    {
+      "name": "language preference persists",
+      "ok": true
+    },
+    {
+      "name": "camera has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390,
+        "targets": []
+      }
+    },
+    {
+      "name": "camera controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "camera 320 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320,
+        "targets": []
+      }
+    },
+    {
+      "name": "camera 320 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "camera shutter stays within the narrow phone viewport",
+      "ok": true,
+      "detail": {
+        "x": 16,
+        "y": 496.359375,
+        "width": 288,
+        "height": 59.640625
+      }
+    },
+    {
+      "name": "camera WCAG A/AA automated checks",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "camera photo review has read and retake choices",
+      "ok": true
+    },
+    {
+      "name": "camera stops after taking photo",
+      "ok": true
+    },
+    {
+      "name": "cancel camera returns home",
+      "ok": true
+    },
+    {
+      "name": "camera stopped on cancel",
+      "ok": true
+    },
+    {
+      "name": "real OCR completes synthetic-single-label.png",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "selected PP-OCRv5 genuinely used",
+      "ok": true,
+      "detail": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      }
+    },
+    {
+      "name": "optional classifier still used",
+      "ok": true,
+      "detail": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      }
+    },
+    {
+      "name": "literal medicine name is prominent",
+      "ok": true
+    },
+    {
+      "name": "medicine results separate strength, amount each time and timing",
+      "ok": true
+    },
+    {
+      "name": "read-aloud summary splits medicine information into separate cards",
+      "ok": true
+    },
+    {
+      "name": "full text stays available without dominating structured medicine results",
+      "ok": true
+    },
+    {
+      "name": "medicine section labels and supported values switch to Traditional Chinese",
+      "ok": true
+    },
+    {
+      "name": "read-aloud preview keeps distinct Traditional Chinese cards",
+      "ok": true
+    },
+    {
+      "name": "medicine language switching preserves extracted fields and never reruns OCR",
+      "ok": true
+    },
+    {
+      "name": "processing and ready screens hidden on results",
+      "ok": true
+    },
+    {
+      "name": "results have no synthetic preview notice",
+      "ok": true
+    },
+    {
+      "name": "results focused for screen-reader navigation",
+      "ok": true
+    },
+    {
+      "name": "results 320 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320,
+        "targets": []
+      }
+    },
+    {
+      "name": "results 320 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "first recognised value is visible at 320",
+      "ok": true,
+      "detail": {
+        "x": 41,
+        "y": 509.703125,
+        "width": 238,
+        "height": 49.59375
+      }
+    },
+    {
+      "name": "results 390 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390,
+        "targets": []
+      }
+    },
+    {
+      "name": "results 390 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "first recognised value is visible at 390",
+      "ok": true,
+      "detail": {
+        "x": 45,
+        "y": 551.703125,
+        "width": 300,
+        "height": 49.59375
+      }
+    },
+    {
+      "name": "results 768 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 768,
+        "scroll": 768,
+        "targets": []
+      }
+    },
+    {
+      "name": "results 768 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "results 1440 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "scroll": 1440,
+        "targets": []
+      }
+    },
+    {
+      "name": "results 1440 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "results WCAG A/AA automated checks",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "original image can be compared",
+      "ok": true
+    },
+    {
+      "name": "English reads trusted words without inferred prescription advice",
+      "ok": true
+    },
+    {
+      "name": "speech control preserves its icon",
+      "ok": true
+    },
+    {
+      "name": "speech-device unavailability is distinguished from unclear OCR",
+      "ok": true
+    },
+    {
+      "name": "results 200% text 320 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320,
+        "targets": []
+      }
+    },
+    {
+      "name": "results 200% text 320 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "results 200% text 390 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 390,
+        "scroll": 390,
+        "targets": []
+      }
+    },
+    {
+      "name": "results 200% text 390 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "results 200% text 1440 has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 1440,
+        "scroll": 1440,
+        "targets": []
+      }
+    },
+    {
+      "name": "results 200% text 1440 controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "home 200% text has no horizontal overflow",
+      "ok": true,
+      "detail": {
+        "width": 320,
+        "scroll": 320,
+        "targets": []
+      }
+    },
+    {
+      "name": "home 200% text controls meet 48px minimum",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "bad file never leaves previous results active",
+      "ok": true
+    },
+    {
+      "name": "invalid-file WCAG A/AA automated checks",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "retry recovers from invalid image",
+      "ok": true
+    },
+    {
+      "name": "offline reload reaches ready screen",
+      "ok": true
+    },
+    {
+      "name": "real OCR completes synthetic-single-label.png",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "offline cold-page OCR still uses PP-OCRv5",
+      "ok": true
+    },
+    {
+      "name": "real OCR completes prescription__studio_clean.png",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "partial prescription retains conservative refusal",
+      "ok": true,
+      "detail": {
+        "speech": "",
+        "fields": 0
+      }
+    },
+    {
+      "name": "unverified medicine offers reading help with its safety explanation",
+      "ok": true
+    },
+    {
+      "name": "unverified medicine speaks only a safe recovery message",
+      "ok": true
+    },
+    {
+      "name": "needs-checking WCAG A/AA automated checks",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "real OCR completes banking__studio_clean.png",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "other supported document fields still render",
+      "ok": true
+    },
+    {
+      "name": "real OCR completes synthetic-general-document.png",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "unsupported document retains genuinely recognised words",
+      "ok": true
+    },
+    {
+      "name": "clear unstructured text is not described as blurry OCR",
+      "ok": true
+    },
+    {
+      "name": "unknown document is not presented as a prescription",
+      "ok": true
+    },
+    {
+      "name": "real OCR completes synthetic-two-medicines.png",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "multiple-medicine test really has speech-eligible OCR",
+      "ok": true,
+      "detail": {
+        "speechCharacters": 73
+      }
+    },
+    {
+      "name": "unmatched doses are not combined in structured results",
+      "ok": true
+    },
+    {
+      "name": "Cantonese refuses unmatched medicine directions",
+      "ok": true
+    },
+    {
+      "name": "real OCR completes synthetic-single-label.png",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no uncaught application errors",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "no external runtime requests",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "failed required cache never claims offline readiness",
+      "ok": true
+    },
+    {
+      "name": "offline saving failure offers a useful retry",
+      "ok": true
+    },
+    {
+      "name": "saving retry recovers the complete required cache",
+      "ok": true
+    },
+    {
+      "name": "processing cancel stays within the narrow phone viewport",
+      "ok": true,
+      "detail": {
+        "x": 94.484375,
+        "y": 404.421875,
+        "width": 131.015625,
+        "height": 48
+      }
+    },
+    {
+      "name": "cancelled scan cannot restore stale results",
+      "ok": true
+    },
+    {
+      "name": "real OCR completes synthetic-single-label.png",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "new scan works after cancellation",
+      "ok": true
+    },
+    {
+      "name": "runtime failure has retry and no false result",
+      "ok": true
+    },
+    {
+      "name": "real reader recovers after runtime failure",
+      "ok": true
+    }
+  ],
+  "records": [
+    {
+      "fixture": "synthetic-single-label.png",
+      "engine": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      },
+      "ms": 1171,
+      "characters": 113,
+      "fields": 3,
+      "speechCharacters": 113
+    },
+    {
+      "fixture": "synthetic-single-label.png",
+      "engine": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      },
+      "ms": 890,
+      "characters": 113,
+      "fields": 3,
+      "speechCharacters": 113
+    },
+    {
+      "fixture": "prescription__studio_clean.png",
+      "engine": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      },
+      "ms": 1205,
+      "characters": 431,
+      "fields": 0,
+      "speechCharacters": 0
+    },
+    {
+      "fixture": "banking__studio_clean.png",
+      "engine": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      },
+      "ms": 1438,
+      "characters": 465,
+      "fields": 3,
+      "speechCharacters": 465
+    },
+    {
+      "fixture": "synthetic-general-document.png",
+      "engine": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      },
+      "ms": 453,
+      "characters": 72,
+      "fields": 0,
+      "speechCharacters": 72
+    },
+    {
+      "fixture": "synthetic-two-medicines.png",
+      "engine": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      },
+      "ms": 508,
+      "characters": 73,
+      "fields": 2,
+      "speechCharacters": 73
+    },
+    {
+      "fixture": "synthetic-single-label.png",
+      "engine": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      },
+      "ms": 546,
+      "characters": 113,
+      "fields": 3,
+      "speechCharacters": 113
+    },
+    {
+      "fixture": "synthetic-single-label.png",
+      "engine": {
+        "restorer": "none",
+        "classifier": "onnx",
+        "ocr": "ppocrv5"
+      },
+      "ms": 1133,
+      "characters": 113,
+      "fields": 3,
+      "speechCharacters": 113
+    }
+  ],
+  "errors": []
+}

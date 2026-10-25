@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SightLine — On-Device Medicine-Label Reader</title>
+
+<!-- PWA / install -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="color-scheme" content="dark light">
+
+<!-- iOS home-screen app -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SightLine">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
+<link rel="icon" href="assets/favicon.ico" sizes="192x192">
+
+<link rel="stylesheet" href="assets/reader.css">
+</head>
+
+<body>
+<a class="skip-link" href="#stage">Skip to the reader</a>
+<header>
+  <a class="wordmark" href="./" aria-label="SightLine home"><h1>Sight<span>Line</span></h1></a>
+  <p>Medicine labels, made easier to read.</p>
+  <span id="badge" data-state="pending" role="status">Preparing offline reading</span>
+</header>
+
+<!-- Screen-reader announcements. Two regions, deliberately NOT one: progress
+     and results stay polite forever, errors go to an assertive region. -->
+<div id="live" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+<div id="live-assertive" class="sr-only" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+<div id="error-banner" role="alert" hidden></div>
+
+<main id="stage" tabindex="-1">
+  <div class="workbench">
+  <section class="capture-panel" aria-labelledby="capture-title">
+  <h2 id="capture-title" class="capture-title">Read your medicine label</h2>
+  <p class="capture-intro">Take a clear photo, or choose one you already have.</p>
+  <div class="tabs" id="tabs" role="tablist" aria-label="Document source">
+    <button type="button" class="tab active" id="tab-cam" role="tab" tabindex="0"
+         aria-selected="true" aria-controls="viewfinder">Camera</button>
+    <button type="button" class="tab" id="tab-file" role="tab" tabindex="-1"
+         aria-selected="false" aria-controls="viewfinder">Photo or PDF</button>
+  </div>
+
+  <div class="controls">
+    <button id="btn-capture" type="button" aria-describedby="capture-help">Read this label</button>
+    <button id="btn-pick" type="button" class="secondary">Choose photo or PDF</button>
+    <button id="btn-retake" type="button" class="secondary" hidden>Scan Another</button>
+    <button id="btn-speak" type="button" class="secondary" hidden>Read Aloud</button>
+    <label class="sr-only" for="speak-lang">Language to read aloud in</label>
+    <select id="speak-lang" hidden aria-label="Language to read aloud in">
+      <option value="en-GB">English</option>
+      <option value="zh-HK">廣東話 Cantonese</option>
+    </select>
+    <p id="cantonese" hidden></p>
+  </div>
+
+  <div id="viewfinder" data-mode="none" role="tabpanel" aria-labelledby="tab-cam">
+    <p id="camera-placeholder">Keep the whole label in view.<br>Tap Start camera when you are ready.</p>
+    <video id="video" hidden autoplay playsinline muted aria-label="Live camera preview"></video>
+    <img id="preview" alt="Captured medicine label preview" hidden>
+    <div id="scan-flash"></div>
+    <div id="scan-line"></div>
+    <div id="quality-hint" role="note" hidden></div>
+  </div>
+
+  <p id="capture-help" class="sr-only">
+    Scans the medicine label in the current camera frame or the selected photo. Works with no
+    internet connection. Reads aloud in English, or in Cantonese for the drug name and dose.
+  </p>
+
+  <input type="file" id="file-input" accept="image/*,application/pdf"
+         aria-label="Choose a medicine-label photo or PDF file">
+
+  <details class="reading-options">
+    <summary>Reading options</summary>
+    <div class="option-fields">
+    <label for="ocr-model">Reading method</label>
+    <select id="ocr-model">
+      <option value="ppocrv5" selected>Enhanced reader</option>
+      <option value="crnn">Original reader</option>
+    </select>
+    <p class="option-help">Both readers work on this device. Nothing is uploaded.</p>
+    <div class="toggles">
+      <label for="skip-restore"><input type="checkbox" id="skip-restore">Read without extra image cleanup</label>
+      <label for="skip-classify"><input type="checkbox" id="skip-classify">Use simple document matching</label>
+    </div>
+    </div>
+  </details>
+
+  <div id="progress-wrap" hidden>
+    <div id="progress-label">Starting…</div>
+    <div class="progress-track" id="progress-track" role="progressbar"
+         aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Scan progress">
+      <div id="progress-fill"></div>
+    </div>
+  </div>
+
+  </section>
+  <div class="reading-output">
+  <div id="warning-box" role="status" hidden></div>
+
+  <section id="results" hidden aria-labelledby="results-title">
+    <h2 id="results-title" tabindex="-1">What we read</h2>
+    <p class="result-reminder">Check these details against the original label.</p>
+    <div id="result-actions" class="result-actions"></div>
+    <div class="card">
+      <h3>In brief</h3>
+      <p class="summary" id="doc-type">Document</p>
+      <p class="summary" id="summary-text"></p>
+      <details class="technical-details"><summary>Details for a helper</summary><p class="meta" id="result-meta"></p></details>
+    </div>
+
+    <div class="card" id="fields-card" hidden>
+      <h3>Details from the label</h3>
+      <div id="fields-list"></div>
+    </div>
+
+    <div class="card" id="entities-card" hidden>
+      <h3>Other words found</h3>
+      <div id="entities-list"></div>
+    </div>
+
+    <details class="card transcript-card">
+      <summary>All recognised text</summary>
+      <div id="ocr-text" tabindex="0" role="region" aria-label="Full recognised text"></div>
+    </details>
+  </section>
+  </div>
+  </div>
+</main>
+
+<footer>
+  <p>Private by design. Your photos stay on your device.</p>
+  <details><summary>About this reader</summary>
+    <p>Enhanced reading uses pretrained PP-OCRv5. Original reading uses SightLine’s own model.</p>
+    <p>Cantonese uses a licensed medicine-name dictionary and a limited set of label phrases.
+      Unmatched names are refused. The Cantonese wording has not been reviewed by a native speaker.</p>
+    <p>This reader can make mistakes. Confirm unclear medicine details with a pharmacist.</p>
+    <a href="selftest.html">Check this device</a> · <a href="THIRD_PARTY.md">Model credits</a>
+  </details>
+</footer>
+<script src="vendor/pdfjs/pdf.min.js"></script>
+<script src="js/pipeline.js"></script>
+<script src="js/gating.js"></script>
+<script src="js/restorer.js"></script>
+<script src="js/classifier.js"></script>
+<script src="js/tts.js"></script>
+<script src="js/say_cantonese.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

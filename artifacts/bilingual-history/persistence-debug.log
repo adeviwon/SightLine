@@ -1,0 +1,6 @@
+PASS webkit optional image really persists as a Blob
+page.waitForFunction: Timeout 60000ms exceeded.
+    at <repo>/app/tools/history_persistence_check.cjs:98:15 {
+  log: [],
+  name: 'TimeoutError'
+}

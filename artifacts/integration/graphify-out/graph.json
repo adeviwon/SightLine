@@ -1,0 +1,4814 @@
+{
+  "nodes": [
+    {
+      "id": "orchestration",
+      "label": "ORCHESTRATION.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "label": "JS module boundaries \u2014 and the Python each one mirrors",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_module_map",
+      "label": "Module map",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_js_pipeline_js_the_fallback_that_must_always_work",
+      "label": "`js/pipeline.js` \u2014 the fallback that must always work",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L25",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_ported_from_ml_src_evaluate_py",
+      "label": "Ported from `ml/src/evaluate.py`",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L33",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_preprocessing_arms_canvas_versions_of_evaluate_arms",
+      "label": "Preprocessing arms \u2014 canvas versions of `evaluate.ARMS`",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L47",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_normalizeocrtext_two_fixes_both_proven",
+      "label": "`normalizeOCRText` \u2014 two fixes, both proven",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L72",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_field_extraction_two_deliberate_widenings",
+      "label": "Field extraction \u2014 two deliberate widenings",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L91",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_js_restorer_js_optional",
+      "label": "`js/restorer.js` \u2014 optional",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L106",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_the_globalthis_handle",
+      "label": "The `globalThis` handle",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L128",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_js_classifier_js_optional",
+      "label": "`js/classifier.js` \u2014 optional",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L138",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_the_availability_manifest",
+      "label": "The availability manifest",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L161",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_js_app_js_orchestration_order",
+      "label": "`js/app.js` \u2014 orchestration order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L183",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_accessibility_wiring",
+      "label": "Accessibility wiring",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L197",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_the_restore_mode_is_chosen_by_whether_the_model_exists_not_by_the_image",
+      "label": "The restore mode is chosen by whether the model exists, not by the image",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L214",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_there_are_two_different_quality_gates_and_they_are_not_interchangeable",
+      "label": "\u26a0 There are TWO different quality gates, and they are NOT interchangeable",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L243",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_the_honesty_gate_js_app_js",
+      "label": "The honesty gate \u2014 `js/app.js`",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L275",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_the_invariant_stated_precisely",
+      "label": "The invariant, stated precisely",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L299",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_test_layers",
+      "label": "Test layers",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L314",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_why_the_shim",
+      "label": "Why the shim",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L328",
+      "_origin": "ast"
+    },
+    {
+      "id": "orchestration_rules_for_changing_this_code",
+      "label": "Rules for changing this code",
+      "file_type": "document",
+      "node_kind": "heading",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L339",
+      "_origin": "ast"
+    },
+    {
+      "id": "app",
+      "label": "app.js",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "app_announce",
+      "label": "announce()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L40",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_setprogress",
+      "label": "setProgress()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L48",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_showprogress",
+      "label": "showProgress()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L61",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_setbadge",
+      "label": "setBadge()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L65",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_showerror",
+      "label": "showError()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L71",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_startcamera",
+      "label": "startCamera()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L81",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_stopcamera",
+      "label": "stopCamera()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L112",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_captureframe",
+      "label": "captureFrame()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L120",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_pickfile",
+      "label": "pickFile()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L137",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_onfile",
+      "label": "onFile()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L141",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_scanpdf",
+      "label": "scanPDF()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L181",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_runscan",
+      "label": "runScan()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L218",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_frame",
+      "label": "frame()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L409",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_setscanenabled",
+      "label": "setScanEnabled()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L413",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_render",
+      "label": "render()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L419",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_precachemodelsonce",
+      "label": "precacheModelsOnce()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L526",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_strengthword",
+      "label": "strengthWord()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L535",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_loadlexicon",
+      "label": "loadLexicon()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L546",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_speaksummary",
+      "label": "speakSummary()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L554",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_updateonlinebadge",
+      "label": "updateOnlineBadge()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L607",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_registersw",
+      "label": "registerSW()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L612",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_settab",
+      "label": "setTab()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L648",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_cachedom",
+      "label": "cacheDom()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L662",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_init",
+      "label": "init()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L675",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "app_lastresult",
+      "label": "lastResult()",
+      "file_type": "code",
+      "source_file": "app/js/app.js",
+      "source_location": "L781",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "classifier",
+      "label": "classifier.js",
+      "file_type": "code",
+      "source_file": "app/js/classifier.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "classifier_sightlineclassifier",
+      "label": "SightLineClassifier",
+      "file_type": "code",
+      "source_file": "app/js/classifier.js",
+      "source_location": "L27",
+      "_origin": "ast"
+    },
+    {
+      "id": "field_engine",
+      "label": "field_engine.js",
+      "file_type": "code",
+      "source_file": "app/js/field_engine.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "field_engine_fieldengine",
+      "label": "FieldEngine",
+      "file_type": "code",
+      "source_file": "app/js/field_engine.js",
+      "source_location": "L54",
+      "_origin": "ast"
+    },
+    {
+      "id": "field_guard",
+      "label": "field_guard.js",
+      "file_type": "code",
+      "source_file": "app/js/field_guard.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "field_guard_fieldguard",
+      "label": "FieldGuard",
+      "file_type": "code",
+      "source_file": "app/js/field_guard.js",
+      "source_location": "L44",
+      "_origin": "ast"
+    },
+    {
+      "id": "field_spot",
+      "label": "field_spot.js",
+      "file_type": "code",
+      "source_file": "app/js/field_spot.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "field_spot_fieldspot",
+      "label": "FieldSpot",
+      "file_type": "code",
+      "source_file": "app/js/field_spot.js",
+      "source_location": "L51",
+      "_origin": "ast"
+    },
+    {
+      "id": "gating",
+      "label": "gating.js",
+      "file_type": "code",
+      "source_file": "app/js/gating.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "gating_gating",
+      "label": "Gating",
+      "file_type": "code",
+      "source_file": "app/js/gating.js",
+      "source_location": "L25",
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "set",
+            "receiver_type": "Float32Array",
+            "lang": "typescript",
+            "line": "L134",
+            "file": "app/js/gating.js"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "layout",
+      "label": "layout.js",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_medianblur",
+      "label": "medianBlur()",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L82",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_verticalmedian",
+      "label": "verticalMedian()",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L114",
+      "_callable": true,
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "fill",
+            "receiver_type": "Int32Array",
+            "lang": "typescript",
+            "line": "L119",
+            "file": "app/js/layout.js"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_inkmask",
+      "label": "inkMask()",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L146",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_runs",
+      "label": "runs()",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L156",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_scalefor",
+      "label": "scaleFor()",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L184",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_detectlines",
+      "label": "detectLines()",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L209",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_cropforrecognizer",
+      "label": "cropForRecognizer()",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L304",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_sightlinelayout",
+      "label": "SightLineLayout",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L337",
+      "_origin": "ast"
+    },
+    {
+      "id": "ocr_engine",
+      "label": "ocr_engine.js",
+      "file_type": "code",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "ocr_engine_togray",
+      "label": "toGray()",
+      "file_type": "code",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L71",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ocr_engine_recognisecanvas",
+      "label": "recogniseCanvas()",
+      "file_type": "code",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L93",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ocr_engine_initworker",
+      "label": "initWorker()",
+      "file_type": "code",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L163",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ocr_engine_runocr",
+      "label": "runOCR()",
+      "file_type": "code",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L186",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ocr_engine_reset",
+      "label": "reset()",
+      "file_type": "code",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L228",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "pipeline",
+      "label": "pipeline.js",
+      "file_type": "code",
+      "source_file": "app/js/pipeline.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "pipeline_sightline",
+      "label": "SightLine",
+      "file_type": "code",
+      "source_file": "app/js/pipeline.js",
+      "source_location": "L26",
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "fill",
+            "receiver_type": "Float64Array",
+            "lang": "typescript",
+            "line": "L515",
+            "file": "app/js/pipeline.js"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr",
+      "label": "ppocr.js",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_getworker",
+      "label": "getWorker()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L5",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_recognizeimage",
+      "label": "recognizeImage()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L21",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_runpaddleocr",
+      "label": "runPaddleOCR()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L32",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_reset",
+      "label": "reset()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L44",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_worker",
+      "label": "ppocr.worker.js",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.worker.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_worker_reader",
+      "label": "reader",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.worker.js",
+      "source_location": "L2",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core",
+      "label": "ppocr_core.js",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core_speechfordocument",
+      "label": "speechForDocument()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L9",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core_paddlereader",
+      "label": "PaddleReader",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L13",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core_paddlereader_constructor",
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L14",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core_paddlereader_prepare",
+      "label": ".prepare()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L15",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core_paddlereader_prepare_dec195",
+      "label": "._prepare()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L21",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core_paddlereader_recognize",
+      "label": ".recognize()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L48",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core_paddlereader_dispose",
+      "label": ".dispose()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L112",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math",
+      "label": "ppocr_math.js",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_resizeluma",
+      "label": "resizeLuma()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L35",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_clampbox",
+      "label": "clampBox()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L65",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_cropresizeluma",
+      "label": "cropResizeLuma()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L75",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_tochw",
+      "label": "toChw()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L125",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_det_mean",
+      "label": "DET_MEAN",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L140",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_det_std",
+      "label": "DET_STD",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L141",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_rec_mean",
+      "label": "REC_MEAN",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L142",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_rec_std",
+      "label": "REC_STD",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L143",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_detinputsize",
+      "label": "detInputSize()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L151",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_connectedcomponents",
+      "label": "connectedComponents()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L178",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_unclipbox",
+      "label": "unclipBox()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L229",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_dbpostprocess",
+      "label": "dbPostProcess()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L254",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_splitintowords",
+      "label": "splitIntoWords()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L305",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_groupintolines",
+      "label": "groupIntoLines()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L373",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_buildcharset",
+      "label": "buildCharset()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L411",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_ctcdecode",
+      "label": "ctcDecode()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L434",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_recwidthfor",
+      "label": "recWidthFor()",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L481",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer",
+      "label": "recognizer.js",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_charset",
+      "label": "CHARSET",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L101",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_blank",
+      "label": "BLANK",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L102",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_crop_h",
+      "label": "CROP_H",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L103",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_training_clamp",
+      "label": "TRAINING_CLAMP",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L111",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_export_w",
+      "label": "EXPORT_W",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L116",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_width_divisor",
+      "label": "WIDTH_DIVISOR",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L118",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_enginewidth",
+      "label": "engineWidth()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L137",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_cache",
+      "label": "cache",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L139",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_simdsupported",
+      "label": "simdSupported()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L161",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_no_simd_message",
+      "label": "NO_SIMD_MESSAGE",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L173",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_probe_widths",
+      "label": "PROBE_WIDTHS",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L186",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_readgraphwidth",
+      "label": "readGraphWidth()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L213",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_init",
+      "label": "init()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L244",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_geterror",
+      "label": "getError()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L310",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_isready",
+      "label": "isReady()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L311",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_timestepsfor",
+      "label": "timestepsFor()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L321",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_buildinput",
+      "label": "buildInput()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L340",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_decodegreedy",
+      "label": "decodeGreedy()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L371",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_recognise",
+      "label": "recognise()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L397",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_recogniseall",
+      "label": "recogniseAll()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L467",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_reset",
+      "label": "reset()",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L485",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_sightlinerecognizer",
+      "label": "SightLineRecognizer",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L501",
+      "_origin": "ast"
+    },
+    {
+      "id": "restorer",
+      "label": "restorer.js",
+      "file_type": "code",
+      "source_file": "app/js/restorer.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "restorer_sightlinerestorer",
+      "label": "SightLineRestorer",
+      "file_type": "code",
+      "source_file": "app/js/restorer.js",
+      "source_location": "L26",
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "set",
+            "receiver_type": "Float32Array",
+            "lang": "typescript",
+            "line": "L265",
+            "file": "app/js/restorer.js"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "say_cantonese",
+      "label": "say_cantonese.js",
+      "file_type": "code",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "say_cantonese_finddoses",
+      "label": "findDoses()",
+      "file_type": "code",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L73",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "say_cantonese_findname",
+      "label": "findName()",
+      "file_type": "code",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L100",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "say_cantonese_findphrases",
+      "label": "findPhrases()",
+      "file_type": "code",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L114",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "say_cantonese_build",
+      "label": "build()",
+      "file_type": "code",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L131",
+      "_callable": true,
+      "_origin": "ast"
+    },
+    {
+      "id": "tts",
+      "label": "tts.js",
+      "file_type": "code",
+      "source_file": "app/js/tts.js",
+      "source_location": "L1",
+      "_origin": "ast"
+    },
+    {
+      "id": "tts_tts",
+      "label": "TTS",
+      "file_type": "code",
+      "source_file": "app/js/tts.js",
+      "source_location": "L15",
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_medianblur",
+      "label": "medianBlur",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L82",
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "fill",
+            "receiver_type": "Int32Array",
+            "lang": "typescript",
+            "line": "L88",
+            "file": "app/js/layout.js"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_inkmask",
+      "label": "inkMask",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L146",
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_scalefor",
+      "label": "scaleFor",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L184",
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_detectlines",
+      "label": "detectLines",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L209",
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "push",
+            "receiver_type": "Uint8Array",
+            "lang": "typescript",
+            "line": "L252",
+            "file": "app/js/layout.js"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "layout_cropforrecognizer",
+      "label": "cropForRecognizer",
+      "file_type": "code",
+      "source_file": "app/js/layout.js",
+      "source_location": "L304",
+      "_origin": "ast"
+    },
+    {
+      "id": "ocr_engine_initworker",
+      "label": "initWorker",
+      "file_type": "code",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L163",
+      "_origin": "ast"
+    },
+    {
+      "id": "ocr_engine_runocr",
+      "label": "runOCR",
+      "file_type": "code",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L186",
+      "_origin": "ast"
+    },
+    {
+      "id": "ocr_engine_reset",
+      "label": "reset",
+      "file_type": "code",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L228",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_recognizeimage",
+      "label": "recognizeImage",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L21",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_runpaddleocr",
+      "label": "runPaddleOCR",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L32",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_reset",
+      "label": "reset",
+      "file_type": "code",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L44",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core_speechfordocument",
+      "label": "speechForDocument",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L9",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_core_paddlereader",
+      "label": "PaddleReader",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L13",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_resizeluma",
+      "label": "resizeLuma",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L35",
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "set",
+            "receiver_type": "Float32Array",
+            "lang": "typescript",
+            "line": "L37",
+            "file": "app/js/ppocr_math.js"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_clampbox",
+      "label": "clampBox",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L65",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_cropresizeluma",
+      "label": "cropResizeLuma",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L75",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_tochw",
+      "label": "toChw",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L125",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_det_mean",
+      "label": "DET_MEAN",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L140",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_det_std",
+      "label": "DET_STD",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L141",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_rec_mean",
+      "label": "REC_MEAN",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L142",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_rec_std",
+      "label": "REC_STD",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L143",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_detinputsize",
+      "label": "detInputSize",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L151",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_connectedcomponents",
+      "label": "connectedComponents",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L178",
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "push",
+            "receiver_type": "Float32Array",
+            "lang": "typescript",
+            "line": "L215",
+            "file": "app/js/ppocr_math.js"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_unclipbox",
+      "label": "unclipBox",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L229",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_dbpostprocess",
+      "label": "dbPostProcess",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L254",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_splitintowords",
+      "label": "splitIntoWords",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L305",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_groupintolines",
+      "label": "groupIntoLines",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L373",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_buildcharset",
+      "label": "buildCharset",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L411",
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_ctcdecode",
+      "label": "ctcDecode",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L434",
+      "metadata": {
+        "unresolved_calls": [
+          {
+            "callee": "push",
+            "receiver_type": "Float32Array",
+            "lang": "typescript",
+            "line": "L467",
+            "file": "app/js/ppocr_math.js"
+          },
+          {
+            "callee": "join",
+            "receiver_type": "Float32Array",
+            "lang": "typescript",
+            "line": "L474",
+            "file": "app/js/ppocr_math.js"
+          }
+        ]
+      },
+      "_origin": "ast"
+    },
+    {
+      "id": "ppocr_math_recwidthfor",
+      "label": "recWidthFor",
+      "file_type": "code",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L481",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_charset",
+      "label": "CHARSET",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L101",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_blank",
+      "label": "BLANK",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L102",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_crop_h",
+      "label": "CROP_H",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L103",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_training_clamp",
+      "label": "TRAINING_CLAMP",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L111",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_export_w",
+      "label": "EXPORT_W",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L116",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_width_divisor",
+      "label": "WIDTH_DIVISOR",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L118",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_enginewidth",
+      "label": "engineWidth",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L137",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_simdsupported",
+      "label": "simdSupported",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L161",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_no_simd_message",
+      "label": "NO_SIMD_MESSAGE",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L173",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_init",
+      "label": "init",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L244",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_geterror",
+      "label": "getError",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L310",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_isready",
+      "label": "isReady",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L311",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_timestepsfor",
+      "label": "timestepsFor",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L321",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_decodegreedy",
+      "label": "decodeGreedy",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L371",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_recognise",
+      "label": "recognise",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L397",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_recogniseall",
+      "label": "recogniseAll",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L467",
+      "_origin": "ast"
+    },
+    {
+      "id": "recognizer_reset",
+      "label": "reset",
+      "file_type": "code",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L485",
+      "_origin": "ast"
+    }
+  ],
+  "edges": [
+    {
+      "source": "orchestration",
+      "target": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "target": "orchestration_module_map",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "target": "orchestration_js_pipeline_js_the_fallback_that_must_always_work",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_pipeline_js_the_fallback_that_must_always_work",
+      "target": "orchestration_ported_from_ml_src_evaluate_py",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_pipeline_js_the_fallback_that_must_always_work",
+      "target": "orchestration_preprocessing_arms_canvas_versions_of_evaluate_arms",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_pipeline_js_the_fallback_that_must_always_work",
+      "target": "orchestration_normalizeocrtext_two_fixes_both_proven",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_pipeline_js_the_fallback_that_must_always_work",
+      "target": "orchestration_field_extraction_two_deliberate_widenings",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L91",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "target": "orchestration_js_restorer_js_optional",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L106",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_restorer_js_optional",
+      "target": "orchestration_the_globalthis_handle",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L128",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "target": "orchestration_js_classifier_js_optional",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L138",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "target": "orchestration_the_availability_manifest",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L161",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "target": "orchestration_js_app_js_orchestration_order",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L183",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_app_js_orchestration_order",
+      "target": "orchestration_accessibility_wiring",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L197",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_app_js_orchestration_order",
+      "target": "orchestration_the_restore_mode_is_chosen_by_whether_the_model_exists_not_by_the_image",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L214",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_app_js_orchestration_order",
+      "target": "orchestration_there_are_two_different_quality_gates_and_they_are_not_interchangeable",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L243",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "target": "orchestration_the_honesty_gate_js_app_js",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L275",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_the_honesty_gate_js_app_js",
+      "target": "orchestration_the_invariant_stated_precisely",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L299",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "target": "orchestration_test_layers",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L314",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_test_layers",
+      "target": "orchestration_why_the_shim",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L328",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_js_module_boundaries_and_the_python_each_one_mirrors",
+      "target": "orchestration_rules_for_changing_this_code",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L339",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_announce",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_setprogress",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L48",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_showprogress",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L61",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_setbadge",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L65",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_showerror",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L71",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_startcamera",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_stopcamera",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L112",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_captureframe",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L120",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_pickfile",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_onfile",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L141",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_scanpdf",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L181",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_runscan",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L218",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_frame",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L409",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_setscanenabled",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L413",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_render",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L419",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_precachemodelsonce",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L526",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_strengthword",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L535",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_loadlexicon",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L546",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_speaksummary",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L554",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_updateonlinebadge",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L607",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_registersw",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L612",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_settab",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L648",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_cachedom",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L662",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_init",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L675",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_lastresult",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L781",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_init",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/app.js",
+      "source_location": "L769",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_init",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L771",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_runscan",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/app.js",
+      "source_location": "L779",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app",
+      "target": "app_render",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/app.js",
+      "source_location": "L780",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_showerror",
+      "target": "app_announce",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L76",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_startcamera",
+      "target": "app_showerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L82",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_startcamera",
+      "target": "app_stopcamera",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_startcamera",
+      "target": "app_settab",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_startcamera",
+      "target": "app_announce",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L101",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_captureframe",
+      "target": "app_showerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L122",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_onfile",
+      "target": "app_showerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L144",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_onfile",
+      "target": "app_stopcamera",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L149",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_onfile",
+      "target": "app_scanpdf",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L151",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_onfile",
+      "target": "app_runscan",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L166",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_scanpdf",
+      "target": "app_showerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L184",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_scanpdf",
+      "target": "app_setprogress",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L187",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_scanpdf",
+      "target": "app_announce",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L188",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_scanpdf",
+      "target": "app_runscan",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L208",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_scanpdf",
+      "target": "app_showprogress",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L212",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_runscan",
+      "target": "app_setscanenabled",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L221",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_runscan",
+      "target": "app_showerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L222",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_runscan",
+      "target": "app_showprogress",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L223",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_runscan",
+      "target": "app_setprogress",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L224",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_runscan",
+      "target": "app_announce",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L225",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_runscan",
+      "target": "app_frame",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L245",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_runscan",
+      "target": "app_render",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L380",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_runscan",
+      "target": "app_lastresult",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/app.js",
+      "source_location": "L380",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_runscan",
+      "target": "app_precachemodelsonce",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L383",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_render",
+      "target": "app_strengthword",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L434",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_speaksummary",
+      "target": "app_showerror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L557",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_speaksummary",
+      "target": "app_announce",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L560",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_speaksummary",
+      "target": "app_loadlexicon",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L572",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_updateonlinebadge",
+      "target": "app_setbadge",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L608",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_registersw",
+      "target": "app_setbadge",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L614",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_registersw",
+      "target": "app_updateonlinebadge",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L634",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_cachedom",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L676",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_startcamera",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L694",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_captureframe",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L695",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_runscan",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L701",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_pickfile",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/app.js",
+      "source_location": "L705",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_speaksummary",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/app.js",
+      "source_location": "L714",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_onfile",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/app.js",
+      "source_location": "L715",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_settab",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L716",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_stopcamera",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L717",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_pickfile",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L717",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_updateonlinebadge",
+      "relation": "indirect_call",
+      "context": "argument",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/app.js",
+      "source_location": "L733",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_updateonlinebadge",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L760",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "app_init",
+      "target": "app_registersw",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/app.js",
+      "source_location": "L761",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "classifier",
+      "target": "classifier_sightlineclassifier",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/classifier.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "field_engine",
+      "target": "field_engine_fieldengine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/field_engine.js",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "field_guard",
+      "target": "field_guard_fieldguard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/field_guard.js",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "field_spot",
+      "target": "field_spot_fieldspot",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/field_spot.js",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "gating",
+      "target": "gating_gating",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/gating.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_medianblur",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L82",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_verticalmedian",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L114",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_inkmask",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L146",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_runs",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L156",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_scalefor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L184",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_detectlines",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L209",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_cropforrecognizer",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L304",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_sightlinelayout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L337",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout_medianblur",
+      "target": "layout_verticalmedian",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L110",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout_inkmask",
+      "target": "layout_medianblur",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L147",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout_detectlines",
+      "target": "layout_scalefor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L210",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout_detectlines",
+      "target": "layout_inkmask",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L218",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout_detectlines",
+      "target": "layout_runs",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/layout.js",
+      "source_location": "L229",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_medianblur",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/layout.js",
+      "source_location": "L339",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_inkmask",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/layout.js",
+      "source_location": "L339",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_detectlines",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/layout.js",
+      "source_location": "L339",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_cropforrecognizer",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/layout.js",
+      "source_location": "L339",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "layout",
+      "target": "layout_scalefor",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/layout.js",
+      "source_location": "L339",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer_init",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer_recogniseall",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer_isready",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer_reset",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer_geterror",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "layout",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L62",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "layout_detectlines",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L62",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "layout_cropforrecognizer",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L62",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer_export_w",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer_crop_h",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer",
+      "relation": "imports_from",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer_simdsupported",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer_no_simd_message",
+      "relation": "re_exports",
+      "context": "re-export",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "ocr_engine_togray",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L71",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "ocr_engine_recognisecanvas",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L93",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "ocr_engine_initworker",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L163",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "ocr_engine_runocr",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L186",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "ocr_engine_reset",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L228",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_recognisecanvas",
+      "target": "ocr_engine_togray",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L94",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_initworker",
+      "target": "ocr_engine_recognisecanvas",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L174",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_runocr",
+      "target": "ppocr",
+      "relation": "imports_from",
+      "context": "import",
+      "deferred": true,
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L188",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_runocr",
+      "target": "ocr_engine_initworker",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L192",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_runocr",
+      "target": "ocr_engine_recognisecanvas",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L202",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_reset",
+      "target": "ppocr",
+      "relation": "imports_from",
+      "context": "import",
+      "deferred": true,
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L230",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "ocr_engine_initworker",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L233",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "ocr_engine_runocr",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L233",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "ocr_engine_reset",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L233",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "ppocr",
+      "relation": "dynamic_import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "_origin": "ast"
+    },
+    {
+      "source": "pipeline",
+      "target": "pipeline_sightline",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/pipeline.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "pipeline_sightline",
+      "target": "ocr_engine",
+      "relation": "imports_from",
+      "context": "import",
+      "deferred": true,
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/pipeline.js",
+      "source_location": "L869",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "pipeline",
+      "target": "ocr_engine",
+      "relation": "dynamic_import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/pipeline.js",
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr",
+      "target": "ppocr_getworker",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr",
+      "target": "ppocr_recognizeimage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr",
+      "target": "ppocr_runpaddleocr",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr",
+      "target": "ppocr_reset",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_getworker",
+      "target": "ppocr_reset",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_recognizeimage",
+      "target": "ppocr_getworker",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_recognizeimage",
+      "target": "ppocr_reset",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_runpaddleocr",
+      "target": "ppocr_recognizeimage",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.js",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_worker",
+      "target": "ppocr_core",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.worker.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_worker",
+      "target": "ppocr_core_paddlereader",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.worker.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_worker",
+      "target": "ppocr_worker_reader",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr.worker.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_resizeluma",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_tochw",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_det_mean",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_det_std",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_rec_mean",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_rec_std",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_detinputsize",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_dbpostprocess",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_groupintolines",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_splitintowords",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_cropresizeluma",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_recwidthfor",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_ctcdecode",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_math_buildcharset",
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_core_speechfordocument",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ppocr_core_paddlereader",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core_paddlereader",
+      "target": "ppocr_core_paddlereader_constructor",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core_paddlereader",
+      "target": "ppocr_core_paddlereader_prepare",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core_paddlereader",
+      "target": "ppocr_core_paddlereader_prepare_dec195",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core_paddlereader",
+      "target": "ppocr_core_paddlereader_recognize",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L48",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core_paddlereader",
+      "target": "ppocr_core_paddlereader_dispose",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L112",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core_paddlereader_prepare",
+      "target": "ppocr_core_paddlereader_prepare_dec195",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core_paddlereader_prepare_dec195",
+      "target": "ext_vendor_ort_ort_min_mjs",
+      "relation": "imports_from",
+      "context": "import",
+      "deferred": true,
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core_paddlereader_recognize",
+      "target": "ppocr_core_speechfordocument",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "source_location": "L108",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_core",
+      "target": "ext_vendor_ort_ort_min_mjs",
+      "relation": "dynamic_import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_core.js",
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_resizeluma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_clampbox",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L65",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_cropresizeluma",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L75",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_tochw",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L125",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_det_mean",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L140",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_det_std",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L141",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_rec_mean",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L142",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_rec_std",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L143",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_detinputsize",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L151",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_connectedcomponents",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L178",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_unclipbox",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L229",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_dbpostprocess",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L254",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_splitintowords",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L305",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_groupintolines",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L373",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_buildcharset",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L411",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_ctcdecode",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L434",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_recwidthfor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L481",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math_cropresizeluma",
+      "target": "ppocr_math_clampbox",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L76",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math_dbpostprocess",
+      "target": "ppocr_math_connectedcomponents",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L267",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math_dbpostprocess",
+      "target": "ppocr_math_unclipbox",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L273",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math_splitintowords",
+      "target": "ppocr_math_clampbox",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L308",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_resizeluma",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L487",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_clampbox",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L487",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_cropresizeluma",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L487",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_tochw",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L487",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_detinputsize",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L487",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_connectedcomponents",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L488",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_unclipbox",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L488",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_dbpostprocess",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L488",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_groupintolines",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L488",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_buildcharset",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L489",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_ctcdecode",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L489",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ppocr_math",
+      "target": "ppocr_math_recwidthfor",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/ppocr_math.js",
+      "source_location": "L489",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_charset",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L101",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_blank",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L102",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_crop_h",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L103",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_training_clamp",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L111",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_export_w",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L116",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_width_divisor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L118",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_enginewidth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_cache",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L139",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_simdsupported",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L161",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_no_simd_message",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L173",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_probe_widths",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L186",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_readgraphwidth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L213",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_init",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L244",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_geterror",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L310",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_isready",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L311",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_timestepsfor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L321",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_buildinput",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L340",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_decodegreedy",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L371",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_recognise",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L397",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_recogniseall",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L467",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_reset",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L485",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_sightlinerecognizer",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L501",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer_init",
+      "target": "recognizer_simdsupported",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L249",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer_init",
+      "target": "recognizer_readgraphwidth",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L282",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer_init",
+      "target": "recognizer_enginewidth",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L292",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer_recognise",
+      "target": "recognizer_init",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L398",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer_recognise",
+      "target": "recognizer_buildinput",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L405",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer_recognise",
+      "target": "recognizer_timestepsfor",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L417",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer_recognise",
+      "target": "recognizer_decodegreedy",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L446",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer_recogniseall",
+      "target": "recognizer_recognise",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L470",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_init",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L503",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_isready",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L503",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_geterror",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L503",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_recognise",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L503",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_recogniseall",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L503",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_decodegreedy",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L504",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_timestepsfor",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L504",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_enginewidth",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L504",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_reset",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L504",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "recognizer",
+      "target": "recognizer_simdsupported",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/recognizer.js",
+      "source_location": "L505",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "restorer",
+      "target": "restorer_sightlinerestorer",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/restorer.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "say_cantonese_finddoses",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L73",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "say_cantonese_findname",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L100",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "say_cantonese_findphrases",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L114",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "say_cantonese_build",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L131",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "ref_assert",
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L164",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "say_cantonese_build",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L158",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "say_cantonese_findname",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L158",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "say_cantonese_finddoses",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L158",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "say_cantonese_findphrases",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L158",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese_build",
+      "target": "say_cantonese_findname",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L134",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese_build",
+      "target": "say_cantonese_finddoses",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L135",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese_build",
+      "target": "say_cantonese_findphrases",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L136",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "say_cantonese",
+      "target": "say_cantonese_build",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/say_cantonese.js",
+      "source_location": "L176",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "tts",
+      "target": "tts_tts",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/tts.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine",
+      "target": "recognizer",
+      "relation": "re_exports",
+      "context": "export",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_recognisecanvas",
+      "target": "layout_detectlines",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_recognisecanvas",
+      "target": "layout_cropforrecognizer",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L123",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_recognisecanvas",
+      "target": "recognizer_recogniseall",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L133",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_initworker",
+      "target": "recognizer_init",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L165",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_initworker",
+      "target": "recognizer_isready",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L166",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_initworker",
+      "target": "recognizer_geterror",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L172",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "ocr_engine_reset",
+      "target": "recognizer_reset",
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "app/js/ocr_engine.js",
+      "source_location": "L229",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "gating_gating",
+      "target": "ocr_engine_togray",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/gating.js",
+      "source_location": "L174",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "pipeline_sightline",
+      "target": "ocr_engine_initworker",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/pipeline.js",
+      "source_location": "L1212",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "pipeline_sightline",
+      "target": "ocr_engine_runocr",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/pipeline.js",
+      "source_location": "L1212",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "pipeline_sightline",
+      "target": "ppocr_core_paddlereader_dispose",
+      "relation": "indirect_call",
+      "context": "collection",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "app/js/pipeline.js",
+      "source_location": "L1212",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_accessibility_wiring",
+      "target": "app_announce",
+      "relation": "references",
+      "context": "announce()",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L204",
+      "weight": 1.0,
+      "_origin": "ast"
+    },
+    {
+      "source": "orchestration_the_honesty_gate_js_app_js",
+      "target": "app_runscan",
+      "relation": "references",
+      "context": "runScan()",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "ORCHESTRATION.md",
+      "source_location": "L283",
+      "weight": 1.0,
+      "_origin": "ast"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "failed_sources": [],
+  "skipped_sources": [],
+  "extracted_sources": [
+    "app/js/ORCHESTRATION.md",
+    "app/js/app.js",
+    "app/js/classifier.js",
+    "app/js/field_engine.js",
+    "app/js/field_guard.js",
+    "app/js/field_spot.js",
+    "app/js/gating.js",
+    "app/js/layout.js",
+    "app/js/ocr_engine.js",
+    "app/js/pipeline.js",
+    "app/js/ppocr.js",
+    "app/js/ppocr.worker.js",
+    "app/js/ppocr_core.js",
+    "app/js/ppocr_math.js",
+    "app/js/recognizer.js",
+    "app/js/restorer.js",
+    "app/js/say_cantonese.js",
+    "app/js/tts.js"
+  ]
+}

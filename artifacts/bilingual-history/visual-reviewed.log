@@ -1,0 +1,38 @@
+PASS Chinese home fits 320
+Receipt focus 320 {
+  active: 'BODY',
+  skipTop: '-100px',
+  skipTransform: 'matrix(1, 0, 0, 1, 0, -110)'
+}
+PASS Chinese receipt fits 320
+PASS Chinese populated history fits 320
+PASS English history label restores 320
+PASS Chinese home fits 390
+Receipt focus 390 {
+  active: 'BODY',
+  skipTop: '-100px',
+  skipTransform: 'matrix(1, 0, 0, 1, 0, -110)'
+}
+PASS Chinese receipt fits 390
+PASS Chinese receipt automated accessibility
+PASS Chinese populated history fits 390
+PASS Chinese history automated accessibility
+PASS English history label restores 390
+PASS Chinese home fits 768
+Receipt focus 768 {
+  active: 'BODY',
+  skipTop: '-100px',
+  skipTransform: 'matrix(1, 0, 0, 1, 0, -110)'
+}
+PASS Chinese receipt fits 768
+PASS Chinese populated history fits 768
+PASS English history label restores 768
+PASS Chinese home fits 1440
+Receipt focus 1440 {
+  active: 'BODY',
+  skipTop: '-100px',
+  skipTransform: 'matrix(1, 0, 0, 1, 0, -110)'
+}
+PASS Chinese receipt fits 1440
+PASS Chinese populated history fits 1440
+PASS English history label restores 1440

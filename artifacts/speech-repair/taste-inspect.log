@@ -1,0 +1,23 @@
+TASTESKILL · INSPECT   http://127.0.0.1:8147/selftest.html
+
+MEASURED (first viewport listed)
+  hero headline   "Check your device"  3 words · 1 line(s) · 44px (3.1vw) · -apple-system 650 · tracking -0.04em · leading 1.15
+  @768px          1 line(s) · 38px
+  @390px          1 line(s) · 33px
+  typefaces       -apple-system 100%
+  sizes in use    20 / 23 / 44 px   body 20px / 1.55
+  colour          page #f7f8f5 · button #efefef
+  page            2.1 screens · 160 words · 0 images · hero media none
+  headings        1 · longest 1 line(s) · median - words
+
+FINDINGS  none. Measurements are clean — now judge the pictures.
+LOOK AT THE RENDER — open these with your image viewer / Read tool before saying anything about quality:
+  desktop 1440px  artifacts/speech-repair/taste-device/desktop-fold.jpg
+                  artifacts/speech-repair/taste-device/desktop-page-01.jpg
+  tablet 768px    artifacts/speech-repair/taste-device/tablet-fold.jpg
+                  artifacts/speech-repair/taste-device/tablet-page-01.jpg
+  mobile 390px    artifacts/speech-repair/taste-device/mobile-fold.jpg
+                  artifacts/speech-repair/taste-device/mobile-page-01.jpg
+
+report: artifacts/speech-repair/taste-device/report.json
+RESULT: 0 FAIL, 0 WARN — measurements pass. Passing the meter is the floor, not the grade: score the screenshots with references/critique.md.
