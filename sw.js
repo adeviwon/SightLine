@@ -6,7 +6,12 @@
 // Both lanes bumped this on the same day: the spoken-reading work (v1.14.1) and the
 // word-LM decoder. One number has to cover both or installed clients keep serving
 // whichever bundle they cached first — patch bump on top of the higher base.
-const VERSION = "v1.14.2-word-lm-decoder";
+// Bumped for the word-LM's metadata pass: app/data/word_trie.json gained the
+// scoring constants the browser now READS instead of hardcoding, and
+// app/js/word_beam.js changed to consume them. A precached ASSET change needs the
+// bump or installed clients keep the old pair from cache (and a stale trie's
+// defaults would silently decode with the pre-sweep numbers).
+const VERSION = "v1.14.3-word-lm-meta";
 const CACHE = "sightline-" + VERSION;
 
 /** Everything required for a scan to complete with no network. */
