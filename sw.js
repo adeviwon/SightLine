@@ -11,7 +11,7 @@
 // app/js/word_beam.js changed to consume them. A precached ASSET change needs the
 // bump or installed clients keep the old pair from cache (and a stale trie's
 // defaults would silently decode with the pre-sweep numbers).
-const VERSION = "v1.14.3-word-lm-meta";
+const VERSION = "v1.14.4-dose-visibility";
 const CACHE = "sightline-" + VERSION;
 
 /** Everything required for a scan to complete with no network. */

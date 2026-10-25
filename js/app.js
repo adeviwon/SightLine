@@ -1106,15 +1106,22 @@
     const sections = new Map();
     const medical = r.category === "medical";
     const medicineLayout = medical ? SightLineMedicineSections.build(r) : null;
+    // `String(x ?? "")`, not `x.toLowerCase()`. A field or entity that arrives without its
+    // text/value used to throw a TypeError HERE -- "Cannot read properties of undefined
+    // (reading 'toLowerCase')" -- and the whole scan died with "we couldn't finish reading
+    // this document", on every prescription, which is the document this product exists for.
+    // A malformed row must cost its own row, never the user's read.
     const medicineNames = new Set(
       (r.entities || [])
         .filter((e) => e.label === "DRUG")
-        .map((e) => e.text.toLowerCase()),
+        .map((e) => String(e.text == null ? "" : e.text).toLowerCase())
+        .filter(Boolean),
     );
     const doseValues = new Set(
       fields
         .filter((f) => f.label === "Dosage")
-        .map((f) => f.value.toLowerCase().replace(/\s+/g, "")),
+        .map((f) => String(f.value == null ? "" : f.value).toLowerCase().replace(/\s+/g, ""))
+        .filter(Boolean),
     );
     const unassociated =
       medical && (medicineNames.size > 1 || medicineLayout?.ambiguous || (doseValues.size > 1 && !medicineLayout?.directionsResolved));

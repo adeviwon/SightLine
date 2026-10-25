@@ -60,7 +60,12 @@ print(json.dumps({
     .replace(/^import .*$/gm, "")
     .replace(/^export default .*$/gm, "")
     .replace(/^export /gm, "")
-    .replace(/^const (WASM_DIR|MODEL_URL) = .*import\.meta.*$/gm, "");
+    // GENERALISED, deliberately: this used to name (WASM_DIR|MODEL_URL), so when the word-LM
+    // change added `const WORD_TRIE_URL = new URL("../data/word_trie.json", import.meta.url)`
+    // the strip missed it and this gate died with "Cannot use 'import.meta' outside a module".
+    // Any binding built from import.meta is a URL constant used only inside init(), which this
+    // harness never calls -- strip the CLASS, not the two names that happened to exist first.
+    .replace(/^const \w+ = .*import\.meta.*$/gm, "");
   // The module declares its bindings as `export const`/`export function`, so
   // stripping the keyword leaves bare declarations in the function scope rather
   // than properties on module.exports. Collect them explicitly instead of
