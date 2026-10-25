@@ -231,7 +231,8 @@ def load_lexicon(path=LEXICON):
         return [ln.strip() for ln in fh if ln.strip()]
 
 
-def export_trie(lm: WordLM, out=DEFAULT_OUT, bigram_min=3, bigram_cap=12000):
+def export_trie(lm: WordLM, out=DEFAULT_OUT, bigram_min=3, bigram_cap=12000,
+                alpha=None):
     """Ship form: nested dicts, counts inline. Small enough to precache.
 
     WORD BIGRAMS RIDE ALONG, pruned hard, because they are the difference between a
@@ -251,6 +252,11 @@ def export_trie(lm: WordLM, out=DEFAULT_OUT, bigram_min=3, bigram_cap=12000):
                      "penalty": lm.penalty, "penalty_digit": lm.digit_penalty,
                      "beta": lm.beta, "eps": lm.eps},
             "root": enc(lm.root)}
+    # ALPHA RIDES WITH THE ARTIFACT. It was a literal in recognizer.js, so a lexicon
+    # retuned at a different fusion weight would have shipped with the old weight applied
+    # — a silent no-op. Every other scoring constant already lives here; this one moves in.
+    if alpha is not None:
+        data["meta"]["alpha"] = float(alpha)
     # Only ship the pairs when they are actually SCORED. A weight of 0 makes the
     # browser ignore them, so carrying 12k of them would be dead precache weight on
     # a phone for no behaviour at all.

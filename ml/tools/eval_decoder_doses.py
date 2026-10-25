@@ -76,6 +76,11 @@ CONFIGS = {
     # so the value tuned for the old lexicon is not automatically right for this one.
     "small-a15": (DOSE_SMALL, 4, 0.15),
     "small-a35": (DOSE_SMALL, 4, 0.35),
+    "small-a45": (DOSE_SMALL, 4, 0.45),
+    "union-a45": (DOSE_UNION, 4, 0.45),
+    "union-s05-a35": (UNION_S05, 4, 0.35),
+    "union-s20-a35": (UNION_S20, 4, 0.35),
+    "union-bg40-a35": (UNION_BG40, 4, 0.35),
     # The union keeps the shipped documents' vocabulary, so the product's existing
     # path cannot lose words to a doses-specific change.
     "dose-union2": (DOSE_UNION, 4, 0.25),
@@ -181,7 +186,16 @@ def main():
     model, ckpt = load_trained(a.ckpt)
     print("checkpoint: %s — canary %d/6 known render crops exact" % (ckpt.name, canary(model)))
 
-    names = [c for c in a.configs.split(",") if c in CONFIGS]
+    asked = [c.strip() for c in a.configs.split(",") if c.strip()]
+    # A mistyped config must not be SILENTLY DROPPED: this filtered unknown names out,
+    # so a run that measured six configs looked like it measured seven and the missing
+    # one simply never appeared in the table.
+    unknown = [c for c in asked if c not in CONFIGS]
+    assert not unknown, "unknown config(s) %s; known: %s" % (unknown, sorted(CONFIGS))
+    # `greedy` is the reference every comparison is printed against, so it is always
+    # measured even when the caller forgets to ask for it (asking for it used to be
+    # load-bearing and undocumented).
+    names = asked if "greedy" in asked else ["greedy"] + asked
     report = {}
     for kind in a.corpus.split(","):
         rows, labels = load_corpus(kind, a.limit)

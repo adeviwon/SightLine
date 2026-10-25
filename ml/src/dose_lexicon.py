@@ -101,7 +101,7 @@ def mine(min_count=1):
 
 
 def build(min_count=1, bigram_w=0.0, out_trie=None, extra=None,
-          bigram_min=3, bigram_cap=12000, union_scale=0.0):
+          bigram_min=3, bigram_cap=12000, union_scale=0.0, alpha=None):
     uni, bi, n_lines, n_types = mine(min_count)
     LEX.write_text("\n".join("%s\t%d" % (w, c) for w, c in
                              sorted(uni.items(), key=lambda kv: -kv[1])))
@@ -128,7 +128,8 @@ def build(min_count=1, bigram_w=0.0, out_trie=None, extra=None,
                    bigrams=bi, bigram_w=bigram_w)
     out = Path(out_trie or TRIE)
     out.parent.mkdir(parents=True, exist_ok=True)
-    WL.export_trie(lm, out=out, bigram_min=bigram_min, bigram_cap=bigram_cap)
+    WL.export_trie(out=out, lm=lm, bigram_min=bigram_min, bigram_cap=bigram_cap,
+                   alpha=alpha)
     print("real panels %d lines, %d word types -> kept %d (%d bigrams, %d phrases>=2)"
           % (n_lines, n_types, len(uni), len(bi), sum(1 for v in bi.values() if v >= 2)))
     print("wrote %s, %s, %s" % (LEX.name, BIGRAMS.name,
@@ -183,6 +184,9 @@ def main():
     ap.add_argument("--min-count", type=int, default=1)
     ap.add_argument("--bigram-weight", type=float, default=0.0)
     ap.add_argument("--out-trie", default="")
+    ap.add_argument("--alpha", type=float, default=None,
+                    help="fusion weight this lexicon was TUNED at; shipped in meta so the "
+                         "device applies the measured value instead of a stale literal")
     ap.add_argument("--union-scale", type=float, default=0.0,
                     help="0 = auto (equalise token mass between the two lexicons)")
     ap.add_argument("--union-shipped", action="store_true",
@@ -208,7 +212,7 @@ def main():
         else:
             extra = None
         build(a.min_count, a.bigram_weight, a.out_trie or None, extra,
-              union_scale=a.union_scale)
+              union_scale=a.union_scale, alpha=a.alpha)
         coverage()
     return 0
 

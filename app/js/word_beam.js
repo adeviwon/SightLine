@@ -81,6 +81,11 @@ export class WordTrie {
     // ships until a measurement says the pairs earn their bytes.
     this.bigramW = meta.bi_w === undefined ? 0.0 : meta.bi_w;
     this.bigramVocab = meta.bi_vocab || 1;
+    // The fusion weight this lexicon was TUNED at, carried by the artifact itself:
+    // alpha differing from the value in recognizer.js silently applies the wrong
+    // weight to a retuned lexicon, and nothing would look broken. Older artifacts
+    // predate the field, so the previous default is the fallback.
+    this.alpha = meta.alpha === undefined ? 0.25 : meta.alpha;
     this.bigrams = new Map();
     this.bigramPrev = new Map();
     const bi = json.bi || {};
