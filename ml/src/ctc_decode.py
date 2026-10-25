@@ -85,7 +85,7 @@ def _lae(a: float, b: float) -> float:
 
 # ── prefix beam search ────────────────────────────────────────────────────────
 
-def beam_search(log_probs, beam=10, blank=None, lm=None, alpha=0.0):
+def beam_search(log_probs, beam=10, blank=None, lm=None, alpha=0.0, lm_gate=0.0):
     """
     CTC prefix beam search over a [T, C] matrix of log-probabilities.
 
@@ -95,12 +95,22 @@ def beam_search(log_probs, beam=10, blank=None, lm=None, alpha=0.0):
 
     `lm` is anything with `.logp(prefix_str, char) -> float` (see build_lm.CharLM);
     `alpha` is its weight and 0.0 disables it.
+
+    `lm_gate` makes that weight PER FRAME instead of constant:
+    `alpha_t = alpha * (1 - lm_gate * p_max(t))`. Where the CTC is sure of a frame
+    the LM is largely silenced, and where the frame is flat the LM is at full
+    strength. It exists because a constant alpha has to be small enough not to
+    overrule confident frames — which is what costs the crops a word-LM BREAKS
+    (measured: 3-4 of 800 against 23-24 fixed) — while those confident frames are
+    exactly where the LM was not needed. 0.0 is the shipped constant-alpha
+    behaviour, bit for bit.
     """
     blank = R.BLANK if blank is None else int(blank)
     lp = np.asarray(log_probs, dtype=np.float64)
     T, C = lp.shape
     i2c = R.I2C
     use_lm = lm is not None and alpha > 0.0
+    gated = use_lm and lm_gate > 0.0
 
     # prefix (str of emitted chars) -> [logP(alignments ending in blank),
     #                                  logP(alignments ending in that char)]
@@ -108,6 +118,10 @@ def beam_search(log_probs, beam=10, blank=None, lm=None, alpha=0.0):
     for t in range(T):
         row = lp[t]
         l_blank = row[blank]
+        alpha_t = alpha
+        if gated:
+            # how certain the CTC is of this frame, as a plain probability
+            alpha_t = alpha * (1.0 - lm_gate * math.exp(float(row.max())))
         nxt = {}
         for prefix, (p_b, p_nb) in beams.items():
             p_tot = _lae(p_b, p_nb)
@@ -130,7 +144,7 @@ def beam_search(log_probs, beam=10, blank=None, lm=None, alpha=0.0):
                     if ext is None:
                         ext = nxt[prefix + ch] = [NEG_INF, NEG_INF]
                     if use_lm:
-                        lpc_lm = lpc + alpha * lm.logp(prefix, ch)
+                        lpc_lm = lpc + alpha_t * lm.logp(prefix, ch)
                     else:
                         lpc_lm = lpc
                     ext[1] = _lae(ext[1], p_b + lpc_lm)
@@ -141,7 +155,7 @@ def beam_search(log_probs, beam=10, blank=None, lm=None, alpha=0.0):
                     if ext is None:
                         ext = nxt[prefix + ch] = [NEG_INF, NEG_INF]
                     if use_lm:
-                        ext[1] = _lae(ext[1], p_tot + lpc + alpha * lm.logp(prefix, ch))
+                        ext[1] = _lae(ext[1], p_tot + lpc + alpha_t * lm.logp(prefix, ch))
                     else:
                         ext[1] = _lae(ext[1], p_tot + lpc)
         if len(nxt) > beam:
@@ -152,9 +166,10 @@ def beam_search(log_probs, beam=10, blank=None, lm=None, alpha=0.0):
     return [(p, _lae(pb, pnb)) for p, (pb, pnb) in ranked]
 
 
-def beam_decode(log_probs, beam=10, blank=None, lm=None, alpha=0.0):
+def beam_decode(log_probs, beam=10, blank=None, lm=None, alpha=0.0, lm_gate=0.0):
     """The single best-reading string from `beam_search`."""
-    out = beam_search(log_probs, beam=beam, blank=blank, lm=lm, alpha=alpha)
+    out = beam_search(log_probs, beam=beam, blank=blank, lm=lm, alpha=alpha,
+                      lm_gate=lm_gate)
     return out[0][0] if out else ""
 
 

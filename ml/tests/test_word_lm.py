@@ -96,6 +96,67 @@ def test_exported_trie_is_the_one_on_disk(lm, tmp_path):
     assert shipped["meta"]["penalty_digit"] == WL.DIGIT_PENALTY
 
 
+def test_weighted_counts_move_the_score(lm, tmp_path):
+    """A lexicon with counts is a FREQUENCY model: the same word at weight 40
+    must score no worse than at weight 1, and a weighting must not change what
+    the trie considers a word."""
+    plain = WL.WordLM([("ACCOUNT", 1.0), ("ACCORDION", 1.0)])
+    weighted = WL.WordLM([("ACCOUNT", 40.0), ("ACCORDION", 1.0)])
+    assert weighted.words == plain.words == 2
+    assert weighted.total == pytest.approx(41.0)
+    # The point of weighting: the FREQUENT continuation gets cheaper and the rare
+    # one gets dearer, because the ratio is now (child weight / parent weight).
+    assert weighted.logp("ACCO", "U") > plain.logp("ACCO", "U")
+    assert weighted.logp("ACCO", "R") < plain.logp("ACCO", "R")
+    assert weighted.logp("ACCO", "U") > weighted.logp("ACCO", "R")
+    # ...and a boundary on a real word is still neutral
+    assert weighted.logp("ACCOUNT", " ") == 0.0
+
+
+def test_beta_is_a_word_insertion_bonus():
+    """beta is added per COMPLETED word and nowhere else — that is what makes it a
+    word-insertion bonus rather than a rescaling (see the rejected table in
+    word_lm's docstring: beta 0.75 measured WORSE, so it ships at 0.0)."""
+    lm = WL.WordLM([("TOTAL", 1.0)], beta=0.0)
+    plus = WL.WordLM([("TOTAL", 1.0)], beta=0.75)
+    assert plus.logp("TOTAL", " ") == pytest.approx(0.75)
+    assert plus.logp("TOTAl".lower().upper(), " ") == pytest.approx(0.75)
+    # an unfinished word takes the penalty AND the bonus
+    assert plus.logp("TOTA", " ") == pytest.approx(0.75 + WL.PENALTY)
+    # a continuation inside the word is untouched by beta
+    assert plus.logp("TOTA", "L") == pytest.approx(lm.logp("TOTA", "L"))
+
+
+def test_bigram_context_prices_a_pair():
+    """The trie has no opinion about word ORDER; the bigram does. Applied on the
+    completed word only, and silent when there is no context to condition on."""
+    bi = {("PATIENT", "JANE"): 9, ("PATIENT", "DOE"): 1, ("TOTAL", "JANE"): 1}
+    lm = WL.WordLM([("JANE", 1.0), ("DOE", 1.0), ("PATIENT", 1.0)], bigrams=bi,
+                   bigram_w=1.0)
+    assert lm.bigram_prev["PATIENT"] == pytest.approx(10.0)
+    liked = lm.logp("PATIENT JANE", " ")
+    unliked = lm.logp("PATIENT DOE", " ")
+    assert liked > unliked, (liked, unliked)
+    # one word of context left: nothing to condition on, no distortion
+    assert lm.logp("JANE", " ") == pytest.approx(0.0)
+    # a repeated word is not evidence of itself
+    assert lm.bigram_logp("JANE JANE", "JANE") == pytest.approx(0.0)
+
+
+def test_lm_gate_zero_is_bit_identical_to_constant_alpha():
+    """`lm_gate` must be OFF by default in behaviour even though the code path is
+    live: the shipped decode cannot drift because a knob exists."""
+    import numpy as np
+    rng = np.random.default_rng(3)
+    T, C = 24, R.NUM_CLASSES
+    lp = rng.normal(size=(T, C))
+    lp = lp - np.log(np.exp(lp).sum(-1, keepdims=True))     # a real log-softmax
+    lm = WL.WordLM(WL.load_lexicon(LSRC))
+    a = CD.beam_decode(lp, beam=4, lm=lm, alpha=0.25)
+    b = CD.beam_decode(lp, beam=4, lm=lm, alpha=0.25, lm_gate=0.0)
+    assert a == b
+
+
 def test_beam_with_the_word_lm_still_collapses_repeats(lm):
     """The doubled-digit bookkeeping is the classic CTC prefix-beam bug the LM
     must not disturb: 40218877 must not become 4021887."""

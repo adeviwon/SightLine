@@ -1,0 +1,153 @@
+{
+ "split": "test",
+ "n": 3375,
+ "ckpt": "/home/ubuntu/Projects/sightline/models/ocr/crnn.pt",
+ "configs": {
+  "shipped": {
+   "config": {
+    "lexicon": "plain",
+    "beam": 4,
+    "alpha": 0.25
+   },
+   "exact": 2385,
+   "exact_rate": 0.7066666666666667,
+   "cer": 0.16751381215469613,
+   "decode_s": 42.27625250816345,
+   "vs_greedy": {
+    "both_right": 2271,
+    "variant_only": 114,
+    "greedy_only": 23,
+    "both_wrong": 967
+   },
+   "p_vs_greedy": 1.090507026135235e-15
+  },
+  "alpha20": {
+   "config": {
+    "lexicon": "plain",
+    "beam": 4,
+    "alpha": 0.2
+   },
+   "exact": 2388,
+   "exact_rate": 0.7075555555555556,
+   "cer": 0.16573357888275014,
+   "decode_s": 42.15653967857361,
+   "vs_greedy": {
+    "both_right": 2280,
+    "variant_only": 108,
+    "greedy_only": 14,
+    "both_wrong": 973
+   },
+   "p_vs_greedy": 3.68446209384926e-19
+  },
+  "alpha30": {
+   "config": {
+    "lexicon": "plain",
+    "beam": 4,
+    "alpha": 0.3
+   },
+   "exact": 2391,
+   "exact_rate": 0.7084444444444444,
+   "cer": 0.1698588090853284,
+   "decode_s": 42.72641396522522,
+   "vs_greedy": {
+    "both_right": 2271,
+    "variant_only": 120,
+    "greedy_only": 23,
+    "both_wrong": 961
+   },
+   "p_vs_greedy": 4.922410555981159e-17
+  },
+  "alpha35": {
+   "config": {
+    "lexicon": "plain",
+    "beam": 4,
+    "alpha": 0.35
+   },
+   "exact": 2396,
+   "exact_rate": 0.709925925925926,
+   "cer": 0.17103744628606507,
+   "decode_s": 42.137866258621216,
+   "vs_greedy": {
+    "both_right": 2269,
+    "variant_only": 127,
+    "greedy_only": 25,
+    "both_wrong": 954
+   },
+   "p_vs_greedy": 1.2183899262321184e-17
+  }
+ },
+ "pairwise": [
+  {
+   "a": "greedy",
+   "b": "shipped",
+   "p": 1.090507026135235e-15,
+   "a_only": 23,
+   "b_only": 114
+  },
+  {
+   "a": "greedy",
+   "b": "alpha20",
+   "p": 3.68446209384926e-19,
+   "a_only": 14,
+   "b_only": 108
+  },
+  {
+   "a": "greedy",
+   "b": "alpha30",
+   "p": 4.922410555981159e-17,
+   "a_only": 23,
+   "b_only": 120
+  },
+  {
+   "a": "greedy",
+   "b": "alpha35",
+   "p": 1.2183899262321184e-17,
+   "a_only": 25,
+   "b_only": 127
+  },
+  {
+   "a": "shipped",
+   "b": "alpha20",
+   "p": 0.60723876953125,
+   "a_only": 6,
+   "b_only": 9
+  },
+  {
+   "a": "shipped",
+   "b": "alpha30",
+   "p": 0.03125,
+   "a_only": 0,
+   "b_only": 6
+  },
+  {
+   "a": "shipped",
+   "b": "alpha35",
+   "p": 0.00738525390625,
+   "a_only": 2,
+   "b_only": 13
+  },
+  {
+   "a": "alpha20",
+   "b": "alpha30",
+   "p": 0.6636238098144531,
+   "a_only": 9,
+   "b_only": 12
+  },
+  {
+   "a": "alpha20",
+   "b": "alpha35",
+   "p": 0.20048842206597328,
+   "a_only": 11,
+   "b_only": 19
+  },
+  {
+   "a": "alpha30",
+   "b": "alpha35",
+   "p": 0.1796875,
+   "a_only": 2,
+   "b_only": 7
+  }
+ ],
+ "greedy_exact": 2294,
+ "note": "every config decoded from the SAME logits; pairwise exact McNemar so 'no better than shipped' is measured, not assumed"
+}

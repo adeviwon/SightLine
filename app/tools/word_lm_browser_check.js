@@ -24,9 +24,14 @@ const pw = require("./pw_core.js");
 const chromeBin = require("./chrome_path.js");
 
 const APP = path.resolve(__dirname, "..");
+// Every extension the app actually serves. A missing one is not a cosmetic
+// gap: `assets/reader.css` with no MIME entry comes back as octet-stream, the
+// page refuses it in strict mode, and a real console error fails this check.
 const MIME = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
   ".mjs": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
-  ".wasm": "application/wasm", ".png": "image/png", ".ico": "image/x-icon" };
+  ".wasm": "application/wasm", ".png": "image/png", ".ico": "image/x-icon",
+  ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".webmanifest": "application/manifest+json",
+  ".woff2": "font/woff2", ".txt": "text/plain; charset=utf-8", ".map": "application/json" };
 
 function serve() {
   const server = http.createServer((req, res) => {

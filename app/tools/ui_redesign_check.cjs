@@ -7,8 +7,11 @@ const fs = require("fs"),
   path = require("path"),
   http = require("http");
 const { chromium } = require("./pw_core.js")();
+// Vendored axe-core + a two-method shim (axe_builder.cjs): @axe-core/playwright
+// was never installed and this repo ships no package.json, so this require threw
+// and every WCAG check in this file silently did not run. AXE_CORE still overrides.
 const AxeBuilder = require(
-  process.env.AXE_CORE || "@axe-core/playwright",
+  process.env.AXE_CORE || "./axe_builder.cjs",
 ).default;
 const APP = path.resolve(__dirname, ".."),
   ROOT = path.dirname(APP);

@@ -92,6 +92,13 @@ case "$cmd" in
   decode-sweep) exec $PYRUN ml/src/eval_decode_sweep.py "$@" ;;
   word-lm-vectors) exec $PYRUN ml/src/gen_wordlm_vectors.py "$@" ;;
   word-lm-parity) exec node app/tools/word_lm_parity.js "$@" ;;
+  # The lexicon's FREQUENCIES and the word bigrams, mined TRAIN-only, then the
+  # two harnesses that decide a decoder change: `decode-sweep` ranks candidates
+  # against greedy and `decode-confirm` re-tests the survivors PAIRED against the
+  # shipped config on the whole split (they disagree, and confirm wins).
+  word-counts) exec $PYRUN ml/src/word_counts.py "$@" ;;
+  decode-confirm) exec $PYRUN ml/src/eval_decode_confirm.py "$@" ;;
+  word-lm-cost) exec node app/tools/word_lm_cost.js "$@" ;;
   compare)     exec $PYRUN ml/src/compare_runs.py "$@" ;;
   # Generic passthrough so any module can be run through the venv with
   # PYTHONPATH stripped: bash run.sh py ml/src/realdata.py --selftest

@@ -1,0 +1,269 @@
+{
+ "split": "test",
+ "n": 3375,
+ "ckpt": "/home/ubuntu/Projects/sightline/models/ocr/crnn.pt",
+ "configs": {
+  "shipped": {
+   "config": {
+    "lexicon": "plain",
+    "beam": 4,
+    "alpha": 0.25
+   },
+   "exact": 2385,
+   "exact_rate": 0.7066666666666667,
+   "cer": 0.16751381215469613,
+   "decode_s": 41.36915993690491,
+   "vs_greedy": {
+    "both_right": 2271,
+    "variant_only": 114,
+    "greedy_only": 23,
+    "both_wrong": 967
+   },
+   "p_vs_greedy": 1.090507026135235e-15
+  },
+  "counts": {
+   "config": {
+    "lexicon": "counts",
+    "beam": 4,
+    "alpha": 0.25
+   },
+   "exact": 2383,
+   "exact_rate": 0.7060740740740741,
+   "cer": 0.169073050951504,
+   "decode_s": 41.029186725616455,
+   "vs_greedy": {
+    "both_right": 2268,
+    "variant_only": 115,
+    "greedy_only": 26,
+    "both_wrong": 966
+   },
+   "p_vs_greedy": 1.482381211092684e-14
+  },
+  "bigram40": {
+   "config": {
+    "lexicon": "counts",
+    "beam": 4,
+    "alpha": 0.25,
+    "bigram_w": 0.4
+   },
+   "exact": 2395,
+   "exact_rate": 0.7096296296296296,
+   "cer": 0.16933087783916514,
+   "decode_s": 42.111775159835815,
+   "vs_greedy": {
+    "both_right": 2278,
+    "variant_only": 117,
+    "greedy_only": 16,
+    "both_wrong": 964
+   },
+   "p_vs_greedy": 3.7982000367999554e-20
+  },
+  "bigram80": {
+   "config": {
+    "lexicon": "counts",
+    "beam": 4,
+    "alpha": 0.25,
+    "bigram_w": 0.8
+   },
+   "exact": 2401,
+   "exact_rate": 0.7114074074074074,
+   "cer": 0.16910988336402702,
+   "decode_s": 41.742411613464355,
+   "vs_greedy": {
+    "both_right": 2283,
+    "variant_only": 118,
+    "greedy_only": 11,
+    "both_wrong": 963
+   },
+   "p_vs_greedy": 8.605553550243273e-24
+  },
+  "beta75": {
+   "config": {
+    "lexicon": "plain",
+    "beam": 4,
+    "alpha": 0.25,
+    "beta": 0.75
+   },
+   "exact": 2393,
+   "exact_rate": 0.709037037037037,
+   "cer": 0.16718232044198894,
+   "decode_s": 42.24681210517883,
+   "vs_greedy": {
+    "both_right": 2279,
+    "variant_only": 114,
+    "greedy_only": 15,
+    "both_wrong": 967
+   },
+   "p_vs_greedy": 5.046110811696223e-20
+  },
+  "beam8": {
+   "config": {
+    "lexicon": "plain",
+    "beam": 8,
+    "alpha": 0.25
+   },
+   "exact": 2392,
+   "exact_rate": 0.7087407407407408,
+   "cer": 0.16647022713321055,
+   "decode_s": 82.19410729408264,
+   "vs_greedy": {
+    "both_right": 2271,
+    "variant_only": 121,
+    "greedy_only": 23,
+    "both_wrong": 960
+   },
+   "p_vs_greedy": 2.923580700821239e-17
+  }
+ },
+ "pairwise": [
+  {
+   "a": "greedy",
+   "b": "shipped",
+   "p": 1.090507026135235e-15,
+   "a_only": 23,
+   "b_only": 114
+  },
+  {
+   "a": "greedy",
+   "b": "counts",
+   "p": 1.482381211092684e-14,
+   "a_only": 26,
+   "b_only": 115
+  },
+  {
+   "a": "greedy",
+   "b": "bigram40",
+   "p": 3.7982000367999554e-20,
+   "a_only": 16,
+   "b_only": 117
+  },
+  {
+   "a": "greedy",
+   "b": "bigram80",
+   "p": 8.605553550243273e-24,
+   "a_only": 11,
+   "b_only": 118
+  },
+  {
+   "a": "greedy",
+   "b": "beta75",
+   "p": 5.046110811696223e-20,
+   "a_only": 15,
+   "b_only": 114
+  },
+  {
+   "a": "greedy",
+   "b": "beam8",
+   "p": 2.923580700821239e-17,
+   "a_only": 23,
+   "b_only": 121
+  },
+  {
+   "a": "shipped",
+   "b": "counts",
+   "p": 0.75390625,
+   "a_only": 6,
+   "b_only": 4
+  },
+  {
+   "a": "shipped",
+   "b": "bigram40",
+   "p": 0.021270751953125,
+   "a_only": 3,
+   "b_only": 13
+  },
+  {
+   "a": "shipped",
+   "b": "bigram80",
+   "p": 0.0008554458618164062,
+   "a_only": 3,
+   "b_only": 19
+  },
+  {
+   "a": "shipped",
+   "b": "beta75",
+   "p": 0.0078125,
+   "a_only": 0,
+   "b_only": 8
+  },
+  {
+   "a": "shipped",
+   "b": "beam8",
+   "p": 0.015625,
+   "a_only": 0,
+   "b_only": 7
+  },
+  {
+   "a": "counts",
+   "b": "bigram40",
+   "p": 0.00048828125,
+   "a_only": 0,
+   "b_only": 12
+  },
+  {
+   "a": "counts",
+   "b": "bigram80",
+   "p": 7.62939453125e-06,
+   "a_only": 0,
+   "b_only": 18
+  },
+  {
+   "a": "counts",
+   "b": "beta75",
+   "p": 0.0308837890625,
+   "a_only": 4,
+   "b_only": 14
+  },
+  {
+   "a": "counts",
+   "b": "beam8",
+   "p": 0.0224609375,
+   "a_only": 2,
+   "b_only": 11
+  },
+  {
+   "a": "bigram40",
+   "b": "bigram80",
+   "p": 0.03125,
+   "a_only": 0,
+   "b_only": 6
+  },
+  {
+   "a": "bigram40",
+   "b": "beta75",
+   "p": 0.8145294189453125,
+   "a_only": 10,
+   "b_only": 8
+  },
+  {
+   "a": "bigram40",
+   "b": "beam8",
+   "p": 0.6476058959960938,
+   "a_only": 11,
+   "b_only": 8
+  },
+  {
+   "a": "bigram80",
+   "b": "beta75",
+   "p": 0.057373046875,
+   "a_only": 11,
+   "b_only": 3
+  },
+  {
+   "a": "bigram80",
+   "b": "beam8",
+   "p": 0.10775214433670044,
+   "a_only": 17,
+   "b_only": 8
+  },
+  {
+   "a": "beta75",
+   "b": "beam8",
+   "p": 1.0,
+   "a_only": 8,
+   "b_only": 7
+  }
+ ],
+ "greedy_exact": 2294,
+ "note": "every config decoded from the SAME logits; pairwise exact McNemar so 'no better than shipped' is measured, not assumed"
+}

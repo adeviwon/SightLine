@@ -36,6 +36,27 @@ SCORING
 Alpha semantics match `ctc_decode`: the value is multiplied into the returned
 log-prob by the beam search (`alpha`), so the trie returns RAW log-probs and
 never scales itself.
+
+MEASURED, AND REJECTED — do not re-litigate these without new data
+------------------------------------------------------------------
+Every row below was decoded from the SAME logits as the shipped config on the
+FULL held-out split (3,375 crops), paired against the shipped config with exact
+McNemar (`ml/src/eval_decode_confirm.py`; b/c = crops the row fixes / breaks):
+
+shipped  plain lexicon, beam 4, alpha 0.25          70.7%  (+114/-23 vs greedy)
+counts   frequency-weighted lexicon (word_counts.py) +6/-4   p=0.75  — no effect
+bigram40 + this file's word bigram, weight 0.4       +3/-13  p=0.021 — WORSE
+bigram80 + word bigram, weight 0.8                   +3/-19  p=0.0009 — worse
+beta75   word-insertion bonus 0.75                   +0/-8   p=0.008 — worse
+beam8    beam width 8                                +0/-7   p=0.016 — worse, 2.29x slower
+alpha20 / alpha30 / alpha35                          +6/-9 p=0.61 (noise) / +0/-6 p=0.031 / +2/-13 p=0.007
+lm_gate  confidence-weighted per-frame fusion        -1.75pp exact at gate 1.0 (800-crop subset)
+backoff  char-LM backoff for unseen continuations    0 crops changed (800-crop subset)
+
+THE TRAP THIS TABLE EXISTS FOR: the sweep ranks cells against GREEDY, so
+bigram40 looked like "+10 crops over shipped" (71.0% vs 70.7%) — and paired
+against shipped it is 10 crops NET WORSE. A shared baseline hides the comparison
+that decides the ship; use eval_decode_confirm.py before believing a sweep.
 """
 
 import argparse
@@ -66,10 +87,32 @@ DIGIT_PENALTY = -0.5
 # smoothing floor for the ratio: a child with count 1 under a parent with count
 # 300 must not read as -log(300) ~ -5.7 *for a continuation that EXISTS*.
 EPS = 0.5
+# Word-insertion bonus: added per COMPLETED word (at the space). 0.0 is neutral;
+# a positive value makes the decoder more willing to break a line into words, a
+# negative one more willing to run characters together. It exists because the
+# per-character ratios above only price "is this a word", never "how many words
+# should this line have" — a lever the published word-LM decoders carry and this
+# one did without.
+BETA = 0.0
+# How much weight the WORD-BIGRAM context gets inside the trie's space score:
+# `+ BIGRAM_W * log P(word | previous word)`. The trie alone cannot know that
+# "JANE" is likelier after "PATIENT" than after "TOTAL"; the bigram is mined from
+# the same train labels as the counts. 0.0 disables it.
+BIGRAM_W = 0.0
+# How much weight a CHARACTER model gets when the trie has NO continuation,
+# replacing part of the flat PENALTY with a graded score: the flat -6 says "not a
+# word" and throws away the information that the character was still plausible.
+# 0.0 keeps the shipped flat behaviour.
+BACKOFF_W = 0.0
 
 
 def _is_digit_run(w):
     return all("0" <= c <= "9" for c in w)
+
+
+def _new_node():
+    """[pass_weight, terminal_weight, children] — children is a plain dict."""
+    return [0.0, 0.0, {}]
 
 
 def clean_token(s):
@@ -82,21 +125,48 @@ def clean_token(s):
 class WordLM:
     """Trie over upper-case charset-clean lexicon words. `logp(prefix, ch)`."""
 
-    def __init__(self, words):
-        # node = [pass_count, terminal_count, children]
-        self.root = [0, 0, {}]
+    def __init__(self, words, penalty=PENALTY, digit_penalty=DIGIT_PENALTY, beta=BETA,
+                 eps=EPS, bigrams=None, bigram_w=BIGRAM_W, backoff=None,
+                 backoff_w=BACKOFF_W):
+        # node = [pass_weight, terminal_weight, children]
+        # Weights are COUNTS when the lexicon carries corpus frequencies and 1 per
+        # word when it does not, so the same trie serves both and the scored
+        # quantity stays comparable: (child + EPS) / (node + EPS).
+        self.root = _new_node()
         self.words = 0
-        for w in words:
+        self.total = 0.0
+        self.penalty, self.digit_penalty, self.beta, self.eps = (
+            penalty, digit_penalty, beta, eps)
+        # (prev_word, word) -> count over TRAIN label text; context the trie cannot express
+        self.bigrams = dict(bigrams or {})
+        self.bigram_w = bigram_w
+        # totals per previous word, and the vocabulary size for smoothing — derived
+        # here so a caller cannot supply bigrams and forget them.
+        self.bigram_prev = {}
+        for (p_, _w), c in self.bigrams.items():
+            self.bigram_prev[p_] = self.bigram_prev.get(p_, 0.0) + c
+        self.bigram_vocab = max(1, len(set(w_ for _p, w_ in self.bigrams)))
+        # any object with .logp(prefix, ch) used ONLY where the trie has nothing
+        self.backoff = backoff
+        self.backoff_w = backoff_w
+        for item in words:
+            if isinstance(item, (tuple, list)):
+                w, cnt = item[0], float(item[1])
+            else:
+                w, cnt = item, 1.0
+            if cnt <= 0:
+                continue
             w = clean_token(w)
             if not w or len(w) > 48:
                 continue
             node = self.root
-            node[0] += 1
+            node[0] += cnt
             for ch in w:
-                node = node[2].setdefault(ch, [0, 0, {}])
-                node[0] += 1
-            node[1] += 1
+                node = node[2].setdefault(ch, _new_node())
+                node[0] += cnt
+            node[1] += cnt
             self.words += 1
+            self.total += cnt
         if not self.words:
             raise ValueError("empty lexicon: refusing to build a useless LM")
 
@@ -107,22 +177,45 @@ class WordLM:
     def logp(self, prefix: str, ch: str) -> float:
         w = self._word_prefix(prefix)
         # a space completes the word being spelled: the word-LM's one binary
-        # judgement is "is this a word we serve".
+        # judgement is "is this a word we serve", plus the word-insertion bonus.
         if ch == " ":
             if not w:
                 return 0.0  # double space / leading space: nothing to score
             node = self._node(w)
-            if node is not None and node[1] > 0:
-                return 0.0
-            return DIGIT_PENALTY if _is_digit_run(w) else PENALTY
+            done = node is not None and node[1] > 0
+            score = self.beta if done else self.beta + (
+                self.digit_penalty if _is_digit_run(w) else self.penalty)
+            # context the trie has no opinion about: how likely this word is to
+            # FOLLOW the previous one. Applied on the completed word only.
+            if self.bigram_w and self.bigrams:
+                score += self.bigram_w * self.bigram_logp(prefix, w)
+            return score
         node = self._node(w)
         child = node[2].get(ch) if node is not None else None
         if child is not None and child[0] > 0:
-            return math.log((child[0] + EPS) / (node[0] + EPS))
-        # not a path any lexicon word takes
+            return math.log((child[0] + self.eps) / (node[0] + self.eps))
+        # not a path any lexicon word takes: the flat penalty, graded by a
+        # character model when one is attached (see BACKOFF_W).
+        back = (self.backoff_w * self.backoff.logp(prefix, ch)
+                if self.backoff is not None and self.backoff_w else 0.0)
         if "0" <= ch <= "9" and (w == "" or _is_digit_run(w)):
-            return DIGIT_PENALTY
-        return PENALTY
+            return self.digit_penalty + back
+        return self.penalty + back
+
+    def bigram_logp(self, prefix, w):
+        """log P(w | previous word), with an unseen pair priced as one
+        pseudo-count over the previous word's total. `prefix` ends with `w`."""
+        words = prefix.split()
+        if len(words) < 2:
+            return 0.0                     # nothing to condition on
+        prev = words[-2]
+        if prev == w:
+            return 0.0                     # a repeated word is not evidence
+        total = self.bigram_prev.get(prev, 0.0)
+        if total <= 0:
+            return 0.0                     # an unseen context says nothing
+        seen = self.bigrams.get((prev, w), 0.0)
+        return math.log((seen + self.eps) / (total + self.eps * self.bigram_vocab))
 
     def _node(self, w):
         node = self.root
@@ -143,8 +236,12 @@ def export_trie(lm: WordLM, out=DEFAULT_OUT):
     def enc(node):
         return {"p": node[0], "t": node[1],
                 "c": {ch: enc(ch_node) for ch, ch_node in node[2].items()}}
-    data = {"meta": {"words": lm.words, "penalty": PENALTY,
-                     "penalty_digit": DIGIT_PENALTY},
+    # meta carries every constant the JS mirror needs, so the browser cannot
+    # drift from the Python the sweep tuned: the numbers are READ from the
+    # artifact, never retyped in word_beam.js.
+    data = {"meta": {"words": lm.words, "total": lm.total,
+                     "penalty": lm.penalty, "penalty_digit": lm.digit_penalty,
+                     "beta": lm.beta, "eps": lm.eps},
             "root": enc(lm.root)}
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(json.dumps(data, separators=(",", ":")))
@@ -157,9 +254,9 @@ def load_trie_json(path):
     data = json.loads(Path(path).read_text())
 
     class _TrieLM:
-        def __init__(self, root, penalty, penalty_digit):
+        def __init__(self, root, penalty, penalty_digit, beta=0.0, eps=EPS):
             self.root, self.penalty = root, penalty
-            self.penalty_digit = penalty_digit
+            self.penalty_digit, self.beta, self.eps = penalty_digit, beta, eps
 
         def _node(self, w):
             node = self.root
@@ -176,21 +273,22 @@ def load_trie_json(path):
                     return 0.0
                 node = self._node(w)
                 if node is not None and node["t"] > 0:
-                    return 0.0
-                return (self.penalty_digit if _is_digit_run(w)
-                        else self.penalty)
+                    return self.beta
+                return self.beta + (self.penalty_digit if _is_digit_run(w)
+                                    else self.penalty)
             node = self._node(w)
             if node is not None:
                 child = node["c"].get(ch)   # _node returns the NODE, not its children
                 if child is not None and child["p"] > 0:
-                    return math.log((child["p"] + EPS) / (node["p"] + EPS))
+                    return math.log((child["p"] + self.eps) / (node["p"] + self.eps))
             if "0" <= ch <= "9" and (w == "" or _is_digit_run(w)):
                 return self.penalty_digit
             return self.penalty
 
     root = data["root"]
     meta = data["meta"]
-    return _TrieLM(root, meta["penalty"], meta["penalty_digit"])
+    return _TrieLM(root, meta["penalty"], meta["penalty_digit"],
+                   meta.get("beta", 0.0), meta.get("eps", EPS))
 
 
 def _self_check():

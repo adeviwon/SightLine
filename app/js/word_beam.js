@@ -54,11 +54,26 @@ function isDigitRun(w) {
   return true;
 }
 
-/** The lexicon trie: {p: passCount, t: terminalCount, c: {char: node}}. */
+/**
+ * The lexicon trie: {p: passWeight, t: terminalWeight, c: {char: node}}.
+ *
+ * Every SCORING CONSTANT comes out of the artifact's own `meta` and not from a
+ * literal in this file. The Python side is what the sweeps tune; a constant
+ * retyped here is a second copy that goes stale the first time a knob moves, and
+ * the failure is silent — the browser just decodes slightly differently from the
+ * model the numbers were measured on. Module-level defaults remain only for a
+ * trie exported before `meta.beta` existed.
+ */
 export class WordTrie {
   constructor(json) {
     this.root = json.root;
-    this.words = (json.meta && json.meta.words) || 0;
+    const meta = json.meta || {};
+    this.words = meta.words || 0;
+    this.total = meta.total || 0;
+    this.penalty = meta.penalty === undefined ? PASS_PENALTY : meta.penalty;
+    this.digitPenalty = meta.penalty_digit === undefined ? DIGIT_PENALTY : meta.penalty_digit;
+    this.beta = meta.beta === undefined ? 0.0 : meta.beta;
+    this.eps = meta.eps === undefined ? EPS : meta.eps;
   }
 
   static async load(url) {
@@ -84,18 +99,18 @@ export class WordTrie {
     if (ch === " ") {
       if (!w) return 0.0;
       const node = this._node(w);
-      if (node && node.t > 0) return 0.0;
-      return isDigitRun(w) ? DIGIT_PENALTY : PASS_PENALTY;
+      if (node && node.t > 0) return this.beta;   // a word we serve, plus the bonus
+      return this.beta + (isDigitRun(w) ? this.digitPenalty : this.penalty);
     }
     const node = this._node(w);
     if (node) {
       const child = node.c[ch];
       if (child && child.p > 0) {
-        return Math.log((child.p + EPS) / (node.p + EPS));
+        return Math.log((child.p + this.eps) / (node.p + this.eps));
       }
     }
-    if (ch >= "0" && ch <= "9" && (w === "" || isDigitRun(w))) return DIGIT_PENALTY;
-    return PASS_PENALTY;
+    if (ch >= "0" && ch <= "9" && (w === "" || isDigitRun(w))) return this.digitPenalty;
+    return this.penalty;
   }
 }
 
