@@ -28,6 +28,7 @@ const APP = path.resolve(__dirname, "..");
 const CHROME = require("./chrome_path.js")();
 
 const MIME = {
+  ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml",
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".mjs": "text/javascript; charset=utf-8",
@@ -65,6 +66,7 @@ const server = http.createServer((req, res) => {
   }
   res.writeHead(200, {
     "Content-Type": MIME[path.extname(file)] || "application/octet-stream",
+    "Content-Length": fs.statSync(file).size,
     "Cache-Control": "no-store",
     "Service-Worker-Allowed": "/",
   });
@@ -178,7 +180,18 @@ function check(desc, ok, detail) {
     await cdp.send("Runtime.enable");
     await cdp.send("Log.enable");
     await cdp.send("Page.enable");
-    await cdp.send("Network.enable");
+    await cdp.send("Network.enable", { maxTotalBufferSize: 128 * 1024 * 1024, maxResourceBufferSize: 64 * 1024 * 1024 });
+    await cdp.send("Page.addScriptToEvaluateOnNewDocument", {source: `
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.addEventListener('message', event => {
+          (window.__cacheReports ||= []).push(event.data);
+        });
+        const original = navigator.serviceWorker.register.bind(navigator.serviceWorker);
+        navigator.serviceWorker.register = (...args) => original(...args).catch(error => {
+          window.__swRegistrationError = error.name + ': ' + error.message; throw error;
+        });
+      }
+    `});
     // Block the camera permission prompt; the app must degrade gracefully.
     await cdp.send("Browser.grantPermissions", { origin: base, permissions: [] }).catch(() => {});
 
@@ -203,7 +216,8 @@ function check(desc, ok, detail) {
       missingScripts.length === 0,
       "missing: " + missingScripts.join(", ") + " | on page: " + JSON.stringify(scriptSrcs));
     for (const src of scriptSrcs || []) {
-      const hit = requested.find((p) => p.endsWith("/" + src) || p === "/" + src);
+      const pathname = new URL(src, base + "/").pathname;
+      const hit = requested.find((p) => p === pathname);
       check("vendor asset served: " + src, !!hit, "not requested");
     }
 
@@ -259,10 +273,27 @@ function check(desc, ok, detail) {
       JSON.stringify(small));
     check("offline badge rendered", typeof a11y.badge === "string" && a11y.badge.length > 0, a11y.badge);
 
+    // Await install, rather than switching the network off while large reading
+    // assets are still arriving. A fixed four-second sleep is not readiness.
+    await cdp.eval(`(async () => {
+      const end = Date.now() + 20000;
+      while (Date.now() < end) {
+        const reg = await navigator.serviceWorker.getRegistration();
+        if (reg && reg.active) return true;
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+      return false;
+    })()`);
+
     // ── 2. service worker ──────────────────────────────────────────
     const sw = JSON.parse(await cdp.eval(`(async () => {
       const r = await navigator.serviceWorker.getRegistration();
-      if (!r) return JSON.stringify({registered:false});
+      if (!r) {
+        const names = await caches.keys();
+        const cached = [];
+        for (const name of names) for (const request of await (await caches.open(name)).keys()) cached.push(new URL(request.url).pathname);
+        return JSON.stringify({registered:false,error:window.__swRegistrationError,badge:document.getElementById("badge").textContent,readyState:document.readyState,reports:window.__cacheReports,caches:names,assets:cached});
+      }
       await new Promise(res => {
         if (r.active) return res();
         navigator.serviceWorker.ready.then(res).catch(res);

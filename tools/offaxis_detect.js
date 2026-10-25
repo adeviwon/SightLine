@@ -144,7 +144,9 @@ async function inPage(cfg) {
     function shearInk(ink, w, h, slope) {
       const xc = w / 2, out = new Uint8Array(ink.length);
       for (let x = 0; x < w; x++) {
-        const d = Math.round(slope * (x - xc));
+        // negated: the same inversion ml/src/line_detect.py had -- shifting ink DOWN
+        // by slope*(x-xc) doubles the tilt instead of removing it
+        const d = -Math.round(slope * (x - xc));
         if (d === 0) { for (let y = 0; y < h; y++) out[y * w + x] = ink[y * w + x]; }
         else if (d > 0) { for (let y = d; y < h; y++) out[y * w + x] = ink[(y - d) * w + x]; }
         else { for (let y = 0; y < h + d; y++) out[y * w + x] = ink[(y - d) * w + x]; }

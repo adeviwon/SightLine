@@ -1,3 +1,5 @@
+import { beamDecode, WordTrie, logSoftmaxRow } from "./word_beam.js";
+
 /**
  * SightLineCRNN — in-browser text recognition.
  *
@@ -117,8 +119,41 @@ export const EXPORT_W = TRAINING_CLAMP;
 
 export const WIDTH_DIVISOR = 8;   // timesteps = contentWidth / 8
 
+// ── the word-LM decode stage ────────────────────────────────────────────────
+// Applied AFTER the graph, to the logits the graph returns (see word_beam.js).
+// Measured on 3,375 held-out crops of THIS checkpoint: greedy 67.97% exact ->
+// beam 4 + word LM at alpha 0.25 = 70.67% (+114 / -23 crops, exact McNemar
+// p < 1e-4). Beam width 4 rather than 8 because the two tied on exact match
+// (71.10% on a 1,000-crop sweep, 70.67% vs 70.70% here) at half the cost.
+export const WORD_BEAM = 4;
+export const WORD_ALPHA = 0.25;
+const WORD_TRIE_URL = new URL("../data/word_trie.json", import.meta.url).href;
+
 let session = null;
 let initPromise = null;
+let wordTrie = null;          // null until loaded; greedy decode while absent
+let wordTriePromise = null;
+let wordTrieError = null;
+
+/**
+ * The trie is optional BY DESIGN: a phone that cannot fetch it still reads text,
+ * it just reads it with the older greedy decoder. So this never throws and never
+ * blocks init() — it resolves to null and the scan proceeds.
+ */
+export function loadWordTrie() {
+  if (!wordTriePromise) {
+    wordTriePromise = WordTrie.load(WORD_TRIE_URL)
+      .then((t) => { wordTrie = t; return t; })
+      .catch((e) => { wordTrieError = e && e.message ? e.message : String(e); return null; });
+  }
+  return wordTriePromise;
+}
+
+/** Which decoder the next scan will use, and why — for the harnesses and the UI. */
+export function decoderState() {
+  return { wordLM: wordTrie ? "on" : "off", words: wordTrie ? wordTrie.words : 0,
+           greedy: wordTrie === null, error: wordTrieError };
+}
 
 // The graph's width axis, read from the session itself at init:
 //   undefined  not read yet (before init, and after reset())
@@ -277,6 +312,10 @@ export async function init(modelUrl = MODEL_URL) {
       session = await ORT.InferenceSession.create(modelUrl, {
         executionProviders: ["wasm"],
       });
+      // Fire the word-LM fetch now and DO NOT await it: the first scan must not
+      // wait on a 195 KB sibling, and a missing/slow trie degrades to greedy
+      // rather than failing the scan (see loadWordTrie).
+      loadWordTrie();
       // Ask the graph what width it takes, ONCE, before any crop is served.
       try {
         graphWidth = await readGraphWidth(session);
@@ -443,12 +482,33 @@ export async function recognise(gray, contentWidth) {
       }
     }
 
-    const text = decodeGreedy(idx, decodeT);
+    // The word-LM stage: same logits, searched over prefixes instead of read
+    // greedily. It runs only when the trie loaded — greedy is the fallback, and
+    // greedy is what the confidence below describes either way (the gates that
+    // consume confidence were calibrated on this emission probability, so it is
+    // deliberately NOT swapped for a beam score).
+    let text = decodeGreedy(idx, decodeT);
+    let decodedBy = "greedy";
+    if (wordTrie) {
+      const lps = new Float64Array(decodeT * C);
+      const row = new Float64Array(C);
+      for (let t = 0; t < decodeT; t++) {
+        logSoftmaxRow(data, t * C, C, row);
+        lps.set(row, t * C);
+      }
+      const beam = beamDecode(lps, decodeT, C, CHARSET,
+                              { beam: WORD_BEAM, blank: BLANK, lm: wordTrie,
+                                alpha: WORD_ALPHA });
+      // A beam that returns nothing usable must not replace a readable greedy
+      // string: the fallback only ever fires on an EMPTY read.
+      if (beam.text) { text = beam.text; decodedBy = "wordLM"; }
+    }
     return {
       text,
       confidence: emitted ? confSum / emitted : 0,
       chars: text.length,
       timesteps: decodeT,
+      decoder: decodedBy,
     };
   } catch (e) {
     lastError = e && e.message ? e.message : String(e);
@@ -502,6 +562,7 @@ const SightLineRecognizer = {
   CHARSET, BLANK, CROP_H, EXPORT_W, TRAINING_CLAMP, WIDTH_DIVISOR,
   init, isReady, getError, recognise, recogniseAll,
   decodeGreedy, timestepsFor, engineWidth, reset,
+  loadWordTrie, decoderState, WORD_BEAM, WORD_ALPHA,
   simdSupported, NO_SIMD_MESSAGE,
 };
 if (typeof window !== "undefined") window.SightLineRecognizer = SightLineRecognizer;
