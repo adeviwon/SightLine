@@ -84,16 +84,37 @@ def test_shipped_json_scores_identically(lm, tmp_path):
 
 
 def test_exported_trie_is_the_one_on_disk(lm, tmp_path):
-    """The shipped artifact must come from the current lexicon: if it does not,
-    the app decodes against a stale vocabulary."""
+    """The shipped artifact must be able to decode the vocabulary the product depends
+    on, and must agree with the code on its scoring constants.
+
+    This used to demand that the trie be the export of `data/lexicon.txt` exactly. The
+    shipped word LM is now a UNION — that document vocabulary plus a lexicon mined from
+    real FDA dose panels — so an equality check on one source would fail on a correct
+    artifact, while still missing the failure that matters: a stale or truncated trie
+    that decodes the product's own words as unknown and silently falls back to penalties.
+    Coverage of BOTH sources is the invariant; the word count is not.
+    """
     if not TRIE.exists():
         pytest.skip("no shipped trie yet — run: bash run.sh py ml/src/word_lm.py --export")
     shipped = json.loads(TRIE.read_text())
-    assert shipped["meta"]["words"] == lm.words, (
-        "app/data/word_trie.json has %s words, the lexicon has %s — re-export"
+    api = WL.load_trie_json(TRIE)
+    doc = [w for w in (ROOT / "data" / "lexicon.txt").read_text().split() if w]
+    missing = [w for w in doc if api._node(w) is None]
+    assert not missing, ("the shipped trie cannot decode %d of the document lexicon's %d "
+                         "words (e.g. %s) — it is stale or truncated"
+                         % (len(missing), len(doc), missing[:5]))
+    # ...and the dose vocabulary it was unioned for, spot-checked on the drugs whose
+    # names the shipped lexicon has no reason to contain.
+    for w in ("METHYLPHENIDATE", "ANASTROZOLE", "IBUPROFEN", "TABLETS", "DAILY"):
+        assert api._node(w) is not None, "dose vocabulary missing from the shipped trie: %s" % w
+    assert shipped["meta"]["words"] >= lm.words, (
+        "app/data/word_trie.json has %s words, fewer than the document lexicon's %s — re-export"
         % (shipped["meta"]["words"], lm.words))
     assert shipped["meta"]["penalty"] == WL.PENALTY
     assert shipped["meta"]["penalty_digit"] == WL.DIGIT_PENALTY
+    # Alpha rides in the artifact, so the file on disk also records the weight it was
+    # tuned at; the device applies this value, not the literal in recognizer.js.
+    assert "alpha" in shipped["meta"], "shipped trie predates meta.alpha"
 
 
 def test_weighted_counts_move_the_score(lm, tmp_path):

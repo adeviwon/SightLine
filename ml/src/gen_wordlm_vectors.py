@@ -74,6 +74,12 @@ def main():
 
     trie_path = ROOT / "app" / "data" / "word_trie.json"
     lm = WL.load_trie_json(trie_path)
+    # The artifact carries the fusion weight it ships with (meta.alpha). Honouring it
+    # here keeps the fixture — and therefore the parity gate — on the configuration the
+    # device actually runs; a stale 0.25 would have verified a config nobody ships.
+    meta_alpha = json.loads(trie_path.read_text())["meta"].get("alpha")
+    if meta_alpha is not None and a.alpha == ALPHA:
+        a.alpha = meta_alpha
     rows = []
     for i, lg in enumerate(logits):
         lps = torch.log_softmax(torch.from_numpy(lg), dim=-1).numpy().astype(np.float64)

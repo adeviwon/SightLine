@@ -347,7 +347,14 @@ const SightLine = (() => {
       if (new RegExp(`\\b${drug}\\b`, "i").test(src)) push("DRUG", drug);
     }
     let m;
-    const dosageRe = /\b(\d{1,4}\s*(?:mg|ml|mcg|micrograms?|tablets?|capsules?))\b/gi;
+    // The left boundary is a NON-DIGIT, not \b. OCR glues a dose to the drug name
+    // ("RX BUPROLIN400MG"), and \b never matches between the letter N and the digit 4, so a
+    // left-\b rule is blind to exactly the readings this app produces -- measured: 7 such doses
+    // across 4 of our own 12 bench documents, every one invisible. `[^\d]` still refuses to
+    // match inside a longer number. A negative LOOKBEHIND would be the natural spelling and is a
+    // parse-time SyntaxError on Safari < 16.4 in a classic script, which is the target engine.
+    // The leading character is consumed, not captured; m[1] is still the dose.
+    const dosageRe = /(?:^|[^\d])(\d{1,4}\s*(?:mg|ml|mcg|micrograms?|tablets?|capsules?))\b/gi;
     while ((m = dosageRe.exec(src))) push("DOSAGE", m[1]);
     const moneyRe = /(£|\$|€)\s*([\d,]+\.\d{2})|\b([\d,]+\.\d{2})\s*(?:GBP|USD|EUR)/gi;
     while ((m = moneyRe.exec(src))) push("MONEY", (m[2] ? m[1] + m[2] : m[3] + " " + m[4]).trim());
@@ -1146,7 +1153,13 @@ const SightLine = (() => {
       fields = [];
     } else if (FIELD_ENGINE.enabled) {
       const eng = fieldEngineFields(normalized, cls.category);
-      fields = eng === null ? extractFields(normalized, cls.category) : eng;
+      // An EMPTY engine result is not an authoritative one. fieldEngineFields returns
+      // an array whether or not it decided anything, so `eng === null` really tested
+      // "is the engine loaded" — and an engine that found no spots on a page was taken
+      // as "this document has no fields", leaving the regex fallback unreachable. Five
+      // of twelve bench pages lost EVERY field that way once the word LM started
+      // returning correctly-cased text. Fall back when the engine produced nothing.
+      fields = (eng && eng.length) ? eng : extractFields(normalized, cls.category);
     } else {
       fields = extractFields(normalized, cls.category);
     }

@@ -1,0 +1,96 @@
+{
+ "render": {
+  "n": 3375,
+  "results": {
+   "greedy": {
+    "exact": 2294,
+    "rate": 0.6797037037037037,
+    "cer": 0.16365868631062,
+    "trie": null,
+    "beam": 4,
+    "alpha": 0.0,
+    "vs_shipped": {
+     "fixes": 23,
+     "breaks": 114,
+     "p": 1.090507026135235e-15
+    },
+    "vs_greedy": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    }
+   },
+   "shipped": {
+    "exact": 2385,
+    "rate": 0.7066666666666667,
+    "cer": 0.16751381215469613,
+    "trie": "word_trie.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_greedy": {
+     "fixes": 114,
+     "breaks": 23,
+     "p": 1.090507026135235e-15
+    },
+    "trie_kb": 222.0
+   },
+   "small-a35": {
+    "exact": 2221,
+    "rate": 0.658074074074074,
+    "cer": 0.1776427255985267,
+    "trie": "dose_trie_small.json",
+    "beam": 4,
+    "alpha": 0.35,
+    "vs_shipped": {
+     "fixes": 17,
+     "breaks": 181,
+     "p": 8.407657938941053e-36
+    },
+    "vs_greedy": {
+     "fixes": 99,
+     "breaks": 172,
+     "p": 1.088933608421405e-05
+    },
+    "trie_kb": 687.1
+   },
+   "union-a35": {
+    "exact": 2394,
+    "rate": 0.7093333333333334,
+    "cer": 0.17298956414978514,
+    "trie": "dose_trie_union.json",
+    "beam": 4,
+    "alpha": 0.35,
+    "vs_shipped": {
+     "fixes": 17,
+     "breaks": 8,
+     "p": 0.10775214433670044
+    },
+    "vs_greedy": {
+     "fixes": 129,
+     "breaks": 29,
+     "p": 2.9588066094676977e-16
+    },
+    "trie_kb": 1076.6
+   },
+   "union-a45": {
+    "exact": 2388,
+    "rate": 0.7075555555555556,
+    "cer": 0.17602209944751382,
+    "trie": "dose_trie_union.json",
+    "beam": 4,
+    "alpha": 0.45,
+    "vs_shipped": {
+     "fixes": 21,
+     "breaks": 18,
+     "p": 0.7492586247608415
+    },
+    "vs_greedy": {
+     "fixes": 131,
+     "breaks": 37,
+     "p": 1.6011017989547444e-13
+    },
+    "trie_kb": 1076.6
+   }
+  }
+ }
+}

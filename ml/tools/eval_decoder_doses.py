@@ -49,17 +49,23 @@ import word_lm as WL           # noqa: E402
 SHIPPED_TRIE = ROOT / "app" / "data" / "word_trie.json"
 DOSE_TRIE = ROOT / "app" / "data" / "dose_trie.json"
 DOSE_SMALL = ROOT / "app" / "data" / "dose_trie_small.json"
+# The trie that shipped BEFORE the doses LM replaced it. Kept as a named artifact because
+# once the app's word_trie.json becomes the union, "shipped" in a table silently means the
+# UNION and every paired comparison loses the baseline it was supposed to be against.
+DOCS_ONLY = ROOT / "app" / "data" / "word_trie_docs_only.json"
 DOSE_UNION = ROOT / "app" / "data" / "dose_trie_union.json"
 DOSE_BG40 = ROOT / "app" / "data" / "dose_trie_bg40.json"
 DOSE_BG80 = ROOT / "app" / "data" / "dose_trie_bg80.json"
 UNION_BG40 = ROOT / "app" / "data" / "dose_trie_union_bg40.json"
 UNION_S05 = ROOT / "app" / "data" / "dose_trie_union_s05.json"
 UNION_S20 = ROOT / "app" / "data" / "dose_trie_union_s20.json"
+UNION_MC2 = ROOT / "app" / "data" / "dose_trie_union_mc2_a35.json"
 
 CONFIGS = {
     # name -> (lexicon/trie source, beam, alpha)
     "greedy": (None, 4, 0.0),
     "shipped": (SHIPPED_TRIE, 4, 0.25),
+    "docs": (DOCS_ONLY, 4, 0.25),        # the pre-doses baseline, always comparable
     "dose": (DOSE_TRIE, 4, 0.25),
     "dose-beam8": (DOSE_TRIE, 8, 0.25),
     # The trie is PRECACHED, so its size is a real cost, not a detail: the shipped one
@@ -78,6 +84,10 @@ CONFIGS = {
     "small-a35": (DOSE_SMALL, 4, 0.35),
     "small-a45": (DOSE_SMALL, 4, 0.45),
     "union-a45": (DOSE_UNION, 4, 0.45),
+    # min-count 5 pruned real drug names out of the vocabulary (METHYLPHENIDATE x3,
+    # ANASTROZOLE x2, ATORVASTATIN x2 in the mined panels) — a doses LM that cannot
+    # spell the drug on the bottle is missing the point of the artifact.
+    "mc2-a35": (UNION_MC2, 4, 0.35),
     "union-s05-a35": (UNION_S05, 4, 0.35),
     "union-s20-a35": (UNION_S20, 4, 0.35),
     "union-bg40-a35": (UNION_BG40, 4, 0.35),
