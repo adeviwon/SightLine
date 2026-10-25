@@ -1,0 +1,228 @@
+{
+ "flat": {
+  "n": 746,
+  "results": {
+   "greedy": {
+    "exact": 120,
+    "rate": 0.16085790884718498,
+    "cer": 0.41577416369165676,
+    "trie": null,
+    "beam": 4,
+    "alpha": 0.0,
+    "vs_shipped": {
+     "fixes": 8,
+     "breaks": 28,
+     "p": 0.0011932429624721408
+    },
+    "vs_greedy": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    }
+   },
+   "shipped": {
+    "exact": 140,
+    "rate": 0.1876675603217158,
+    "cer": 0.414319714399048,
+    "trie": "word_trie.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_greedy": {
+     "fixes": 28,
+     "breaks": 8,
+     "p": 0.0011932429624721408
+    },
+    "trie_kb": 222.0
+   },
+   "dose-small": {
+    "exact": 209,
+    "rate": 0.2801608579088472,
+    "cer": 0.4015602274229803,
+    "trie": "dose_trie_small.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 69,
+     "breaks": 0,
+     "p": 3.3881317890172014e-21
+    },
+    "vs_greedy": {
+     "fixes": 90,
+     "breaks": 1,
+     "p": 7.431700815906108e-26
+    },
+    "trie_kb": 687.1
+   },
+   "union-s05": {
+    "exact": 207,
+    "rate": 0.2774798927613941,
+    "cer": 0.4016263387544625,
+    "trie": "dose_trie_union_s05.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 67,
+     "breaks": 0,
+     "p": 1.3552527156068805e-20
+    },
+    "vs_greedy": {
+     "fixes": 89,
+     "breaks": 2,
+     "p": 3.3822316648042255e-24
+    },
+    "trie_kb": 889.0
+   },
+   "union-s20": {
+    "exact": 207,
+    "rate": 0.2774798927613941,
+    "cer": 0.40175856141742694,
+    "trie": "dose_trie_union_s20.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 67,
+     "breaks": 0,
+     "p": 1.3552527156068805e-20
+    },
+    "vs_greedy": {
+     "fixes": 89,
+     "breaks": 2,
+     "p": 3.3822316648042255e-24
+    },
+    "trie_kb": 890.6
+   },
+   "union-a35": {
+    "exact": 219,
+    "rate": 0.2935656836461126,
+    "cer": 0.4032791220415179,
+    "trie": "dose_trie_union.json",
+    "beam": 4,
+    "alpha": 0.35,
+    "vs_shipped": {
+     "fixes": 79,
+     "breaks": 0,
+     "p": 3.308722450212111e-24
+    },
+    "vs_greedy": {
+     "fixes": 101,
+     "breaks": 2,
+     "p": 1.05648196731724e-27
+    },
+    "trie_kb": 1076.6
+   }
+  }
+ },
+ "render": {
+  "n": 3375,
+  "results": {
+   "greedy": {
+    "exact": 2294,
+    "rate": 0.6797037037037037,
+    "cer": 0.16365868631062,
+    "trie": null,
+    "beam": 4,
+    "alpha": 0.0,
+    "vs_shipped": {
+     "fixes": 23,
+     "breaks": 114,
+     "p": 1.090507026135235e-15
+    },
+    "vs_greedy": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    }
+   },
+   "shipped": {
+    "exact": 2385,
+    "rate": 0.7066666666666667,
+    "cer": 0.16751381215469613,
+    "trie": "word_trie.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_greedy": {
+     "fixes": 114,
+     "breaks": 23,
+     "p": 1.090507026135235e-15
+    },
+    "trie_kb": 222.0
+   },
+   "dose-small": {
+    "exact": 2272,
+    "rate": 0.6731851851851852,
+    "cer": 0.17220380601596072,
+    "trie": "dose_trie_small.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 6,
+     "breaks": 119,
+     "p": 2.320507557605719e-28
+    },
+    "vs_greedy": {
+     "fixes": 83,
+     "breaks": 105,
+     "p": 0.12540008404533765
+    },
+    "trie_kb": 687.1
+   },
+   "union-s05": {
+    "exact": 2384,
+    "rate": 0.7063703703703703,
+    "cer": 0.16950276243093923,
+    "trie": "dose_trie_union_s05.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 4,
+     "breaks": 5,
+     "p": 1.0
+    },
+    "vs_greedy": {
+     "fixes": 113,
+     "breaks": 23,
+     "p": 1.818716912352605e-15
+    },
+    "trie_kb": 889.0
+   },
+   "union-s20": {
+    "exact": 2384,
+    "rate": 0.7063703703703703,
+    "cer": 0.16929404542664211,
+    "trie": "dose_trie_union_s20.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 4,
+     "breaks": 5,
+     "p": 1.0
+    },
+    "vs_greedy": {
+     "fixes": 113,
+     "breaks": 23,
+     "p": 1.818716912352605e-15
+    },
+    "trie_kb": 890.6
+   },
+   "union-a35": {
+    "exact": 2394,
+    "rate": 0.7093333333333334,
+    "cer": 0.17298956414978514,
+    "trie": "dose_trie_union.json",
+    "beam": 4,
+    "alpha": 0.35,
+    "vs_shipped": {
+     "fixes": 17,
+     "breaks": 8,
+     "p": 0.10775214433670044
+    },
+    "vs_greedy": {
+     "fixes": 129,
+     "breaks": 29,
+     "p": 2.9588066094676977e-16
+    },
+    "trie_kb": 1076.6
+   }
+  }
+ }
+}
