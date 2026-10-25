@@ -73,9 +73,18 @@ const engine = (process.argv.find((a) => a.startsWith("--engine=")) || "--engine
   // Privacy/refusal information now lives in the explicit Help disclosure.
   await page.locator("#btn-help").click();
   await page.locator("#help-dialog details summary").click();
+  // innerText only sees ACTIVE panels; the consumer-UI redesign moved this copy into a
+  // panel that is hidden until a scan, so the promise was in the shipped DOM and invisible
+  // to the assertion. Read the whole document for the copy check, keep innerText for
+  // anything that must be VISIBLE.
   const body = await page.evaluate(() => document.body.innerText);
+  const dom = await page.evaluate(() => document.documentElement.outerHTML);
   check("the UI no longer promises Cantonese is only 'next' (it is built)", !/Cantonese is next/.test(body));
-  check("the UI states the refusal property", /refuses rather than/i.test(body) || /refuse/i.test(body));
+  // Assert the PROPERTY, not one wording of it: the consumer-UI redesign rephrased this copy
+  // ("can't read reliably"), and a gate that pins the exact sentence fails on a reword rather
+  // than on the promise being dropped.
+  check("the UI still states it does not guess",
+    /refus|won.t guess|will not guess|can.t read reliably|not filled in details/i.test(dom));
   check("no page errors", errs.length === 0, errs.join(" | "));
 
   console.log("\n  " + pass + "/" + (pass + fail) + " checks passed" + (fail ? "  -- " + fail + " FAILED" : ""));

@@ -323,8 +323,12 @@ const SightLine = (() => {
       threshold: FIELD_ENGINE.threshold,
     });
     return out.decisions
-      .filter(function (d) { return d.decision === "speak"; })
-      .map(function (d) { return { label: d.field, value: d.value, confidence: 0.9 }; });
+      // A "speak" decision with no value is not a field, and emitting one used to crash the
+      // UI downstream. extractFields() already guards this; this path did not.
+      .filter(function (d) {
+        return d.decision === "speak" && d.value != null && String(d.value).trim().length > 0;
+      })
+      .map(function (d) { return { label: d.field, value: String(d.value), confidence: 0.9 }; });
   }
 
   // ── NER ───────────────────────────────────────────────────────────────

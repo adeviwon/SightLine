@@ -567,11 +567,17 @@ const FREQUENCY_PHRASES = [
   { re: /\b(?:weekly|once a week)\b/i, phrase: 'once a week', confidence: 0.88 },
 ];
 
+// EVERY pattern here must CAPTURE the unit as group 2 -- the metadata says so and both call
+// sites read `hit[2].toLowerCase()`. The two "day course"/"day supply" patterns shipped with a
+// NON-capturing `(?:day|days)`, so a match had NO group 2, `hit[2]` was undefined, and the
+// TypeError took down the whole scan: "Cannot read properties of undefined (reading
+// 'toLowerCase')" on every prescription, the one document this product is for. The default
+// markers also name the unit when the text is a course/supply rather than "for N days".
 const DURATION_PHRASES = [
   { re: /\bfor\s+(\d{1,3})\s*(day|days|week|weeks|month|months)\b/i, capture: 2, unitIndex: 2 },
   { re: /\bx\s*(\d{1,3})\s*(day|days|week|weeks|month|months)\b/i, capture: 2, unitIndex: 2 },
-  { re: /\b(\d{1,3})[\s-]*day\s+course\b/i, capture: 2, unitIndex: 2 },
-  { re: /\b(\d{1,3})\s*(?:day|days)\s+supply\b/i, capture: 2, unitIndex: 2 },
+  { re: /\b(\d{1,3})[\s-]*day\s+course\b/i, capture: 2, unitIndex: 2, unit: "day" },
+  { re: /\b(\d{1,3})\s*(day|days)\s+supply\b/i, capture: 2, unitIndex: 2 },
 ];
 
 /**
@@ -616,8 +622,9 @@ export function extractDosage(text, opts) {
     let duration = null;
     for (const d of DURATION_PHRASES) {
       const hit = d.re.exec(after) || d.re.exec(before);
-      if (hit) {
-        duration = { raw: squeezeWhitespace(hit[0]), count: Number(hit[1]), unit: hit[2].toLowerCase().replace(/s$/, '') };
+      if (hit && hit[1] != null && (hit[2] != null || d.unit)) {
+        duration = { raw: squeezeWhitespace(hit[0]), count: Number(hit[1]),
+                     unit: String(hit[2] != null ? hit[2] : d.unit).toLowerCase().replace(/s$/, '') };
         break;
       }
     }
@@ -1233,11 +1240,15 @@ function extractPrescriptionFields(ctx) {
     out.route = makeField('route', hit[0].toLowerCase(), hit[0], 0.7, routeLine.text);
   }
 
-  const dur = DURATION_PHRASES.map((d) => ({ d, m: d.re.exec(text) })).filter((x) => x.m)
+  // `x.m[1] != null && (x.m[2] != null || x.d.unit)` -- guarding only on the MATCH is what
+  // let an undefined group through to .toLowerCase() and kill the scan. A pattern whose
+  // groups did not fire is simply not a usable duration.
+  const dur = DURATION_PHRASES.map((d) => ({ d, m: d.re.exec(text) }))
+    .filter((x) => x.m && x.m[1] != null && (x.m[2] != null || x.d.unit))
     .sort((a, b) => a.m.index - b.m.index)[0];
   if (dur) {
     const count = Number(dur.m[1]);
-    const unit = dur.m[2].toLowerCase().replace(/s$/, '');
+    const unit = String(dur.m[2] != null ? dur.m[2] : dur.d.unit).toLowerCase().replace(/s$/, '');
     out.duration = makeField('duration', `${count} ${unit}${count === 1 ? '' : 's'}`, dur.m[0], 0.85, lineAt(lines, dur.m.index));
   }
 

@@ -72,7 +72,9 @@ const norm = (s) => String(s == null ? "" : s)
 /** Dose tokens our recogniser can actually emit: a number and a unit, no punctuation. */
 function findDoses(text) {
   const out = [];
-  const re = /\b(\d{1,4})\s?(MG|MCG|G|ML|L|IU|PERCENT|%)\b/g;
+  // same non-digit left boundary as the app's extractor: OCR glues the dose to the drug
+  // name and a left \b cannot match a letter->digit transition (no lookbehind: Safari).
+  const re = /(?:^|[^\d])(\d{1,4})\s?(MG|MCG|G|ML|L|IU|PERCENT|%)\b/g;
   let m;
   while ((m = re.exec(text)) !== null) {
     out.push(m[1] + " " + (m[2] === "%" || m[2] === "PERCENT" ? "PERCENT" : m[2]));
@@ -219,6 +221,12 @@ if (typeof module !== "undefined" && require.main === module) {
     const r = build("RX AMOXICILLIN 500MG UNKNOWN VERBAGE HERE THAT WE CANNOT MAP AT ALL", lex);
     assert.strictEqual(r.untranslated, true);
     assert.ok(r.zh.includes(PARTIAL), r.zh);
+  });
+  t("a dose GLUED to the drug name is still a dose", () => {
+    // measured failure: "RX BUPROLIN400MG" produced NO dose, because a left \b cannot match
+    // between the letter N and the digit 4
+    const r = build("1 M RX BUPROLIN400MG ABETS", lex);
+    assert.ok(r.doses.includes("400 MG"), "glued dose invisible: " + JSON.stringify(r.doses));
   });
   t("a numerals-only read still gives the dose, and admits it has no name", () => {
     const r = build("500 MG", lex);
