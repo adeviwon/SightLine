@@ -496,9 +496,13 @@ export async function recognise(gray, contentWidth) {
         logSoftmaxRow(data, t * C, C, row);
         lps.set(row, t * C);
       }
+      // The weight comes from the loaded artifact (see WordTrie.alpha) so a retuned
+      // lexicon cannot ship against the old literal; WORD_ALPHA stays the documented
+      // fallback for tries exported before meta.alpha existed.
       const beam = beamDecode(lps, decodeT, C, CHARSET,
                               { beam: WORD_BEAM, blank: BLANK, lm: wordTrie,
-                                alpha: WORD_ALPHA });
+                                alpha: wordTrie.alpha === undefined ? WORD_ALPHA
+                                                                    : wordTrie.alpha });
       // A beam that returns nothing usable must not replace a readable greedy
       // string: the fallback only ever fires on an EMPTY read.
       if (beam.text) { text = beam.text; decodedBy = "wordLM"; }

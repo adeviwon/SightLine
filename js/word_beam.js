@@ -74,6 +74,28 @@ export class WordTrie {
     this.digitPenalty = meta.penalty_digit === undefined ? DIGIT_PENALTY : meta.penalty_digit;
     this.beta = meta.beta === undefined ? 0.0 : meta.beta;
     this.eps = meta.eps === undefined ? EPS : meta.eps;
+    // WORD BIGRAMS. The trie alone knows `TWICE` and `DAILY` are words; only the
+    // bigram knows `TWICE DAILY` is a phrase and `DAILY TWICE` is not — which is the
+    // half of a word LM a lexicon cannot express. Absent from older artifacts, and
+    // weight 0 keeps the trie-only behaviour exactly, so this cannot change what
+    // ships until a measurement says the pairs earn their bytes.
+    this.bigramW = meta.bi_w === undefined ? 0.0 : meta.bi_w;
+    this.bigramVocab = meta.bi_vocab || 1;
+    // The fusion weight this lexicon was TUNED at, carried by the artifact itself:
+    // alpha differing from the value in recognizer.js silently applies the wrong
+    // weight to a retuned lexicon, and nothing would look broken. Older artifacts
+    // predate the field, so the previous default is the fallback.
+    this.alpha = meta.alpha === undefined ? 0.25 : meta.alpha;
+    this.bigrams = new Map();
+    this.bigramPrev = new Map();
+    const bi = json.bi || {};
+    for (const k of Object.keys(bi)) {
+      const i = k.indexOf("\u0000");
+      const prev = i < 0 ? k : k.slice(0, i);
+      const next = i < 0 ? "" : k.slice(i + 1);
+      this.bigrams.set(prev + "\u0000" + next, bi[k]);
+      this.bigramPrev.set(prev, (this.bigramPrev.get(prev) || 0) + bi[k]);
+    }
   }
 
   static async load(url) {
@@ -92,6 +114,25 @@ export class WordTrie {
     return node;
   }
 
+  /**
+   * Mirrors ml/src/word_lm.WordLM.bigram_logp — log P(w | previous word).
+   *
+   * `prefix` ends with `w`, so the context is the word before it. An unseen pair is
+   * priced as one pseudo-count over that context's total rather than as a hard zero:
+   * a dose panel that says something the panels never said must stay decodable, and
+   * a -Infinity here would silently prune every novel reading out of the beam.
+   */
+  bigramLogp(prefix, w) {
+    const words = prefix.split(" ");
+    if (words.length < 2) return 0.0;          // nothing to condition on
+    const prev = words[words.length - 2];
+    if (prev === w) return 0.0;                // a repeated word is not evidence
+    const total = this.bigramPrev.get(prev) || 0;
+    if (total <= 0) return 0.0;                // an unseen context says nothing
+    const seen = this.bigrams.get(prev + "\u0000" + w) || 0;
+    return Math.log((seen + this.eps) / (total + this.eps * this.bigramVocab));
+  }
+
   /** Mirrors ml/src/word_lm.WordLM.logp — raw log-prob; the caller weights it. */
   logp(prefix, ch) {
     const sp = prefix.lastIndexOf(" ");
@@ -99,8 +140,13 @@ export class WordTrie {
     if (ch === " ") {
       if (!w) return 0.0;
       const node = this._node(w);
-      if (node && node.t > 0) return this.beta;   // a word we serve, plus the bonus
-      return this.beta + (isDigitRun(w) ? this.digitPenalty : this.penalty);
+      const done = !!(node && node.t > 0);
+      let score = done ? this.beta              // a word we serve, plus the bonus
+        : this.beta + (isDigitRun(w) ? this.digitPenalty : this.penalty);
+      if (this.bigramW && this.bigrams.size) {
+        score += this.bigramW * this.bigramLogp(prefix, w);
+      }
+      return score;
     }
     const node = this._node(w);
     if (node) {
