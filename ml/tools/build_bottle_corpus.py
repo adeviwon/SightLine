@@ -51,6 +51,7 @@ OUT = ROOT / "data" / "bottle_corpus"
 # usually a partial wrap (0.2-0.4); the deep end exists so the model does not learn
 # one curvature the way it learned one font.
 CURLS = (0.15, 0.25, 0.35, 0.45, 0.55)
+_WRAP = 28          # set from --wrap; see the width-contract note in main()
 # The capture profiles a REAL phone photo of glossy packaging lands in. Reusing the
 # existing profile parameters matters: they were re-tuned against measured
 # photographs (retune_profiles.py), so this corpus inherits that calibration
@@ -59,14 +60,28 @@ PROFILES = ["glossy_glare", "off_axis", "jpeg_social", "handheld_light",
             "handheld_heavy", "low_light", "worst_case"]
 
 
-def curl_transform(img, seed):
-    """The one geometry the flat renderer cannot express: the panel is CURVED."""
-    rng = random.Random(seed)
-    curl = rng.choice(CURLS)
-    return C.cylinder_wrap(img, strength=curl), "bottle_curl%.2f" % curl
+def make_curl_transform(curls):
+    """Page transform: the geometry the flat renderer cannot express.
+
+    `curls` of (0,) is a FLAT medication panel — the case the shipped recogniser can
+    actually read (~70% exact on flat renders, against 0% on anything curved), which
+    is where a doses lexicon can be measured in the product's own metric instead of
+    through CER alone. Same code path either way: cylinder_wrap at strength 0 returns
+    the page unchanged.
+    """
+    def transform(img, seed):
+        rng = random.Random(seed)
+        curl = rng.choice(curls)
+        tag = "flat" if curl <= 0 else "bottle_curl%.2f" % curl
+        return C.cylinder_wrap(img, strength=curl), tag
+    return transform
 
 
-def wrap(line, width=38):
+def curl_transform(img, seed):                      # the curved default
+    return make_curl_transform(CURLS)(img, seed)
+
+
+def wrap(line, width=28):
     """Break a leaflet paragraph into the short physical lines a label actually
     prints. openFDA returns sections as paragraphs (some 400+ chars) and drawing one
     as a single unbroken line teaches the model a line length no bottle has; it also
@@ -82,7 +97,7 @@ def panels_from(lines, per_page, seed=0):
     that order would teach the model that 'DOSAGE' is always the third line.
     """
     rng = random.Random(seed)
-    wrapped = [w for l in lines for w in wrap(l)]
+    wrapped = [w for l in lines for w in wrap(l, _WRAP)]
     pool = [l for l in wrapped if len(l) >= 4]
     rng.shuffle(pool)
     out = []
@@ -117,6 +132,13 @@ def main():
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--probe", action="store_true")
+    ap.add_argument("--curls", default="", help="comma list of curl strengths; 0 = FLAT panel")
+    # WIDTH CONTRACT: the reader resizes a crop to 320 px wide, so a rendered line
+    # much wider than that is SQUASHED horizontally and becomes unreadable — the same
+    # trap this repo has hit three times. The render corpus's own lines come out at
+    # ~28 characters, so real panel text is wrapped to match instead of being drawn at
+    # its natural paragraph width.
+    ap.add_argument("--wrap", type=int, default=28)
     ap.add_argument("--min-contrast", type=int, default=55,
                     help="p95-p5 pixel separation a crop must have to be readable")
     a = ap.parse_args()
@@ -126,6 +148,8 @@ def main():
               "fetch_dose_labels.py --n 1200" % PANELS, file=sys.stderr)
         return 1
     lines = [l.rstrip("\n") for l in PANELS.read_text().splitlines() if l.strip()]
+    global _WRAP
+    _WRAP = a.wrap
     pl = panels_from(lines, a.lines_per_page, seed=a.seed)[:a.pages]
     if not pl:
         print("no panels built from %d lines" % len(lines), file=sys.stderr)
@@ -133,8 +157,10 @@ def main():
     print("%d real panel lines -> %d bottle pages of ~%d lines"
           % (len(lines), len(pl), a.lines_per_page))
 
+    curls = ([float(x) for x in a.curls.split(",") if x != ""] or list(CURLS))
+    print("curvatures: %s" % ("FLAT" if max(curls) <= 0 else curls))
     data = RC.build(n_pages=0, profiles=PROFILES, seed=a.seed, out_dir=a.out,
-                    panels=pl, page_transform=curl_transform, verbose=True)
+                    panels=pl, page_transform=make_curl_transform(curls), verbose=True)
 
     # CONTRAST FLOOR. A crop whose ink and paper are the same value teaches nothing
     # and actively harms: it asks the model to emit a full string from a smear. The

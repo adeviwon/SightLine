@@ -231,8 +231,16 @@ def load_lexicon(path=LEXICON):
         return [ln.strip() for ln in fh if ln.strip()]
 
 
-def export_trie(lm: WordLM, out=DEFAULT_OUT):
-    """Ship form: nested dicts, counts inline. Small enough to precache."""
+def export_trie(lm: WordLM, out=DEFAULT_OUT, bigram_min=3, bigram_cap=12000):
+    """Ship form: nested dicts, counts inline. Small enough to precache.
+
+    WORD BIGRAMS RIDE ALONG, pruned hard, because they are the difference between a
+    lexicon beam and a WORD-LM beam: the trie alone scores `TWICE` as a word, while
+    the bigram knows `TWICE DAILY` and `EVERY 6` and can price `DAILY TWICE`, which
+    no unigram can. They are pruned by count and capped because the artifact is
+    PRECACHED on the device — 55k real pairs is over a megabyte of JSON and the
+    whole point of this decoder is that it is cheap on a phone.
+    """
     def enc(node):
         return {"p": node[0], "t": node[1],
                 "c": {ch: enc(ch_node) for ch, ch_node in node[2].items()}}
@@ -243,6 +251,19 @@ def export_trie(lm: WordLM, out=DEFAULT_OUT):
                      "penalty": lm.penalty, "penalty_digit": lm.digit_penalty,
                      "beta": lm.beta, "eps": lm.eps},
             "root": enc(lm.root)}
+    # Only ship the pairs when they are actually SCORED. A weight of 0 makes the
+    # browser ignore them, so carrying 12k of them would be dead precache weight on
+    # a phone for no behaviour at all.
+    if lm.bigrams and lm.bigram_w > 0:
+        keep = sorted(((k, v) for k, v in lm.bigrams.items() if v >= bigram_min),
+                      key=lambda kv: -kv[1])[:bigram_cap]
+        data["bi"] = {"%s\u0000%s" % k: v for k, v in keep}
+        prevs = {}
+        for (p_, _w), v in keep:
+            prevs[p_] = prevs.get(p_, 0) + v
+        data["bi_prev"] = prevs
+        data["meta"]["bi_w"] = lm.bigram_w
+        data["meta"]["bi_vocab"] = lm.bigram_vocab
     Path(out).parent.mkdir(parents=True, exist_ok=True)
     Path(out).write_text(json.dumps(data, separators=(",", ":")))
     return Path(out).stat().st_size
@@ -254,9 +275,34 @@ def load_trie_json(path):
     data = json.loads(Path(path).read_text())
 
     class _TrieLM:
-        def __init__(self, root, penalty, penalty_digit, beta=0.0, eps=EPS):
+        def __init__(self, root, penalty, penalty_digit, beta=0.0, eps=EPS,
+                     bigrams=None, bigram_w=0.0, bigram_vocab=1):
             self.root, self.penalty = root, penalty
             self.penalty_digit, self.beta, self.eps = penalty_digit, beta, eps
+            # Bigrams are optional so older artifacts and the measured-worse case
+            # stay loadable; every field defaults to neutral.
+            self.bigrams = dict(bigrams or {})
+            self.bigram_w = bigram_w
+            self.bigram_vocab = bigram_vocab
+            self.bigram_prev = {}
+            for (p_, _w), c in self.bigrams.items():
+                self.bigram_prev[p_] = self.bigram_prev.get(p_, 0.0) + c
+
+        def bigram_logp(self, prefix, w):
+            """log P(w | previous word). SAME formula and same eps/vocab treatment as
+            WordLM.bigram_logp -- the two must agree or the parity gate is comparing
+            two different languages."""
+            words = prefix.split()
+            if len(words) < 2:
+                return 0.0
+            prev = words[-2]
+            if prev == w:
+                return 0.0
+            total = self.bigram_prev.get(prev, 0.0)
+            if total <= 0:
+                return 0.0
+            seen = self.bigrams.get((prev, w), 0.0)
+            return math.log((seen + self.eps) / (total + self.eps * self.bigram_vocab))
 
         def _node(self, w):
             node = self.root
@@ -272,10 +318,13 @@ def load_trie_json(path):
                 if not w:
                     return 0.0
                 node = self._node(w)
-                if node is not None and node["t"] > 0:
-                    return self.beta
-                return self.beta + (self.penalty_digit if _is_digit_run(w)
-                                    else self.penalty)
+                done = node is not None and node["t"] > 0
+                score = (self.beta if done
+                         else self.beta + (self.penalty_digit if _is_digit_run(w)
+                                           else self.penalty))
+                if self.bigram_w and self.bigrams:
+                    score += self.bigram_w * self.bigram_logp(prefix, w)
+                return score
             node = self._node(w)
             if node is not None:
                 child = node["c"].get(ch)   # _node returns the NODE, not its children
@@ -287,8 +336,14 @@ def load_trie_json(path):
 
     root = data["root"]
     meta = data["meta"]
+    bi = {}
+    for k, v in (data.get("bi") or {}).items():
+        prev, _, nxt = k.partition("\u0000")
+        bi[(prev, nxt)] = float(v)
     return _TrieLM(root, meta["penalty"], meta["penalty_digit"],
-                   meta.get("beta", 0.0), meta.get("eps", EPS))
+                   meta.get("beta", 0.0), meta.get("eps", EPS),
+                   bi, float(meta.get("bi_w", 0.0)),
+                   int(meta.get("bi_vocab", 1) or 1))
 
 
 def _self_check():

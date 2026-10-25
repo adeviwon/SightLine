@@ -1,0 +1,77 @@
+{
+ "flat": {
+  "n": 746,
+  "results": {
+   "greedy": {
+    "exact": 0,
+    "rate": 0.0,
+    "cer": 0.9012296707655693,
+    "trie": null,
+    "beam": 4,
+    "alpha": 0.0,
+    "vs_shipped": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    },
+    "vs_greedy": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    }
+   },
+   "shipped": {
+    "exact": 0,
+    "rate": 0.0,
+    "cer": 0.9374586804178237,
+    "trie": "word_trie.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_greedy": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    },
+    "trie_kb": 222.0
+   },
+   "dose-small": {
+    "exact": 0,
+    "rate": 0.0,
+    "cer": 0.9159724976861034,
+    "trie": "dose_trie_small.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    },
+    "vs_greedy": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    },
+    "trie_kb": 1000.9
+   },
+   "dose-bg40": {
+    "exact": 0,
+    "rate": 0.0,
+    "cer": 0.9146502710564591,
+    "trie": "dose_trie_bg40.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    },
+    "vs_greedy": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    },
+    "trie_kb": 1000.9
+   }
+  }
+ }
+}

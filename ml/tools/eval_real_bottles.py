@@ -159,19 +159,60 @@ def score_synthetic(model, verbose=True):
     return ok, len(labels)
 
 
+def load_trained(ckpt):
+    """Load the SHIPPED checkpoint and refuse to measure with random weights.
+
+    `ocr_model.build()` is the ARCHITECTURE, not the trained model. Calling it and
+    forgetting the checkpoint decodes with a random initialisation and reports 0%
+    exact everywhere — indistinguishable from a model that cannot read the data, and
+    it cost this project an afternoon before the canary caught it. `--synthetic`
+    numbers from before this guard existed are VOID.
+    """
+    import torch
+    path = Path(ckpt or (ROOT / "models" / "ocr" / "crnn.pt"))
+    assert path.exists(), "no checkpoint at %s" % path
+    model = OM.build()
+    ck = torch.load(path, map_location="cpu")
+    model.load_state_dict(ck["model"] if isinstance(ck, dict) and "model" in ck else ck)
+    model.eval()
+    hit = 0
+    for c, l in zip(_CANARY_CROPS, _CANARY_LABELS):
+        a = np.asarray(c, np.uint8)
+        x = (a.astype(np.float32)[None, None] / 255.0 - 0.5) / 0.5
+        with torch.no_grad():
+            lg = model(torch.from_numpy(x)).cpu().numpy()[0]
+        hit += int(R.norm_label(R.decode_greedy(lg.argmax(-1))) == R.norm_label(l))
+    assert hit >= 2, ("CANARY FAILED (%d/6 known crops read exactly) — the model in "
+                      "this process is not the shipped one" % hit)
+    print("checkpoint: %s — canary %d/6 known render crops exact" % (path.name, hit))
+    return model
+
+
+def _canaries():
+    """Six known crops from the render test split, loaded once for the tripwire."""
+    import build_dataset as B
+    import render_corpus as RC
+    from PIL import Image
+    d = RC.load(split="test")
+    crops, labels = [], []
+    for c, l in list(zip(d["crops"], d["labels"]))[:6]:
+        crops.append(B.crop_to_array(Image.fromarray(np.asarray(c, np.uint8))))
+        labels.append(str(l))
+    return crops, labels
+
+
+_CANARY_CROPS, _CANARY_LABELS = [], []
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", default="")
     ap.add_argument("--synthetic", action="store_true")
     ap.add_argument("--quiet", action="store_true")
     a = ap.parse_args()
-    model = OM.load(a.ckpt) if a.ckpt and hasattr(OM, "load") else OM.build()
-    if a.ckpt:
-        import torch
-        ck = torch.load(a.ckpt, map_location="cpu")
-        model.load_state_dict(ck["model"] if "model" in ck else ck)
-        print("checkpoint: %s" % a.ckpt)
-    model.eval()
+    global _CANARY_CROPS, _CANARY_LABELS
+    _CANARY_CROPS, _CANARY_LABELS = _canaries()
+    model = load_trained(a.ckpt)
     if a.synthetic:
         return 0 if score_synthetic(model, not a.quiet)[0] >= 0 else 1
     score_real(model, not a.quiet)

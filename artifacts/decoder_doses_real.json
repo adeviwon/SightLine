@@ -1,0 +1,152 @@
+{
+ "flat": {
+  "n": 746,
+  "results": {
+   "greedy": {
+    "exact": 120,
+    "rate": 0.16085790884718498,
+    "cer": 0.41577416369165676,
+    "trie": null,
+    "beam": 4,
+    "alpha": 0.0,
+    "vs_shipped": {
+     "fixes": 8,
+     "breaks": 28,
+     "p": 0.0011932429624721408
+    },
+    "vs_greedy": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    }
+   },
+   "shipped": {
+    "exact": 140,
+    "rate": 0.1876675603217158,
+    "cer": 0.414319714399048,
+    "trie": "word_trie.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_greedy": {
+     "fixes": 28,
+     "breaks": 8,
+     "p": 0.0011932429624721408
+    },
+    "trie_kb": 222.0
+   },
+   "dose-small": {
+    "exact": 209,
+    "rate": 0.2801608579088472,
+    "cer": 0.4015602274229803,
+    "trie": "dose_trie_small.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 69,
+     "breaks": 0,
+     "p": 3.3881317890172014e-21
+    },
+    "vs_greedy": {
+     "fixes": 90,
+     "breaks": 1,
+     "p": 7.431700815906108e-26
+    },
+    "trie_kb": 1000.9
+   },
+   "dose-bg40": {
+    "exact": 210,
+    "rate": 0.28150134048257375,
+    "cer": 0.40189078408039136,
+    "trie": "dose_trie_bg40.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 70,
+     "breaks": 0,
+     "p": 1.6940658945086007e-21
+    },
+    "vs_greedy": {
+     "fixes": 91,
+     "breaks": 1,
+     "p": 3.75624008630037e-26
+    },
+    "trie_kb": 1000.9
+   }
+  }
+ },
+ "render": {
+  "n": 3375,
+  "results": {
+   "greedy": {
+    "exact": 2294,
+    "rate": 0.6797037037037037,
+    "cer": 0.16365868631062,
+    "trie": null,
+    "beam": 4,
+    "alpha": 0.0,
+    "vs_shipped": {
+     "fixes": 23,
+     "breaks": 114,
+     "p": 1.090507026135235e-15
+    },
+    "vs_greedy": {
+     "fixes": 0,
+     "breaks": 0,
+     "p": 1.0
+    }
+   },
+   "shipped": {
+    "exact": 2385,
+    "rate": 0.7066666666666667,
+    "cer": 0.16751381215469613,
+    "trie": "word_trie.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_greedy": {
+     "fixes": 114,
+     "breaks": 23,
+     "p": 1.090507026135235e-15
+    },
+    "trie_kb": 222.0
+   },
+   "dose-small": {
+    "exact": 2272,
+    "rate": 0.6731851851851852,
+    "cer": 0.17220380601596072,
+    "trie": "dose_trie_small.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 6,
+     "breaks": 119,
+     "p": 2.320507557605719e-28
+    },
+    "vs_greedy": {
+     "fixes": 83,
+     "breaks": 105,
+     "p": 0.12540008404533765
+    },
+    "trie_kb": 687.1
+   },
+   "dose-bg40": {
+    "exact": 2275,
+    "rate": 0.674074074074074,
+    "cer": 0.17228974831184776,
+    "trie": "dose_trie_bg40.json",
+    "beam": 4,
+    "alpha": 0.25,
+    "vs_shipped": {
+     "fixes": 8,
+     "breaks": 118,
+     "p": 3.1633163266191123e-26
+    },
+    "vs_greedy": {
+     "fixes": 84,
+     "breaks": 103,
+     "p": 0.1879332627414171
+    },
+    "trie_kb": 1000.9
+   }
+  }
+ }
+}
