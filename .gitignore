@@ -18,3 +18,9 @@ artifacts/*.npz
 **/.DS_Store
 **/xcuserdata/
 *.xcuserstate
+
+# Real-photo corpus: the photographs themselves are 467 MB of CC-licensed Wikimedia
+# images, re-fetchable with `bash run.sh py ml/tools/fetch_real_bottles.py`. The
+# TRANSCRIPTS are the irreplaceable part (a person read them off the pixels) and they
+# are tracked, so the eval set survives a fresh clone.
+/data/real_bottles/raw/
